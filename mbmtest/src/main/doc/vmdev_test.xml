@@ -1,0 +1,14 @@
+<Table Name="t1"  Description="t1表">
+    <Columns>
+        <Column Name="Id" ColumnName="id" DataType="Int32" RawType="int" PrimaryKey="true" AutoIncrement="true" />
+        <Column Name="Code" ColumnName="code" DataType="String" RawType="varchar" Nullable="false" Size="50" />
+        <Column Name="Name" ColumnName="name" DataType="String" RawType="varchar" Nullable="false" Size="200" />
+        <Column Name="Score" ColumnName="score" DataType="Double" />
+        <Column Name="Enabled" ColumnName="enabled" DataType="Int32" RawType="tinyint" />
+        <Column Name="Birthday" ColumnName="birthday" DataType="DateTime" />
+        <Column Name="CreateTime" ColumnName="createTime" DataType="DateTime" />
+    </Columns>
+    <Indexes>
+        <Index Columns="id asc" Unique="True" Pk="True" />
+    </Indexes>
+</Table>

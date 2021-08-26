@@ -1,0 +1,38 @@
+import com.hxx.mbtest.MbtestApplication;
+import com.hxx.mbtest.entity.T1;
+import com.hxx.mbtest.mapper.T1Mapper;
+import com.hxx.mbtest.service.T1Service;
+import com.hxx.sbcommon.common.JsonUtil;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @Author: huoxuxu
+ * @Description:
+ * @Date: 2021-05-13 9:09:21
+ **/
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = MbtestApplication.class)
+public class T1ServiceTest {
+    @Autowired
+    private T1Service t1Service;
+
+
+    @Test
+    public void Run() {
+        System.out.println("==============t1Service.Run==============");
+
+        t1Service.Run();
+
+    }
+
+
+
+}
