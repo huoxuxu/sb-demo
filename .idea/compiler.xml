@@ -7,13 +7,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="mbtest" />
         <module name="sbweb" />
+        <module name="mbmtest" />
         <module name="javatest" />
         <module name="sbrest" />
         <module name="sbcommon" />
         <module name="sbservice" />
-        <module name="mbmtest" />
+        <module name="mbtest" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
