@@ -12,6 +12,7 @@
         <module name="javatest" />
         <module name="sbrest" />
         <module name="sbcommon" />
+        <module name="sbservice" />
         <module name="mbmtest" />
       </profile>
     </annotationProcessing>
@@ -26,6 +27,7 @@
       <module name="mbtest" options="-parameters" />
       <module name="sbcommon" options="-parameters" />
       <module name="sbrest" options="-parameters" />
+      <module name="sbservice" options="-parameters" />
       <module name="sbweb" options="-parameters" />
     </option>
   </component>

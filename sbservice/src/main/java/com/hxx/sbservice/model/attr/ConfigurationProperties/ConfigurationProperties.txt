@@ -1,0 +1,19 @@
+总结#
+@ConfigurationProperties 和 @value 有着相同的功能,但是 @ConfigurationProperties的写法更为方便
+@ConfigurationProperties 的 POJO类的命名比较严格,因为它必须和prefix的后缀名要一致, 不然值会绑定不上,
+  特殊的后缀名是“driver-class-name”这种带横杠的情况,在POJO里面的命名规则是 下划线转驼峰 就可以绑定成功，所以就是 “driverClassName”
+
+用法:
+1.用在方法上时，该方法需要有@Bean注解且所属Class需要有@Configuration注解
+2.用在类上时，
+ 为每个要捕获的外部属性提供一个带有字段的类。
+
+注意:
+  前缀定义了哪些外部属性将绑定到类的字段上
+  根据 Spring Boot 宽松的绑定规则，类的属性名称必须与外部属性的名称匹配
+  我们可以简单地用一个值初始化一个字段来定义一个默认值
+  类本身可以是包私有的
+  类的字段必须有公共 setter 方法
+
+
+

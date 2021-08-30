@@ -30,7 +30,7 @@ public class T1Service2Impl implements T1Service2 {
 
     @Override
     public void Run() {
-        log.info("开始执行：{}- {}", 1, new Date());
+        log.info("开始执行：{} - {}", 1, new Date());
         {
             List<T1> t1s = t1Mapper.selectAll();
             System.out.println("selectAll：");
