@@ -1,8 +1,14 @@
-@PropertySource加载自定义属性文件, 可以同时加载多个文件，也可以加载单个文件
-如果相同第一个属性文件和第二属性文件存在相同key，则最后一个属性文件里的key启作用。
-加载文件的路径也可以配置变量，如下文的${anotherfile.configinject}，此值定义在第一个属性文件config.properties
+@PropertySource 加载自定义属性文件, 可以同时加载多个文件，也可以加载单个文件
+加载单个配置文件 @PropertySource(value = "classpath:jdbcxml.xml")
+加载多个配置文件 @PropertySource(value = {"classpath:jdbc.properties", "classpath:myconf.properties"})
 
 默认支持.properties与.xml两种配置文件
+加载文件的路径也可以配置变量，如下文的${anotherfile.configinject}，此值定义在第一个属性文件config.properties
+
+注意：
+  如果 *.properties和 *.xml *.yml 配置中的 key（属性名称） 完全一样，使用@Value会取到最后一个配置文件的值
+
+
 属性如下：
 name：默认为空，不指定Spring自动生成
 value：配置文件
@@ -11,4 +17,3 @@ encoding：配置文件编码格式，默认UTF-8 4.3版本才加入
 factory：配置文件解析工厂，默认：PropertySourceFactory.class 4.3版本才加入，如果是之前的版本就需要手动注入配置文件解析Bean
 
 问题：
-如果 *.properties和 *.xml *.yml 配置中的属性名称完全一样，使用@Value会取到最后一个配置文件的值

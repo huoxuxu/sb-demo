@@ -21,7 +21,7 @@ import java.util.concurrent.Future;
  * mybatis 注解方式示例
  */
 @RestController
-@RequestMapping("/attr")
+@RequestMapping("/async")
 public class AsyncController {
     @Autowired
     private SyncService syncService;

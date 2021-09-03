@@ -39,4 +39,8 @@ public class ValueTestConf {
     @Value("${jdbc.userName}")
     private String userName2;
 
+    // ②指定默认值为“unknown”
+    @Value("${jdbc.userName1:unknownXXX}")
+    private String userNameDef;
+
 }

@@ -80,6 +80,23 @@ public class StreamTest {
         }
     }
 
+    @Test
+    public void limit() {
+        List<Employee> persons = listPersons();
+        persons.stream().forEach(d -> System.out.println(d.getName()));
+        System.out.println("ls.size=" + persons.size());
+        System.out.println();
+
+        persons = persons.stream().limit(2).collect(Collectors.toList());
+        System.out.println("ls.size limit 2=" + persons.size());
+        persons.stream().forEach(d -> System.out.println(d.getName()));
+        System.out.println();
+
+        persons = persons.stream().limit(20).collect(Collectors.toList());
+        System.out.println("ls.size limit 20=" + persons.size());
+        persons.stream().forEach(d -> System.out.println(d.getName()));
+        System.out.println();
+    }
 
     @Test
     public void Collector() {
@@ -602,17 +619,17 @@ public class StreamTest {
 
     public static List<Employee> listPersons() {
         Employee p1 = new Employee(1, "Jake", Employee.Gender.MALE,
-                LocalDate.of(1971, Month.JANUARY, 1), 2343.0,true);
+                LocalDate.of(1971, Month.JANUARY, 1), 2343.0, true);
         Employee p2 = new Employee(2, "Jack", Employee.Gender.MALE,
-                LocalDate.of(1972, Month.JULY, 21), 7100.0,true);
+                LocalDate.of(1972, Month.JULY, 21), 7100.0, true);
         Employee p3 = new Employee(3, "Jane", Employee.Gender.FEMALE,
-                LocalDate.of(1973, Month.MAY, 29), 5455.0,true);
+                LocalDate.of(1973, Month.MAY, 29), 5455.0, true);
         Employee p4 = new Employee(4, "Jode", Employee.Gender.MALE,
-                LocalDate.of(1974, Month.OCTOBER, 16), 1800.0,true);
+                LocalDate.of(1974, Month.OCTOBER, 16), 1800.0, true);
         Employee p5 = new Employee(5, "Jeny", Employee.Gender.FEMALE,
-                LocalDate.of(1975, Month.DECEMBER, 13), 1234.0,true);
+                LocalDate.of(1975, Month.DECEMBER, 13), 1234.0, true);
         Employee p6 = new Employee(6, "Jason", Employee.Gender.MALE,
-                LocalDate.of(1976, Month.JUNE, 9), 3211.0,true);
+                LocalDate.of(1976, Month.JUNE, 9), 3211.0, true);
 
         List<Employee> persons = Arrays.asList(p1, p2, p3, p4, p5, p6);
 
