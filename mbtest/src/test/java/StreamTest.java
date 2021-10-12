@@ -1,10 +1,12 @@
 import com.hxx.mbtest.MbtestApplication;
+import com.hxx.sbcommon.common.LocalDateTimeUtil;
 import models.Employee;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -78,6 +80,26 @@ public class StreamTest {
             Stream<String> parallelStream = names.parallelStream();
             parallelStream.forEach(System.out::println);
         }
+    }
+
+    @Test
+    public void Sorted() {
+        List<Employee> persons = listPersons();
+
+        Comparator<Employee> comparator = (o1, o2) -> {
+            int flag = o1.getBirthday().compareTo(o2.getBirthday());
+            return flag;
+        };
+
+        // 正序
+        persons.stream().sorted(comparator).forEach(d -> System.out.println(d.getBirthday()));
+
+        System.out.println("===============================");
+
+        // 逆序
+        persons.stream().sorted(comparator.reversed()).forEach(d -> System.out.println(d.getBirthday()));
+
+        System.out.println("ok");
     }
 
     @Test
@@ -466,7 +488,13 @@ public class StreamTest {
         }
         {
             Optional<Employee> person = listPersons().stream()
-                    .max(Comparator.comparingDouble(Employee::getIncome));
+                    .max((o1, o2) -> {
+                        //借助BigDecimal函数来比较，也可以把Float转成int来进行比较，方法很多种。
+                        BigDecimal first = new BigDecimal(String.valueOf(o1.getIncome()));
+                        BigDecimal second = new BigDecimal(String.valueOf(o2.getIncome()));
+                        return first.compareTo(second);
+                    });
+//                    .max(Comparator.comparingDouble(Employee::getIncome));
 
             if (person.isPresent()) {
                 System.out.println("Highest earner: " + person.get());
@@ -619,17 +647,23 @@ public class StreamTest {
 
     public static List<Employee> listPersons() {
         Employee p1 = new Employee(1, "Jake", Employee.Gender.MALE,
-                LocalDate.of(1971, Month.JANUARY, 1), 2343.0, true);
+                LocalDate.of(2021, Month.JANUARY, 1), 2343.0, true,
+                LocalDateTimeUtil.toDate(LocalDateTime.of(1971, 1, 12, 3, 4)));
         Employee p2 = new Employee(2, "Jack", Employee.Gender.MALE,
-                LocalDate.of(1972, Month.JULY, 21), 7100.0, true);
+                LocalDate.of(1972, Month.JULY, 21), 7100.0, true,
+                LocalDateTimeUtil.toDate(LocalDateTime.of(1971, 1, 2, 3, 4)));
         Employee p3 = new Employee(3, "Jane", Employee.Gender.FEMALE,
-                LocalDate.of(1973, Month.MAY, 29), 5455.0, true);
+                LocalDate.of(1973, Month.MAY, 29), 5455.0, true,
+                LocalDateTimeUtil.toDate(LocalDateTime.of(1971, 1, 3, 3, 4)));
         Employee p4 = new Employee(4, "Jode", Employee.Gender.MALE,
-                LocalDate.of(1974, Month.OCTOBER, 16), 1800.0, true);
+                LocalDate.of(1974, Month.OCTOBER, 16), 1800.0, true,
+                LocalDateTimeUtil.toDate(LocalDateTime.of(1971, 1, 1, 3, 4)));
         Employee p5 = new Employee(5, "Jeny", Employee.Gender.FEMALE,
-                LocalDate.of(1975, Month.DECEMBER, 13), 1234.0, true);
+                LocalDate.of(1975, Month.DECEMBER, 13), 1234.0, true,
+                LocalDateTimeUtil.toDate(LocalDateTime.of(1971, 1, 6, 3, 4)));
         Employee p6 = new Employee(6, "Jason", Employee.Gender.MALE,
-                LocalDate.of(1976, Month.JUNE, 9), 3211.0, true);
+                LocalDate.of(1976, Month.JUNE, 9), 3211.0, true,
+                LocalDateTimeUtil.toDate(LocalDateTime.of(1971, 1, 2, 3, 4)));
 
         List<Employee> persons = Arrays.asList(p1, p2, p3, p4, p5, p6);
 

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +23,7 @@ public class Employee {
     private LocalDate createTime;
     private double income;
     private boolean alive;
+    private Date birthday;
 
     public boolean isMale() {
         return this.gender == Gender.MALE;
