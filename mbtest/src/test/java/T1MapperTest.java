@@ -71,6 +71,7 @@ public class T1MapperTest {
             tls.add(t);
         }
 
+
         int ret = T1Mapper.insertBatch(tls);
         System.out.println("==============insertBatch==============");
         System.out.println("影响行数：" + ret);

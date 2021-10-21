@@ -82,6 +82,17 @@ public class StreamTest {
         }
     }
 
+    // 集合转数组
+    @Test
+    public void toArray() {
+        List<String> listStrings = new ArrayList<>();
+        listStrings.add("1");
+        listStrings.add("2");
+
+        String[] ss = listStrings.stream().toArray(String[]::new);
+        Arrays.stream(ss).forEach(System.out::println);
+    }
+
     @Test
     public void Sorted() {
         List<Employee> persons = listPersons();
