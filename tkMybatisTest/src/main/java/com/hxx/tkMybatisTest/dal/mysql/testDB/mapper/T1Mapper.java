@@ -1,0 +1,16 @@
+package com.hxx.tkMybatisTest.dal.mysql.testDB.mapper;
+
+import com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1;
+import tk.mybatis.mapper.common.Mapper;
+
+
+/**
+ * @Author: huoxuxu
+ * @Description:
+ * @Date: 2021-05-09 12:01:53
+ **/
+@org.apache.ibatis.annotations.Mapper
+public interface T1Mapper extends Mapper<T1> {
+
+
+}

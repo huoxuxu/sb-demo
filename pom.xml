@@ -17,6 +17,7 @@
         <module>mbmtest</module>
         <module>javatest</module>
         <module>sbservice</module>
+        <module>tkMybatisTest</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>

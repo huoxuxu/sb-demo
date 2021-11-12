@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace 关联此xml对应的Mapper接口全包名
+    select、insert、update、delete标签的id对应namespace对应的Mapper接口的方法名
+    parameterType属性指明查询时使用的参数类型
+    resultType属性指明查询返回的结果集类型
+ -->
+<mapper namespace="com.hxx.tkMybatisTest.dal.mysql.testDB.mapper.T1Mapper">
+    <resultMap id="mapTeacher" type="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="createTime" column="createTime"/>
+<!--        <result property="remark" column="remark"/>-->
+<!--        <result property="theTeacher" column="theTeacher"/>-->
+<!--        <association property="teacher" javaType="com.hxx.sbweb.domain.Teacher">-->
+<!--            <result property="name" column="bname"/>-->
+<!--            <result property="createTime" column="bcreateTime"/>-->
+<!--        </association>-->
+    </resultMap>
+
+</mapper>

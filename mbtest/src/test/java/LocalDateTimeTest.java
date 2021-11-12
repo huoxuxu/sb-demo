@@ -5,7 +5,6 @@ import com.hxx.sbcommon.common.LocalDateUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.helpers.MessageFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -246,11 +245,18 @@ public class LocalDateTimeTest {
     public void ChronoUnitXXX() {
         LocalDateTime startTime = LocalDateTimeUtil.parse("2021-05-10 00:00:00");
         LocalDateTime endTime = LocalDateTimeUtil.parse("2021-08-10 00:00:00");
+        // 3
         long month1 = ChronoUnit.MONTHS.between(startTime, endTime);
-        long day1 = ChronoUnit.DAYS.between(startTime, endTime);
         if (month1 > 3) {
             System.out.println("大于3个月");
         }
+        // 92
+        long day1 = ChronoUnit.DAYS.between(startTime, endTime);
+
+        // 132480
+        long minute = ChronoUnit.MINUTES.between(startTime, endTime);
+        // -132480
+        long minute1 = ChronoUnit.MINUTES.between(endTime, startTime);
 
         startTime = LocalDateTimeUtil.parse("2021-05-09 00:00:00");
         long month2 = ChronoUnit.MONTHS.between(startTime, endTime);
@@ -260,6 +266,9 @@ public class LocalDateTimeTest {
         }
     }
 
+    /**
+     * 主要用来衡量秒级和纳秒级的时间，使用于时间精度要求比较高的情况
+     */
     @Test
     public void DurationXXX() {
         LocalDateTime startTime = LocalDateTimeUtil.parse("2021-05-10 00:00:00");
