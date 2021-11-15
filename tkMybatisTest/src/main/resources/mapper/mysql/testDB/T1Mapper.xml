@@ -11,7 +11,7 @@
         <result property="id" column="id"/>
         <result property="code" jdbcType="VARCHAR" column="code"/>
         <result property="name" jdbcType="VARCHAR" column="name"/>
-        <result property="createTime" column="createTime"/>
+        <result property="Createtime" column="createTime"/>
         <!--        <result property="remark" column="remark"/>-->
         <!--        <result property="theTeacher" column="theTeacher"/>-->
         <!--        <association property="teacher" javaType="com.hxx.sbweb.domain.Teacher">-->
@@ -24,11 +24,31 @@
             resultType="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1">
         select * from t1
         <where>
-            <if test="code!=null">
+        <!--
+            整型、浮点型，判NULL和有效范围
+            字符串，判NULL和空，注意相等判断时使用双引号括住右值
+            日期，判NULL，在传入之前处理日期的有效范围
+        -->
+            <if test="id!=null and id>=1">
+                and id=#{id}
+            </if>
+            <if test='code!=null and code=="a1"'>
                 and code=#{code}
             </if>
-            <if test="name!=null">
+            <if test='name!=null and name!=""'>
                 and name=#{name}
+            </if>
+            <if test="age!=null and age>=1">
+                and age=#{age}
+            </if>
+            <if test="score!=null and score>=0">
+                and score>=#{score}
+            </if>
+            <if test="enabled!=null and enabled>=0">
+                and enabled=#{enabled}
+            </if>
+            <if test="Createtime!=null">
+                and createtime=#{createtime}
             </if>
         </where>
     </select>

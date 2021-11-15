@@ -24,15 +24,7 @@ public class T1Service {
         return t1s;
     }
 
-    public List<T1> selectBy(String code, String name) {
-        T1 t1 = new T1();
-        if (!StringUtils.isEmpty(code)) {
-            t1.setCode(code);
-        }
-        if (!StringUtils.isEmpty(name)) {
-            t1.setName(name);
-        }
-
+    public List<T1> selectBy(T1 t1) {
         List<T1> t1s = t1Mapper.selectBy(t1);
         return t1s;
     }
