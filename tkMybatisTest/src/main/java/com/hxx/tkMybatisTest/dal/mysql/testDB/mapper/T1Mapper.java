@@ -1,7 +1,10 @@
 package com.hxx.tkMybatisTest.dal.mysql.testDB.mapper;
 
 import com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1;
+import org.springframework.stereotype.Component;
 import tk.mybatis.mapper.common.Mapper;
+
+import java.util.List;
 
 
 /**
@@ -9,8 +12,10 @@ import tk.mybatis.mapper.common.Mapper;
  * @Description:
  * @Date: 2021-05-09 12:01:53
  **/
+@Component
 @org.apache.ibatis.annotations.Mapper
 public interface T1Mapper extends Mapper<T1> {
 
+    List<T1> selectBy(T1 t1);
 
 }

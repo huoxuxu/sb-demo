@@ -3,13 +3,21 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-<!--    别名-->
+    <properties>
+
+    </properties>
+
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+    <!--    别名-->
     <typeAliases>
         <typeAlias alias="T1" type="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1"/>
     </typeAliases>
 
-<!--    <settings>-->
-<!--        <setting name="logImpl" value="STDOUT_LOGGING"/>-->
-<!--    </settings>-->
+    <typeHandlers>
+
+    </typeHandlers>
 
 </configuration>

@@ -9,14 +9,29 @@
 <mapper namespace="com.hxx.tkMybatisTest.dal.mysql.testDB.mapper.T1Mapper">
     <resultMap id="mapTeacher" type="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1">
         <result property="id" column="id"/>
-        <result property="name" column="name"/>
+        <result property="code" jdbcType="VARCHAR" column="code"/>
+        <result property="name" jdbcType="VARCHAR" column="name"/>
         <result property="createTime" column="createTime"/>
-<!--        <result property="remark" column="remark"/>-->
-<!--        <result property="theTeacher" column="theTeacher"/>-->
-<!--        <association property="teacher" javaType="com.hxx.sbweb.domain.Teacher">-->
-<!--            <result property="name" column="bname"/>-->
-<!--            <result property="createTime" column="bcreateTime"/>-->
-<!--        </association>-->
+        <!--        <result property="remark" column="remark"/>-->
+        <!--        <result property="theTeacher" column="theTeacher"/>-->
+        <!--        <association property="teacher" javaType="com.hxx.sbweb.domain.Teacher">-->
+        <!--            <result property="name" column="bname"/>-->
+        <!--            <result property="createTime" column="bcreateTime"/>-->
+        <!--        </association>-->
     </resultMap>
+
+    <select id="selectBy" parameterType="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1"
+            resultType="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1">
+        select * from t1
+        <where>
+            <if test="code!=null">
+                and code=#{code}
+            </if>
+            <if test="name!=null">
+                and name=#{name}
+            </if>
+        </where>
+    </select>
+
 
 </mapper>
