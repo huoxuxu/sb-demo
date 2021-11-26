@@ -29,4 +29,20 @@ public class T1Service {
         return t1s;
     }
 
+    public Integer insertDemo(List<T1> t1s) {
+        if (t1s.size() == 1) {
+            return t1Mapper.insertOne(t1s.get(0));
+        } else {
+            return t1Mapper.insertList(t1s);
+        }
+    }
+
+    public Integer updateDemo(T1 t1) {
+        return t1Mapper.updateById(t1);
+    }
+
+    public Integer deleteDemo(List<Integer> ids) {
+        return t1Mapper.delIn(ids);
+    }
+
 }

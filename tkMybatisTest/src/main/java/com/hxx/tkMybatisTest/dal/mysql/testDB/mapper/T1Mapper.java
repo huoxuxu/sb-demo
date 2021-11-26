@@ -18,4 +18,10 @@ public interface T1Mapper extends Mapper<T1> {
 
     List<T1> selectBy(T1 t1);
 
+    Integer insertOne(T1 t1);
+    Integer insertList(List<T1> t1s);
+
+    Integer updateById(T1 t1);
+
+    Integer delIn(List<Integer> ids);
 }

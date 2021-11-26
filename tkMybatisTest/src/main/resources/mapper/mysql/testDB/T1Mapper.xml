@@ -11,7 +11,7 @@
         <result property="id" column="id"/>
         <result property="code" jdbcType="VARCHAR" column="code"/>
         <result property="name" jdbcType="VARCHAR" column="name"/>
-        <result property="Createtime" column="createTime"/>
+        <result property="createtime" column="createTime"/>
         <!--        <result property="remark" column="remark"/>-->
         <!--        <result property="theTeacher" column="theTeacher"/>-->
         <!--        <association property="teacher" javaType="com.hxx.sbweb.domain.Teacher">-->
@@ -20,25 +20,32 @@
         <!--        </association>-->
     </resultMap>
 
-    <select id="selectBy" parameterType="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1"
-            resultType="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1">
-        select * from t1
+
+    <!--
+        整型、浮点型，判NULL和有效范围
+        字符串，判NULL和空，注意相等判断时使用双引号括住右值
+        日期、集合，判NULL，在传入之前处理日期的有效范围
+        集合 in时注意 in后括号中不能为空
+    -->
+    <sql id="WHERE_CASE">
         <where>
-        <!--
-            整型、浮点型，判NULL和有效范围
-            字符串，判NULL和空，注意相等判断时使用双引号括住右值
-            日期，判NULL，在传入之前处理日期的有效范围
-        -->
             <if test="id!=null and id>=1">
                 and id=#{id}
             </if>
-            <if test='code!=null and code=="a1"'>
+            <if test="ids!=null and ids.size()>0">
+                id in
+                <foreach item="item" index="index" collection="ids"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test='code!=null and code== "a1"'>
                 and code=#{code}
             </if>
-            <if test='name!=null and name!=""'>
+            <if test='name!=null and name != ""'>
                 and name=#{name}
             </if>
-            <if test="age!=null and age>=1">
+            <if test="age!=null and age>=0">
                 and age=#{age}
             </if>
             <if test="score!=null and score>=0">
@@ -47,11 +54,108 @@
             <if test="enabled!=null and enabled>=0">
                 and enabled=#{enabled}
             </if>
-            <if test="Createtime!=null">
-                and createtime=#{createtime}
+            <if test="createtime!=null and createtime.getYear()>2000">
+                and createtime >=#{createtime}
             </if>
         </where>
+    </sql>
+    <sql id="PAGE_CASE">
+        <if test="page>= 0 and pageSize > 0 ">
+            limit #{page},#{pageSize}
+        </if>
+    </sql>
+    <select id="selectBy" parameterType="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1"
+            resultType="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1">
+        select *
+        from t1
+        <include refid="WHERE_CASE"></include>
     </select>
 
+    <insert id="insertOne" parameterType="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1">
+        insert into t1
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null">
+                code,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="age != null">
+                age,
+            </if>
+            <if test="score != null">
+                score,
+            </if>
+            <if test="enabled != null">
+                enabled,
+            </if>
+            <if test="createtime != null">
+                createtime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=INTEGER},
+            </if>
+            <if test="score != null">
+                #{score,jdbcType=DECIMAL},
+            </if>
+            <if test="enabled != null">
+                #{enabled,jdbcType=TINYINT},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
 
+    <insert id="insertList">
+        insert into t1(code, name, age, score,enabled)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.code}, #{item.name},#{item.age},#{item.score},#{item.enabled}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateById" parameterType="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1">
+        update t1
+        <set>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null and age > 0">
+                age = #{age,jdbcType=INTEGER},
+            </if>
+            <if test="score != null and score>= 0">
+                score = #{score,jdbcType=DECIMAL},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled,jdbcType=TINYINT},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="delIn">
+        delete from t1
+        where id in
+        <foreach collection="list" item="item" open="(" close=")" separator="," index="i">
+            #{item}
+        </foreach>
+
+    </delete>
 </mapper>

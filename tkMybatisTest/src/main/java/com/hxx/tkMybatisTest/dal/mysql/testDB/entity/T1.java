@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @Author: huoxuxu
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
  **/
 @Data
 public class T1 {
+    private List<Integer> ids;
     private Integer id;
     private String code;
     private String name;
@@ -20,6 +22,6 @@ public class T1 {
     private Integer enabled;
     private String remark;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime Createtime;
+    private LocalDateTime createtime;
 
 }
