@@ -15,7 +15,6 @@
         <module>sbcommon</module>
         <module>mbtest</module>
         <module>mbmtest</module>
-        <module>javatest</module>
         <module>sbservice</module>
         <module>tkMybatisTest</module>
     </modules>
