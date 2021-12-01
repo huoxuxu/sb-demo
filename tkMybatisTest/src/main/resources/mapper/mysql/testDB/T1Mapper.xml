@@ -60,15 +60,16 @@
         </where>
     </sql>
     <sql id="PAGE_CASE">
-        <if test="page>= 0 and pageSize > 0 ">
-            limit #{page},#{pageSize}
+        <if test="limitStart>= 0 and pageSize > 0 ">
+            limit #{limitStart},#{pageSize}
         </if>
     </sql>
-    <select id="selectBy" parameterType="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1"
+    <select id="selectBy" parameterType="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1Example"
             resultType="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1">
         select *
         from t1
         <include refid="WHERE_CASE"></include>
+        <include refid="PAGE_CASE"></include>
     </select>
 
     <insert id="insertOne" parameterType="com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1">

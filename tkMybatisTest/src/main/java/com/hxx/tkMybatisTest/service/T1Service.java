@@ -1,6 +1,7 @@
 package com.hxx.tkMybatisTest.service;
 
 import com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1;
+import com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1Example;
 import com.hxx.tkMybatisTest.dal.mysql.testDB.mapper.T1Mapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class T1Service {
         return t1s;
     }
 
-    public List<T1> selectBy(T1 t1) {
+    public List<T1> selectBy(T1Example t1) {
         List<T1> t1s = t1Mapper.selectBy(t1);
         return t1s;
     }

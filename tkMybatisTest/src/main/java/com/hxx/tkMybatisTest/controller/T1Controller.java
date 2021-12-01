@@ -2,6 +2,7 @@ package com.hxx.tkMybatisTest.controller;
 
 import com.hxx.sbcommon.common.JsonUtil;
 import com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1;
+import com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1Example;
 import com.hxx.tkMybatisTest.service.T1Service;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -49,7 +50,7 @@ public class T1Controller {
         switch (msgType) {
             case "SELECT_BY": {
                 // http://localhost:8083/t1/select?msgType=select_by&data=%7b%22code%22%3a%22%22%2c%22name%22%3a%22ahxx%22%7d
-                T1 t1 = JsonUtil.parse(data, T1.class);
+                T1Example t1 = JsonUtil.parse(data, T1Example.class);
                 List<T1> all = t1Service.selectBy(t1);
                 return JsonUtil.toJSON(all);
             }
