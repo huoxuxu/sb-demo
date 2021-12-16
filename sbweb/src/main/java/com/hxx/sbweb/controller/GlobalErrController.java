@@ -8,13 +8,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 测试全局异常拦截
+ */
 @RestController
 @RequestMapping("/globalerr")
 public class GlobalErrController {
 
     @RequestMapping("/ok")
     public ResultBean<List<Integer>> ok() {
-        List<Integer>ls=new ArrayList<>();
+        List<Integer> ls = new ArrayList<>();
         ls.add(99);
         ls.add(998);
 
