@@ -30,6 +30,10 @@ public class StreamTest {
 
     @Test
     public void Run() {
+        Map<String,Integer>map=new HashMap<>();
+        map.put(null,null);
+
+
         System.out.println("==============StreamTest.Run==============");
         {
             Stream<String> stream = Stream.of("java2s.com");

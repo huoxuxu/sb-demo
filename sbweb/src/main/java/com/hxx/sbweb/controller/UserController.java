@@ -2,6 +2,7 @@ package com.hxx.sbweb.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.hxx.sbweb.common.ResultHandler;
+import com.hxx.sbweb.common.annotation.OperationLog;
 import com.hxx.sbweb.domain.User;
 import com.hxx.sbweb.model.ResultBean;
 import com.hxx.sbweb.service.UserService;
@@ -39,6 +40,7 @@ public class UserController {
      *
      * @return
      */
+    @OperationLog
     @RequestMapping("/list")
     public ResultBean<List<User>> listAll() {
         List<User> users = userService.listAll();

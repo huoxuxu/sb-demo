@@ -23,6 +23,15 @@
         </if>
      </select>
 
+    <select id="selectUserByIds"
+            resultType="com.hxx.mbtest.entity.T1">
+        select * from t1
+        WHERE id IN
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
     <!-- 根据name查询得到一个user对象 -->
     <select id="selectUser"
             resultType="com.hxx.mbtest.entity.T1">
