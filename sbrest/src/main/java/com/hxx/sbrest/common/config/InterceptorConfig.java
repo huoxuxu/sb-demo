@@ -27,6 +27,10 @@ public class InterceptorConfig implements WebMvcConfigurer {
     private LogInterceptor logInterceptor;
 
 
+    /**
+     * 注册拦截器
+     * @param registry
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(firstInterceptor).addPathPatterns("/index/**");

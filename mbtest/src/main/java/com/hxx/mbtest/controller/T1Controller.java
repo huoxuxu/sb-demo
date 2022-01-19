@@ -26,4 +26,11 @@ public class T1Controller {
         return "ok";
     }
 
+    @GetMapping("transaction")
+    public String transaction() {
+        t1Service.TransactionDemo();
+
+        return "ok";
+    }
+
 }

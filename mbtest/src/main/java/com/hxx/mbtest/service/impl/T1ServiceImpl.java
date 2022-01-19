@@ -6,10 +6,16 @@ import com.hxx.mbtest.mapper.example.T1Example;
 import com.hxx.mbtest.service.T1Service;
 import com.hxx.sbcommon.common.JsonUtil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -25,6 +31,13 @@ public class T1ServiceImpl implements T1Service {
 
     @Autowired
     private T1Mapper t1Mapper;
+
+    // 编程式事务
+    @Autowired
+    TransactionTemplate transactionTemplate;
+
+    @Autowired
+    PlatformTransactionManager transactionManager;
 
     @Override
     public void Run() {
@@ -135,13 +148,16 @@ public class T1ServiceImpl implements T1Service {
         }
         {
             int ret = t1Mapper.deleteUserById(cid);
-            System.out.println("deleteUserById：" + cid);
-            System.out.println(ret);
+            System.out.println("deleteUserById：" + cid + " ret:" + ret);
         }
 
 
     }
 
+    @Override
+    public void TransactionDemo() {
+        transactionDemo();
+    }
 
     public void updateBatch() {
         List<Map<String, Object>> ls = new ArrayList<>();
@@ -154,5 +170,64 @@ public class T1ServiceImpl implements T1Service {
         }
         t1Mapper.updateBatch(ls);
     }
+
+    // 声明式事务
+    private void transactionDemo() {
+        //开启事务保存数据
+        {
+            boolean result = transactionTemplate.execute((status) -> {
+                try {
+                    // TODO something
+                    Integer cid = 10;
+                    T1 t1 = t1Mapper.selectUserById(cid);
+                    log.info("T1: " + JsonUtil.toJSON(t1));
+                    int ret = t1Mapper.deleteUserById(cid);
+                    System.out.println("deleteUserById：" + cid + " ret:" + ret);
+
+                    return true;
+                } catch (Exception e) {
+                    //TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    // 手动回滚事务
+                    status.setRollbackOnly();
+                    log.error("出现异常：{}", ExceptionUtils.getStackTrace(e));
+                    return false;
+                }
+            });
+        }
+
+        {
+            // 依靠Spring回滚事务
+            transactionTemplate.execute((status) -> {
+                Integer cid = 10;
+                T1 t1 = t1Mapper.selectUserById(cid);
+                log.info("T1: " + JsonUtil.toJSON(t1));
+                int ret = t1Mapper.deleteUserById(cid);
+                System.out.println("deleteUserById：" + cid + " ret:" + ret);
+
+                return true;
+            });
+        }
+    }
+
+    // 声明式事务2
+    public void transactionDemo2() {
+        // 定义事务
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setReadOnly(false);
+        //隔离级别,-1表示使用数据库默认级别
+        def.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        TransactionStatus status = transactionManager.getTransaction(def);
+        try {
+            //TODO something
+
+            transactionManager.commit(status);
+        } catch (Exception e) {
+            transactionManager.rollback(status);
+            log.error("出现异常：{}", ExceptionUtils.getStackTrace(e));
+            throw e;
+        }
+    }
+
 
 }

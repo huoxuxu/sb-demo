@@ -9,4 +9,6 @@ public interface T1Service {
 
     void Run();
 
+    void TransactionDemo();
+
 }
