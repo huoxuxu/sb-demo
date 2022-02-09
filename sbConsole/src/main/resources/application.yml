@@ -1,0 +1,13 @@
+person:
+  lastName: 张三
+  age: 18
+  boss: false
+  birth: 2022-01-20 01:02:03
+  maps: { k1: v1,k2: 12 }
+  lists:
+   - dog
+   - cat
+   - pig
+  dog:
+    name: 迪迪
+    age: 5

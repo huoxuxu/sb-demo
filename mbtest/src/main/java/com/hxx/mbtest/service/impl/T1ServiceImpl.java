@@ -175,9 +175,8 @@ public class T1ServiceImpl implements T1Service {
     private void transactionDemo() {
         //开启事务保存数据
         {
-            boolean result = transactionTemplate.execute((status) -> {
+            transactionTemplate.execute((status) -> {
                 try {
-                    // TODO something
                     Integer cid = 10;
                     T1 t1 = t1Mapper.selectUserById(cid);
                     log.info("T1: " + JsonUtil.toJSON(t1));
@@ -221,8 +220,10 @@ public class T1ServiceImpl implements T1Service {
         try {
             //TODO something
 
+            // 手动提交
             transactionManager.commit(status);
         } catch (Exception e) {
+            // 手动回滚
             transactionManager.rollback(status);
             log.error("出现异常：{}", ExceptionUtils.getStackTrace(e));
             throw e;

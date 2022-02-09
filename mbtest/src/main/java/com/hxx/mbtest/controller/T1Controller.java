@@ -18,6 +18,10 @@ public class T1Controller {
     @Autowired
     private T1ServiceImpl t1Service;
 
+    /**
+     * http://localhost:8083/t1/run
+     * @return
+     */
     @GetMapping("run")
     public String run() {
 //        t1Service.Run();
@@ -26,6 +30,10 @@ public class T1Controller {
         return "ok";
     }
 
+    /**
+     * http://localhost:8083/t1/transaction
+     * @return
+     */
     @GetMapping("transaction")
     public String transaction() {
         t1Service.TransactionDemo();
