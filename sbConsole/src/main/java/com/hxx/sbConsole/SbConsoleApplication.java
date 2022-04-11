@@ -28,7 +28,14 @@ public class SbConsoleApplication {
 
     public static void main(String[] args) {
         //case2();
-
+        try {
+            Integer num = null;
+            if (1 == num) {
+                System.out.println(1);
+            }
+        } catch (Exception e) {
+            log.error("err:{}", ExceptionUtils.getStackTrace(e));
+        }
         // 标准
         SpringApplication.run(SbConsoleApplication.class, args);
 

@@ -1,6 +1,7 @@
 package com.hxx.sbcommon.common;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 /**
  * @Author: huoxuxu
@@ -9,7 +10,33 @@ import java.math.BigDecimal;
  **/
 public class NumberUtil {
     /**
-     * 保留n位小数
+     * 保留scale 位小数
+     *
+     * @param b
+     * @param scale
+     * @return
+     */
+    public static BigDecimal ROUND_HALF_UP(BigDecimal b, int scale) {
+//        float operateLengthNum=0F;
+//        BigDecimal b = new BigDecimal(operateLengthNum);
+        return b.setScale(scale, BigDecimal.ROUND_HALF_UP);
+        //.floatValue();
+    }
+
+    /**
+     * 保留2位小数
+     *
+     * @param val
+     * @return
+     */
+    public static String ROUND(double val) {
+        DecimalFormat dfmt = new DecimalFormat("###.00");
+        return dfmt.format(val);
+    }
+
+
+    /**
+     * 两数相除后保留n位小数
      *
      * @param numerator
      * @param denominator
