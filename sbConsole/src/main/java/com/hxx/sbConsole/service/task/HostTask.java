@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 /**
+ * Spring调度，需要开启@EnableScheduling
+ *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2022-01-20 10:47:15
