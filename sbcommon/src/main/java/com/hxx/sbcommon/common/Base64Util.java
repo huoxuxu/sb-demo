@@ -7,6 +7,17 @@ public class Base64Util {
     static final Base64.Encoder encoder = Base64.getEncoder();
 
     /**
+     * base64编码
+     *
+     * @param bytes
+     * @return
+     * @throws Exception
+     */
+    public static byte[] encode(byte[] bytes) throws Exception {
+        return encoder.encode(bytes);
+    }
+
+    /**
      * 编码
      *
      * @param txt
@@ -16,6 +27,17 @@ public class Base64Util {
     public static String encode(String txt) throws Exception {
         byte[] textByte = txt.getBytes("UTF-8");
         return encoder.encodeToString(textByte);
+    }
+
+    /**
+     * base64解码
+     *
+     * @param bytes
+     * @return
+     * @throws Exception
+     */
+    public static byte[] decode(byte[] bytes) throws Exception {
+        return decoder.decode(bytes);
     }
 
     /**

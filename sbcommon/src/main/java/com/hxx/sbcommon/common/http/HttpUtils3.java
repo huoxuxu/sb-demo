@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common;
+package com.hxx.sbcommon.common.http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,8 +10,8 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import com.hxx.sbcommon.common.JsonUtil;
 import com.hxx.sbcommon.model.HttpResEntity;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;

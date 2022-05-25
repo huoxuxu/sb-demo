@@ -1,6 +1,8 @@
-package com.hxx.sbcommon.common;
+package com.hxx.sbcommon.common.http;
 
 
+import com.hxx.sbcommon.common.JsonUtil;
+import com.hxx.sbcommon.common.encrypt.RsaUtils;
 import com.hxx.sbcommon.model.HttpResEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -44,14 +46,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class CopyOfHttpUtils {
+public class HttpUtils2 {
 
-    private static Logger logger = LoggerFactory.getLogger(CopyOfHttpUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(HttpUtils2.class);
 
     private static final CloseableHttpClient httpClient;
     // 设置超时时间
-    public static final int REQUEST_TIMEOUT = 2000;
-    public static final int REQUEST_SOCKET_TIME = 2000;
+    public static final int REQUEST_TIMEOUT = 1000;
+    public static final int REQUEST_SOCKET_TIME = 60000;
 
     static {
         RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.<ConnectionSocketFactory>create();
@@ -106,18 +108,16 @@ public class CopyOfHttpUtils {
         try {
             httpEntity = new UrlEncodedFormEntity(pairs, charset);
         } catch (UnsupportedEncodingException e) {
+            logger.error("http推送->{}", e);
             e.printStackTrace();
         }
         return doPost(url, httpEntity, charset);
     }
 
     public static HttpResEntity doPost(String url, String params, String charset, String contentType, boolean isMap) {
-        StringEntity entity = null;
         Map<String, String> map = JsonUtil.parseNotThrowException(params, Map.class);
-
         return doPost(url, map, charset);
     }
-
 
     public static HttpResEntity doPost(String url, String params, String charset) {
         StringEntity entity = null;
@@ -129,8 +129,7 @@ public class CopyOfHttpUtils {
         return doPost(url, entity, charset);
     }
 
-    public static HttpResEntity doPost(String url, String params,
-                                       String charset, String contentType) {
+    public static HttpResEntity doPost(String url, String params, String charset, String contentType) {
         StringEntity entity = null;
         try {
             entity = new StringEntity(params, charset);
@@ -183,20 +182,20 @@ public class CopyOfHttpUtils {
             entity.setStatus(statusCode);
             entity.setData(result);
             return entity;
-        } catch (SocketTimeoutException e) {
-            logger.info("请求超时:{},{}", url, e);
-            return null;
-        } catch (ConnectTimeoutException e) {
-            logger.info("请求超时:{},{}", url, e);
-            return null;
-        } catch (HttpHostConnectException e) {
-            logger.info("请求超时:{},{}", url, e);
-            return null;
-        } catch (SocketException e) {
-            logger.info("请求超时:{},{}", url, e);
-            return null;
+//        } catch (SocketTimeoutException e) {
+//            logger.info("请求超时:{},{}", url, e);
+//            return null;
+//        } catch (ConnectTimeoutException e) {
+//            logger.info("请求超时:{},{}", url, e);
+//            return null;
+//        } catch (HttpHostConnectException e) {
+//            logger.info("请求超时:{},{}", url, e);
+//            return null;
+//        } catch (SocketException e) {
+//            logger.info("请求超时:{},{}", url, e);
+//            return null;
         } catch (Exception e) {
-            logger.info("请求超时:{},{}", url, e);
+            logger.error("底层发起 请求超时:{},{}", url, e);
             return null;
         }
     }
@@ -209,8 +208,7 @@ public class CopyOfHttpUtils {
      * @param charset 编码格式
      * @return 页面内容
      */
-    public static HttpResEntity post(String url, StringEntity params,
-                                     String charset) {
+    public static HttpResEntity post(String url, StringEntity params, String charset) {
         HttpResEntity entity = new HttpResEntity();
         if (StringUtils.isBlank(url)) {
             entity.setMsg("请求地址异常");
@@ -219,6 +217,8 @@ public class CopyOfHttpUtils {
         }
         try {
             HttpPost httpPost = new HttpPost(url);
+            httpPost.addHeader("siteId", "2743");
+            httpPost.addHeader("sign", RsaUtils.encrypt("2743"));
             if (params != null) {
                 httpPost.setEntity(params);
             }
@@ -258,8 +258,7 @@ public class CopyOfHttpUtils {
         }
     }
 
-    public static HttpResEntity post(String url, Map<String, String> params,
-                                     String charset) {
+    public static HttpResEntity post(String url, Map<String, String> params, String charset) {
         List<NameValuePair> pairs = null;
         if (params != null && !params.isEmpty()) {
             pairs = new ArrayList<NameValuePair>(params.size());
@@ -281,7 +280,6 @@ public class CopyOfHttpUtils {
     }
 
     public static HttpResEntity post(String url, InputStream is) {
-
         HttpResEntity entity = new HttpResEntity();
         if (StringUtils.isBlank(url)) {
             entity.setMsg("请求地址异常");
@@ -328,10 +326,8 @@ public class CopyOfHttpUtils {
      * @return 响应
      * @throws IOException
      */
-    public static String post(String url, String charset,
-                              Map<String, String> params, String sign) throws IOException {
-
-        HttpURLConnection conn = null;
+    public static String post(String url, String charset, Map<String, String> params, String sign) throws IOException {
+        HttpURLConnection conn;
         OutputStreamWriter out = null;
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
@@ -356,7 +352,7 @@ public class CopyOfHttpUtils {
             inputStream = conn.getInputStream();
             inputStreamReader = new InputStreamReader(inputStream);
             reader = new BufferedReader(inputStreamReader);
-            String tempLine;
+            String tempLine = null;
             while ((tempLine = reader.readLine()) != null) {
                 result.append(tempLine);
             }
@@ -397,8 +393,7 @@ public class CopyOfHttpUtils {
      * @return
      * @throws IOException
      */
-    public static String buildQuery(Map<String, String> params, String charset)
-            throws IOException {
+    public static String buildQuery(Map<String, String> params, String charset) throws IOException {
         if (params == null || params.isEmpty()) {
             return null;
         }
@@ -412,14 +407,18 @@ public class CopyOfHttpUtils {
             } else {
                 flag = true;
             }
-
             data.append(entry.getKey())
                     .append("=")
                     .append(URLEncoder.encode(entry.getValue() == null ? ""
                             : entry.getValue(), charset));
         }
-
         return data.toString();
+    }
 
+    private static HttpResEntity buildRes(Exception e) {
+        HttpResEntity res = new HttpResEntity();
+        res.setData(e.getCause().getMessage());
+        res.setStatus(0);
+        return res;
     }
 }

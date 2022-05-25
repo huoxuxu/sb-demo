@@ -1,7 +1,6 @@
 package com.hxx.mbtest;
 
-import com.hxx.mbtest.entity.T1;
-import com.hxx.sbcommon.common.LocalDateTimeUtil;
+import com.hxx.sbcommon.common.basic.LocalDateTimeUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,9 +9,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @MapperScan("com.hxx.mbtest.mapper")
 @ConfigurationPropertiesScan

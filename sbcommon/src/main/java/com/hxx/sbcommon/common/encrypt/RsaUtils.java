@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common;
+package com.hxx.sbcommon.common.encrypt;
 
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;

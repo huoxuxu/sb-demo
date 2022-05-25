@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common;
+package com.hxx.sbcommon.common.basic;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

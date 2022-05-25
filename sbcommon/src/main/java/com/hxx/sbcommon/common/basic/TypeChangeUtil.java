@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common;
+package com.hxx.sbcommon.common.basic;
 
 import org.apache.commons.lang3.math.NumberUtils;
 

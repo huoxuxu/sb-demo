@@ -1,5 +1,5 @@
 import com.hxx.mbtest.MbtestApplication;
-import com.hxx.sbcommon.common.LocalDateUtil;
+import com.hxx.sbcommon.common.basic.LocalDateUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.helpers.MessageFormatter;

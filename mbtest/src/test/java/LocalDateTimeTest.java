@@ -1,10 +1,7 @@
 import com.hxx.mbtest.MbtestApplication;
-import com.hxx.mbtest.service.T1Service;
-import com.hxx.sbcommon.common.LocalDateTimeUtil;
-import com.hxx.sbcommon.common.LocalDateUtil;
+import com.hxx.sbcommon.common.basic.LocalDateTimeUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.helpers.MessageFormatter;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
