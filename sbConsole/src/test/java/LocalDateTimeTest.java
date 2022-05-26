@@ -1,4 +1,4 @@
-import com.hxx.mbtest.MbtestApplication;
+import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.basic.LocalDateTimeUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +57,7 @@ LocalDateTime 转换成 Date：Thu Jul 22 14:44:00 CST 2021
  * @Date: 2021-05-13 9:09:21
  **/
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = MbtestApplication.class)
+@SpringBootTest(classes = SbConsoleApplication.class)
 public class LocalDateTimeTest {
 
     @Test

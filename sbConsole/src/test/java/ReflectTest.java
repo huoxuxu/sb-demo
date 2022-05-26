@@ -1,4 +1,4 @@
-import com.hxx.mbtest.MbtestApplication;
+import com.hxx.sbConsole.SbConsoleApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * @Date: 2021-05-13 9:09:21
  **/
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = MbtestApplication.class)
+@SpringBootTest(classes = SbConsoleApplication.class)
 public class ReflectTest {
 
     @Test

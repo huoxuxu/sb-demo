@@ -1,4 +1,4 @@
-import com.hxx.mbtest.MbtestApplication;
+import com.hxx.sbConsole.SbConsoleApplication;
 import models.Employee;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import java.util.List;
  * @Date: 2021-05-13 9:09:21
  **/
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = MbtestApplication.class)
+@SpringBootTest(classes = SbConsoleApplication.class)
 public class CollectionsTest {
 
     @Test

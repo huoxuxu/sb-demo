@@ -13,7 +13,7 @@ public class Employee {
         MALE, FEMALE
     }
 
-    public Employee(){
+    public Employee() {
 
     }
 
@@ -21,6 +21,8 @@ public class Employee {
     private String name;
     private Gender gender;
     private LocalDate createTime;
+    private int salary;
+    private int age;
     private double income;
     private boolean alive;
     private Date birthday;

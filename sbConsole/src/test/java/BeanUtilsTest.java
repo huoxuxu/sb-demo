@@ -1,4 +1,4 @@
-import com.hxx.mbtest.MbtestApplication;
+import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.JsonUtil;
 import models.Employee;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import java.util.Date;
  * @Date: 2021-05-13 9:09:21
  **/
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = MbtestApplication.class)
+@SpringBootTest(classes = SbConsoleApplication.class)
 public class BeanUtilsTest {
 
     @Test

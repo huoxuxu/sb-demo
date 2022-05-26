@@ -1,4 +1,4 @@
-import com.hxx.mbtest.MbtestApplication;
+import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.basic.LocalDateTimeUtil;
 import models.Employee;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import java.util.stream.Stream;
  * @Date: 2021-05-13 9:09:21
  **/
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = MbtestApplication.class)
+@SpringBootTest(classes = SbConsoleApplication.class)
 public class StreamTest {
 
     @Test
@@ -110,6 +110,20 @@ public class StreamTest {
 
         // 逆序
         persons.stream().sorted(comparator.reversed()).forEach(d -> System.out.println(d.getBirthday()));
+
+        // 先按xx排序，后按xx排序
+        persons.stream().sorted(Comparator.comparing(Employee::getSalary).thenComparing(Employee::getAge))
+                .map(Employee::getName)
+                .collect(Collectors.toList());
+
+        // 先按工资再按年龄自定义排序（降序）
+        persons.stream().sorted((p1, p2) -> {
+            if (p1.getSalary() == p2.getSalary()) {
+                return p2.getAge() - p1.getAge();
+            } else {
+                return p2.getSalary() - p1.getSalary();
+            }
+        }).map(Employee::getName).collect(Collectors.toList());
 
         System.out.println("ok");
     }
