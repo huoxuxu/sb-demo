@@ -4,6 +4,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
+
 /**
  * @Author: huoxuxu
  * @Description:
@@ -12,6 +14,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SbConsoleApplication.class)
 public class EqualsTest {
+    @Test
+    public void testDecimalEqual() {
+        BigDecimal tLenVal = BigDecimal.valueOf(20);
+        BigDecimal tLenVal2 = BigDecimal.valueOf(20.0);
+        pl(tLenVal.compareTo(tLenVal2) + "");
+    }
 
     @Test
     public void testEqual() {
@@ -47,19 +55,19 @@ public class EqualsTest {
         System.out.println("==============test==============");
         int int12 = 12;
 
-        long long128 = 128;
-        int int128 = 128;
+        long long128 = 1281;
+        int int128 = 1281;
 
         Integer new_integer12_1 = new Integer(12);
         Integer new_integer12_2 = new Integer(12);
         Integer new_integer127 = new Integer(127);
-        Integer new_integer128 = new Integer(128);
+        Integer new_integer128 = new Integer(1281);
 
         Integer valOf127_1 = 127;
         Integer valOf127_2 = 127;
 
-        Integer valOf128_1 = 128;
-        Integer valOf128_2 = 128;
+        Integer valOf128_1 = 1281;
+        Integer valOf128_2 = 1281;
 
         pl("");
         pl("new_integer12_1 equals new_integer12_2 -> " + (new_integer12_1.equals(new_integer12_2)));

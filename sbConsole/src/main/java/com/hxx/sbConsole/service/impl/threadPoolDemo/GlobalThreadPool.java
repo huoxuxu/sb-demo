@@ -80,7 +80,10 @@ public class GlobalThreadPool {
         }
     }
 
-    class NamedThreadFactory implements ThreadFactory {
+    static class NamedThreadFactory implements ThreadFactory {
+        public NamedThreadFactory(String name,boolean flag){
+
+        }
 
         @Override
         public Thread newThread(Runnable r) {
