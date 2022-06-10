@@ -32,7 +32,7 @@ public class HostTask {
     private DemoAnnotationService demoAnnotationService;
 
     // 需要开启@EnableScheduling
-    @Scheduled(initialDelay = 1 * 1000, fixedDelay = 1 * 1000)
+    //@Scheduled(initialDelay = 1 * 1000, fixedDelay = 1 * 1000)
     private void run() {
         System.out.println(LocalDateTime.now());
         System.out.println(config.getLastName());

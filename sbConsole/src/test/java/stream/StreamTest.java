@@ -1,12 +1,22 @@
+package stream;
+
 import com.hxx.sbConsole.SbConsoleApplication;
+import com.hxx.sbcommon.common.JsonUtil;
 import com.hxx.sbcommon.common.basic.LocalDateTimeUtil;
 import models.Employee;
+import models.Person;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -27,11 +37,11 @@ public class StreamTest {
 
     @Test
     public void Run() {
-        Map<String,Integer>map=new HashMap<>();
-        map.put(null,null);
+        Map<String, Integer> map = new HashMap<>();
+        map.put(null, null);
 
 
-        System.out.println("==============StreamTest.Run==============");
+        System.out.println("==============stream.StreamTest.Run==============");
         {
             Stream<String> stream = Stream.of("java2s.com");
             stream.forEach(System.out::println);
@@ -96,6 +106,30 @@ public class StreamTest {
 
     @Test
     public void Sorted() {
+        List<Person> people = listPerson();
+        {
+            // 按成绩倒序+id正序
+            System.out.println("按成绩倒序+id正序");
+            Comparator<Person> comp1 = Comparator.comparing(Person::getScore)
+                    .reversed()
+                    .thenComparing(Person::getId);
+            List<Person> data = people.stream().sorted(comp1).collect(Collectors.toList());
+            data.forEach(d->{
+                System.out.println(d.getName()+"");
+            });
+        }
+        {
+            // 按成绩倒序+id正序 ls.sort()
+            System.out.println("按成绩倒序+id正序 ls.sort()");
+            Comparator<Person> comp1 = Comparator.comparing(Person::getScore)
+                    .reversed()
+                    .thenComparing(Person::getId);
+            people.sort(comp1);
+            people.forEach(d->{
+                System.out.println(d.getName()+"");
+            });
+        }
+
         List<Employee> persons = listPersons();
 
         Comparator<Employee> comparator = (o1, o2) -> {
@@ -703,8 +737,22 @@ public class StreamTest {
                 LocalDateTimeUtil.toDate(LocalDateTime.of(1971, 1, 2, 3, 4)));
 
         List<Employee> persons = Arrays.asList(p1, p2, p3, p4, p5, p6);
+        //String json= JsonUtil.toJSON(persons);
 
         return persons;
     }
 
+    public static List<Person> listPerson() {
+        //获取文件的URL
+        try {
+            File file = ResourceUtils.getFile("classpath:json/person.json");
+            //转成string输入文本
+            String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+            return JsonUtil.parseArray(content, Person.class);
+        } catch (Exception e) {
+            System.out.println(ExceptionUtils.getStackTrace(e));
+        }
+
+        return null;
+    }
 }

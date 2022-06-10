@@ -16,6 +16,11 @@ import java.math.BigDecimal;
 public class EqualsTest {
     @Test
     public void testDecimalEqual() {
+        Long lll = null;
+        BigDecimal val = BigDecimal.valueOf(lll);
+        BigDecimal compareVal = BigDecimal.valueOf(1);
+        int compFlag = val.compareTo(compareVal);
+
         BigDecimal tLenVal = BigDecimal.valueOf(20);
         BigDecimal tLenVal2 = BigDecimal.valueOf(20.0);
         pl(tLenVal.compareTo(tLenVal2) + "");

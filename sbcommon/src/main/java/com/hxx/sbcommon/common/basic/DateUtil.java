@@ -11,11 +11,21 @@ import java.util.Date;
  * @Date: 2021-12-11 10:27:19
  **/
 public class DateUtil {
+    /**
+     * 格式化为：yyyy-MM-dd
+     * @param date
+     * @return
+     */
     public static String formatDate(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(date);
     }
 
+    /**
+     * 格式化为：yyyy-MM-dd HH:mm:ss
+     * @param date
+     * @return
+     */
     public static String formatDateTime(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(date);
