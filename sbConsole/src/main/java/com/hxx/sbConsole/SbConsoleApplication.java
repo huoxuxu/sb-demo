@@ -3,6 +3,8 @@ package com.hxx.sbConsole;
 //import com.hxx.sbConsole.commons.config.javaConfig;
 
 import com.hxx.sbConsole.commons.config.ElConfig;
+import com.hxx.sbConsole.commons.config.MyWebConfig;
+import com.hxx.sbConsole.commons.event.Publisher;
 import com.hxx.sbConsole.service.UserService;
 import com.hxx.sbConsole.service.impl.DemoAnnotationService;
 import com.hxx.sbConsole.service.impl.DemoMethodService;
@@ -75,6 +77,14 @@ public class SbConsoleApplication {
 //        } catch (Exception e) {
 //            log.error("出现异常：{}", ExceptionUtils.getStackTrace(e));
 //        }
+//    }
+
+    // WebConfig.class主要是为了扫描Publisher 和Listener类。里面有两个注解@ComponenScan和@Configuration。
+//    static void main(String[] args) {
+//        AnnotationConfigApplicationContext applicationContext =
+//                new AnnotationConfigApplicationContext(MyWebConfig.class);
+//        Publisher publisher = applicationContext.getBean(Publisher.class);
+//        publisher.publish("Hello,World!","Mr.Lensen", "I Love U");
 //    }
 
 }
