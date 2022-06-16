@@ -32,18 +32,20 @@ public class EqualsTest {
         int int1 = 12;
         int int2 = 12;
 
-        int int3 = 128;
-        int int4 = 128;
 
         Integer integer1 = new Integer(12);
         Integer integer2 = new Integer(12);
+
         Integer integer3 = new Integer(127);
 
         Integer a1 = 127;
         Integer b1 = 127;
 
-        Integer a = 128;
-        Integer b = 128;
+        int int3 = 128880;
+        int int4 = 128880;
+
+        Integer a = 128880;
+        Integer b = Integer.valueOf(128880);
 
         System.out.println("int1 == int2 -> " + (int1 == int2));
         System.out.println("int1 == integer1 -> " + (int1 == integer1));
@@ -53,6 +55,8 @@ public class EqualsTest {
         System.out.println("integer1 == integer2 -> " + (integer1 == integer2));
         System.out.println("integer3 == a1 -> " + (integer3 == a1));
         System.out.println("a == b -> " + (a == b));
+        System.out.println("a eq b -> " + (a.equals(b)));
+        System.out.println("int3 == a -> " + (int3 == a));
     }
 
     @Test
