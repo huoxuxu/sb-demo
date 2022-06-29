@@ -40,6 +40,9 @@ public interface T1Mapper {
     //添加用户
     int addUser(T1 user);
 
+    // 添加用户，动态列
+    int addUserDynamic(T1 user);
+
     // 批量添加，并给list中元素的id属性赋值
     int insertBatch(List<T1> list);
 

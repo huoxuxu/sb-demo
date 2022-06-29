@@ -7,21 +7,33 @@
     resultType属性指明查询返回的结果集类型
  -->
 <mapper namespace="com.hxx.mbtest.mapper.T1Mapper">
+    <!--        <resultMap id="mapTeacher" type="com.hxx.mbtest.entity.T1">-->
+    <!--            <result property="id" column="id"/>-->
+    <!--            <result property="name" column="name"/>-->
+    <!--            <result property="createTime" column="createTime"/>-->
+    <!--            <result property="remark" column="remark"/>-->
+    <!--            <result property="theTeacher" column="theTeacher"/>-->
+    <!--            <association property="teacher" javaType="com.hxx.sbweb.domain.Teacher">-->
+    <!--                <result property="name" column="bname"/>-->
+    <!--                <result property="createTime" column="bcreateTime"/>-->
+    <!--            </association>-->
+    <!--        </resultMap>-->
 
     <!-- 查询全部-->
-    <select id="selectAll" resultType="T1">
-         SELECT * FROM t1
-     </select>
+    <select id="selectAll" resultType="com.hxx.mbtest.entity.T1">
+        SELECT *
+        FROM t1
+    </select>
 
     <!-- 根据id查询 -->
     <select id="selectUserById"
             resultType="com.hxx.mbtest.entity.T1">
-         select * from t1
-         where
+        select * from t1
+        where
         <if test="id !=null and id !='' ">
             id = #{id}
         </if>
-     </select>
+    </select>
 
     <select id="selectUserByIds"
             resultType="com.hxx.mbtest.entity.T1">
@@ -35,23 +47,26 @@
     <!-- 根据name查询得到一个user对象 -->
     <select id="selectUser"
             resultType="com.hxx.mbtest.entity.T1">
-         select * from t1 where name = #{name}
-     </select>
+        select *
+        from t1
+        where name = #{name}
+    </select>
 
     <!-- 根据birthday查询得到一个user对象 -->
     <select id="selectByBirthday"
             resultType="com.hxx.mbtest.entity.T1">
-         select *
-         from t1
-         where birthday &lt; #{birthday}
-         limit #{page},#{pageSize}
-     </select>
+        select *
+        from t1
+        where birthday &lt; #{birthday} limit #{page}
+            , #{pageSize}
+    </select>
 
     <!-- bymap -->
     <select id="selectUserByMap" parameterType="java.util.Map"
             resultType="com.hxx.mbtest.entity.T1">
-         select * from t1 limit #{min},#{max}
-     </select>
+        select *
+        from t1 limit #{min},#{max}
+    </select>
 
     <select id="selectByExample" parameterType="java.util.Map"
             resultType="com.hxx.mbtest.entity.T1">
@@ -94,34 +109,58 @@
     <!-- count -->
     <select id="count"
             resultType="Integer">
-         select count from t1
-     </select>
+        select count
+        from t1
+    </select>
     <!-- 创建用户 -->
     <insert id="addUser" parameterType="com.hxx.mbtest.entity.T1">
-         insert into t1
-         (code,name,score,enabled,birthday,createTime)
-         values
-         (#{code},#{name},#{score},#{enabled},#{birthday},#{createTime})
-     </insert>
+        insert into t1
+            (code, name, score, enabled, birthday, createTime)
+        values (#{code}, #{name}, #{score}, #{enabled}, #{birthday}, #{createTime})
+    </insert>
+
+    <insert id="addUserDynamic" parameterType="com.hxx.mbtest.entity.T1">
+        insert into t1
+        (code,
+        name,
+        <if test='score != null and score >= 0'>
+            score,
+        </if>
+        enabled,
+        birthday,
+        createTime)
+        values (#{code},
+        #{name},
+        <if test='score != null and score >= 0'>
+            #{score},
+        </if>
+        #{enabled},
+        #{birthday},
+        #{createTime})
+    </insert>
 
     <!--批量新增-->
     <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id">
         insert into t1 (code, name, score,enabled,birthday,createTime)
         values
-        <foreach collection="list" item="t1" separator=",">
-            (#{t1.code}, #{t1.name}, #{t1.score}, #{t1.enabled}, #{t1.birthday}, #{t1.createTime})
+        <foreach collection="list" item="item" separator=",">
+            (#{item.code}, #{item.name}, #{item.score}, #{item.enabled}, #{item.birthday}, #{item.createTime})
         </foreach>
     </insert>
 
     <!-- 修改用户 -->
     <update id="updateUser" parameterType="com.hxx.mbtest.entity.T1">
-         update t1
-         set name = #{name},createTime = #{createTime}
-         where id = #{id}
-     </update>
+        update t1
+        set name = #{name},
+        <if test='score != null and score >= 0'>
+            score = #{score},
+        </if>
+        createTime = #{createTime}
+        where id = #{id}
+    </update>
     <!--    批量更新-->
     <update id="updateBatch" parameterType="list">
---         要实现批量更新，首先得设置mysql支持批量操作，在jdbc链接中需要附加allowMultiQueries=true属性才行
+        -- 要实现批量更新，首先得设置mysql支持批量操作，在jdbc链接中需要附加allowMultiQueries=true属性才行
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
             update t1
             <set>
@@ -135,20 +174,10 @@
 
     <!-- 删除用户 -->
     <delete id="deleteUserById">
-         delete from t1 where id=#{id}
-     </delete>
+        delete
+        from t1
+        where id = #{id}
+    </delete>
 
-
-    <!--    <resultMap id="mapTeacher" type="com.hxx.mbtest.entity.T1">-->
-    <!--        <result property="id" column="id"/>-->
-    <!--        <result property="name" column="name"/>-->
-    <!--        <result property="createTime" column="createTime"/>-->
-    <!--        <result property="remark" column="remark"/>-->
-    <!--        <result property="theTeacher" column="theTeacher"/>-->
-    <!--        <association property="teacher" javaType="com.hxx.sbweb.domain.Teacher">-->
-    <!--            <result property="name" column="bname"/>-->
-    <!--            <result property="createTime" column="bcreateTime"/>-->
-    <!--        </association>-->
-    <!--    </resultMap>-->
 
 </mapper>

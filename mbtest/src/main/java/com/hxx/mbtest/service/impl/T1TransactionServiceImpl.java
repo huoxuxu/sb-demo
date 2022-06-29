@@ -26,8 +26,8 @@ import java.util.*;
  * @Date: 2021-05-09 12:26:11
  **/
 @Service
-public class T1ServiceImpl implements T1Service {
-    private final static Logger log = LoggerFactory.getLogger(T1ServiceImpl.class);
+public class T1TransactionServiceImpl implements T1Service {
+    private final static Logger log = LoggerFactory.getLogger(T1TransactionServiceImpl.class);
 
     @Autowired
     private T1Mapper t1Mapper;

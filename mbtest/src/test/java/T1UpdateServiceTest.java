@@ -1,0 +1,32 @@
+import com.hxx.mbtest.MbtestApplication;
+import com.hxx.mbtest.service.T1Service;
+import com.hxx.mbtest.service.impl.T1UpdateServiceImpl;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+/**
+ * @Author: huoxuxu
+ * @Description:
+ * @Date: 2021-05-13 9:09:21
+ **/
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = MbtestApplication.class)
+public class T1UpdateServiceTest {
+    @Autowired
+    private T1UpdateServiceImpl t1Service;
+
+
+    @Test
+    public void updateUser() {
+        System.out.println("==============t1Service.updateUser==============");
+
+        t1Service.updateUser();
+
+    }
+
+
+
+}
