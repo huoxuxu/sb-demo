@@ -10,20 +10,6 @@ import java.text.DecimalFormat;
  **/
 public class NumberUtil {
     /**
-     * 保留scale 位小数
-     *
-     * @param b
-     * @param scale
-     * @return
-     */
-    public static BigDecimal ROUND_HALF_UP(BigDecimal b, int scale) {
-//        float operateLengthNum=0F;
-//        BigDecimal b = new BigDecimal(operateLengthNum);
-        return b.setScale(scale, BigDecimal.ROUND_HALF_UP);
-        //.floatValue();
-    }
-
-    /**
      * 保留2位小数
      *
      * @param val
