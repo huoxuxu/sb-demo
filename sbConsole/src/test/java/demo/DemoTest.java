@@ -23,7 +23,8 @@ public class DemoTest {
     @Test
     public void test() {
         System.out.println("==============test==============");
-
+        String tmpPath = System.getProperty("java.io.tmpdir");
+        System.out.println("临时目录：" + tmpPath);
     }
 
 
