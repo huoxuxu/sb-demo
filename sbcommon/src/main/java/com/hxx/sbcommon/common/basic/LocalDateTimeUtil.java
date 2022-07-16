@@ -58,6 +58,8 @@ public class LocalDateTimeUtil {
     }
 
     /**
+     * yyyy-MM-dd HH:mm:ss
+     *
      * @param dateTime
      * @return
      */
@@ -79,7 +81,7 @@ public class LocalDateTimeUtil {
     }
 
     /**
-     * @param timestamp 转13位毫秒时间戳
+     * @param timestamp 传13位毫秒时间戳
      * @return
      */
     public static LocalDateTime parse(long timestamp) {
@@ -101,7 +103,16 @@ public class LocalDateTimeUtil {
      * @return
      */
     public static long toTimestamp(LocalDateTime dt) {
-        return dt.toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
+        return dt.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
+    /**
+     * 转10位秒级时间戳
+     * @param dt
+     * @return
+     */
+    public static long toTimestampSecond(LocalDateTime dt) {
+        return dt.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
     }
 
     /**
