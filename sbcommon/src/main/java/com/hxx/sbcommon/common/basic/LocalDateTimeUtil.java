@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 /*
@@ -49,6 +50,18 @@ public class LocalDateTimeUtil {
     }
 
     /**
+     * 转字符串
+     *
+     * @param dateTime
+     * @return
+     */
+    public static String toString(LocalDateTime dateTime) {
+        return format(dateTime);
+    }
+
+    /**
+     * 格式化
+     *
      * @param dateTime
      * @param pattern  yyyy-MM-dd HH:mm:ss
      * @return
@@ -58,7 +71,7 @@ public class LocalDateTimeUtil {
     }
 
     /**
-     * yyyy-MM-dd HH:mm:ss
+     * 格式化为：yyyy-MM-dd HH:mm:ss
      *
      * @param dateTime
      * @return
@@ -68,6 +81,8 @@ public class LocalDateTimeUtil {
     }
 
     /**
+     * 解析为LDT
+     *
      * @param text
      * @param pattern yyyy-MM-dd HH:mm:ss
      * @return
@@ -76,12 +91,20 @@ public class LocalDateTimeUtil {
         return LocalDateTime.parse(text, DateTimeFormatter.ofPattern(pattern));
     }
 
+    /**
+     * 解析为LDT，支持字符串格式：yyyy-MM-dd HH:mm:ss
+     *
+     * @param text
+     * @return
+     */
     public static LocalDateTime parse(String text) {
         return LocalDateTime.parse(text, Default_Formatter);
     }
 
     /**
-     * @param timestamp 传13位毫秒时间戳
+     * 时间戳转LDT
+     *
+     * @param timestamp 转13位毫秒时间戳
      * @return
      */
     public static LocalDateTime parse(long timestamp) {
@@ -89,6 +112,8 @@ public class LocalDateTimeUtil {
     }
 
     /**
+     * Date转LDT
+     *
      * @param date Date
      * @return
      */
@@ -103,16 +128,7 @@ public class LocalDateTimeUtil {
      * @return
      */
     public static long toTimestamp(LocalDateTime dt) {
-        return dt.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-    }
-
-    /**
-     * 转10位秒级时间戳
-     * @param dt
-     * @return
-     */
-    public static long toTimestampSecond(LocalDateTime dt) {
-        return dt.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
+        return dt.toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
     }
 
     /**
@@ -123,16 +139,6 @@ public class LocalDateTimeUtil {
      */
     public static Date toDate(LocalDateTime dt) {
         return Date.from(dt.atZone(ZoneId.systemDefault()).toInstant());
-    }
-
-    /**
-     * 转字符串
-     *
-     * @param dateTime
-     * @return
-     */
-    public static String toString(LocalDateTime dateTime) {
-        return format(dateTime);
     }
 
 }
