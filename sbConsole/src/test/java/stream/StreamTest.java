@@ -108,35 +108,47 @@ public class StreamTest {
     public void Sorted() {
         List<Person> people = listPerson();
         {
+            // 单字段倒序
+            List<Integer> intls = new ArrayList<>();
+            intls.add(1);
+            intls.add(12);
+            List<Integer> data = intls.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+            data.forEach(d -> {
+                System.out.println(d + "");
+            });
+        }
+
+        // 多条件排序-带逆序
+        {
             // 按成绩倒序+id正序
             System.out.println("按成绩倒序+id正序");
-            Comparator<Person> comp1 = Comparator.comparing(Person::getScore)
-                    .reversed()
+            Comparator<Person> comp1 = Comparator.comparing(Person::getScore,Comparator.reverseOrder())
                     .thenComparing(Person::getId);
-            List<Person> data = people.stream().sorted(comp1).collect(Collectors.toList());
-            data.forEach(d->{
-                System.out.println(d.getName()+"");
+
+            List<Person> data = people.stream()
+                    .sorted(comp1)
+                    .collect(Collectors.toList());
+            data.forEach(d -> {
+                System.out.println(d.getName() + "");
             });
         }
         {
             // 按成绩倒序+id正序 ls.sort()
             System.out.println("按成绩倒序+id正序 ls.sort()");
-            Comparator<Person> comp1 = Comparator.comparing(Person::getScore)
-                    .reversed()
+            Comparator<Person> comp1 = Comparator.comparing(Person::getScore,Comparator.reverseOrder())
                     .thenComparing(Person::getId);
             people.sort(comp1);
-            people.forEach(d->{
-                System.out.println(d.getName()+"");
+            people.forEach(d -> {
+                System.out.println(d.getName() + "");
             });
         }
-
-        List<Employee> persons = listPersons();
 
         Comparator<Employee> comparator = (o1, o2) -> {
             int flag = o1.getBirthday().compareTo(o2.getBirthday());
             return flag;
         };
 
+        List<Employee> persons = listPersons();
         // 正序
         persons.stream().sorted(comparator).forEach(d -> System.out.println(d.getBirthday()));
 
@@ -158,6 +170,7 @@ public class StreamTest {
                 return p2.getSalary() - p1.getSalary();
             }
         }).map(Employee::getName).collect(Collectors.toList());
+
 
         System.out.println("ok");
     }
@@ -717,29 +730,23 @@ public class StreamTest {
     }
 
     public static List<Employee> listPersons() {
-        Employee p1 = new Employee(1, "Jake", Employee.Gender.MALE,
-                LocalDate.of(2021, Month.JANUARY, 1), 2343.0, true,
-                LocalDateTimeUtil.toDate(LocalDateTime.of(1971, 1, 12, 3, 4)));
-        Employee p2 = new Employee(2, "Jack", Employee.Gender.MALE,
-                LocalDate.of(1972, Month.JULY, 21), 7100.0, true,
-                LocalDateTimeUtil.toDate(LocalDateTime.of(1971, 1, 2, 3, 4)));
-        Employee p3 = new Employee(3, "Jane", Employee.Gender.FEMALE,
-                LocalDate.of(1973, Month.MAY, 29), 5455.0, true,
-                LocalDateTimeUtil.toDate(LocalDateTime.of(1971, 1, 3, 3, 4)));
-        Employee p4 = new Employee(4, "Jode", Employee.Gender.MALE,
-                LocalDate.of(1974, Month.OCTOBER, 16), 1800.0, true,
-                LocalDateTimeUtil.toDate(LocalDateTime.of(1971, 1, 1, 3, 4)));
-        Employee p5 = new Employee(5, "Jeny", Employee.Gender.FEMALE,
-                LocalDate.of(1975, Month.DECEMBER, 13), 1234.0, true,
-                LocalDateTimeUtil.toDate(LocalDateTime.of(1971, 1, 6, 3, 4)));
-        Employee p6 = new Employee(6, "Jason", Employee.Gender.MALE,
-                LocalDate.of(1976, Month.JUNE, 9), 3211.0, true,
-                LocalDateTimeUtil.toDate(LocalDateTime.of(1971, 1, 2, 3, 4)));
+        String json = "[" +
+                "{\"age\":18,\"alive\":true,\"birthday\":32468640000,\"createTime\":\"2021-01-01\",\"female\":false," +
+                "\"gender\":\"MALE\",\"id\":0,\"income\":2343.0,\"male\":true,\"name\":\"Jake\",\"salary\":89}," +
+                "{\"age\":19,\"alive\":true,\"birthday\":31604640000,\"createTime\":\"1972-07-21\",\"female\":false," +
+                "\"gender\":\"MALE\",\"id\":0,\"income\":7100.0,\"male\":true,\"name\":\"Jack\",\"salary\":88}," +
+                "{\"age\":18,\"alive\":true,\"birthday\":31691040000,\"createTime\":\"1973-05-29\",\"female\":true," +
+                "\"gender\":\"FEMALE\",\"id\":0,\"income\":5455.0,\"male\":false,\"name\":\"Jane\",\"salary\":78}," +
+                "{\"age\":23,\"alive\":true,\"birthday\":31518240000,\"createTime\":\"1974-10-16\",\"female\":false," +
+                "\"gender\":\"MALE\",\"id\":0,\"income\":1800.0,\"male\":true,\"name\":\"Jode\",\"salary\":88}," +
+                "{\"age\":32,\"alive\":true,\"birthday\":31950240000,\"createTime\":\"1975-12-13\",\"female\":true," +
+                "\"gender\":\"FEMALE\",\"id\":0,\"income\":1234.0,\"male\":false,\"name\":\"Jeny\",\"salary\":100}," +
+                "{\"age\":35,\"alive\":true,\"birthday\":31604640000,\"createTime\":\"1976-06-09\",\"female\":false," +
+                "\"gender\":\"MALE\",\"id\":0,\"income\":3211.0,\"male\":true,\"name\":\"Jason\",\"salary\":96}" +
+                "]";
 
-        List<Employee> persons = Arrays.asList(p1, p2, p3, p4, p5, p6);
-        //String json= JsonUtil.toJSON(persons);
-
-        return persons;
+        List<Employee> ls = JsonUtil.parseArray(json, Employee.class);
+        return ls;
     }
 
     public static List<Person> listPerson() {

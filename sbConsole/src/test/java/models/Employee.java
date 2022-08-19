@@ -10,9 +10,9 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 public class Employee {
-    public Employee(int i, String jake, Gender male,
+    public Employee(int id, String jake, Gender male,
                     LocalDate of, double v, boolean b, Date toDate) {
-        id = i;
+        id = id;
         name = jake;
         gender = male;
         createTime = of;
