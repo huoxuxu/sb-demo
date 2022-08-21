@@ -1,6 +1,7 @@
 package demo;
 
 import com.hxx.sbConsole.SbConsoleApplication;
+import org.apache.ibatis.logging.LogFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ public class DemoTest {
         String tmpPath = System.getProperty("java.io.tmpdir");
         System.out.println("临时目录：" + tmpPath);
 
+        LogFactory
     }
 
 
