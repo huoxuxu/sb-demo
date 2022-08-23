@@ -1,6 +1,6 @@
 import com.hxx.sbConsole.SbConsoleApplication;
-import com.hxx.sbcommon.common.HexUtil;
-import com.hxx.sbcommon.common.encoder.BCD8421Util;
+import com.hxx.sbcommon.common.other.HexUtil;
+import com.hxx.sbcommon.common.other.encoder.BCD8421Util;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,7 +1,7 @@
 import com.hxx.mbtest.MbtestApplication;
 import com.hxx.mbtest.entity.T1;
 import com.hxx.mbtest.mapper.T1Mapper;
-import com.hxx.sbcommon.common.JsonUtil;
+import com.hxx.sbcommon.common.json.JsonUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

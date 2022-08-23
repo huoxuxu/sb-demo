@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.restTemplate;
+package com.hxx.sbcommon.common.http.restTemplate;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;

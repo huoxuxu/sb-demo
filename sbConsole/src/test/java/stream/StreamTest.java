@@ -1,9 +1,10 @@
 package stream;
 
 import com.hxx.sbConsole.SbConsoleApplication;
-import com.hxx.sbcommon.common.JsonUtil;
-import com.hxx.sbcommon.common.basic.LocalDateTimeUtil;
+import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.ListUtil;
 import models.Employee;
+import models.KV;
 import models.Person;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -14,12 +15,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -35,12 +32,29 @@ import java.util.stream.Stream;
 @SpringBootTest(classes = SbConsoleApplication.class)
 public class StreamTest {
 
+    // 集合与数组互转
+    @Test
+    public void ArrayOrListConvert() {
+        // 数组转集合
+        {
+            String[] array = {"XML", "Java", "SQL", "CSS"};
+
+            List<String> ls = ListUtil.toList(array);
+            System.out.println(ls);
+        }
+        // 集合转数组
+        {
+            List<KV> ls = new ArrayList<>();
+            ls.add(new KV(1,"A"));
+            ls.add(new KV(2,"B"));
+
+            KV[] array = ListUtil.toArray(ls, KV.class);
+            System.out.println(Arrays.toString(array));
+        }
+    }
+
     @Test
     public void Run() {
-        Map<String, Integer> map = new HashMap<>();
-        map.put(null, null);
-
-
         System.out.println("==============stream.StreamTest.Run==============");
         {
             Stream<String> stream = Stream.of("java2s.com");
@@ -100,13 +114,15 @@ public class StreamTest {
         listStrings.add("1");
         listStrings.add("2");
 
-        String[] ss = listStrings.stream().toArray(String[]::new);
+        String[] ss = listStrings.toArray(new String[0]);
+        System.out.println(ss);
         Arrays.stream(ss).forEach(System.out::println);
     }
 
     @Test
     public void Sorted() {
         List<Person> people = listPerson();
+
         {
             // 单字段倒序
             List<Integer> intls = new ArrayList<>();
@@ -122,7 +138,7 @@ public class StreamTest {
         {
             // 按成绩倒序+id正序
             System.out.println("按成绩倒序+id正序");
-            Comparator<Person> comp1 = Comparator.comparing(Person::getScore,Comparator.reverseOrder())
+            Comparator<Person> comp1 = Comparator.comparing(Person::getScore, Comparator.reverseOrder())
                     .thenComparing(Person::getId);
 
             List<Person> data = people.stream()
@@ -135,7 +151,7 @@ public class StreamTest {
         {
             // 按成绩倒序+id正序 ls.sort()
             System.out.println("按成绩倒序+id正序 ls.sort()");
-            Comparator<Person> comp1 = Comparator.comparing(Person::getScore,Comparator.reverseOrder())
+            Comparator<Person> comp1 = Comparator.comparing(Person::getScore, Comparator.reverseOrder())
                     .thenComparing(Person::getId);
             people.sort(comp1);
             people.forEach(d -> {

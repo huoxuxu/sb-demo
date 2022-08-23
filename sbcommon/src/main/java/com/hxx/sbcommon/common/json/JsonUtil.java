@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common;
+package com.hxx.sbcommon.common.json;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeConfig;
@@ -36,7 +36,7 @@ public class JsonUtil {
 
 	/***
 	 * 序列化数据
-	 * 
+	 *
 	 * @param object
 	 * @return
 	 */
@@ -46,7 +46,7 @@ public class JsonUtil {
 
 	/***
 	 * 反序列化数据
-	 * 
+	 *
 	 * @param json
 	 * @param clazz
 	 * @return
@@ -54,11 +54,11 @@ public class JsonUtil {
 	public static <T> T parse(String json, Class<T> clazz) {
 		return JSON.parseObject(json, clazz);
 	}
-	
+
 
 	/***
 	 * 反序列化数据
-	 * 
+	 *
 	 * @param json
 	 * @param clazz
 	 * @return
@@ -75,7 +75,7 @@ public class JsonUtil {
 
 	/***
 	 * 反序列化数据
-	 * 
+	 *
 	 * @param json
 	 * @param clazz
 	 * @return
@@ -85,7 +85,7 @@ public class JsonUtil {
 	}
 	/***
 	 * 反序列化数据
-	 * 
+	 *
 	 * @param json
 	 * @param clazz
 	 * @return

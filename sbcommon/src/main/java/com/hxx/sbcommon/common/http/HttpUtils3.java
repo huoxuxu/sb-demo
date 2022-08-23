@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.hxx.sbcommon.common.JsonUtil;
+import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.model.HttpResEntity;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;

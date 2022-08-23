@@ -1,7 +1,7 @@
 package com.hxx.sbcommon.common.http;
 
 
-import com.hxx.sbcommon.common.JsonUtil;
+import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.common.encrypt.RsaUtils;
 import com.hxx.sbcommon.model.HttpResEntity;
 import org.apache.commons.lang3.StringUtils;

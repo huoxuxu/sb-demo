@@ -29,7 +29,7 @@ public class DemoTest {
         String tmpPath = System.getProperty("java.io.tmpdir");
         System.out.println("临时目录：" + tmpPath);
 
-        LogFactory
+        //LogFactory
     }
 
 

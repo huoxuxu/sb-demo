@@ -1,6 +1,6 @@
 package com.hxx.sbcommon.common.http;
 
-import com.hxx.sbcommon.common.HexUtil;
+import com.hxx.sbcommon.common.other.HexUtil;
 import com.hxx.sbcommon.common.encrypt.AESUtil;
 import com.hxx.sbcommon.common.encrypt.RSAUtil;
 import com.hxx.sbcommon.common.json.JacksonUtil;

@@ -2,65 +2,57 @@ package com.hxx.sbcommon.common;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * @author liming
+ * @author
  * @description 字符串压缩和解压缩
  */
 public class ZipUtil {
 
-    //zip压缩
-    public static String zipString(String str) {
-        try {
-            ByteArrayOutputStream bos = null;
-            GZIPOutputStream os = null;
-            byte[] bs = null;
-            try {
-                bos = new ByteArrayOutputStream();
-                os = new GZIPOutputStream(bos);
+    /**
+     * zip压缩
+     *
+     * @param str
+     * @return
+     * @throws IOException
+     */
+    public static String zipString(String str) throws IOException {
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            try (GZIPOutputStream os = new GZIPOutputStream(bos)) {
                 os.write(str.getBytes());
                 os.close();
                 bos.close();
-                bs = bos.toByteArray();
+                byte[] bs = bos.toByteArray();
                 return new String(bs, "iso-8859-1");
-            } finally {
-                bs = null;
-                bos = null;
-                os = null;
             }
-        } catch (Exception ex) {
-            return str;
         }
     }
 
-    //解压缩
-    public static String unzipString(String str) {
-        ByteArrayInputStream bis = null;
-        ByteArrayOutputStream bos = null;
-        GZIPInputStream is = null;
-        byte[] buf = null;
-        try {
-            bis = new ByteArrayInputStream(str.getBytes("iso-8859-1"));
-            bos = new ByteArrayOutputStream();
-            is = new GZIPInputStream(bis);
-            buf = new byte[1024];
-            int len;
-            while ((len = is.read(buf)) != -1) {
-                bos.write(buf, 0, len);
+    /**
+     * 解压缩
+     *
+     * @param str
+     * @return
+     * @throws IOException
+     */
+    public static String unzipString(String str) throws IOException {
+        byte[] bytes = str.getBytes("iso-8859-1");
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes)) {
+            try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+                try (GZIPInputStream is = new GZIPInputStream(bis)) {
+                    byte[] buf = new byte[1024];
+                    int len;
+                    while ((len = is.read(buf)) != -1) {
+                        bos.write(buf, 0, len);
+                    }
+
+                    return new String(bos.toByteArray());
+                }
             }
-            is.close();
-            bis.close();
-            bos.close();
-            return new String(bos.toByteArray());
-        } catch (Exception ex) {
-            return str;
-        } finally {
-            bis = null;
-            bos = null;
-            is = null;
-            buf = null;
         }
     }
+
 }

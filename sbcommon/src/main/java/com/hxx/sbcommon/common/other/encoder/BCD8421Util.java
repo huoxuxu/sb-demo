@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.encoder;
+package com.hxx.sbcommon.common.other.encoder;
 
 /**
  * @Author: huoxuxu
