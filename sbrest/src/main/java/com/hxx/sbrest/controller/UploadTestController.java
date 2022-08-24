@@ -40,8 +40,11 @@ public class UploadTestController extends BaseController {
      */
     @PostMapping("/upload")
     public String importScanData(@RequestParam(value = "upload") MultipartFile file, UploadParam pingDuoDuoImportParam) {
-
         return "";
     }
 
+    @PostMapping(value = "/multiSortPlanUpload")
+    public String planUpload(@RequestParam(value = "file") MultipartFile file) {
+        return "";
+    }
 }
