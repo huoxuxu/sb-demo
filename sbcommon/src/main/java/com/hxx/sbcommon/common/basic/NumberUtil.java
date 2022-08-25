@@ -1,7 +1,6 @@
 package com.hxx.sbcommon.common.basic;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 
 /**
  * @Author: huoxuxu
@@ -10,22 +9,33 @@ import java.text.DecimalFormat;
  **/
 public class NumberUtil {
     /**
-     * 保留2位小数
+     * 格式化为字符串
      *
      * @param val
      * @return
      */
-    public static String ROUND(double val) {
-        DecimalFormat dfmt = new DecimalFormat("###.00");
-        return dfmt.format(val);
+    public static String format2String(Float val) {
+        if (val == null) {
+            return "";
+        }
+
+        if (val == 0) {
+            return "0";
+        }
+
+        // 去除小数点后无意义零
+        if (val == val.intValue()) {
+            return val.intValue() + "";
+        }
+
+        return val + "";
     }
 
-
     /**
-     * 两数相除后保留n位小数
+     * 两数相除后保留n位小数，带百分号后缀
      *
-     * @param numerator
-     * @param denominator
+     * @param numerator   分子
+     * @param denominator 分母
      * @param scale
      * @return
      */
@@ -44,8 +54,10 @@ public class NumberUtil {
     }
 
     /**
-     * @param numerator
-     * @param denominator
+     * 两数相除后保留n位小数，带百分号后缀
+     *
+     * @param numerator   分子
+     * @param denominator 分母
      * @param scale
      * @return
      */

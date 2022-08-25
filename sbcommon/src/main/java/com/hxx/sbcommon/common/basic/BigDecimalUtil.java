@@ -9,17 +9,25 @@ import java.math.BigDecimal;
  **/
 public class BigDecimalUtil {
     /**
-     * 保留scale 位小数
+     * 直接去掉多余的位数
+     *
+     * @return
+     */
+    public static BigDecimal ROUND_DOWN(BigDecimal b, int scale) {
+        BigDecimal val = b.setScale(scale, BigDecimal.ROUND_DOWN);
+        return val;
+    }
+
+    /**
+     * 保留scale 位小数, 四舍五入
      *
      * @param b
      * @param scale
      * @return
      */
     public static BigDecimal ROUND_HALF_UP(BigDecimal b, int scale) {
-//        float operateLengthNum=0F;
-//        BigDecimal b = new BigDecimal(operateLengthNum);
-        return b.setScale(scale, BigDecimal.ROUND_HALF_UP);
-        //.floatValue();
+        BigDecimal val = b.setScale(scale, BigDecimal.ROUND_HALF_UP);
+        return val;
     }
 
     /**
@@ -47,11 +55,10 @@ public class BigDecimalUtil {
      * @return
      */
     public static BigDecimal round(BigDecimal numerator, BigDecimal denominator, int scale) {
-        if (null == numerator || null == denominator
-                || numerator.compareTo(BigDecimal.ZERO) == 0
-                || denominator.compareTo(BigDecimal.ZERO) == 0) {
+        if (null == numerator || null == denominator || numerator.compareTo(BigDecimal.ZERO) == 0 || denominator.compareTo(BigDecimal.ZERO) == 0) {
             return BigDecimal.valueOf(0);
         }
+
         BigDecimal decimal = numerator.multiply(new BigDecimal(100));
         // 4舍，5入，其他未测
         return decimal.divide(denominator, scale, BigDecimal.ROUND_HALF_UP);
