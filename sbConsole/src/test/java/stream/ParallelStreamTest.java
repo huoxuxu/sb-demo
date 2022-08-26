@@ -8,7 +8,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
@@ -47,6 +46,27 @@ public class ParallelStreamTest {
         Object o = joinTask.get();
         System.out.println(o);
         System.out.println(LocalDateTime.now() + " 测试不带返回值2");
+    }
+
+    @Test
+    public void case1(){
+        ForkJoinPool forkJoinPool = new ForkJoinPool(20);
+//        ForkJoinTask<Boolean> fs = forkJoinPool.submit(() -> inputStream.allMatch(element -> {
+//            Thread.sleep(300);
+//            System.out.println(Thread.currentThread().getName());
+//            System.out.println("线程数量：" + Thread.activeCount());
+//            return new Random().nextInt(100) >= 0;
+//        }));
+//
+//        try {
+//            result = fs.get();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e){
+//            e.printStackTrace();
+//        }
+//
+//        forkJoinPool.shutdown();
     }
 
     static void procCase1(Integer d){
