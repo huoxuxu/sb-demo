@@ -1,6 +1,5 @@
 package com.hxx.sbConsole.dynamicProxy.cglib;
 
-import io.netty.handler.codec.MessageToMessageDecoder;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;

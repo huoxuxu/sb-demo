@@ -2,7 +2,7 @@ package com.hxx.sbConsole.dynamicProxy;
 
 import com.hxx.sbConsole.service.Hello;
 import com.hxx.sbConsole.service.impl.biz.HelloImpl;
-import com.hxx.sbcommon.common.reflect.autoProxy.DynamicProxyHandler;
+import com.hxx.sbcommon.common.reflect.autoProxy.JDKDynamicProxyHandler;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -19,7 +19,7 @@ import java.lang.reflect.Proxy;
  **/
 public class JDKDynamicProxyTest {
     public static void main(String[] args) {
-        case0();
+        case1();
     }
 
     static void case0() {
@@ -47,10 +47,13 @@ public class JDKDynamicProxyTest {
         hello.morning("小小");
     }
 
+    /**
+     * JDK代理，JDKDynamicProxyHandler必须传入接口
+     */
     static void case1() {
         Hello hello = new HelloImpl();
-        DynamicProxyHandler<Hello> proxyHandler = new DynamicProxyHandler<>(hello);
-        Hello proxyHello = proxyHandler.getProxyObject();
+        JDKDynamicProxyHandler<Hello> proxyHandler = new JDKDynamicProxyHandler<>(hello);
+        Hello proxyHello = proxyHandler.getProxy();
         proxyHello.morning("哈哈");
     }
 
