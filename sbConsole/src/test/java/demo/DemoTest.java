@@ -1,8 +1,11 @@
 package demo;
 
 import com.hxx.sbConsole.SbConsoleApplication;
+import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.reflection.Reflector;
+import org.apache.ibatis.type.JdbcType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author: huoxuxu
@@ -30,11 +30,11 @@ public class DemoTest {
         String tmpPath = System.getProperty("java.io.tmpdir");
         System.out.println("临时目录：" + tmpPath);
 
-        Class<Byte[]> cls1 = Byte[].class;
-        Class<byte[]> cls2 = byte[].class;
-        System.out.println(cls1);
-        System.out.println(cls2);
+        JdbcType smallint = JdbcType.SMALLINT;
+        System.out.println("");
     }
+
+
 
 
 }

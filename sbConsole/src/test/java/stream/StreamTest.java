@@ -45,8 +45,8 @@ public class StreamTest {
         // 集合转数组
         {
             List<KV> ls = new ArrayList<>();
-            ls.add(new KV(1,"A"));
-            ls.add(new KV(2,"B"));
+            ls.add(new KV(1, "A"));
+            ls.add(new KV(2, "B"));
 
             KV[] array = ListUtil.toArray(ls, KV.class);
             System.out.println(Arrays.toString(array));

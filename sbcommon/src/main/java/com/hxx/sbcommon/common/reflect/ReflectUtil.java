@@ -55,7 +55,7 @@ public class ReflectUtil {
 //    }
 
     /**
-     * 获取type对应的是基类型
+     * 获取type对应的class类型
      * type不能直接实例化对象，通过type获取class的类型，然后实例化对象
      *
      * @param type
