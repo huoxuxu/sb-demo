@@ -42,6 +42,14 @@ public class StreamTest {
             List<String> ls = ListUtil.toList(array);
             System.out.println(ls);
         }
+        // 数组转集合
+        {
+            String[] array = {"XML1", "Java2", "SQL3", "CSS4"};
+
+            List<String> ls = ListUtil.toListUseStream(array);
+            System.out.println(ls);
+        }
+
         // 集合转数组
         {
             List<KV> ls = new ArrayList<>();
@@ -49,6 +57,16 @@ public class StreamTest {
             ls.add(new KV(2, "B"));
 
             KV[] array = ListUtil.toArray(ls, KV.class);
+            System.out.println(Arrays.toString(array));
+        }
+        // 集合转数组
+        {
+            List<Integer> ls = new ArrayList<>();
+            ls.add(998);
+            ls.add(997);
+            ls.add(996);
+
+            Integer[] array = ListUtil.toArray(ls, Integer.class);
             System.out.println(Arrays.toString(array));
         }
     }
@@ -434,9 +452,15 @@ public class StreamTest {
 
     @Test
     public void Group() {
+        List<Employee> data = listPersons();
+        // 多字段分组
         {
-            Map<Employee.Gender, Long> countByGender = listPersons()
-                    .stream()
+            // 按名称和年龄分组
+            Map<String, Map<Integer, List<Employee>>> gyMap = data.stream()
+                    .collect(Collectors.groupingBy(Employee::getName, Collectors.groupingBy(Employee::getAge)));
+        }
+        {
+            Map<Employee.Gender, Long> countByGender = data.stream()
                     .collect(Collectors.groupingBy(Employee::getGender, Collectors.counting()));
             System.out.println(countByGender);
         }
@@ -603,16 +627,14 @@ public class StreamTest {
             }
         }
         {
-            OptionalDouble income =
+            Double income =
                     listPersons()
                             .stream()
-                            .mapToDouble(Employee::getIncome).max();
+                            .mapToDouble(Employee::getIncome)
+                            .max()
+                            .orElse(0);
 
-            if (income.isPresent()) {
-                System.out.println("Highest income:   " + income.getAsDouble());
-            } else {
-                System.out.println("Could not  get   the   highest income.");
-            }
+            System.out.println("income: " + income);
         }
     }
 
