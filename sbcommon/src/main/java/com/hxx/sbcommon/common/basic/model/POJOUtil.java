@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common;
+package com.hxx.sbcommon.common.basic.model;
 
 import java.util.function.Function;
 

@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.basic;
+package com.hxx.sbcommon.common.basic.datetime;
 
 import java.text.ParseException;
 import java.text.ParsePosition;

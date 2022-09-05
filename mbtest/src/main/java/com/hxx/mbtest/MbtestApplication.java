@@ -1,6 +1,6 @@
 package com.hxx.mbtest;
 
-import com.hxx.sbcommon.common.basic.LocalDateTimeUtil;
+import com.hxx.sbcommon.common.basic.datetime.LocalDateTimeUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

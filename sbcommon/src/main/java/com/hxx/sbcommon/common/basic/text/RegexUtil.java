@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.basic;
+package com.hxx.sbcommon.common.basic.text;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

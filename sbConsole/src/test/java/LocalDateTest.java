@@ -1,5 +1,5 @@
 import com.hxx.sbConsole.SbConsoleApplication;
-import com.hxx.sbcommon.common.basic.LocalDateUtil;
+import com.hxx.sbcommon.common.basic.datetime.LocalDateUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.helpers.MessageFormatter;

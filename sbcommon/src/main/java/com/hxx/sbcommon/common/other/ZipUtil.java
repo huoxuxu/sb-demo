@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common;
+package com.hxx.sbcommon.common.other;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

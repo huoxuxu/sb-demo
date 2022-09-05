@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.basic;
+package com.hxx.sbcommon.common.basic.number;
 
 import java.math.BigDecimal;
 

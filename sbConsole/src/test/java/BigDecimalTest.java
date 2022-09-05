@@ -1,5 +1,5 @@
 import com.hxx.sbConsole.SbConsoleApplication;
-import com.hxx.sbcommon.common.basic.BigDecimalUtil;
+import com.hxx.sbcommon.common.basic.number.BigDecimalUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

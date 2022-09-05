@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common;
+package com.hxx.sbcommon.common.basic.array;
 
 import lombok.extern.slf4j.Slf4j;
 

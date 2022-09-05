@@ -1,7 +1,7 @@
 package java;
 
 import com.hxx.sbConsole.SbConsoleApplication;
-import com.hxx.sbcommon.common.basic.LocalDateTimeUtil;
+import com.hxx.sbcommon.common.basic.datetime.LocalDateTimeUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

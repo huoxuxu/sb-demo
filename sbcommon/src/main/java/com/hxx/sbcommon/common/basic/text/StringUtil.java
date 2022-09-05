@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.basic;
+package com.hxx.sbcommon.common.basic.text;
 
 import org.apache.commons.lang3.StringUtils;
 

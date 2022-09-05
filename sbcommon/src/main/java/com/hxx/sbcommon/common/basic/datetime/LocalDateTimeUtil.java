@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.basic;
+package com.hxx.sbcommon.common.basic.datetime;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

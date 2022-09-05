@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common;
+package com.hxx.sbcommon.common.web;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;

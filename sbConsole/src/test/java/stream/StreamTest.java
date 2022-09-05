@@ -2,7 +2,7 @@ package stream;
 
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.json.JsonUtil;
-import com.hxx.sbcommon.common.ListUtil;
+import com.hxx.sbcommon.common.basic.array.ListUtil;
 import models.Employee;
 import models.KV;
 import models.Person;

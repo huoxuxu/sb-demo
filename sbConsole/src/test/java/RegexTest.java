@@ -1,5 +1,5 @@
 import com.hxx.sbConsole.SbConsoleApplication;
-import com.hxx.sbcommon.common.basic.RegexUtil;
+import com.hxx.sbcommon.common.basic.text.RegexUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
