@@ -7,4 +7,5 @@ package com.hxx.sbConsole.service;
  **/
 public interface Hello {
     void morning(String name);
+    void world(String name);
 }

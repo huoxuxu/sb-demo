@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.dynamicProxy;
+package com.hxx.sbConsole.dynamicProxy.jdk;
 
 import com.hxx.sbConsole.service.Hello;
 import com.hxx.sbConsole.service.impl.biz.HelloImpl;
@@ -55,6 +55,7 @@ public class JDKDynamicProxyTest {
         JDKDynamicProxyHandler<Hello> proxyHandler = new JDKDynamicProxyHandler<>(hello);
         Hello proxyHello = proxyHandler.getProxy();
         proxyHello.morning("哈哈");
+        proxyHello.world("yaho");
     }
 
 }

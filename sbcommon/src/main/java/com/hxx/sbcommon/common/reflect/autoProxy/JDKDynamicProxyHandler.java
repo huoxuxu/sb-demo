@@ -5,16 +5,21 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 /**
+ * JDK动态代理（组合）通用Handler
+ *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2022-08-26 14:54:42
  **/
 public class JDKDynamicProxyHandler<T> implements InvocationHandler {
     /**
-     *
+     * 代理的实现接口T的目标类实例
      */
     private final T target;
 
+    /**
+     * @param target 代理的实现接口T的目标类实例
+     */
     public JDKDynamicProxyHandler(final T target) {
         this.target = target;
     }
@@ -48,20 +53,20 @@ public class JDKDynamicProxyHandler<T> implements InvocationHandler {
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        System.out.println("执行前1");
+        System.out.println(method+"执行前1==================");
         Object result = method.invoke(this.target, args);
-        System.out.println("执行后1");
+        System.out.println(method+"执行后1==================");
         return result;
     }
 
     // 获取代理对象
     private Object getProxyObject() {
-        ClassLoader loader = this.target.getClass().getClassLoader();
+        Class<?> targetCls = this.target.getClass();
+        ClassLoader loader = targetCls.getClassLoader();
         //类可以实现多个接口，因此这里的接口是个数组
-        Class<?>[] interfaces = target.getClass().getInterfaces();
+        Class<?>[] interfaces = targetCls.getInterfaces();
         //this即MyInvocatioHandler实例，其包含被代理类的引用，以及重写的方法，newProxyInstance方法将利用这些参数创建一个代理类的实例
-        Object t = Proxy.newProxyInstance(loader, interfaces, this);
-        return t;
+        return Proxy.newProxyInstance(loader, interfaces, this);
     }
 
 }
