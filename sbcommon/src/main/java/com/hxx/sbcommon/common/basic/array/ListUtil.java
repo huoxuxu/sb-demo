@@ -47,7 +47,8 @@ public class ListUtil {
      * @return
      */
     public static <T> List<T> toListUseStream(T[] array) {
-        return Arrays.stream(array).collect(Collectors.toList());
+        return Arrays.stream(array)
+                .collect(Collectors.toList());
     }
 
 }

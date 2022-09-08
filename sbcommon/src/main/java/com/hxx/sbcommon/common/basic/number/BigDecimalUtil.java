@@ -47,7 +47,7 @@ public class BigDecimalUtil {
     }
 
     /**
-     * 分子分母相除后保留指定位数
+     * 分子乘以100后，与分母相除后保留指定位数
      *
      * @param numerator   分子
      * @param denominator 分母
@@ -73,7 +73,8 @@ public class BigDecimalUtil {
     public static String Format(BigDecimal b) {
         // stripTrailingZeros 去除小数点后无意义的零
         // toPlainString 返回不以指数表示的字符串形式
-        return b.stripTrailingZeros().toPlainString();
+        return b.stripTrailingZeros()
+                .toPlainString();
     }
 
 }

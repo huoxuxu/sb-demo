@@ -20,7 +20,7 @@ public class POJOUtil {
      * @param <U>
      * @return
      */
-    public static <T, U> U SetNullToDefault(T source, Function<T, U> getFieldFunc, U defaultVal) {
+    public static <T, U> U getNullToDefault(T source, Function<T, U> getFieldFunc, U defaultVal) {
         U fieldVal = getFieldFunc.apply(source);
         if (fieldVal == null) {
             return defaultVal;

@@ -1,6 +1,7 @@
 package demo;
 
 import com.hxx.sbConsole.SbConsoleApplication;
+import models.KV;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
@@ -38,26 +39,31 @@ public class DemoTest {
         System.out.println("临时目录：" + tmpPath);
 
         // Mybatis 插件
-        Executor executor = null;
+        {
+            Executor executor = null;
 
-        StatementHandler statementHandler = null;
-        RoutingStatementHandler routingStatementHandler = null;
+            StatementHandler statementHandler = null;
+            RoutingStatementHandler routingStatementHandler = null;
 
-        ParameterHandler parameterHandler = null;
-        DefaultParameterHandler defaultParameterHandler = null;
+            ParameterHandler parameterHandler = null;
+            DefaultParameterHandler defaultParameterHandler = null;
 
-        ResultSetHandler resultSetHandler = null;
-        DefaultResultSetHandler defaultResultSetHandler = null;
+            ResultSetHandler resultSetHandler = null;
+            DefaultResultSetHandler defaultResultSetHandler = null;
 
-        // 分页参数类
-        RowBounds rowBounds = null;
-        // sql+参数化
-        BoundSql boundSql = null;
+            // 分页参数类
+            RowBounds rowBounds = null;
+            // sql+参数化
+            BoundSql boundSql = null;
+        }
+
+        {
+
+        }
 
         // 枚举
         JdbcType smallint = JdbcType.SMALLINT;
         System.out.println("");
     }
-
 
 }

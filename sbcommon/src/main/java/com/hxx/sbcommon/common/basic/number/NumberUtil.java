@@ -9,12 +9,14 @@ import java.math.BigDecimal;
  **/
 public class NumberUtil {
     /**
-     * 格式化为字符串
+     * 格式化为字符串，
+     * 为null时返回空字符串，
+     * 去除1.00后的无意义0
      *
      * @param val
      * @return
      */
-    public static String format2String(Float val) {
+    public static String fmt2String(Float val) {
         if (val == null) {
             return "";
         }
