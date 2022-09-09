@@ -47,13 +47,13 @@ public class OftenUtil {
     }
 
     /**
-     * 不满足条件时，抛出 IllegalArgumentException
+     * 满足条件时，抛出 IllegalArgumentException
      *
-     * @param condition
+     * @param condition 条件
      * @param errMsg
      */
-    public static void assertCond(Boolean condition, String errMsg) {
-        if (condition == null || !condition) {
+    public static void assertCond(boolean condition, String errMsg) {
+        if (condition) {
             throw new IllegalArgumentException(errMsg);
         }
     }
@@ -251,8 +251,23 @@ public class OftenUtil {
      * @param text
      * @return
      */
-    public static LocalDateTime parse(String text) {
+    public static LocalDateTime parseDateTime(String text) {
         return LocalDateTime.parse(text, DateTime_Default_Formatter);
+    }
+
+    /**
+     * 解析为LDT，支持字符串格式：yyyy-MM-dd HH:mm:ss
+     *
+     * @param text
+     * @param defaultVal
+     * @return
+     */
+    public static LocalDateTime parseDateTime(String text, LocalDateTime defaultVal) {
+        try {
+            return LocalDateTime.parse(text, DateTime_Default_Formatter);
+        } catch (Exception e) {
+            return defaultVal;
+        }
     }
 
     /**
