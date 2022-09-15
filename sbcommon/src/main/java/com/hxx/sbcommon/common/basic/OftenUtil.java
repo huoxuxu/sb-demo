@@ -371,4 +371,16 @@ public class OftenUtil {
                 .toUpperCase();
     }
 
+    // 数据库
+
+    /**
+     * 获取mysql的limit左值
+     *
+     * @param pageNum  页码，从1开始
+     * @param pageSize 页大小
+     * @return
+     */
+    public static int getMySqlLimitLeftVal(int pageNum, int pageSize) {
+        return (pageNum - 1) * pageSize;
+    }
 }

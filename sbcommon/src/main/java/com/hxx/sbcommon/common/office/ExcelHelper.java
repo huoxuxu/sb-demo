@@ -261,8 +261,8 @@ public class ExcelHelper implements Closeable {
 
         @Override
         public void close() throws IOException {
-            if (this.getWorkbook() != null) {
-                this.getWorkbook()
+            if (this.workbook != null) {
+                this.workbook
                         .close();
             }
             if (this.poifsFileSystem != null) {

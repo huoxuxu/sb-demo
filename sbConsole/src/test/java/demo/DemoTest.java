@@ -13,6 +13,8 @@ import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.reflection.Reflector;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.defaults.DefaultSqlSession;
 import org.apache.ibatis.type.JdbcType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,6 +57,10 @@ public class DemoTest {
             RowBounds rowBounds = null;
             // sql+参数化
             BoundSql boundSql = null;
+
+            //
+            SqlSession sqlSession = null;
+            DefaultSqlSession defaultSqlSession = null;
         }
 
         {
