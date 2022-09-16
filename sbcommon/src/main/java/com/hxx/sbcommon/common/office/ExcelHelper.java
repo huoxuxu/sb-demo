@@ -4,6 +4,7 @@ import com.hxx.sbcommon.common.basic.OftenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.*;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import lombok.Data;
 
@@ -35,7 +37,7 @@ public class ExcelHelper implements Closeable {
     private final Workbook workbook;
     private final int sheetCount;
 
-    public ExcelHelper(String fileName, InputStream inputStream) throws IOException {
+    public ExcelHelper(String fileName, InputStream inputStream) throws Exception {
         this.fileName = fileName;
         this.inputStream = inputStream;
         OftenUtil.assertCond(StringUtils.isBlank(this.fileName), "excel名称不能为空");
@@ -45,19 +47,24 @@ public class ExcelHelper implements Closeable {
         if (!this.is97_03Excel) {
             OftenUtil.assertCond(!fileName.endsWith(".xlsx"), "excel只支持后缀为.xls和.xlsx");
 
-            this.is97_03Excel = true;
+            this.is97_03Excel = false;
         }
 
-        if (this.is97_03Excel) {
-            this.excel97_03Helper = new Excel97_03Helper(fileName, inputStream);
-            this.workbook = this.excel97_03Helper.getWorkbook();
-        } else {
-            this.workbook = new XSSFWorkbook(this.inputStream);
+        // 加载excel
+        try {
+            if (this.is97_03Excel) {
+                this.excel97_03Helper = new Excel97_03Helper(fileName, inputStream);
+                this.workbook = this.excel97_03Helper.getWorkbook();
+            } else {
+                this.workbook = new XSSFWorkbook(this.inputStream);
+            }
+            this.sheetCount = this.workbook.getNumberOfSheets();
+        } catch (Exception e) {
+            log.error("加载excel出现异常：{}", ExceptionUtils.getStackTrace(e));
+            throw new Exception("加载excel出现异常：" + e.getMessage());
         }
-        this.sheetCount = this.workbook.getNumberOfSheets();
 
         OftenUtil.assertCond(this.sheetCount < 1, "未找到工作簿");
-
     }
 
     @Override
@@ -83,11 +90,25 @@ public class ExcelHelper implements Closeable {
      * @return
      */
     public List<RowItem> parseRows(int sheetIndex, int startRowIndex, int colCount) {
+        List<RowItem> ls = new ArrayList<>();
+        parseExcelRows(sheetIndex, startRowIndex, colCount, ls::add);
+
+        return ls;
+    }
+
+    /**
+     * 按行解析Excel
+     *
+     * @param sheetIndex
+     * @param startRowIndex
+     * @param colCount
+     * @param rowAct
+     */
+    public void parseExcelRows(int sheetIndex, int startRowIndex, int colCount, Consumer<RowItem> rowAct) {
         OftenUtil.assertCond(sheetCount <= sheetIndex, "不包含工作簿，索引：" + sheetIndex);
         Sheet sheet = this.workbook.getSheetAt(sheetIndex);
         OftenUtil.assertCond(sheet == null, "未正常解析工作簿，索引：" + sheetIndex);
 
-        List<RowItem> ls = new ArrayList<>();
         // 得到Excel的行数
         int totalRows = sheet.getPhysicalNumberOfRows();
 
@@ -111,10 +132,8 @@ public class ExcelHelper implements Closeable {
                 data.add(cellValue);
             }
             RowItem rowItem = new RowItem(rowNum, data);
-            ls.add(rowItem);
+            rowAct.accept(rowItem);
         }
-
-        return ls;
     }
 
 //    // 获取工作簿
