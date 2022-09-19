@@ -58,9 +58,14 @@ public class DemoTest {
             // sql+参数化
             BoundSql boundSql = null;
 
-            //
+            // SqlSession
             SqlSession sqlSession = null;
             DefaultSqlSession defaultSqlSession = null;
+
+            // 反射
+            Reflector reflector = new Reflector(KV.class);
+            String id = reflector.findPropertyName("id");
+            String name = reflector.findPropertyName("Name");
         }
 
         {
