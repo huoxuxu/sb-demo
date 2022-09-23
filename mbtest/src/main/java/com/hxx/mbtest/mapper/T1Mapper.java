@@ -53,7 +53,10 @@ public interface T1Mapper {
     void updateBatch(List<Map<String, Object>> ls);
 
     //删除用户
-    int deleteUserById(@Param("id") int id);
+    int deleteUserById(int id);
+
+    // 批量删除
+    int delByIds(List<Integer> ids);
 
 
 }

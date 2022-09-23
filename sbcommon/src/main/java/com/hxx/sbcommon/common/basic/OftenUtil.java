@@ -60,6 +60,28 @@ public class OftenUtil {
         }
     }
 
+    /**
+     * 校验包装类型有效性，
+     * 注意：会要求入参大于0
+     *
+     * @param i
+     * @return
+     */
+    public static boolean validInteger(Integer i) {
+        return i != null && i > 0;
+    }
+
+    /**
+     * 校验日期有效性
+     * 注意：年份必须大于2000年
+     *
+     * @param ldt
+     * @return
+     */
+    public static boolean validLocalDateTime(LocalDateTime ldt) {
+        return ldt != null && ldt.getYear() > 2000;
+    }
+
     // Number
 
     /**
@@ -221,8 +243,6 @@ public class OftenUtil {
                 .collect(Collectors.toList());
     }
 
-    // 日期
-
     // Date&LocalDateTime
     // yyyy-MM-dd HH:mm:ss
     private final static DateTimeFormatter DateTime_Default_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd " + "HH:mm:ss");
@@ -359,45 +379,6 @@ public class OftenUtil {
         }
 
         return days;
-    }
-
-    // 字符串
-
-    /**
-     * 分割字符串
-     *
-     * @param oriStr
-     * @param separatorChars
-     * @return
-     */
-    public static List<String> Split(String oriStr, String separatorChars) {
-        List<String> ls = new ArrayList<>();
-        if (StringUtils.isBlank(oriStr)) {
-            return ls;
-        }
-
-        String[] arr = StringUtils.split(oriStr, separatorChars);
-        for (String item : arr) {
-            if (StringUtils.isBlank(item)) {
-                continue;
-            }
-
-            ls.add(item.trim());
-        }
-
-        return ls;
-    }
-
-    /**
-     * 替换字符串
-     *
-     * @param oriStr
-     * @param str1
-     * @param newStr1
-     * @return
-     */
-    public static String Replace(String oriStr, String str1, String newStr1) {
-        return StringUtils.replace(oriStr, str1, newStr1);
     }
 
     // UUID

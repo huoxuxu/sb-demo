@@ -6,7 +6,6 @@ import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
 import org.apache.ibatis.reflection.invoker.Invoker;
 import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
-import org.apache.ibatis.reflection.property.PropertyNamer;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -25,16 +24,16 @@ public class MyReflector {
     private final String[] readablePropertyNames;
     // 可写的属性名
     private final String[] writeablePropertyNames;
-    private final Map<String, Invoker> setMethods = new HashMap();
-    private final Map<String, Invoker> getMethods = new HashMap();
+    private final Map<String, Invoker> setMethods = new HashMap<>();
+    private final Map<String, Invoker> getMethods = new HashMap<>();
     /**
      * k=属性名，v=属性类型
      */
-    private final Map<String, Class<?>> setTypes = new HashMap();
+    private final Map<String, Class<?>> setTypes = new HashMap<>();
     /**
      * k=属性名，v=属性类型
      */
-    private final Map<String, Class<?>> getTypes = new HashMap();
+    private final Map<String, Class<?>> getTypes = new HashMap<>();
 
     public String[] getReadablePropertyNames() {
         return readablePropertyNames;
@@ -59,16 +58,12 @@ public class MyReflector {
 
 
     private void addGetMethods(Class<?> cls) {
-        Map<String, List<Method>> conflictingGetters = new HashMap();
+        Map<String, List<Method>> conflictingGetters = new HashMap<>();
         Method[] methods = this.getClassMethods(cls);
-        Method[] var4 = methods;
-        int var5 = methods.length;
-
-        for (int var6 = 0; var6 < var5; ++var6) {
-            Method method = var4[var6];
+        for (Method method : methods) {
             if (method.getParameterTypes().length <= 0) {
                 String name = method.getName();
-                if (name.startsWith("get") && name.length() > 3 || name.startsWith("is") && name.length() > 2) {
+                if ((name.startsWith("get") && name.length() > 3) || (name.startsWith("is") && name.length() > 2)) {
                     name = PropertyNamer.methodToProperty(name);
                     this.addMethodConflict(conflictingGetters, name, method);
                 }
@@ -380,4 +375,38 @@ public class MyReflector {
         }
     }
 
+    public static class PropertyNamer {
+        private PropertyNamer() {
+        }
+
+        public static String methodToProperty(String name) {
+            if (name.startsWith("is")) {
+                name = name.substring(2);
+            } else {
+                if (!name.startsWith("get") && !name.startsWith("set")) {
+                    throw new ReflectionException("Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
+                }
+
+                name = name.substring(3);
+            }
+
+            if (name.length() == 1 || name.length() > 1 && !Character.isUpperCase(name.charAt(1))) {
+                name = name.substring(0, 1).toLowerCase(Locale.ENGLISH) + name.substring(1);
+            }
+
+            return name;
+        }
+
+        public static boolean isProperty(String name) {
+            return name.startsWith("get") || name.startsWith("set") || name.startsWith("is");
+        }
+
+        public static boolean isGetter(String name) {
+            return name.startsWith("get") || name.startsWith("is");
+        }
+
+        public static boolean isSetter(String name) {
+            return name.startsWith("set");
+        }
+    }
 }

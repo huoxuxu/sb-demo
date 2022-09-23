@@ -179,5 +179,16 @@
         where id = #{id}
     </delete>
 
+    <!--删除-->
+    <delete id="delByIds">
+        delete
+        from zto_package_mix_config
+        where id in
+        <foreach collection="list" item="item" index="index"
+                 open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
 
 </mapper>

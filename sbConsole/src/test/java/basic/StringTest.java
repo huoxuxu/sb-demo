@@ -2,6 +2,7 @@ package basic;
 
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.basic.OftenUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +26,7 @@ public class StringTest {
         System.out.println(split);
 
         // 可以正常处理！！！
-        System.out.println(OftenUtil.Split(str, "^"));
+        System.out.println(StringUtils.split(str, "^"));
 
         System.out.println("ok");
     }
@@ -39,9 +40,16 @@ public class StringTest {
         System.out.println(split);
 
         // 可以正常处理！！！
-        System.out.println(OftenUtil.Split(str, "^"));
+        System.out.println(StringUtils.split(str, "^"));
 
         System.out.println("ok");
+
+        {
+            // output：1，2，3
+            String str1="1 2 3  ";
+            String[] s = str1.split(" ");
+            System.out.println(s);
+        }
     }
 
 

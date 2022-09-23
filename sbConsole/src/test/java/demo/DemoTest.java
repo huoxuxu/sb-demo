@@ -68,10 +68,6 @@ public class DemoTest {
             String name = reflector.findPropertyName("Name");
         }
 
-        {
-
-        }
-
         // 枚举
         JdbcType smallint = JdbcType.SMALLINT;
         System.out.println("");
