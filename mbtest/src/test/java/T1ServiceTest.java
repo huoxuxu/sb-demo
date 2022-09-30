@@ -14,15 +14,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MbtestApplication.class)
 public class T1ServiceTest {
-    @Autowired
-    private T1Service t1Service;
 
 
     @Test
     public void Run() {
         System.out.println("==============t1Service.Run==============");
 
-        t1Service.Run();
+//        t1Service.Run();
 
     }
 

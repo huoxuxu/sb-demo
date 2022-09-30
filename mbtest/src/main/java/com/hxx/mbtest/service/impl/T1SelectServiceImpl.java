@@ -3,7 +3,6 @@ package com.hxx.mbtest.service.impl;
 import com.hxx.mbtest.entity.T1;
 import com.hxx.mbtest.mapper.T1Mapper;
 import com.hxx.mbtest.mapper.example.T1Example;
-import com.hxx.mbtest.service.T1Service;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -26,7 +25,7 @@ import java.util.*;
  * @Date: 2021-05-09 12:26:11
  **/
 @Service
-public class T1SelectServiceImpl implements T1Service {
+public class T1SelectServiceImpl {
     private final static Logger log = LoggerFactory.getLogger(T1SelectServiceImpl.class);
 
     @Autowired
@@ -39,7 +38,6 @@ public class T1SelectServiceImpl implements T1Service {
     @Autowired
     PlatformTransactionManager transactionManager;
 
-    @Override
     public void Run() {
         log.info("开始执行：{}- {}", 1, new Date());
         {
@@ -167,7 +165,6 @@ public class T1SelectServiceImpl implements T1Service {
 
     }
 
-    @Override
     public void TransactionDemo() {
         transactionDemo();
     }

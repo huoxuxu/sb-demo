@@ -25,7 +25,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -72,7 +75,10 @@ public class DemoTest {
             String id = reflector.findPropertyName("id");
             String name = reflector.findPropertyName("Name");
 
-
+            // 事务
+            TransactionAspectSupport transactionAspectSupport = null;
+            AbstractPlatformTransactionManager abstractPlatformTransactionManager = null;
+            DataSourceTransactionManager dataSourceTransactionManager = null;
         }
 
         // 枚举
@@ -83,7 +89,7 @@ public class DemoTest {
     public static void case1() {
         MetaClass metaClass = MetaClass.forClass(Order.class, new DefaultReflectorFactory());
         // 获取所有有get方法的属性名
-        String [] getterNames = metaClass.getGetterNames();
+        String[] getterNames = metaClass.getGetterNames();
         System.out.println(JsonUtil.toJSON(getterNames));
         // 是否有默认构造方法
         boolean hasDefaultConstructor = metaClass.hasDefaultConstructor();
