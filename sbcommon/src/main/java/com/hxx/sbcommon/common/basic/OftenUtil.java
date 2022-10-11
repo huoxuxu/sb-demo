@@ -1,5 +1,6 @@
 package com.hxx.sbcommon.common.basic;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Array;
@@ -58,6 +59,81 @@ public class OftenUtil {
         if (condition) {
             throw new IllegalArgumentException(errMsg);
         }
+    }
+
+    /**
+     * 字符是否null或空白字符
+     *
+     * @param ch
+     * @return
+     */
+    public static boolean isNullOrWhiteSpace(Character ch) {
+        return ch == null || ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n' || ch == '\f' || ch == '\b';
+//        return StringUtils.isBlank(ch);
+//        return Character.isWhitespace(ch);
+    }
+
+    /**
+     * 字符串是否null或空白字符
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isNullOrWhiteSpace(String str) {
+        return StringUtils.isBlank(str);
+    }
+
+    /**
+     * 集合是否为空
+     *
+     * @param ls
+     * @return
+     */
+    public static boolean isEmpty(Collection<?> ls) {
+        return CollectionUtils.isEmpty(ls);
+    }
+
+    /**
+     * 数组是否为空
+     *
+     * @param arr
+     * @param <T>
+     * @return
+     */
+    public static <T> boolean isEmptyArray(T[] arr) {
+        return arr == null || arr.length == 0;
+    }
+
+    public static boolean isEmptyArray(boolean[] arr) {
+        return arr == null || arr.length == 0;
+    }
+
+    public static boolean isEmptyArray(char[] arr) {
+        return arr == null || arr.length == 0;
+    }
+
+    public static boolean isEmptyArray(byte[] arr) {
+        return arr == null || arr.length == 0;
+    }
+
+    public static boolean isEmptyArray(int[] arr) {
+        return arr == null || arr.length == 0;
+    }
+
+    public static boolean isEmptyArray(short[] arr) {
+        return arr == null || arr.length == 0;
+    }
+
+    public static boolean isEmptyArray(long[] arr) {
+        return arr == null || arr.length == 0;
+    }
+
+    public static boolean isEmptyArray(float[] arr) {
+        return arr == null || arr.length == 0;
+    }
+
+    public static boolean isEmptyArray(double[] arr) {
+        return arr == null || arr.length == 0;
     }
 
     /**
@@ -225,8 +301,12 @@ public class OftenUtil {
      * @return
      */
     public static <T> List<T> toList(T[] array) {
+        //Arrays.stream(arr).boxed().collect(Collectors.toList());// 不通用，仅支持int long double 等基础类型
         List<T> resultList = new ArrayList<>(array.length);
-        Collections.addAll(resultList, array);
+        //Collections.addAll(resultList, array);
+        for (T item : array) {
+            resultList.add(item);
+        }
 
         return resultList;
     }

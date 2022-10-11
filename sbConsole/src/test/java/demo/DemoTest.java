@@ -1,5 +1,6 @@
 package demo;
 
+import com.alibaba.fastjson.JSONValidator;
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import models.KV;
@@ -79,6 +80,11 @@ public class DemoTest {
             TransactionAspectSupport transactionAspectSupport = null;
             AbstractPlatformTransactionManager abstractPlatformTransactionManager = null;
             DataSourceTransactionManager dataSourceTransactionManager = null;
+        }
+
+        // fastJSON
+        {
+            JSONValidator jsonValidator = null;
         }
 
         // 枚举
