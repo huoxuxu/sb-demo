@@ -30,5 +30,13 @@
         </dependency>
     </dependencies>
 
-
+    <build>
+        <plugins>
+            <!--将项目依赖的jar包 打包进jar或war中-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
