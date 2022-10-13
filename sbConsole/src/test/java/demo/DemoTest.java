@@ -2,9 +2,11 @@ package demo;
 
 import com.alibaba.fastjson.JSONValidator;
 import com.hxx.sbConsole.SbConsoleApplication;
+import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import models.KV;
 import models.Order;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
@@ -89,6 +91,25 @@ public class DemoTest {
 
         // 枚举
         JdbcType smallint = JdbcType.SMALLINT;
+        {
+            String str = "123456";
+            {
+                String str1 = OftenUtil.cut(str, 19);
+                System.out.println(str1);
+            }
+            {
+                String str1 = OftenUtil.cut(str, 10);
+                System.out.println(str1);
+            }
+            {
+                String str1 = OftenUtil.cut(str, 0);
+                System.out.println(str1);
+            }
+            {
+                String str1 = OftenUtil.cut(str, 2);
+                System.out.println(str1);
+            }
+        }
         System.out.println("");
     }
 

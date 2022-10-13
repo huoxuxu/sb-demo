@@ -73,6 +73,8 @@ public class OftenUtil {
 //        return Character.isWhitespace(ch);
     }
 
+    // String
+
     /**
      * 字符串是否null或空白字符
      *
@@ -81,6 +83,31 @@ public class OftenUtil {
      */
     public static boolean isNullOrWhiteSpace(String str) {
         return StringUtils.isBlank(str);
+    }
+
+    /**
+     * 取字符串的前n位,
+     * 超过字符串总长度不会报错
+     *
+     * @param str
+     * @param count
+     * @return
+     */
+    public static String cut(String str, int count) {
+        if (StringUtils.isEmpty(str)) {
+            return str;
+        }
+
+        if (count == 0) {
+            return "";
+        }
+
+        int len = str.length();
+        if (count >= len) {
+            return str;
+        }
+
+        return str.substring(0, count);
     }
 
     /**
