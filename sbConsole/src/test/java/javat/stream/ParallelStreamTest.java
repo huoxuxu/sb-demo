@@ -1,4 +1,4 @@
-package java.stream;
+package javat.stream;
 
 import com.hxx.sbConsole.SbConsoleApplication;
 import org.junit.Test;

@@ -1,14 +1,14 @@
-package java;
+package javat;
 
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.json.JsonUtil;
+import javat.models.Employee;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeanUtils;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.models.Employee;
 import java.time.LocalDate;
 import java.util.Date;
 

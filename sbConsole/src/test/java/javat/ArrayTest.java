@@ -1,4 +1,4 @@
-package demo;
+package javat;
 
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.basic.OftenUtil;

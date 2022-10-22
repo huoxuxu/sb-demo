@@ -25,10 +25,14 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class PrintParamAspect {
     @Pointcut("@within(com.hxx.sbConsole.commons.annotation.PrintParamAnno)")
-    public void pointCut() {
+    public void objPointCut() {
     }
 
-    @Around("pointCut()")
+    @Pointcut("@annotation(com.hxx.sbConsole.commons.annotation.PrintParamAnno)")
+    public void methodPointCut() {
+    }
+
+    @Around("objPointCut() || methodPointCut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
         String uuid = OftenUtil.getUUID();
         String methodSign = getMethodSign(point);

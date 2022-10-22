@@ -1,8 +1,9 @@
-package java.stream;
+package javat.stream;
 
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.common.basic.datetime.LocalDateTimeUtil;
+import javat.models.Person;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.Test;
@@ -13,8 +14,8 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.models.Employee;
-import java.models.Person;
+import javat.models.Employee;
+
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package java;
+package javat;
 
 import com.hxx.sbConsole.SbConsoleApplication;
 import org.junit.Test;

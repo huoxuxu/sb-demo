@@ -1,4 +1,4 @@
-package java.resources;
+package javat.resources;
 
 import com.hxx.sbConsole.SbConsoleApplication;
 import org.apache.commons.io.FileUtils;

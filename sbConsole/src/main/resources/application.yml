@@ -11,3 +11,8 @@ person:
   dog:
     name: 迪迪
     age: 5
+spring:
+  redis:
+    cluster:
+      nodes:127.0.0.1:6401,127.0.0.1:6400
+    password: 123456

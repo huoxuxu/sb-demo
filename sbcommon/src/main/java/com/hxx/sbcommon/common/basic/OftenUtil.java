@@ -352,7 +352,7 @@ public class OftenUtil {
 
     // Date&LocalDateTime
     // yyyy-MM-dd HH:mm:ss
-    private final static DateTimeFormatter DateTime_Default_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd " + "HH:mm:ss");
+    private final static DateTimeFormatter DateTime_Default_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     // yyyy-MM-dd
     private final static DateTimeFormatter DateTime_Date_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
