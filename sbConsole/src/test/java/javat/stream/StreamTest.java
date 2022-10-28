@@ -14,6 +14,7 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.math.BigDecimal;
+
 import javat.models.Employee;
 
 import java.nio.charset.StandardCharsets;
@@ -58,7 +59,10 @@ public class StreamTest {
 
         {
             Stream<String> stream = Stream.<String>builder()
-                    .add("XML").add("Java").add("CSS").add("SQL")
+                    .add("XML")
+                    .add("Java")
+                    .add("CSS")
+                    .add("SQL")
                     .build();
             stream.forEach(System.out::println);
         }
@@ -100,8 +104,10 @@ public class StreamTest {
         listStrings.add("1");
         listStrings.add("2");
 
-        String[] ss = listStrings.stream().toArray(String[]::new);
-        Arrays.stream(ss).forEach(System.out::println);
+        String[] ss = listStrings.stream()
+                .toArray(String[]::new);
+        Arrays.stream(ss)
+                .forEach(System.out::println);
     }
 
     @Test
@@ -113,9 +119,11 @@ public class StreamTest {
             Comparator<Person> comp1 = Comparator.comparing(Person::getScore)
                     .reversed()
                     .thenComparing(Person::getId);
-            List<Person> data = people.stream().sorted(comp1).collect(Collectors.toList());
-            data.forEach(d->{
-                System.out.println(d.getName()+"");
+            List<Person> data = people.stream()
+                    .sorted(comp1)
+                    .collect(Collectors.toList());
+            data.forEach(d -> {
+                System.out.println(d.getName() + "");
             });
         }
         {
@@ -125,39 +133,49 @@ public class StreamTest {
                     .reversed()
                     .thenComparing(Person::getId);
             people.sort(comp1);
-            people.forEach(d->{
-                System.out.println(d.getName()+"");
+            people.forEach(d -> {
+                System.out.println(d.getName() + "");
             });
         }
 
         List<Employee> persons = listPersons();
 
         Comparator<Employee> comparator = (o1, o2) -> {
-            int flag = o1.getBirthday().compareTo(o2.getBirthday());
+            int flag = o1.getBirthday()
+                    .compareTo(o2.getBirthday());
             return flag;
         };
 
         // 正序
-        persons.stream().sorted(comparator).forEach(d -> System.out.println(d.getBirthday()));
+        persons.stream()
+                .sorted(comparator)
+                .forEach(d -> System.out.println(d.getBirthday()));
 
         System.out.println("===============================");
 
         // 逆序
-        persons.stream().sorted(comparator.reversed()).forEach(d -> System.out.println(d.getBirthday()));
+        persons.stream()
+                .sorted(comparator.reversed())
+                .forEach(d -> System.out.println(d.getBirthday()));
 
         // 先按xx排序，后按xx排序
-        persons.stream().sorted(Comparator.comparing(Employee::getSalary).thenComparing(Employee::getAge))
+        persons.stream()
+                .sorted(Comparator.comparing(Employee::getSalary)
+                        .thenComparing(Employee::getAge))
                 .map(Employee::getName)
                 .collect(Collectors.toList());
 
         // 先按工资再按年龄自定义排序（降序）
-        persons.stream().sorted((p1, p2) -> {
-            if (p1.getSalary() == p2.getSalary()) {
-                return p2.getAge() - p1.getAge();
-            } else {
-                return p2.getSalary() - p1.getSalary();
-            }
-        }).map(Employee::getName).collect(Collectors.toList());
+        persons.stream()
+                .sorted((p1, p2) -> {
+                    if (p1.getSalary() == p2.getSalary()) {
+                        return p2.getAge() - p1.getAge();
+                    } else {
+                        return p2.getSalary() - p1.getSalary();
+                    }
+                })
+                .map(Employee::getName)
+                .collect(Collectors.toList());
 
         System.out.println("ok");
     }
@@ -165,18 +183,25 @@ public class StreamTest {
     @Test
     public void limit() {
         List<Employee> persons = listPersons();
-        persons.stream().forEach(d -> System.out.println(d.getName()));
+        persons.stream()
+                .forEach(d -> System.out.println(d.getName()));
         System.out.println("ls.size=" + persons.size());
         System.out.println();
 
-        persons = persons.stream().limit(2).collect(Collectors.toList());
+        persons = persons.stream()
+                .limit(2)
+                .collect(Collectors.toList());
         System.out.println("ls.size limit 2=" + persons.size());
-        persons.stream().forEach(d -> System.out.println(d.getName()));
+        persons.stream()
+                .forEach(d -> System.out.println(d.getName()));
         System.out.println();
 
-        persons = persons.stream().limit(20).collect(Collectors.toList());
+        persons = persons.stream()
+                .limit(20)
+                .collect(Collectors.toList());
         System.out.println("ls.size limit 20=" + persons.size());
-        persons.stream().forEach(d -> System.out.println(d.getName()));
+        persons.stream()
+                .forEach(d -> System.out.println(d.getName()));
         System.out.println();
     }
 
@@ -227,14 +252,18 @@ public class StreamTest {
     public void Find() {
         List<Employee> persons = listPersons();
         // Find any male
-        Optional<Employee> anyMale = persons.stream().filter(Employee::isMale).findAny();
+        Optional<Employee> anyMale = persons.stream()
+                .filter(Employee::isMale)
+                .findAny();
         if (anyMale.isPresent()) {
             System.out.println("Any male:   " + anyMale.get());
         } else {
             System.out.println("No male  found.");
         }
         // Find the first male
-        Optional<Employee> firstMale = persons.stream().filter(Employee::isMale).findFirst();
+        Optional<Employee> firstMale = persons.stream()
+                .filter(Employee::isMale)
+                .findFirst();
         if (firstMale.isPresent()) {
             System.out.println("First male:   " + anyMale.get());
         } else {
@@ -304,7 +333,8 @@ public class StreamTest {
     @Test
     public void Count() {
         {
-            long personCount = listPersons().stream().count();
+            long personCount = listPersons().stream()
+                    .count();
             System.out.println("Person count: " + personCount);
         }
         {
@@ -406,6 +436,13 @@ public class StreamTest {
     @Test
     public void Group() {
         {
+            // 单字段分组
+            Map<Employee.Gender, List<Employee>> map = listPersons()
+                    .stream()
+                    .collect(Collectors.groupingBy(Employee::getGender));
+            System.out.println(map);
+        }
+        {
             Map<Employee.Gender, Long> countByGender = listPersons()
                     .stream()
                     .collect(Collectors.groupingBy(Employee::getGender, Collectors.counting()));
@@ -432,7 +469,8 @@ public class StreamTest {
                     = listPersons()
                     .stream()
                     .collect(Collectors.groupingBy(Employee::getGender,
-                            Collectors.groupingBy(p -> p.getCreateTime().getMonth(),
+                            Collectors.groupingBy(p -> p.getCreateTime()
+                                            .getMonth(),
                                     Collectors.mapping(Employee::getName, Collectors.joining(", ")))));
 
             System.out.println(personsByGenderAndDobMonth);
@@ -481,13 +519,15 @@ public class StreamTest {
             {
                 // Check if any person was born in 1971
                 boolean anyoneBornIn1971 = persons.stream()
-                        .anyMatch(p -> p.getCreateTime().getYear() == 1971);
+                        .anyMatch(p -> p.getCreateTime()
+                                .getYear() == 1971);
                 System.out.println("Anyone born  in 1971:  " + anyoneBornIn1971);
             }
             {
                 // Check if none person was born in 1971
                 boolean noneBornIn1971 = persons.stream()
-                        .noneMatch(p -> p.getCreateTime().getYear() == 1971);
+                        .noneMatch(p -> p.getCreateTime()
+                                .getYear() == 1971);
                 System.out.println("none born  in 1971:  " + noneBornIn1971);
             }
         }
@@ -577,7 +617,8 @@ public class StreamTest {
             OptionalDouble income =
                     listPersons()
                             .stream()
-                            .mapToDouble(Employee::getIncome).max();
+                            .mapToDouble(Employee::getIncome)
+                            .max();
 
             if (income.isPresent()) {
                 System.out.println("Highest income:   " + income.getAsDouble());
@@ -615,14 +656,16 @@ public class StreamTest {
                             0.0,
                             (Double partialSum, Employee p) -> {
                                 double accumulated = partialSum + p.getIncome();
-                                System.out.println(Thread.currentThread().getName()
+                                System.out.println(Thread.currentThread()
+                                        .getName()
                                         + "  - Accumulator: partialSum  = " + partialSum
                                         + ",  person = " + p + ", accumulated = " + accumulated);
                                 return accumulated;
                             },
                             (a, b) -> {
                                 double combined = a + b;
-                                System.out.println(Thread.currentThread().getName()
+                                System.out.println(Thread.currentThread()
+                                        .getName()
                                         + "  - Combiner:  a  = " + a + ", b  = " + b
                                         + ", combined  = " + combined);
                                 return combined;
@@ -636,14 +679,16 @@ public class StreamTest {
                             0.0,
                             (Double partialSum, Employee p) -> {
                                 double accumulated = partialSum + p.getIncome();
-                                System.out.println(Thread.currentThread().getName()
+                                System.out.println(Thread.currentThread()
+                                        .getName()
                                         + "  - Accumulator: partialSum  = " + partialSum
                                         + ",  person = " + p + ", accumulated = " + accumulated);
                                 return accumulated;
                             },
                             (a, b) -> {
                                 double combined = a + b;
-                                System.out.println(Thread.currentThread().getName()
+                                System.out.println(Thread.currentThread()
+                                        .getName()
                                         + "  - Combiner:  a  = " + a + ", b  = " + b
                                         + ", combined  = " + combined);
                                 return combined;
@@ -651,7 +696,8 @@ public class StreamTest {
             System.out.println(sum);
         }
         {
-            Optional<Integer> max = Stream.of(1, 2, 3, 4, 5).reduce(Integer::max);
+            Optional<Integer> max = Stream.of(1, 2, 3, 4, 5)
+                    .reduce(Integer::max);
 
             if (max.isPresent()) {
                 System.out.println("max = " + max.get());
@@ -659,7 +705,8 @@ public class StreamTest {
                 System.out.println("max is not  defined.");
             }
 
-            max = Stream.<Integer>empty().reduce(Integer::max);
+            max = Stream.<Integer>empty()
+                    .reduce(Integer::max);
             if (max.isPresent()) {
                 System.out.println("max = " + max.get());
             } else {
