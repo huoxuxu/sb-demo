@@ -27,9 +27,10 @@ public class CustomTypeHandler implements LangTypeHandler<Object> {
             return null;
         }
 
-        if (val instanceof Object) {
-            return val;
-        }
+        // 不能先判断，貌似所有类型都是true。。。
+//        if (val instanceof Object) {
+//            return val;
+//        }
 
         if (val instanceof String) {
             String str = (String) val;

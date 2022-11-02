@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @RestController
 @RequestMapping("bt")
-public class BasicTestController extends BaseController {
+public class ExceptionTestController extends BaseController {
 
     @Autowired
     private BasicTestService basicTestService;
@@ -32,6 +32,13 @@ public class BasicTestController extends BaseController {
         return ok(str1);
     }
 
+    /**
+     * 局部异常捕获，仅捕获当前Controller内的异常
+     *
+     * @param req
+     * @param e
+     * @return
+     */
     @ResponseBody
     @ExceptionHandler({Exception.class, IllegalArgumentException.class})
     public String exceptionHandler(HttpServletRequest req, Exception e) {

@@ -1,5 +1,6 @@
 package com.hxx.sbcommon.common.reflect;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
@@ -45,9 +46,12 @@ public class MyReflector {
 
     public MyReflector(Class<?> clazz) {
         this.type = clazz;
+
         this.addGetMethods(clazz);
         this.addSetMethods(clazz);
+
         this.addFields(clazz);
+
         this.readablePropertyNames = (String[]) this.getMethods.keySet()
                 .toArray(new String[this.getMethods.keySet()
                         .size()]);
@@ -58,60 +62,51 @@ public class MyReflector {
 
 
     private void addGetMethods(Class<?> cls) {
-        Map<String, List<Method>> conflictingGetters = new HashMap<>();
+        Map<String, List<Method>> getterMap = new HashMap<>();
         Method[] methods = this.getClassMethods(cls);
         for (Method method : methods) {
             if (method.getParameterTypes().length <= 0) {
                 String name = method.getName();
                 if ((name.startsWith("get") && name.length() > 3) || (name.startsWith("is") && name.length() > 2)) {
                     name = PropertyNamer.methodToProperty(name);
-                    this.addMethodConflict(conflictingGetters, name, method);
+                    this.addMethodToMap(getterMap, name, method);
                 }
             }
         }
 
-        this.resolveGetterConflicts(conflictingGetters);
+        this.resolveGetterConflicts(getterMap);
     }
 
-    private void resolveGetterConflicts(Map<String, List<Method>> conflictingGetters) {
-        Iterator var2 = conflictingGetters.entrySet()
-                .iterator();
-
-        while (var2.hasNext()) {
-            Map.Entry<String, List<Method>> entry = (Map.Entry) var2.next();
+    private void resolveGetterConflicts(Map<String, List<Method>> getterMap) {
+        getterMap.forEach((propName,getters)->{
             Method winner = null;
-            String propName = (String) entry.getKey();
-            Iterator var6 = ((List) entry.getValue()).iterator();
-
-            while (var6.hasNext()) {
-                Method candidate = (Method) var6.next();
+            for (Method getter : getters) {
                 if (winner == null) {
-                    winner = candidate;
+                    winner = getter;
                 } else {
                     Class<?> winnerType = winner.getReturnType();
-                    Class<?> candidateType = candidate.getReturnType();
+                    Class<?> candidateType = getter.getReturnType();
                     if (candidateType.equals(winnerType)) {
                         if (!Boolean.TYPE.equals(candidateType)) {
                             throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property " + propName + " in class " + winner.getDeclaringClass() + ". This breaks the JavaBeans specification and can cause unpredictable results.");
                         }
 
-                        if (candidate.getName()
+                        if (getter.getName()
                                 .startsWith("is")) {
-                            winner = candidate;
+                            winner = getter;
                         }
                     } else if (!candidateType.isAssignableFrom(winnerType)) {
                         if (!winnerType.isAssignableFrom(candidateType)) {
                             throw new ReflectionException("Illegal overloaded getter method with ambiguous type for property " + propName + " in class " + winner.getDeclaringClass() + ". This breaks the JavaBeans specification and can cause unpredictable results.");
                         }
 
-                        winner = candidate;
+                        winner = getter;
                     }
                 }
             }
 
             this.addGetMethod(propName, winner);
-        }
-
+        });
     }
 
     private void addGetMethod(String name, Method method) {
@@ -124,37 +119,28 @@ public class MyReflector {
     }
 
     private void addSetMethods(Class<?> cls) {
-        Map<String, List<Method>> conflictingSetters = new HashMap();
+        Map<String, List<Method>> settersMap = new HashMap<>();
         Method[] methods = this.getClassMethods(cls);
-        Method[] var4 = methods;
-        int var5 = methods.length;
 
-        for (int var6 = 0; var6 < var5; ++var6) {
-            Method method = var4[var6];
+        for (int i = 0; i < methods.length; i++) {
+            Method method = methods[i];
             String name = method.getName();
             if (name.startsWith("set") && name.length() > 3 && method.getParameterTypes().length == 1) {
                 name = PropertyNamer.methodToProperty(name);
-                this.addMethodConflict(conflictingSetters, name, method);
+                this.addMethodToMap(settersMap, name, method);
             }
         }
 
-        this.resolveSetterConflicts(conflictingSetters);
+        this.resolveSetterConflicts(settersMap);
     }
 
-    private void resolveSetterConflicts(Map<String, List<Method>> conflictingSetters) {
-        Iterator var2 = conflictingSetters.keySet()
-                .iterator();
-
-        while (var2.hasNext()) {
-            String propName = (String) var2.next();
-            List<Method> setters = (List) conflictingSetters.get(propName);
-            Class<?> getterType = (Class) this.getTypes.get(propName);
+    private void resolveSetterConflicts(Map<String, List<Method>> settersMap) {
+        settersMap.forEach((propName, setters) -> {
+            Class<?> getterType = this.getTypes.get(propName);
             Method match = null;
             ReflectionException exception = null;
-            Iterator var8 = setters.iterator();
 
-            while (var8.hasNext()) {
-                Method setter = (Method) var8.next();
+            for (Method setter : setters) {
                 Class<?> paramType = setter.getParameterTypes()[0];
                 if (paramType.equals(getterType)) {
                     match = setter;
@@ -176,8 +162,7 @@ public class MyReflector {
             }
 
             this.addSetMethod(propName, match);
-        }
-
+        });
     }
 
     private Method pickBetterSetter(Method setter1, Method setter2, String property) {
@@ -207,15 +192,12 @@ public class MyReflector {
 
     private void addFields(Class<?> clazz) {
         Field[] fields = clazz.getDeclaredFields();
-        Field[] var3 = fields;
-        int var4 = fields.length;
-
-        for (int var5 = 0; var5 < var4; ++var5) {
-            Field field = var3[var5];
+        for (int var5 = 0; var5 < fields.length; ++var5) {
+            Field field = fields[var5];
             if (canAccessPrivateMethods()) {
                 try {
                     field.setAccessible(true);
-                } catch (Exception var8) {
+                } catch (Exception ignored) {
                 }
             }
 
@@ -257,58 +239,56 @@ public class MyReflector {
 
     }
 
+    // 获取类型的所有方法,会获取基类的方法
     private Method[] getClassMethods(Class<?> cls) {
-        Map<String, Method> uniqueMethods = new HashMap();
+        Map<String, Method> uniqueMethods = new HashMap<>();
 
         for (Class<?> currentClass = cls; currentClass != null && currentClass != Object.class; currentClass = currentClass.getSuperclass()) {
             this.addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
             Class<?>[] interfaces = currentClass.getInterfaces();
-            Class[] var5 = interfaces;
-            int var6 = interfaces.length;
 
-            for (int var7 = 0; var7 < var6; ++var7) {
-                Class<?> anInterface = var5[var7];
+            for (Class<?> anInterface : interfaces) {
                 this.addUniqueMethods(uniqueMethods, anInterface.getMethods());
             }
         }
 
         Collection<Method> methods = uniqueMethods.values();
-        return (Method[]) methods.toArray(new Method[methods.size()]);
+        return methods.toArray(new Method[methods.size()]);
     }
 
     private void addUniqueMethods(Map<String, Method> uniqueMethods, Method[] methods) {
-        Method[] var3 = methods;
-        int var4 = methods.length;
+        for (int var5 = 0; var5 < methods.length; ++var5) {
+            Method currentMethod = methods[var5];
+            if (currentMethod.isBridge()) {
+                continue;
+            }
 
-        for (int var5 = 0; var5 < var4; ++var5) {
-            Method currentMethod = var3[var5];
-            if (!currentMethod.isBridge()) {
-                String signature = this.getSignature(currentMethod);
-                if (!uniqueMethods.containsKey(signature)) {
-                    if (canAccessPrivateMethods()) {
-                        try {
-                            currentMethod.setAccessible(true);
-                        } catch (Exception var9) {
-                        }
-                    }
+            String signature = this.getMethodSignature(currentMethod);
+            if (uniqueMethods.containsKey(signature)) {
+                continue;
+            }
 
-                    uniqueMethods.put(signature, currentMethod);
+            if (canAccessPrivateMethods()) {
+                try {
+                    currentMethod.setAccessible(true);
+                } catch (Exception ignored) {
                 }
             }
-        }
 
+            uniqueMethods.put(signature, currentMethod);
+        }
     }
 
-    private void addMethodConflict(Map<String, List<Method>> conflictingMethods, String name, Method method) {
-        List<Method> list = conflictingMethods.get(name);
-        if (list == null) {
-            list = new ArrayList();
-            conflictingMethods.put(name, list);
+    // 加入Map中
+    private void addMethodToMap(Map<String, List<Method>> methodMap, String name, Method method) {
+        List<Method> item = methodMap.getOrDefault(name, new ArrayList<>());
+        if (CollectionUtils.isEmpty(item)) {
+            methodMap.put(name, item);
         }
-
-        ((List) list).add(method);
+        item.add(method);
     }
 
+    // Type转Class
     private Class<?> typeToClass(Type src) {
         Class<?> result = null;
         if (src instanceof Class) {
@@ -334,11 +314,13 @@ public class MyReflector {
         return result;
     }
 
+    // 是否有效的属性名
     private boolean isValidPropertyName(String name) {
         return !name.startsWith("$") && !"serialVersionUID".equals(name) && !"class".equals(name);
     }
 
-    private String getSignature(Method method) {
+    // 获取方法签名
+    private String getMethodSignature(Method method) {
         StringBuilder sb = new StringBuilder();
         Class<?> returnType = method.getReturnType();
         if (returnType != null) {
@@ -362,6 +344,7 @@ public class MyReflector {
         return sb.toString();
     }
 
+    // 是否可访问私有方法
     private static boolean canAccessPrivateMethods() {
         try {
             SecurityManager securityManager = System.getSecurityManager();
@@ -391,7 +374,8 @@ public class MyReflector {
             }
 
             if (name.length() == 1 || name.length() > 1 && !Character.isUpperCase(name.charAt(1))) {
-                name = name.substring(0, 1).toLowerCase(Locale.ENGLISH) + name.substring(1);
+                name = name.substring(0, 1)
+                        .toLowerCase(Locale.ENGLISH) + name.substring(1);
             }
 
             return name;

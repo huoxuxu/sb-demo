@@ -1,6 +1,8 @@
 package com.hxx.sbcommon.common.reflect;
 
 import java.lang.reflect.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 反射
@@ -70,15 +72,98 @@ public class ReflectUtil {
             return (Class) rawType;
         } else if (type instanceof GenericArrayType) {
             Type componentType = ((GenericArrayType) type).getGenericComponentType();
-            return Array.newInstance(getRawType(componentType), 0).getClass();
+            return Array.newInstance(getRawType(componentType), 0)
+                    .getClass();
         } else if (type instanceof TypeVariable) {
             return Object.class;
         } else if (type instanceof WildcardType) {
             return getRawType(((WildcardType) type).getUpperBounds()[0]);
         } else {
-            String className = type == null ? "null" : type.getClass().getName();
+            String className = type == null ? "null" : type.getClass()
+                    .getName();
             throw new IllegalArgumentException("Expected a Class, ParameterizedType, or GenericArrayType, but <" + type + "> is of type " + className);
         }
+    }
+
+
+    /**
+     * 获取方法Map，key= 方法签名，val= 方法
+     *
+     * @param currentClass
+     * @return
+     */
+    public static Map<String, Method> getMethods(Class<?> currentClass) {
+        Map<String, Method> uniqueMethods = new HashMap();
+
+        for (; currentClass != null && currentClass != Object.class; currentClass = currentClass.getSuperclass()) {
+            // self
+            {
+                Method[] methods = currentClass.getDeclaredMethods();
+                addUniqueMethod(uniqueMethods, methods);
+            }
+
+            // 接口
+            Class<?>[] interfaces = currentClass.getInterfaces();
+            for (Class<?> interf : interfaces) {
+                Method[] methods = interf.getMethods();
+                addUniqueMethod(uniqueMethods, methods);
+            }
+        }
+
+        return uniqueMethods;
+    }
+
+    /**
+     * 获取方法签名
+     * com.zto.base.bean.ConfigResponse#pageQuerySecCode:com.zto.base.bean.request.TSecCodeRequest,java.lang.Integer,java.lang.Integer
+     *
+     * @param method
+     * @return
+     */
+    public static String getMethodSignature(Method method) {
+        StringBuilder sb = new StringBuilder();
+        Class<?> returnType = method.getReturnType();
+        if (returnType != null) {
+            sb.append(returnType.getName())
+                    .append('#');
+        }
+
+        sb.append(method.getName());
+        Class<?>[] parameters = method.getParameterTypes();
+
+        for (int i = 0; i < parameters.length; ++i) {
+            if (i == 0) {
+                sb.append(':');
+            } else {
+                sb.append(',');
+            }
+
+            sb.append(parameters[i].getName());
+        }
+
+        return sb.toString();
+    }
+
+    private static void addUniqueMethod(Map<String, Method> uniqueMethods, Method[] methods) {
+        for (Method method : methods) {
+            Method method1 = getMethod(method);
+            if (method1 == null) {
+                continue;
+            }
+
+            String methodSign = getMethodSignature(method);
+            if (!uniqueMethods.containsKey(methodSign)) {
+                uniqueMethods.put(methodSign, method);
+            }
+        }
+    }
+
+    private static Method getMethod(Method method) {
+        if (method.isBridge()) {
+            return null;
+        }
+
+        return method;
     }
 
 }

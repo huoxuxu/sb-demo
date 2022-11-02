@@ -1,5 +1,7 @@
 package com.hxx.sbConsole.commons.enums;
 
+import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.LangTypeHandlerFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.ibatis.type.JdbcType;
@@ -59,5 +61,36 @@ public enum LinePatternEnum {
         }
 
         return enumModel.getName();
+    }
+
+    public static void main(String[] args) {
+        LinePatternEnum linePatternEnum = LinePatternEnum.BIG;
+        Class<?> defaultEnumTypeHandler = LangTypeHandlerFactory.getDefaultEnumTypeHandler();
+        LangTypeHandler inst = LangTypeHandlerFactory.getInstance(defaultEnumTypeHandler, LinePatternEnum.class);
+        {
+            // 测试同类型
+            LinePatternEnum eval = (LinePatternEnum) inst.convert(linePatternEnum);
+            System.out.println(eval);
+        }
+        {
+            // 测试字符串
+            LinePatternEnum eval = (LinePatternEnum) inst.convert("BIG");
+            System.out.println(eval);
+        }
+        {
+            // 测试字符串  不通过
+//            LinePatternEnum eval = (LinePatternEnum) inst.convert("big");
+//            System.out.println(eval);
+        }
+        {
+            // 测试字符串
+            LinePatternEnum eval = (LinePatternEnum) inst.convert(1);
+            System.out.println(eval);
+        }
+        {
+            // 测试字符串
+            LinePatternEnum eval = (LinePatternEnum) inst.convert(0L);
+            System.out.println(eval);
+        }
     }
 }

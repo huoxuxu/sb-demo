@@ -17,9 +17,11 @@ import java.util.Map;
  * @Date: 2022-10-27 13:01:05
  **/
 public class LangTypeHandlerFactory {
-    private static Map<Class, LangTypeHandler> typeHandlerMap = new HashMap<>();
+    private static final Map<Class<?>, LangTypeHandler<?>> typeHandlerMap = new HashMap<>();
     // 自定义类型处理
-    private static Class<?> customTypeHandlerCls = CustomTypeHandler.class;
+    private static final Class<?> customTypeHandlerCls = CustomTypeHandler.class;
+    // 枚举处理
+    private static final Class<?> defaultEnumTypeHandler = EnumTypeHandler.class;
 
     static {
         typeHandlerMap.put(String.class, new StringTypeHandler());
@@ -58,6 +60,15 @@ public class LangTypeHandlerFactory {
      */
     public static Class<?> getCustomTypeHandlerCls() {
         return customTypeHandlerCls;
+    }
+
+    /**
+     * 获取枚举类型处理器
+     *
+     * @return
+     */
+    public static Class<?> getDefaultEnumTypeHandler() {
+        return defaultEnumTypeHandler;
     }
 
     /**
