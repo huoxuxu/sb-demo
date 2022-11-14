@@ -350,6 +350,36 @@ public class OftenUtil {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 取集合第一个元素
+     *
+     * @param ls
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    public static <T> T first(List<T> ls) throws Exception {
+        if (CollectionUtils.isEmpty(ls)) {
+            throw new Exception("集合不包含任何元素");
+        }
+        return ls.get(0);
+    }
+
+    /**
+     * 取集合第一个元素,如果为空集合则返回默认值
+     *
+     * @param ls
+     * @param defaultVal
+     * @param <T>
+     * @return
+     */
+    public static <T> T firstOrDefault(List<T> ls, T defaultVal) {
+        if (CollectionUtils.isEmpty(ls)) {
+            return defaultVal;
+        }
+        return ls.get(0);
+    }
+
     // Date&LocalDateTime
     // yyyy-MM-dd HH:mm:ss
     private final static DateTimeFormatter DateTime_Default_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
