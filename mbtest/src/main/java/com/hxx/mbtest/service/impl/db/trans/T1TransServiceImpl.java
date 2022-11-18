@@ -6,6 +6,7 @@ import com.hxx.sbcommon.common.json.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
@@ -32,6 +33,37 @@ public class T1TransServiceImpl {
 
     @Autowired
     private T1Mapper t1Mapper;
+
+    @Autowired
+    private DataSourceTransactionManager dsTransactionManager;
+
+    public void addDemo() {
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        // explicitly setting the transaction name is something that can only be done programmatically
+        def.setName("SomeTxName");
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+        TransactionStatus status = dsTransactionManager.getTransaction(def);
+        try {
+            // execute your business logic here
+            T1 t1 = new T1();
+            {
+                t1.setCode("orange");
+                t1.setName("橙子");
+                t1.setScore(86.2);
+                t1.setEnabled(true);
+                t1.setEnabled(false);
+                LocalDateTime now = LocalDateTime.now();
+                t1.setBirthday(now.minusYears(1));
+                t1.setCreateTime(now.minusYears(2));
+            }
+            int ret = t1Mapper.addUser(t1);
+            System.out.println("ccc:" + ret);
+        } catch (Exception ex) {
+            dsTransactionManager.rollback(status);
+            throw ex;
+        }
+    }
 
     public boolean transDemo(int flag) {
         // 模拟出现了异常，如何来进行处理？

@@ -30,7 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.interceptor.TransactionInterceptor;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
 import java.time.LocalDateTime;
@@ -82,6 +84,10 @@ public class DemoTest {
             TransactionAspectSupport transactionAspectSupport = null;
             AbstractPlatformTransactionManager abstractPlatformTransactionManager = null;
             DataSourceTransactionManager dataSourceTransactionManager = null;
+
+            // SB事务
+            TransactionInterceptor transactionInterceptor = null;
+            PlatformTransactionManager platformTransactionManager = null;
         }
 
         // fastJSON

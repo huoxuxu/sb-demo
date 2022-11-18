@@ -3,6 +3,7 @@ package com.hxx.sbcommon.common.basic;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -530,6 +531,59 @@ public class OftenUtil {
                 .toString()
                 .replace("-", "")
                 .toUpperCase();
+    }
+
+    // 字节与HEX
+
+    /**
+     * 字符串转HEX字符串
+     *
+     * @param str      输入字符串
+     * @param splitStr HEX字符串的连接字符串
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    public static String toHexString(String str, String splitStr) throws UnsupportedEncodingException {
+        return toHexString(str, "UTF-8", splitStr);
+    }
+
+    /**
+     * 字符串转HEX字符串
+     *
+     * @param str         输入字符串
+     * @param charsetName 字符集名称，GBK、UTF-8
+     * @param splitStr    HEX字符串的连接字符串
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    public static String toHexString(String str, String charsetName, String splitStr) throws UnsupportedEncodingException {
+        byte[] arr = str.getBytes(charsetName);
+        return toHexString(arr, charsetName, splitStr);
+    }
+
+    /**
+     * 字节数组转HEX字符串
+     *
+     * @param arr
+     * @param charsetName
+     * @param splitStr
+     * @return
+     */
+    public static String toHexString(byte[] arr, String charsetName, String splitStr) {
+        splitStr = splitStr == null ? "" : splitStr;
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < arr.length; i++) {
+            byte b = arr[i];
+            String str1 = Integer.toHexString(b & 0xFF);
+            sb.append(str1);
+            if (i != arr.length - 1) {
+                sb.append(splitStr);
+            }
+        }
+
+        return sb.toString();
     }
 
     // 数据库
