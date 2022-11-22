@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.xml;
+package com.hxx.sbcommon.common.io.xml;
 
 import com.hxx.sbcommon.model.XStreamItem;
 import com.thoughtworks.xstream.XStream;

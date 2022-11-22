@@ -6,7 +6,10 @@ import com.hxx.sbweb.model.ResultBean;
 import com.hxx.sbweb.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -127,6 +131,17 @@ public class RequestParaController {
     public void testCookieParam(HttpServletRequest request, HttpServletResponse response,
                                 @CookieValue String sessionid) {
         System.out.println("通过CookieValue获取的参数sessionid=" + sessionid);
+    }
+
+    @RequestMapping("/testHttpEntity")
+    public ResponseEntity<String> handle(HttpEntity<byte[]> requestEntity) throws UnsupportedEncodingException {
+        String requestHeader = requestEntity.getHeaders()
+                .getFirst("MyRequestHeader");
+        byte[] requestBody = requestEntity.getBody();
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("MyResponseHeader", "MyValue");
+        return new ResponseEntity<String>("Hello World", responseHeaders, HttpStatus.CREATED);
     }
 
     /**

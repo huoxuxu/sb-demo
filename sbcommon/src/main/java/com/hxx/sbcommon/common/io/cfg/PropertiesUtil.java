@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.cfg;
+package com.hxx.sbcommon.common.io.cfg;
 
 import java.io.FileInputStream;
 import java.io.IOException;

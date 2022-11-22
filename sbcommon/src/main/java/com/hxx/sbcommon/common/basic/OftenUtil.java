@@ -14,6 +14,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -222,7 +223,7 @@ public class OftenUtil {
             return "0";
         }
 
-        // 去除小数点后无意义零
+        // 去除小数点后全是零的情况
         if (val == val.intValue()) {
             return val.intValue() + "";
         }
@@ -234,6 +235,7 @@ public class OftenUtil {
      * 格式化为字符串，
      * 为null时返回空字符串，
      * 去除1.00后的无意义0
+     * 不以科学计数法表示
      *
      * @param val
      * @return
@@ -247,9 +249,21 @@ public class OftenUtil {
             return "0";
         }
 
-        // 去除小数点后无意义零,且不以科学计数发表示
+        // 去除小数点后无意义零,
         return val.stripTrailingZeros()
+                //且不以科学计数法表示
                 .toPlainString();
+    }
+
+    /**
+     * 字符串转为BigDecimal
+     * BigDecimal能够精确地表示你希望的数值，一定要使用字符串来表示小数，并传递给BigDecimal的构造函数
+     *
+     * @param num
+     * @return
+     */
+    public static BigDecimal convert2(String num) {
+        return new BigDecimal(num);
     }
 
     /**
@@ -584,6 +598,35 @@ public class OftenUtil {
         }
 
         return sb.toString();
+    }
+
+    // 随机数
+
+    /**
+     * 获取随机数
+     * 不能在多线程之间共享ThreadLocalRandom
+     *
+     * @param origin 起始
+     * @param bound  界限
+     * @return
+     */
+    public static int nextRandomVal(int origin, int bound) {
+        int randomVal = ThreadLocalRandom.current()
+                .nextInt(origin, bound);
+        return randomVal;
+    }
+
+    /**
+     * 获取随机数
+     * 不能在多线程之间共享ThreadLocalRandom
+     *
+     * @param bound 界限
+     * @return
+     */
+    public static int nextRandomVal(int bound) {
+        int randomVal = ThreadLocalRandom.current()
+                .nextInt(0, bound);
+        return randomVal;
     }
 
     // 数据库
