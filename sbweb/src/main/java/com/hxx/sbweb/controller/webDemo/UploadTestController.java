@@ -1,9 +1,7 @@
-package com.hxx.sbrest.controller;
+package com.hxx.sbweb.controller.webDemo;
 
-import com.hxx.sbrest.controller.base.BaseController;
-import com.hxx.sbrest.model.Chunk;
-import com.hxx.sbrest.model.UploadParam;
-import com.hxx.sbrest.service.BasicTestService;
+import com.hxx.sbweb.model.Chunk;
+import com.hxx.sbweb.model.UploadParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,19 +23,9 @@ import java.io.RandomAccessFile;
 @Slf4j
 @RestController
 @RequestMapping("upload")
-public class UploadTestController extends BaseController {
-
-    @Autowired
-    private BasicTestService basicTestService;
+public class UploadTestController {
     @Autowired
     MultipartResolver multipartResolver;
-
-    @RequestMapping("/switchTest")
-    public String switchTest(String str) {
-        log.info("请求参数：{} {{}}{{++--}}", str);
-        String str1 = basicTestService.switchTest(str);
-        return ok(str1);
-    }
 
     /**
      * 上传文件
@@ -47,9 +35,45 @@ public class UploadTestController extends BaseController {
      * @return
      */
     @PostMapping("/upload")
-    public String importScanData(@RequestParam(value = "upload") MultipartFile file, UploadParam pingDuoDuoImportParam) {
+    public String upload(@RequestParam(value = "upload") MultipartFile file, UploadParam pingDuoDuoImportParam) {
         return "";
     }
+
+    /**
+     * 单文件上传
+     *
+     * @param req
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("/upload1")
+    public String upload1(HttpServletRequest req, MultipartFile file) throws IOException {
+        String udir = req.getSession()
+                .getServletContext()
+                .getRealPath("/");
+
+        File f = new File(udir);
+        if (!f.exists()) {
+            f.mkdir();
+        }
+
+        // 上传文件名
+        String fileName = file.getOriginalFilename();
+        String fullName = udir + fileName;
+        File sf = new File(fullName);
+        file.transferTo(sf);
+
+        return "";
+    }
+
+    @PostMapping("/multupload")
+    public String multupload(HttpServletRequest req, MultipartFile[] files) {
+
+
+        return "";
+    }
+
 
     @PostMapping(value = "/multiSortPlanUpload")
     public String planUpload(@RequestParam(value = "file") MultipartFile file) {

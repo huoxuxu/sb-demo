@@ -15,6 +15,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -26,20 +28,12 @@ import java.time.LocalDateTime;
 @EnableAsync
 @EnableConfigurationProperties
 @EnableScheduling
+@ConfigurationPropertiesScan
 // 排除数据库配置扫描
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class})
 public class SbConsoleApplication {
 
     public static void main(String[] args) {
-        //case2();
-        try {
-            Integer num = null;
-            if (1 == num) {
-                System.out.println(1);
-            }
-        } catch (Exception e) {
-            log.error("err:{}", ExceptionUtils.getStackTrace(e));
-        }
         // 标准
         SpringApplication.run(SbConsoleApplication.class, args);
 

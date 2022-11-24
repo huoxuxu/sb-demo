@@ -1,5 +1,6 @@
-package com.hxx.sbweb.controller;
+package com.hxx.sbweb.controller.webDemo;
 
+import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbweb.common.ResultHandler;
 import com.hxx.sbweb.domain.User;
 import com.hxx.sbweb.model.ResultBean;
@@ -21,7 +22,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 请求参数映射示例
@@ -39,6 +42,28 @@ import java.util.List;
 public class RequestParaController {
 
     // =================================GET====================================
+
+    /**
+     * /rm/t1/9998/hhhxxx
+     *
+     * @param ids
+     * @param names
+     * @return
+     */
+    @GetMapping("t1/{id}/{name}")
+    public String test5(@PathVariable("id") Long ids, @PathVariable("name") String names) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", ids);
+        map.put("name", names);
+
+        return JsonUtil.toJSON(map);
+    }
+
+    @PostMapping("t1")
+    public String test1(@RequestBody List<Integer> ids) {
+        return ids + "";
+    }
+
 
     /**
      * 请求参数名和方法参数名不一致

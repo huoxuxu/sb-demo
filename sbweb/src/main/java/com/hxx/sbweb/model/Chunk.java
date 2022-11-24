@@ -1,4 +1,4 @@
-package com.hxx.sbrest.model;
+package com.hxx.sbweb.model;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;

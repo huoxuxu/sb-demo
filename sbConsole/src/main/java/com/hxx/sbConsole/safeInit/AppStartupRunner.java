@@ -1,9 +1,13 @@
 package com.hxx.sbConsole.safeInit;
 
+import com.hxx.sbConsole.springReadConfig.ReadSingleConfig;
+import com.hxx.sbConsole.springReadConfig.UseConfigProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * 与 CommandLineRunner接口类似, Spring boot 还提供另一个ApplicationRunner 接口来实现初始化逻辑。
@@ -16,6 +20,11 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class AppStartupRunner implements ApplicationRunner {
+    @Resource
+    private ReadSingleConfig readSingleConfig;
+    @Resource
+    private UseConfigProperties useConfigProperties;
+
     public static int counter;
 
     @Override
@@ -24,5 +33,8 @@ public class AppStartupRunner implements ApplicationRunner {
                 args.getOptionNames());
         log.info("Increment counter");
         counter++;
+        readSingleConfig.show();
+        useConfigProperties.show();
+
     }
 }

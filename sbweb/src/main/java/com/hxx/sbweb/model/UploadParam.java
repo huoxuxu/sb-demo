@@ -1,4 +1,4 @@
-package com.hxx.sbrest.model;
+package com.hxx.sbweb.model;
 
 /**
  * @Author: huoxuxu

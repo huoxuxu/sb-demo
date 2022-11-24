@@ -17,25 +17,5 @@ import java.util.Map;
 @RequestMapping("rm")
 public class RequestMappingController extends BaseController {
 
-    /**
-     * /rm/t1/9998/hhhxxx
-     *
-     * @param ids
-     * @param names
-     * @return
-     */
-    @GetMapping("t1/{id}/{name}")
-    public String test5(@PathVariable("id") Long ids, @PathVariable("name") String names) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", ids);
-        map.put("name", names);
-
-        return JsonUtil.toJSON(map);
-    }
-
-    @PostMapping("t1")
-    public String test1(@RequestBody List<Integer> ids) {
-        return ids + "";
-    }
 
 }
