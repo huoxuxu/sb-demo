@@ -22,30 +22,6 @@ public class JDKDynamicProxyTest {
         case1();
     }
 
-    static void case0() {
-        InvocationHandler handler = new InvocationHandler() {
-            @Override
-            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                System.out.println("================start=================");
-                System.out.println("method：" + method);
-                if (method.getName().equals("morning")) {
-                    System.out.println("Good morning, " + args[0]);
-                }
-
-                System.out.println("================end=================");
-                return null;
-            }
-        };
-
-        Hello hello = (Hello) Proxy.newProxyInstance(
-                // 传入ClassLoader
-                Hello.class.getClassLoader(),
-                // 传入要实现的接口
-                new Class[]{Hello.class},
-                // 传入处理调用方法的InvocationHandler
-                handler);
-        hello.morning("小小");
-    }
 
     /**
      * JDK代理，JDKDynamicProxyHandler必须传入接口

@@ -166,4 +166,18 @@ public class ReflectUtil {
         return method;
     }
 
+    /**
+     * 是否Object类的方法
+     *
+     * @param method
+     * @return
+     */
+    private static boolean isObjMethod(Method method) {
+        if (Object.class.equals(method.getDeclaringClass())) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
