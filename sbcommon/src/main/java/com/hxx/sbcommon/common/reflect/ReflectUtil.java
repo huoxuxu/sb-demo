@@ -144,6 +144,19 @@ public class ReflectUtil {
         return sb.toString();
     }
 
+    /**
+     * 创建泛型类型的实例
+     *
+     * @param clsT
+     * @param <T>
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    public static <T> T createInstance(Class clsT) throws InstantiationException, IllegalAccessException {
+        return (T) clsT.newInstance();
+    }
+
     private static void addUniqueMethod(Map<String, Method> uniqueMethods, Method[] methods) {
         for (Method method : methods) {
             Method method1 = getMethod(method);

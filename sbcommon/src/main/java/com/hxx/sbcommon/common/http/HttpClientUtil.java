@@ -1,5 +1,6 @@
 package com.hxx.sbcommon.common.http;
 
+import com.hxx.sbcommon.common.json.JsonStreamUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -20,20 +21,25 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.Args;
+import org.apache.http.util.CharArrayBuffer;
 import org.apache.http.util.EntityUtils;
 
 
 import javax.net.ssl.SSLContext;
-import java.io.IOException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.charset.UnsupportedCharsetException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -44,14 +50,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * http驱动，
+ * header信息，每次都需要重新写入请求
  * 超时、请求头、GET、POST、上传
  * <p>
  * BA认证：
  * urlParameters.add(new BasicNameValuePair("username", "abc"));
  * urlParameters.add(new BasicNameValuePair("password", "123"));
+ * <p>
  *
  * @Author: huoxuxu
  * @Description:
@@ -60,10 +69,13 @@ import java.util.Map;
 @Slf4j
 public class HttpClientUtil {
     private static final String CONTENT_TYPE = "Content-Type";
+    private static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
+    private static final String FORM_URLENCODED_CONTENT_TYPE = "application/x-www-form-urlencoded";
 
+    // Http驱动
     private static final CloseableHttpClient httpClient;
     // 设置超时时间
-    public static final int REQUEST_TIMEOUT = 1000;
+    public static final int REQUEST_TIMEOUT = 1500;
     public static final int REQUEST_SOCKET_TIME = 60000;
 
     static {
@@ -111,6 +123,34 @@ public class HttpClientUtil {
     }
 
     /**
+     * 发起get请求
+     *
+     * @param url
+     * @param headers
+     * @param charset
+     * @param consumer
+     * @throws Exception
+     */
+    public static void get(String url, Map<String, String> headers, Charset charset, Consumer<Reader> consumer) throws Exception {
+        if (charset == null) {
+            charset = StandardCharsets.UTF_8;
+        }
+
+        final HttpGet httpGet = new HttpGet(url);
+        // 添加请求头
+        if (headers != null && !headers.isEmpty()) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+//                httpPost.addHeader("Content-Type", "application/json");
+                httpGet.addHeader(entry.getKey(), entry.getValue());
+            }
+        }
+
+        try (CloseableHttpResponse resp = httpClient.execute(httpGet)) {
+            processHttpResp(resp, charset, consumer);
+        }
+    }
+
+    /**
      * post请求发送Json
      *
      * @param url
@@ -128,10 +168,34 @@ public class HttpClientUtil {
         StringEntity reqEntity = new StringEntity(json, charset);
         headers = headers == null ? new HashMap<>() : headers;
         if (!hasContentType(headers)) {
-            headers.put("Content-Type", "application/json");
+            headers.put("Content-Type", JSON_CONTENT_TYPE);
         }
 
         return post(url, reqEntity, headers, charset);
+    }
+
+    /**
+     * 发起post请求
+     *
+     * @param url
+     * @param json
+     * @param headers
+     * @param charset
+     * @param consumer
+     * @throws Exception
+     */
+    public static void postJson(String url, String json, Map<String, String> headers, Charset charset, Consumer<Reader> consumer) throws Exception {
+        if (charset == null) {
+            charset = StandardCharsets.UTF_8;
+        }
+
+        StringEntity reqEntity = new StringEntity(json, charset);
+        headers = headers == null ? new HashMap<>() : headers;
+        if (!hasContentType(headers)) {
+            headers.put("Content-Type", JSON_CONTENT_TYPE);
+        }
+
+        post(url, reqEntity, headers, charset, consumer);
     }
 
     /**
@@ -144,14 +208,14 @@ public class HttpClientUtil {
      * @return
      * @throws Exception
      */
-    public static String postFormParam(String url, Map<String, String> formParaMap, Map<String, String> headers, Charset charset) throws Exception {
+    public static String postFormUrlEncoded(String url, Map<String, String> formParaMap, Map<String, String> headers, Charset charset) throws Exception {
         if (charset == null) {
             charset = StandardCharsets.UTF_8;
         }
 
         headers = headers == null ? new HashMap<>() : headers;
         if (!hasContentType(headers)) {
-            headers.put("Content-Type", "application/x-www-form-urlencoded");
+            headers.put("Content-Type", FORM_URLENCODED_CONTENT_TYPE);
         }
 
         List<NameValuePair> pairs = new ArrayList<>();
@@ -162,6 +226,36 @@ public class HttpClientUtil {
         }
         UrlEncodedFormEntity reqEntity = new UrlEncodedFormEntity(pairs, charset);
         return post(url, reqEntity, headers, charset);
+    }
+
+    /**
+     * post请求
+     *
+     * @param url
+     * @param formParaMap
+     * @param headers
+     * @param charset
+     * @param consumer
+     * @throws Exception
+     */
+    public static void postFormUrlEncoded(String url, Map<String, String> formParaMap, Map<String, String> headers, Charset charset, Consumer<Reader> consumer) throws Exception {
+        if (charset == null) {
+            charset = StandardCharsets.UTF_8;
+        }
+
+        headers = headers == null ? new HashMap<>() : headers;
+        if (!hasContentType(headers)) {
+            headers.put("Content-Type", FORM_URLENCODED_CONTENT_TYPE);
+        }
+
+        List<NameValuePair> pairs = new ArrayList<>();
+        if (formParaMap != null && !formParaMap.isEmpty()) {
+            for (Map.Entry<String, String> entry : formParaMap.entrySet()) {
+                pairs.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+            }
+        }
+        UrlEncodedFormEntity reqEntity = new UrlEncodedFormEntity(pairs, charset);
+        post(url, reqEntity, headers, charset, consumer);
     }
 
 //    public static String postFormTxt(String url, String formTxt, String contentType, Map<String, String> headers, Charset charset) throws Exception {
@@ -208,6 +302,39 @@ public class HttpClientUtil {
 
         try (CloseableHttpResponse resp = httpClient.execute(httpPost)) {
             return processHttpResp(resp, charset);
+        }
+    }
+
+    /**
+     * post请求
+     *
+     * @param url
+     * @param reqEntity
+     * @param headers
+     * @param charset
+     * @param consumer
+     * @throws Exception
+     */
+    public static void post(String url, HttpEntity reqEntity, Map<String, String> headers, Charset charset, Consumer<Reader> consumer) throws Exception {
+        if (charset == null) {
+            charset = StandardCharsets.UTF_8;
+        }
+
+        final HttpPost httpPost = new HttpPost(url);
+        // 添加请求头
+        if (headers != null && !headers.isEmpty()) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+//                httpPost.addHeader("Content-Type", "application/json");
+                httpPost.addHeader(entry.getKey(), entry.getValue());
+            }
+        }
+        // 添加数据
+        if (reqEntity != null) {
+            httpPost.setEntity(reqEntity);
+        }
+
+        try (CloseableHttpResponse resp = httpClient.execute(httpPost)) {
+            processHttpResp(resp, charset, consumer);
         }
     }
 
@@ -265,6 +392,7 @@ public class HttpClientUtil {
                 .setConnectionRequestTimeout(REQUEST_TIMEOUT)
                 .setConnectTimeout(REQUEST_TIMEOUT)
                 .setSocketTimeout(REQUEST_SOCKET_TIME)
+                .setRedirectsEnabled(false)
                 .build();
         // 构造连接
         return HttpClientBuilder.create()
@@ -341,10 +469,59 @@ public class HttpClientUtil {
         return html;
     }
 
-//    public static void main(String[] args) throws Exception {
-//        String url = "https://www.bing.com";
-//
-//        String html = get(url);
-//        System.out.println(html);
-//    }
+    private static void processHttpResp(CloseableHttpResponse resp, Charset defCharset, Consumer<Reader> consumer) throws IOException {
+        HttpEntity entity = resp.getEntity();
+        ContentType contentType = getContentType(entity, defCharset);
+
+        InputStream inStream = entity.getContent();
+        if (inStream == null) {
+            return;
+        }
+        try {
+            int contentLength = (int) entity.getContentLength();
+
+            Charset charset = null;
+            if (contentType != null) {
+                charset = contentType.getCharset();
+                if (charset == null) {
+                    ContentType defaultContentType = ContentType.getByMimeType(contentType.getMimeType());
+                    charset = defaultContentType != null ? defaultContentType.getCharset() : null;
+                }
+            }
+
+            if (charset == null) {
+                charset = HTTP.DEF_CONTENT_CHARSET;
+            }
+
+            Reader reader = new InputStreamReader(inStream, charset);
+            consumer.accept(reader);
+        } finally {
+            inStream.close();
+        }
+    }
+
+    public static ContentType getContentType(HttpEntity entity, Charset defaultCharset) throws UnsupportedEncodingException {
+        if (defaultCharset == null) {
+            defaultCharset = StandardCharsets.UTF_8;
+        }
+        ContentType contentType = null;
+        try {
+            contentType = ContentType.get(entity);
+        } catch (UnsupportedCharsetException var4) {
+            if (defaultCharset == null) {
+                throw new UnsupportedEncodingException(var4.getMessage());
+            }
+        }
+
+        if (contentType != null) {
+            if (contentType.getCharset() == null) {
+                contentType = contentType.withCharset(defaultCharset);
+            }
+        } else {
+            contentType = ContentType.DEFAULT_TEXT.withCharset(defaultCharset);
+        }
+
+        return contentType;
+    }
+
 }
