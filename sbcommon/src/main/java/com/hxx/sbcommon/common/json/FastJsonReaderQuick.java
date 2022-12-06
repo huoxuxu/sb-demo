@@ -4,13 +4,10 @@ import com.alibaba.fastjson.JSONReader;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 /**
  * JsonReader帮助类
@@ -21,16 +18,16 @@ import java.util.function.Function;
  * @Date: 2022-12-03 21:30:16
  **/
 @Slf4j
-public class JsonStreamUtil implements Closeable {
+public class FastJsonReaderQuick implements Closeable {
     private final JSONReader reader;
 
     /**
      * 文件：getFileReader
-     * 字符串：StringReader
+     * 字符串：getStringReader
      *
      * @param r
      */
-    public JsonStreamUtil(Reader r) {
+    public FastJsonReaderQuick(Reader r) {
         this.reader = new JSONReader(r);
     }
 
@@ -67,38 +64,9 @@ public class JsonStreamUtil implements Closeable {
     }
 
     /**
-     * 解析POJO集合
-     *
-     * @param func map转实体 注意：返回null时会停止解析. p1 对象索引，p2 数据map，p3 返回生成的POJO
-     * @param <T>
-     * @return
-     */
-    public <T> List<T> parsePOJOArr2(BiFunction<Integer, Map<String, Object>, T> func) {
-        List<T> ls = new ArrayList<>();
-        this.reader.startArray();
-
-        boolean breakFlag = false;
-        int ind = 0;
-        while (this.reader.hasNext()) {
-            T t = parsePOJO(ind, func);
-            if (t == null) {
-                breakFlag = true;
-                break;
-            }
-
-            ls.add(t);
-            ind++;
-        }
-        if (!breakFlag) {
-            this.reader.endArray();
-        }
-        return ls;
-    }
-
-    /**
      * 解析数组
      *
-     * @param func
+     * @param func map转实体 注意：返回null时会停止解析. p1 对象索引，p2 数据map，p3 返回生成的POJO
      * @param <T>
      */
     public <T> void parsePOJOArr(BiFunction<Integer, Map<String, Object>, T> func) {
@@ -123,35 +91,32 @@ public class JsonStreamUtil implements Closeable {
     /**
      * 解析POJO
      *
-     * @param func map转实体
+     * @param func map转POJO p1 对象索引，p2 数据map，p3 返回生成的POJO
      * @param <T>
      * @return
      */
-    public <T> T parsePOJO(Function<Map<String, Object>, T> func) {
-        this.reader.startObject();
+    public <T> T parsePOJO(BiFunction<Integer, Map<String, Object>, T> func) {
+        return parsePOJO(0, func);
+    }
 
-        Map<String, Object> map = new HashMap<>();
-        while (this.reader.hasNext()) {
-            String k = this.reader.readString();
-            Object v = this.reader.readObject();
-
-            map.put(k, v);
-        }
-        this.reader.endObject();
-
-        // 转为实体
-        return func.apply(map);
+    /**
+     * 解析对象
+     *
+     * @param consumer
+     */
+    public void parsePOJO(BiConsumer<Integer, Map<String, Object>> consumer) {
+        parsePOJO(0, consumer);
     }
 
     /**
      * 解析POJO
      *
      * @param ind  行索引
-     * @param func map转POJO
+     * @param func map转POJO p1 对象索引，p2 数据map，p3 返回生成的POJO
      * @param <T>
      * @return
      */
-    public <T> T parsePOJO(int ind, BiFunction<Integer, Map<String, Object>, T> func) {
+    private  <T> T parsePOJO(int ind, BiFunction<Integer, Map<String, Object>, T> func) {
         this.reader.startObject();
 
         Map<String, Object> map = new HashMap<>();
@@ -168,11 +133,12 @@ public class JsonStreamUtil implements Closeable {
     }
 
     /**
+     * 解析对象
      *
      * @param ind
      * @param consumer
      */
-    public void parsePOJO(int ind, BiConsumer<Integer, Map<String, Object>> consumer) {
+    private void parsePOJO(int ind, BiConsumer<Integer, Map<String, Object>> consumer) {
         this.reader.startObject();
 
         Map<String, Object> map = new HashMap<>();
@@ -188,28 +154,6 @@ public class JsonStreamUtil implements Closeable {
         consumer.accept(ind, map);
     }
 
-    /**
-     * 解析POJO
-     *
-     * @param func p1 对象索引，p2 数据map，p3 返回生成的POJO
-     * @param <T>
-     * @return
-     */
-    public <T> T parsePOJO(BiFunction<Integer, Map<String, Object>, T> func) {
-        this.reader.startObject();
-
-        Map<String, Object> map = new HashMap<>();
-        while (this.reader.hasNext()) {
-            String k = this.reader.readString();
-            Object v = this.reader.readObject();
-
-            map.put(k, v);
-        }
-        this.reader.endObject();
-
-        // 转为实体
-        return func.apply(0, map);
-    }
 
     // demo
     private void scanObjDemo() {

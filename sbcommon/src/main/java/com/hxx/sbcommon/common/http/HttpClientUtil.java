@@ -1,6 +1,5 @@
 package com.hxx.sbcommon.common.http;
 
-import com.hxx.sbcommon.common.json.JsonStreamUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -15,6 +14,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
@@ -29,8 +29,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.util.Args;
-import org.apache.http.util.CharArrayBuffer;
 import org.apache.http.util.EntityUtils;
 
 
@@ -50,6 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -383,7 +382,7 @@ public class HttpClientUtil {
         }
 
         Registry<ConnectionSocketFactory> registry = registryBuilder.build();
-        //设置连接管理器
+        // 设置连接管理器
         PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(registry);
         connManager.setMaxTotal(6000);
         connManager.setDefaultMaxPerRoute(1000);
@@ -399,6 +398,21 @@ public class HttpClientUtil {
                 .setConnectionManager(connManager)
                 .setDefaultRequestConfig(requestConfig)
                 .build();
+    }
+
+    /**
+     * 可能需要定时清理
+     * 官方同时建议我们在后台起一个定时清理无效连接的线程，
+     * 因为某些连接建立后可能由于服务端单方面断开连接导致一个不可用的连接一直占用着资源，
+     * 而HttpClient框架又不能百分之百保证检测到这种异常连接并做清理
+     */
+    private static void close(){
+        HttpClientConnectionManager connMgr =null;
+        // Close expired connections
+        connMgr.closeExpiredConnections();
+        // Optionally, close connections
+        // that have been idle longer than 30 sec
+        connMgr.closeIdleConnections(30, TimeUnit.SECONDS);
     }
 
     /**
@@ -478,7 +492,8 @@ public class HttpClientUtil {
             return;
         }
         try {
-            int contentLength = (int) entity.getContentLength();
+            // ContentLength
+//            int contentLength = (int) entity.getContentLength();
 
             Charset charset = null;
             if (contentType != null) {

@@ -1,12 +1,10 @@
 package com.hxx.sbConsole.service.impl.http;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hxx.sbConsole.model.HttpTestDemoModel;
 import com.hxx.sbcommon.common.http.HttpClientUtil;
-import com.hxx.sbcommon.common.json.JsonStreamUtil;
+import com.hxx.sbcommon.common.json.FastJsonReaderQuick;
 import com.hxx.sbcommon.common.json.JsonUtil;
-import org.springframework.beans.BeanUtils;
 
 import java.io.Reader;
 import java.util.HashMap;
@@ -40,7 +38,7 @@ public class HttpClientServiceDemo {
 
     // 解析Reader
     private static void parseReader(Reader reader) {
-        try (JsonStreamUtil jsu = new JsonStreamUtil(reader)) {
+        try (FastJsonReaderQuick jsu = new FastJsonReaderQuick(reader)) {
             HttpTestDemoModel model = jsu.parsePOJO((ind, modelMap) -> {
                 HttpTestDemoModel m = new HttpTestDemoModel();
                 for (Map.Entry<String, Object> entry : modelMap.entrySet()) {

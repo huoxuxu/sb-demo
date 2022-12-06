@@ -1,6 +1,6 @@
 package com.hxx.sbConsole.service.impl.fastjson;
 
-import com.hxx.sbcommon.common.json.JsonStreamUtil;
+import com.hxx.sbcommon.common.json.FastJsonReaderQuick;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -44,59 +44,61 @@ public class FastjsonServiceImpl {
     }
 
     // 取第一行JSONObject
-//    static void parse2(String path) {
-//        try {
-//            FileReader fileReader = JsonStreamUtil.getFileReader(path);
-//            try (JsonStreamUtil jsu = new JsonStreamUtil(fileReader)) {
-//                List<DemoCls> ls = jsu.parsePOJOArr((ind, m) -> {
-//                    if (ind > 0) {
-//                        return null;
-//                    }
-//
-//                    DemoCls d = new DemoCls();
-//                    for (Map.Entry<String, Object> entry : m.entrySet()) {
-//                        String k = entry.getKey();
-//                        Object v = entry.getValue();
-//
-//                        switch (k) {
-//                            case "id":
-//                                if (v instanceof Integer) {
-//                                    d.setId((Integer) v);
-//                                }
-//                                break;
-//                            case "code":
-//                                if (v instanceof String) {
-//                                    d.setCode((String) v);
-//                                }
-//                                break;
-//                            case "name":
-//                                if (v instanceof String) {
-//                                    d.setName((String) v);
-//                                }
-//                                break;
-//                            default:
-//                                break;
-//                        }
-//                    }
-//                    return d;
-//                });
-//
-//                DemoCls fir = ls.get(0);
-//                System.out.println(JsonUtil.toJSON(fir));
-//
-//                int total = ls.size();
-//                System.out.println("共：" + total);
-//            }
-//        } catch (Exception e) {
-//            System.out.println(e + "");
-//        }
-//    }
+    static void parse2(String path) {
+        try {
+            FileReader fileReader = FastJsonReaderQuick.getFileReader(path);
+            try (FastJsonReaderQuick jsu = new FastJsonReaderQuick(fileReader)) {
+                List<DemoCls> ls = new ArrayList<>();
+
+                jsu.parsePOJOArr((ind, m) -> {
+                    if (ind > 0) {
+                        return null;
+                    }
+
+                    DemoCls d = new DemoCls();
+                    for (Map.Entry<String, Object> entry : m.entrySet()) {
+                        String k = entry.getKey();
+                        Object v = entry.getValue();
+
+                        switch (k) {
+                            case "id":
+                                if (v instanceof Integer) {
+                                    d.setId((Integer) v);
+                                }
+                                break;
+                            case "code":
+                                if (v instanceof String) {
+                                    d.setCode((String) v);
+                                }
+                                break;
+                            case "name":
+                                if (v instanceof String) {
+                                    d.setName((String) v);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    return d;
+                });
+
+                DemoCls fir = ls.get(0);
+                System.out.println(JsonUtil.toJSON(fir));
+
+                int total = ls.size();
+                System.out.println("共：" + total);
+            }
+        } catch (Exception e) {
+            System.out.println(e + "");
+        }
+    }
 
     // 分批取
     static void parse3(String path) {
         try {
-            FileReader fileReader = JsonStreamUtil.getFileReader(path);
-            try (JsonStreamUtil jsu = new JsonStreamUtil(fileReader)) {
+            FileReader fileReader = FastJsonReaderQuick.getFileReader(path);
+            try (FastJsonReaderQuick jsu = new FastJsonReaderQuick(fileReader)) {
                 // 分页数据
                 List<DemoCls> data = new ArrayList<>(2000);
 
