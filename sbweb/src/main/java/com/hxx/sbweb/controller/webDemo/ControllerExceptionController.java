@@ -82,6 +82,18 @@ public class ControllerExceptionController {
         response.flushBuffer();
     }
 
+    @RequestMapping("/get")
+    public String get(int k) throws Exception {
+        int a = 99 - 98 - 1;
+        if (k == 1) {
+            throw new Exception("123");
+        } else if (k == 2) {
+            throw new IOException("234");
+        }
+
+        return "ook";
+    }
+
     /**
      * 异常页面控制，会跳转到对应的ModelAndView
      *

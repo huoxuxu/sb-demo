@@ -3,7 +3,7 @@ package com.hxx.sbweb.common.config;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.hxx.sbweb.common.aspect.ReqInterceptor;
+//import com.hxx.sbweb.common.aspect.ReqInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
@@ -101,9 +101,14 @@ public class MyWebConfig implements WebMvcConfigurer {
         converters.add(fastJsonHttpMessageConverter);
     }
 
+    /**
+     * 添加拦截器
+     *
+     * @param registry
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new ReqInterceptor()).addPathPatterns("/**");
+//        registry.addInterceptor(new ReqInterceptor()).addPathPatterns("/**");
     }
 
 }

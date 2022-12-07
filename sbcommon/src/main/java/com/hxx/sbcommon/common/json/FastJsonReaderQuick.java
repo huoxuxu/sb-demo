@@ -63,6 +63,10 @@ public class FastJsonReaderQuick implements Closeable {
         return new StringReader(jsonString);
     }
 
+    public JSONReader getJSONReader(){
+        return reader;
+    }
+
     /**
      * 解析数组
      *

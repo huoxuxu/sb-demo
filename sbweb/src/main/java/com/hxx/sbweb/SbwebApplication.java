@@ -27,7 +27,6 @@ public class SbwebApplication {
     public static void main(String[] args) {
         // SignUtils.main(args);
 
-
         SpringApplication.run(SbwebApplication.class, args);
     }
 

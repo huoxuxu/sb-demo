@@ -183,7 +183,8 @@ public class HttpClientUtil {
      * @param consumer
      * @throws Exception
      */
-    public static void postJson(String url, String json, Map<String, String> headers, Charset charset, Consumer<Reader> consumer) throws Exception {
+    public static void postJson(String url, String json, Map<String, String> headers, Charset charset,
+                                Consumer<Reader> consumer) throws IOException {
         if (charset == null) {
             charset = StandardCharsets.UTF_8;
         }
@@ -207,7 +208,8 @@ public class HttpClientUtil {
      * @return
      * @throws Exception
      */
-    public static String postFormUrlEncoded(String url, Map<String, String> formParaMap, Map<String, String> headers, Charset charset) throws Exception {
+    public static String postFormUrlEncoded(String url, Map<String, String> formParaMap, Map<String, String> headers,
+                                            Charset charset) throws IOException {
         if (charset == null) {
             charset = StandardCharsets.UTF_8;
         }
@@ -237,7 +239,8 @@ public class HttpClientUtil {
      * @param consumer
      * @throws Exception
      */
-    public static void postFormUrlEncoded(String url, Map<String, String> formParaMap, Map<String, String> headers, Charset charset, Consumer<Reader> consumer) throws Exception {
+    public static void postFormUrlEncoded(String url, Map<String, String> formParaMap, Map<String, String> headers,
+                                          Charset charset, Consumer<Reader> consumer) throws IOException {
         if (charset == null) {
             charset = StandardCharsets.UTF_8;
         }
@@ -281,7 +284,7 @@ public class HttpClientUtil {
      * @return
      * @throws Exception
      */
-    public static String post(String url, HttpEntity reqEntity, Map<String, String> headers, Charset charset) throws Exception {
+    public static String post(String url, HttpEntity reqEntity, Map<String, String> headers, Charset charset) throws IOException {
         if (charset == null) {
             charset = StandardCharsets.UTF_8;
         }
@@ -314,7 +317,8 @@ public class HttpClientUtil {
      * @param consumer
      * @throws Exception
      */
-    public static void post(String url, HttpEntity reqEntity, Map<String, String> headers, Charset charset, Consumer<Reader> consumer) throws Exception {
+    public static void post(String url, HttpEntity reqEntity, Map<String, String> headers, Charset charset,
+                            Consumer<Reader> consumer) throws IOException {
         if (charset == null) {
             charset = StandardCharsets.UTF_8;
         }
@@ -491,6 +495,7 @@ public class HttpClientUtil {
         if (inStream == null) {
             return;
         }
+
         try {
             // ContentLength
 //            int contentLength = (int) entity.getContentLength();
@@ -522,10 +527,7 @@ public class HttpClientUtil {
         ContentType contentType = null;
         try {
             contentType = ContentType.get(entity);
-        } catch (UnsupportedCharsetException var4) {
-            if (defaultCharset == null) {
-                throw new UnsupportedEncodingException(var4.getMessage());
-            }
+        } catch (UnsupportedCharsetException ignored) {
         }
 
         if (contentType != null) {

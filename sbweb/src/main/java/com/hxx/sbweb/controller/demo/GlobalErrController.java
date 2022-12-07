@@ -1,10 +1,11 @@
-package com.hxx.sbweb.controller;
+package com.hxx.sbweb.controller.demo;
 
 import com.hxx.sbweb.common.ResultHandler;
 import com.hxx.sbweb.model.ResultBean;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +26,15 @@ public class GlobalErrController {
     }
 
     @RequestMapping("/get")
-    public List<Integer> get() {
+    public String get(int k) throws Exception {
         int a = 99 - 98 - 1;
-        double b = 1 / a;
-        return new ArrayList<>();
+        if (k == 1) {
+            throw new Exception("123");
+        } else if (k == 2) {
+            throw new IOException("234");
+        }
+
+        return "ook";
     }
 
 }

@@ -1,5 +1,8 @@
 package com.hxx.sbConsole.service.impl.fastjson;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONReader;
 import com.hxx.sbcommon.common.json.FastJsonReaderQuick;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -103,6 +106,88 @@ public class FastjsonServiceImpl {
                 List<DemoCls> data = new ArrayList<>(2000);
 
                 AtomicInteger total = new AtomicInteger();
+
+                {
+                    // {"data":[]}
+                    JSONReader reader = jsu.getJSONReader();
+                    reader.startObject();
+
+                    while (reader.hasNext()) {
+                        String k = reader.readString();
+                        if ("data".equalsIgnoreCase(k)) {
+//                            {
+//                                // 方法1，JSONObject 一次读到内存，不推荐
+//                                Object v = reader.readObject();
+//                                if(v instanceof JSONArray){
+//                                    System.out.println(1);
+//                                }
+//                            }
+                            {
+                                // 方法2，节省内存
+                                reader.startArray();
+                                while (reader.hasNext()) {
+                                    if (total.get() > 0 && total.get() % 2000 == 0) {
+                                        // TODO：处理 data 中的数据
+                                        System.out.println("开始处理data数据：" + data.size());
+                                        data.clear();
+                                    }
+
+//                                {
+//                                    // 方法1 内存占用高
+//                                    DemoCls d = reader.readObject(DemoCls.class);
+//                                    data.add(d);
+//                                }
+                                    {
+                                        // 方法2
+                                        reader.startObject();
+                                        Map<String, Object> modelMap = new HashMap<>();
+
+                                        while (reader.hasNext()) {
+                                            String k1 = reader.readString();
+                                            Object v1 = reader.readObject();
+
+                                            modelMap.put(k1, v1);
+                                        }
+
+                                        reader.endObject();
+                                        DemoCls d = convert2(modelMap);
+                                        data.add(d);
+                                    }
+
+                                    // 自增计数器
+                                    total.getAndIncrement();
+                                }
+                                reader.endArray();
+                            }
+                        }
+                    }
+                    reader.endObject();
+                }
+
+                if (!CollectionUtils.isEmpty(data)) {
+                    // TODO：处理 data 中的数据
+                    System.out.println("开始处理data数据：" + data.size());
+                    data.clear();
+                }
+
+                System.out.println("共：" + total);
+            }
+        } catch (Exception e) {
+            System.out.println(e + "");
+        }
+    }
+
+    // 批量处理数组
+    static void parse4(String s) {
+        String path = "d:/demoArr.json";
+        try {
+            FileReader fileReader = FastJsonReaderQuick.getFileReader(path);
+            try (FastJsonReaderQuick jsu = new FastJsonReaderQuick(fileReader)) {
+                // 分页数据
+                List<DemoCls> data = new ArrayList<>(2000);
+
+                AtomicInteger total = new AtomicInteger();
+
                 jsu.parsePOJOArr((ind, modelMap) -> {
                     total.getAndIncrement();
                     if (ind > 0 && ind % 2000 == 0) {
