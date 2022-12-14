@@ -513,6 +513,8 @@ public class HttpClientUtil {
                 charset = HTTP.DEF_CONTENT_CHARSET;
             }
 
+//            BufferedInputStream is = new BufferedInputStream(urlConn.getInputStream());
+//            BufferedReader br = new BufferedReader(new InputStreamReader(is,"utf-8"));
             Reader reader = new InputStreamReader(inStream, charset);
             consumer.accept(reader);
         } finally {

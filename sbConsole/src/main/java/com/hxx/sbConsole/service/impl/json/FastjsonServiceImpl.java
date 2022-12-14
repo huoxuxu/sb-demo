@@ -1,8 +1,7 @@
-package com.hxx.sbConsole.service.impl.fastjson;
+package com.hxx.sbConsole.service.impl.json;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONReader;
+import com.hxx.sbConsole.model.DemoCls;
 import com.hxx.sbcommon.common.json.FastJsonReaderQuick;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -251,10 +250,5 @@ public class FastjsonServiceImpl {
         System.out.println("ok");
     }
 
-    @lombok.Data
-    public static class DemoCls {
-        private int id;
-        private String code;
-        private String name;
-    }
+
 }

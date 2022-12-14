@@ -9,6 +9,7 @@ import com.hxx.sbConsole.service.UserService;
 import com.hxx.sbConsole.service.impl.DemoAnnotationService;
 import com.hxx.sbConsole.service.impl.DemoMethodService;
 import com.hxx.sbConsole.service.impl.UseFunctionService;
+import com.hxx.sbcommon.common.hardware.NetUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.boot.SpringApplication;
@@ -34,6 +35,11 @@ import java.time.LocalDateTime;
 public class SbConsoleApplication {
 
     public static void main(String[] args) {
+        {
+            String localIP = NetUtil.getLocalIP();
+            String localMac = NetUtil.getLocalMac();
+            System.out.println("本机信息：" + localIP + " " + localMac);
+        }
         // 标准
         SpringApplication.run(SbConsoleApplication.class, args);
 

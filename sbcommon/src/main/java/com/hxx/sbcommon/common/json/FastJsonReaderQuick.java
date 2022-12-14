@@ -63,6 +63,16 @@ public class FastJsonReaderQuick implements Closeable {
         return new StringReader(jsonString);
     }
 
+    /**
+     * 获取其它Reader流,推荐http响应流等等
+     *
+     * @param inputStream 流
+     * @return
+     */
+    public static Reader getHttpResponseReader(InputStream inputStream) {
+        return new InputStreamReader(inputStream);
+    }
+
     public JSONReader getJSONReader(){
         return reader;
     }
