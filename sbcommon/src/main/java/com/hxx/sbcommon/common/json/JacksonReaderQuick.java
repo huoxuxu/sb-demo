@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * jacksonStreamApi
+ *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2022-12-09 12:57:57
@@ -78,7 +80,25 @@ public class JacksonReaderQuick {
 
                                         fieldName = parser.getCurrentName();
                                         jsonToken = parser.nextToken();
-                                        String v = parser.getText();
+                                        Object v=null;
+                                        switch(jsonToken){
+                                            case VALUE_NULL:
+                                                break;
+                                            case VALUE_TRUE:
+                                            case VALUE_FALSE:
+                                                v=parser.getBooleanValue();
+                                                break;
+                                            case VALUE_NUMBER_INT:
+                                            case VALUE_NUMBER_FLOAT:
+                                                // TODO 测试long
+                                                // TODO 测试Float
+                                                v=parser.getNumberValue();
+                                                break;
+                                            case VALUE_STRING:
+                                            default:
+                                                v = parser.getText();
+                                                break;
+                                        }
                                         objFields.add(fieldName + " : " + v);
                                     }
                                 }
