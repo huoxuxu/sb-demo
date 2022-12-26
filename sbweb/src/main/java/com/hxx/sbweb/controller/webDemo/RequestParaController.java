@@ -2,6 +2,7 @@ package com.hxx.sbweb.controller.webDemo;
 
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbweb.common.ResultHandler;
+import com.hxx.sbweb.domain.Book;
 import com.hxx.sbweb.domain.User;
 import com.hxx.sbweb.model.ResultBean;
 import com.hxx.sbweb.service.UserService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -140,8 +142,7 @@ public class RequestParaController {
     }
 
     @RequestMapping("/testUrlPathParam/{param1}/{param2}")
-    public String testUrlPathParam(@PathVariable String param1,
-                                   @PathVariable String param2) {
+    public String testUrlPathParam(@PathVariable String param1, @PathVariable String param2) {
         System.out.println("通过PathVariable获取的参数param1=" + param1);
         System.out.println("通过PathVariable获取的参数param2=" + param2);
         return "";
@@ -153,8 +154,7 @@ public class RequestParaController {
     }
 
     @RequestMapping("/testCookieParam")
-    public void testCookieParam(HttpServletRequest request, HttpServletResponse response,
-                                @CookieValue String sessionid) {
+    public void testCookieParam(HttpServletRequest request, HttpServletResponse response, @CookieValue String sessionid) {
         System.out.println("通过CookieValue获取的参数sessionid=" + sessionid);
     }
 
@@ -167,6 +167,21 @@ public class RequestParaController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("MyResponseHeader", "MyValue");
         return new ResponseEntity<String>("Hello World", responseHeaders, HttpStatus.CREATED);
+    }
+
+    // InitBind=============================================================
+
+    /**
+     * localhost:8082/reqpara/hello?user.name=hangge&user.age=11&book.name=ThinkingInJava&book.price=56.5
+     *
+     * @param user
+     * @param book
+     * @return
+     */
+    @GetMapping("/hello")
+    public String hello(@ModelAttribute("user") User user,
+                        @ModelAttribute("book") Book book) {
+        return "name：" + user.getName() + " | age：" + user.getAge() + "<br>" + "name：" + book.getName() + " | price：" + book.getPrice();
     }
 
     /**
@@ -201,9 +216,7 @@ public class RequestParaController {
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void processMethod(MissingServletRequestParameterException ex,
-                              HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public void processMethod(MissingServletRequestParameterException ex, HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("抛异常了！" + ex.getLocalizedMessage());
         log.error("抛异常了！" + ex.getLocalizedMessage());
         response.getWriter()
@@ -218,8 +231,7 @@ public class RequestParaController {
      * @return
      */
     @ExceptionHandler(RuntimeException.class)
-    public String runtimeExceptionHandler(RuntimeException runtimeException,
-                                          ModelMap modelMap) {
+    public String runtimeExceptionHandler(RuntimeException runtimeException, ModelMap modelMap) {
         log.error(runtimeException.getLocalizedMessage());
 
         modelMap.put("status", false);

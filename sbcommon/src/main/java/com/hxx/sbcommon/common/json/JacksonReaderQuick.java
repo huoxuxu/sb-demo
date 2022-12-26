@@ -7,7 +7,10 @@ import com.fasterxml.jackson.core.JsonToken;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * jacksonStreamApi
@@ -51,8 +54,9 @@ public class JacksonReaderQuick {
 
     /**
      * 使用jsonParser 提取数据并写入中间文件
+     * 不支持字段为对象或数组的情况，eg.{[{"a":{}}]}
      */
-    public static int parse(String jsonFilePath) throws IOException {
+    public static int parse(String jsonFilePath, Consumer<Map<String, Object>> consumer) throws IOException {
         int total = 0;
         JsonFactory jasonFactory = new JsonFactory();
         // {"data":[{"id":0}]}
@@ -68,7 +72,7 @@ public class JacksonReaderQuick {
                             while (!JsonToken.END_ARRAY.equals(parser.nextToken())) {
                                 if (JsonToken.START_OBJECT.equals(parser.currentToken())) {
                                     // 开始读取对象
-                                    List<String> objFields = new ArrayList<>();
+                                    Map<String, Object> objMap = new HashMap<>();
                                     while (true) {
                                         jsonToken = parser.nextToken();
                                         if (JsonToken.END_OBJECT.equals(jsonToken)) {
@@ -80,27 +84,37 @@ public class JacksonReaderQuick {
 
                                         fieldName = parser.getCurrentName();
                                         jsonToken = parser.nextToken();
-                                        Object v=null;
-                                        switch(jsonToken){
+                                        Object v = null;
+                                        v = parser.getText();
+                                        switch (jsonToken) {
+                                            case START_OBJECT:
+                                            case END_OBJECT:
+                                            case START_ARRAY:
+                                            case END_ARRAY:
+                                                throw new IllegalStateException("不支持对象属性包含对象或集合. 属性：" + fieldName);
                                             case VALUE_NULL:
                                                 break;
                                             case VALUE_TRUE:
                                             case VALUE_FALSE:
-                                                v=parser.getBooleanValue();
+                                                v = parser.getBooleanValue();
                                                 break;
                                             case VALUE_NUMBER_INT:
+                                                v = parser.getNumberValue();
+                                                break;
                                             case VALUE_NUMBER_FLOAT:
-                                                // TODO 测试long
-                                                // TODO 测试Float
-                                                v=parser.getNumberValue();
+                                                // 不能使用 getDoubleValue或getFloatValue 取值，会丢失小数点后的精度
+                                                v = parser.getDecimalValue();
                                                 break;
                                             case VALUE_STRING:
                                             default:
                                                 v = parser.getText();
                                                 break;
                                         }
-                                        objFields.add(fieldName + " : " + v);
+                                        objMap.put(fieldName, v);
+                                        System.out.println(fieldName + " : (" + jsonToken + ")" + v);
                                     }
+
+                                    consumer.accept(objMap);
                                 }
                             }
                         }
@@ -111,5 +125,11 @@ public class JacksonReaderQuick {
         }
         return total;
     }
+
+//    @lombok.Data
+//    public static class JsonValCls{
+//        private
+//    }
+
 
 }

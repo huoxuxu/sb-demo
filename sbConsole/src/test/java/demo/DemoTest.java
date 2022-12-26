@@ -1,7 +1,13 @@
 package demo;
 
-import com.alibaba.fastjson.JSONValidator;
+import com.alibaba.fastjson.*;
+import com.alibaba.fastjson.parser.ParserConfig;
+import com.alibaba.fastjson.serializer.JSONSerializable;
+import com.alibaba.fastjson.serializer.JavaBeanSerializer;
+import com.alibaba.fastjson.serializer.ObjectSerializer;
+import com.alibaba.fastjson.util.TypeUtils;
 import com.hxx.sbConsole.SbConsoleApplication;
+import com.hxx.sbConsole.service.impl.Demo;
 import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import models.KV;
@@ -35,6 +41,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -93,6 +100,7 @@ public class DemoTest {
         // fastJSON
         {
             JSONValidator jsonValidator = null;
+            JSON.toJSON(null);
         }
 
         // 枚举
@@ -145,5 +153,99 @@ public class DemoTest {
             e.printStackTrace();
         }
     }
+
+//    public static Object case2() {
+//        Demo demo = new Demo();
+//        {
+//            demo.setAnothor("HK");
+//        }
+//        Object javaObject = demo;
+//
+//        if (javaObject == null) {
+//            return null;
+//        }
+//
+//        // Map
+//        if (javaObject instanceof Map) {
+//            Map<Object, Object> map = (Map<Object, Object>) javaObject;
+//
+//            int size = map.size();
+//
+//            Map innerMap;
+//            if (map instanceof LinkedHashMap) {
+//                innerMap = new LinkedHashMap(size);
+//            } else if (map instanceof TreeMap) {
+//                innerMap = new TreeMap();
+//            } else {
+//                innerMap = new HashMap(size);
+//            }
+//
+//            JSONObject json = new JSONObject(innerMap);
+//
+//            for (Map.Entry<Object, Object> entry : map.entrySet()) {
+//                Object key = entry.getKey();
+//                String jsonKey = TypeUtils.castToString(key);
+//                Object jsonValue = toJSON(entry.getValue(), config);
+//                json.put(jsonKey, jsonValue);
+//            }
+//
+//            return json;
+//        }
+//
+//        // 集合
+//        if (javaObject instanceof Collection) {
+//            Collection<Object> collection = (Collection<Object>) javaObject;
+//
+//            JSONArray array = new JSONArray(collection.size());
+//
+//            for (Object item : collection) {
+//                Object jsonValue = toJSON(item, config);
+//                array.add(jsonValue);
+//            }
+//
+//            return array;
+//        }
+//
+//        Class<?> clazz = javaObject.getClass();
+//        if (clazz.isEnum()) {
+//            return ((Enum<?>) javaObject).name();
+//        } else if (clazz.isArray()) {
+//            int len = Array.getLength(javaObject);
+//
+//            JSONArray array = new JSONArray(len);
+//
+//            for (int i = 0; i < len; ++i) {
+//                Object item = Array.get(javaObject, i);
+//                Object jsonValue = toJSON(item);
+//                array.add(jsonValue);
+//            }
+//
+//            return array;
+//        }
+//
+//        // 基本类型
+//        if (ParserConfig.isPrimitive2(clazz)) {
+//            return javaObject;
+//        }
+//
+//        ObjectSerializer serializer = config.getObjectWriter(clazz);
+//        if (serializer instanceof JavaBeanSerializer) {
+//            JavaBeanSerializer javaBeanSerializer = (JavaBeanSerializer) serializer;
+//
+//            JSONObject json = new JSONObject();
+//            try {
+//                Map<String, Object> values = javaBeanSerializer.getFieldValuesMap(javaObject);
+//                for (Map.Entry<String, Object> entry : values.entrySet()) {
+//                    json.put(entry.getKey(), toJSON(entry.getValue(), config));
+//                }
+//            } catch (Exception e) {
+//                throw new JSONException("toJSON error", e);
+//            }
+//            return json;
+//        }
+//
+//        String text = JSON.toJSONString(javaObject, config);
+//        return JSON.parse(text);
+//    }
 
 }

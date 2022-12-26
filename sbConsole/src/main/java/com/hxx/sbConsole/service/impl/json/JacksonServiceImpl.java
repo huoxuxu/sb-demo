@@ -26,7 +26,7 @@ public class JacksonServiceImpl {
 
     public static void demo() {
         try {
-            String path = "d:/demo.json";
+            String path = "d:/demo1.json";
             long start = System.currentTimeMillis();
             parse1(path);
             System.out.println("耗时：" + (System.currentTimeMillis() - start));
@@ -36,7 +36,9 @@ public class JacksonServiceImpl {
     }
 
     private static void parse1(String path) throws IOException {
-        int total = JacksonReaderQuick.parse(path);
+        int total = JacksonReaderQuick.parse(path,om->{
+            System.out.println(om);
+        });
         System.out.println("共：" + total);
     }
 

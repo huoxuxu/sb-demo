@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -22,11 +24,20 @@ import java.io.IOException;
 @ResponseBody
 public class AGlobalIOExceptionHandler {
 
+//    @ResponseBody
+//    @ExceptionHandler({IOException.class})
+//    public ResultBean exceptionHandler(IOException e) {
+//        log.error("全局IO异常捕获:{}", ExceptionUtils.getStackTrace(e));
+//
+//        return ResultHandler.error("未知异常，请联系管理员");
+//    }
+
     @ResponseBody
     @ExceptionHandler({IOException.class})
-    public ResultBean exceptionHandler(IOException e) {
+    public String exceptionHandler(final HttpServletRequest request, final HttpServletResponse response, IOException e) {
         log.error("全局IO异常捕获:{}", ExceptionUtils.getStackTrace(e));
 
-        return ResultHandler.error("未知异常，请联系管理员");
+        return "123321";
     }
+
 }

@@ -3,6 +3,7 @@ package com.hxx.sbweb.controller.demo;
 import com.hxx.sbweb.common.ResultHandler;
 import com.hxx.sbweb.model.ResultBean;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -26,7 +27,12 @@ public class GlobalErrController {
     }
 
     @RequestMapping("/get")
-    public String get(int k) throws Exception {
+    public String get(int k, @RequestParam(defaultValue = "0") int timeout) throws Exception {
+        // 超时
+        if (timeout > 0) {
+            Thread.sleep(timeout);
+        }
+
         int a = 99 - 98 - 1;
         if (k == 1) {
             throw new Exception("123");
