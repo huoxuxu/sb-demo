@@ -9,7 +9,6 @@ import lombok.Data;
  **/
 @Data
 public class RestResult<T> {
-    private Class cls;
     private int code;
     private String message;
     private T data;

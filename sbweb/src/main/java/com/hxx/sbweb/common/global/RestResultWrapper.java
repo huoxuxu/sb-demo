@@ -3,6 +3,7 @@ package com.hxx.sbweb.common.global;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.model.Result;
 import com.hxx.sbweb.common.global.model.RestResult;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
+ * 对 Controller 返回的内容在 HttpMessageConverter 进行类型转换之前拦截
+ *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2022-12-16 10:15:27
@@ -24,16 +27,33 @@ public class RestResultWrapper implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass) {
         // 如果返回false，则 beforeBodyWrite 不被调用
-        return false;
+        return true;
     }
 
+    /**
+     * 必须返回字符串，否则会报错
+     *
+     * @param body
+     * @param methodParameter
+     * @param mediaType
+     * @param aClass
+     * @param serverHttpRequest
+     * @param serverHttpResponse
+     * @return
+     */
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter methodParameter, MediaType mediaType, Class<?
             extends HttpMessageConverter<?>> aClass,
                                   ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
+        if (body == null) {
+            return Result.success(null);
+        }
+
+        if (body instanceof Result) {
+            return body;
+        }
+
         //定义一个统一的返回类
-        RestResult responseResult = new RestResult(0, body, "success");
-        //封装后的数据返回到前端页面
-        return JsonUtil.toJSON(responseResult);
+        return Result.success(body);
     }
 }

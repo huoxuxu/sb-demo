@@ -1,9 +1,8 @@
 package com.hxx.sbweb.controller;
 
-import com.hxx.sbweb.common.ResultHandler;
+import com.hxx.sbcommon.model.Result;
 import com.hxx.sbweb.domain.Teacher;
 import com.hxx.sbweb.domain.User;
-import com.hxx.sbweb.model.ResultBean;
 import com.hxx.sbweb.service.TeacherXmlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,9 +21,9 @@ public class TeacherXmlController {
      * @return
      */
     @RequestMapping("/get")
-    public ResultBean<List<User>> getbyID(Integer id) {
+    public Result<Teacher> getbyID(Integer id) {
         Teacher teacher = service.getbyID(id);
-        return ResultHandler.ok(teacher);
+        return Result.success(teacher);
     }
 
 

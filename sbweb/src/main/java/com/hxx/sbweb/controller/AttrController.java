@@ -1,24 +1,17 @@
 package com.hxx.sbweb.controller;
 
-import com.github.pagehelper.PageInfo;
+import com.hxx.sbcommon.model.Result;
 import com.hxx.sbservice.model.JdbcModel;
 import com.hxx.sbservice.model.attr.Value.ValueTestConf;
 import com.hxx.sbweb.common.JsonUtil;
-import com.hxx.sbweb.common.ResultHandler;
-import com.hxx.sbweb.domain.User;
-import com.hxx.sbweb.model.ResultBean;
 import com.hxx.sbweb.service.ConfigurationPropertiesTestService;
 import com.hxx.sbweb.service.PropertySourceTestConfService;
-import com.hxx.sbweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * mybatis 注解方式示例
@@ -45,7 +38,7 @@ public class AttrController {
      * @return
      */
     @RequestMapping("/get")
-    public ResultBean<User> get(@RequestParam(value = "name") String name) {
+    public Result<Integer> get(@RequestParam(value = "name") String name) {
         confSer.testPropertySource();
         confPropSer.testConfigurationProperties();
 
@@ -53,7 +46,7 @@ public class AttrController {
 
         String valConfJson = JsonUtil.toJSON(valConf);
 
-        return ResultHandler.ok(1);
+        return Result.success(1);
     }
 
 

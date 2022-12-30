@@ -1,7 +1,6 @@
 package com.hxx.sbweb.controller.demo;
 
-import com.hxx.sbweb.common.ResultHandler;
-import com.hxx.sbweb.model.ResultBean;
+import com.hxx.sbcommon.model.Result;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +17,12 @@ import java.util.List;
 public class GlobalErrController {
 
     @RequestMapping("/ok")
-    public ResultBean<List<Integer>> ok() {
+    public Result<List<Integer>> ok() {
         List<Integer> ls = new ArrayList<>();
         ls.add(99);
         ls.add(998);
 
-        return ResultHandler.ok(ls);
+        return Result.success(ls);
     }
 
     @RequestMapping("/get")

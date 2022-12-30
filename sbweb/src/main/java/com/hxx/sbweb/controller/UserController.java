@@ -1,10 +1,9 @@
 package com.hxx.sbweb.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.hxx.sbweb.common.ResultHandler;
+import com.hxx.sbcommon.model.Result;
 import com.hxx.sbweb.common.annotation.OperationLog;
 import com.hxx.sbweb.domain.User;
-import com.hxx.sbweb.model.ResultBean;
 import com.hxx.sbweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +29,9 @@ public class UserController {
      * @return
      */
     @RequestMapping("/fenye")
-    public ResultBean<List<User>> fenye(int pageNum,int pageSize) {
+    public Result<PageInfo> fenye(int pageNum,int pageSize) {
         PageInfo pageInfo = userService.fenye(pageNum, pageSize);
-        return ResultHandler.ok(pageInfo);
+        return Result.success(pageInfo);
     }
 
     /**
@@ -42,9 +41,9 @@ public class UserController {
      */
     @OperationLog
     @RequestMapping("/list")
-    public ResultBean<List<User>> listAll() {
+    public Result<List<User>> listAll() {
         List<User> users = userService.listAll();
-        return ResultHandler.ok(users);
+        return Result.success(users);
     }
 
     /**
@@ -54,9 +53,9 @@ public class UserController {
      * @return
      */
     @RequestMapping("/get")
-    public ResultBean<User> get(@RequestParam(value = "name") String name) {
+    public Result<User> get(@RequestParam(value = "name") String name) {
         User u = userService.selectUser(name);
-        return ResultHandler.ok(u);
+        return Result.success(u);
     }
 
     /**
@@ -66,7 +65,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/in")
-    public ResultBean<User> in(@RequestParam(value = "ids") String ids) {
+    public Result<List<User>> in(@RequestParam(value = "ids") String ids) {
         String[] arr = ids.split(",");
         List<Integer> idArr = Stream.of(arr)
                 .filter(d -> d != null && !d.isEmpty())
@@ -74,7 +73,7 @@ public class UserController {
                 .collect(Collectors.toList());
 
         List<User> uls = userService.selectUserIn(idArr);
-        return ResultHandler.ok(uls);
+        return Result.success(uls);
     }
 
     /**
@@ -83,9 +82,9 @@ public class UserController {
      * @return
      */
     @RequestMapping("/like")
-    public ResultBean<User> like(@RequestParam(value = "name") String name) {
+    public Result<List<User>> like(@RequestParam(value = "name") String name) {
         List<User> uls = userService.selectUserLike(name);
-        return ResultHandler.ok(uls);
+        return Result.success(uls);
     }
 
     /**
@@ -95,12 +94,10 @@ public class UserController {
      * @return
      */
     @RequestMapping("/dynamic")
-    public ResultBean<User> dynamic(@RequestParam(value = "name") String name, @RequestParam(value = "age") Integer age) {
+    public Result<List<User>> dynamic(@RequestParam(value = "name") String name,
+                                   @RequestParam(value = "age") Integer age) {
         List<User> uls = userService.selectUserDynamic(name, age);
-        return ResultHandler.ok(uls);
+        return Result.success(uls);
     }
-
-
-
 
 }

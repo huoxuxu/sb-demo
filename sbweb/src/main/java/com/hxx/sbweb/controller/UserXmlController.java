@@ -1,8 +1,7 @@
 package com.hxx.sbweb.controller;
 
-import com.hxx.sbweb.common.ResultHandler;
+import com.hxx.sbcommon.model.Result;
 import com.hxx.sbweb.domain.User;
-import com.hxx.sbweb.model.ResultBean;
 import com.hxx.sbweb.service.UserXmlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +23,9 @@ public class UserXmlController {
      * @return
      */
     @RequestMapping("/list")
-    public ResultBean<List<User>> selectAll() {
+    public Result<List<User>> selectAll() {
         List<User> users = userService.selectAll();
-        return ResultHandler.ok(users);
+        return Result.success(users);
     }
 
     /**
@@ -35,9 +34,9 @@ public class UserXmlController {
      * @return
      */
     @RequestMapping("/get")
-    public ResultBean<User> get(@RequestParam(value="name")String name){
+    public Result<User> get(@RequestParam(value="name")String name){
         User u=userService.selectUser(name);
-        return ResultHandler.ok(u);
+        return Result.success(u);
     }
 
     /**
@@ -47,13 +46,14 @@ public class UserXmlController {
      * @return
      */
     @RequestMapping("/bymap")
-    public ResultBean<User> selectListByMap(@RequestParam(value = "min") Integer min,@RequestParam(value = "max") Integer max) {
+    public Result<List<User>> selectListByMap(@RequestParam(value = "min") Integer min,
+                                     @RequestParam(value = "max") Integer max) {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("min",min);
         map.put("max",max);
 
         List<User> uls = userService.selectUserByMap(map);
-        return ResultHandler.ok(uls);
+        return Result.success(uls);
     }
 
     /**
@@ -61,9 +61,9 @@ public class UserXmlController {
      * @return
      */
     @RequestMapping("/list2")
-    public ResultBean<User> listAll2() {
+    public Result<List<User>> listAll2() {
         List<User> uls = userService.selectAll2();
-        return ResultHandler.ok(uls);
+        return Result.success(uls);
     }
 
 

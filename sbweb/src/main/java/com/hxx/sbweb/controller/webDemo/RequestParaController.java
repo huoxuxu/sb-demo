@@ -1,13 +1,10 @@
 package com.hxx.sbweb.controller.webDemo;
 
 import com.hxx.sbcommon.common.json.JsonUtil;
-import com.hxx.sbweb.common.ResultHandler;
+import com.hxx.sbcommon.model.Result;
 import com.hxx.sbweb.domain.Book;
 import com.hxx.sbweb.domain.User;
-import com.hxx.sbweb.model.ResultBean;
-import com.hxx.sbweb.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -46,7 +43,7 @@ public class RequestParaController {
     // =================================GET====================================
 
     /**
-     * /rm/t1/9998/hhhxxx
+     * /reqpara/t1/9998/hhhxxx
      *
      * @param ids
      * @param names
@@ -59,6 +56,20 @@ public class RequestParaController {
         map.put("name", names);
 
         return JsonUtil.toJSON(map);
+    }
+
+    /**
+     * /reqpara/demo/9998
+     *
+     * @param ids
+     * @return
+     */
+    @GetMapping("demo/{id}")
+    public Result<Map<String, Object>> demo1(@PathVariable("id") Long ids) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", ids);
+
+        return Result.success(map);
     }
 
     @PostMapping("t1")
@@ -137,8 +148,8 @@ public class RequestParaController {
      * @return
      */
     @PostMapping("/reqList")
-    public String req1(@RequestBody List<Integer> ids) {
-        return ids + "";
+    public List<Integer> req1(@RequestBody List<Integer> ids) {
+        return ids;
     }
 
     @RequestMapping("/testUrlPathParam/{param1}/{param2}")
@@ -159,7 +170,7 @@ public class RequestParaController {
     }
 
     @RequestMapping("/testHttpEntity")
-    public ResponseEntity<String> handle(HttpEntity<byte[]> requestEntity) throws UnsupportedEncodingException {
+    public ResponseEntity<String> handle(HttpEntity<byte[]> requestEntity) {
         String requestHeader = requestEntity.getHeaders()
                 .getFirst("MyRequestHeader");
         byte[] requestBody = requestEntity.getBody();
@@ -202,7 +213,7 @@ public class RequestParaController {
             sb.append(objectError.getDefaultMessage())
                     .append(",");
         }
-        return ResultHandler.error("PARAM_ERROR" + sb);
+        return Result.failed("PARAM_ERROR" + sb);
     }
 
     /**

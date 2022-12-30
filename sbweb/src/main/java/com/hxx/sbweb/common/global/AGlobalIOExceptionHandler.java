@@ -1,7 +1,5 @@
 package com.hxx.sbweb.common.global;
 
-import com.hxx.sbweb.common.ResultHandler;
-import com.hxx.sbweb.model.ResultBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,14 +1,8 @@
 package com.hxx.sbweb.controller;
 
-import com.hxx.sbservice.model.JdbcModel;
+import com.hxx.sbcommon.model.Result;
 import com.hxx.sbservice.model.attr.Async.SyncService;
-import com.hxx.sbservice.model.attr.Value.ValueTestConf;
-import com.hxx.sbweb.common.JsonUtil;
-import com.hxx.sbweb.common.ResultHandler;
 import com.hxx.sbweb.domain.User;
-import com.hxx.sbweb.model.ResultBean;
-import com.hxx.sbweb.service.ConfigurationPropertiesTestService;
-import com.hxx.sbweb.service.PropertySourceTestConfService;
 import com.hxx.sbweb.service.async.AsyncService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
@@ -38,7 +31,7 @@ public class AsyncController {
      * @return
      */
     @RequestMapping("/get")
-    public ResultBean<User> get(@RequestParam(value = "name") String name) {
+    public Result<String> get(@RequestParam(value = "name") String name) {
         try {
             Future<String> result1 = syncService.method1("I");
             Future<String> result2 = syncService.method2("love");
@@ -49,12 +42,12 @@ public class AsyncController {
             String str3 = result3.get();
 
             String result = str + str2 + str3;
-            return ResultHandler.ok(result);
+            return Result.success(result);
         } catch (Throwable ex) {
 
         }
 
-        return ResultHandler.ok(1);
+        return Result.success("1");
     }
 
     @Autowired
