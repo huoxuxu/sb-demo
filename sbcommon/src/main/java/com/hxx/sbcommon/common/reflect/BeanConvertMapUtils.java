@@ -25,14 +25,14 @@ public class BeanConvertMapUtils {
      * @return
      * @throws Exception
      */
-    public <T> Map<String, Object> toMap(T bean) throws Exception {
+    public static <T> Map<String, Object> toMap(T bean) throws Exception {
         Map<String, Object> map = new HashMap<>();
 
         //获取类的属性描述器
         BeanInfo beaninfo = Introspector.getBeanInfo(bean.getClass(), Object.class);
         //获取类的属性集
-        PropertyDescriptor[] pro = beaninfo.getPropertyDescriptors();
-        for (PropertyDescriptor property : pro) {
+        PropertyDescriptor[] props = beaninfo.getPropertyDescriptors();
+        for (PropertyDescriptor property : props) {
             //得到属性的name
             String key = property.getName();
             Method getMethod = property.getReadMethod();

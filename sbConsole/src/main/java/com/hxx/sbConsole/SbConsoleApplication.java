@@ -7,7 +7,6 @@ import com.hxx.sbConsole.commons.config.MyWebConfig;
 import com.hxx.sbConsole.commons.event.Publisher;
 import com.hxx.sbConsole.service.UserService;
 import com.hxx.sbConsole.service.impl.DemoAnnotationService;
-import com.hxx.sbConsole.service.impl.DemoMethodService;
 import com.hxx.sbConsole.service.impl.UseFunctionService;
 import com.hxx.sbcommon.common.hardware.NetUtil;
 import lombok.extern.slf4j.Slf4j;

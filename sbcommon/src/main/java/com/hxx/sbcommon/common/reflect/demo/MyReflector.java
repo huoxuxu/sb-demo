@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.reflect;
+package com.hxx.sbcommon.common.reflect.demo;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.reflection.ReflectionException;

@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.reflect;
+package com.hxx.sbcommon.common.reflect.demo;
 
 import java.lang.reflect.*;
 import java.util.HashMap;

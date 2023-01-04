@@ -2,6 +2,7 @@ package com.hxx.sbcommon.common.basic;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
@@ -321,6 +322,48 @@ public class OftenUtil {
         return fmt2Str(divVal);
     }
 
+    // 字符串
+    public static class StringUtil {
+        /**
+         * 小写第一位
+         */
+        public static String lowerFirstChar(String str) {
+            if (null == str) {
+                return null;
+            }
+
+            if (str.length() > 0) {
+                char firstChar = str.charAt(0);
+                if (Character.isUpperCase(firstChar)) {
+                    return Character.toLowerCase(firstChar) + str.substring(1);
+                }
+            }
+
+            return str;
+        }
+
+        /**
+         * 大写第一位
+         *
+         * @param str
+         * @return
+         */
+        public static String upperFirstChar(String str) {
+            if (null == str) {
+                return null;
+            }
+
+            if (str.length() > 0) {
+                char firstChar = str.charAt(0);
+                if (Character.isLowerCase(firstChar)) {
+                    return Character.toUpperCase(firstChar) + str.substring(1);
+                }
+            }
+
+            return str;
+        }
+    }
+
     // 集合&数组
 
     /**
@@ -600,20 +643,46 @@ public class OftenUtil {
         return sb.toString();
     }
 
-    // 随机数
-
     /**
-     * 获取随机数
-     * 不能在多线程之间共享ThreadLocalRandom
+     * 权重随机
      *
-     * @param origin 起始
-     * @param bound  界限
+     * @param map k=服务，v=权重
      * @return
      */
-    public static int nextRandomVal(int origin, int bound) {
-        int randomVal = ThreadLocalRandom.current()
-                .nextInt(origin, bound);
-        return randomVal;
+    public static String weightRandom(Map<String, Integer> map) {
+        int seed = 0;
+        List<String> ls = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            // 权重
+            Integer weight = entry.getValue();
+            seed += weight;
+            for (int i = 0; i < weight; i++) {
+                ls.add(entry.getKey());
+            }
+        }
+
+        Collections.sort(ls);
+
+        java.util.Random r = new java.util.Random();
+        int randomVal = r.nextInt(seed);
+        return ls.get(randomVal);
+    }
+
+    // 随机数
+    public static class Random {
+        /**
+         * 获取随机数
+         * 不能在多线程之间共享ThreadLocalRandom
+         *
+         * @param origin 起始
+         * @param bound  界限
+         * @return
+         */
+        public static int nextRandomVal(int origin, int bound) {
+            int randomVal = ThreadLocalRandom.current()
+                    .nextInt(origin, bound);
+            return randomVal;
+        }
     }
 
     /**
@@ -630,15 +699,16 @@ public class OftenUtil {
     }
 
     // 数据库
-
-    /**
-     * 获取mysql的limit左值
-     *
-     * @param pageNum  页码，从1开始
-     * @param pageSize 页大小
-     * @return
-     */
-    public static int getMySqlLimitLeftVal(int pageNum, int pageSize) {
-        return (pageNum - 1) * pageSize;
+    public static class DB {
+        /**
+         * 获取mysql的limit左值
+         *
+         * @param pageNum  页码，从1开始
+         * @param pageSize 页大小
+         * @return
+         */
+        public static int getMySqlLimitLeftVal(int pageNum, int pageSize) {
+            return (pageNum - 1) * pageSize;
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.hxx.sbcommon.common.reflect;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 /*
@@ -16,12 +17,20 @@ WildcardType：一种通配符类型表达式，比如?, ? extends Number；
  * @Date: 2022-11-25 17:10:03
  **/
 public class MethodSignature {
-    // 返回类型为void
-    private final boolean returnsVoid;
+    // 是否公开
+    private final boolean isPublic;
+    // 是否静态
+    private final boolean isStatic;
     // 返回类型
     private final Class<?> returnType;
+    // 返回类型为void
+    private final boolean returnsVoid;
 
     public MethodSignature(Class<?> mapperInterface, Method method) {
+        int modifiers = method.getModifiers();
+        this.isPublic= Modifier.isPublic(modifiers);
+        this.isStatic=Modifier.isStatic(modifiers);
+
         {
             Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);
             if (resolvedReturnType instanceof Class) {
@@ -43,6 +52,37 @@ public class MethodSignature {
 
     public boolean returnsVoid() {
         return this.returnsVoid;
+    }
+
+
+    /**
+     * 获取方法签名
+     *
+     * @param method
+     * @return
+     */
+    public static String getMethodSignature(Method method) {
+        StringBuilder sb = new StringBuilder();
+        Class<?> returnType = method.getReturnType();
+        if (returnType != null) {
+            sb.append(returnType.getName())
+                    .append('#');
+        }
+
+        sb.append(method.getName());
+        Class<?>[] parameters = method.getParameterTypes();
+
+        for (int i = 0; i < parameters.length; ++i) {
+            if (i == 0) {
+                sb.append(':');
+            } else {
+                sb.append(',');
+            }
+
+            sb.append(parameters[i].getName());
+        }
+
+        return sb.toString();
     }
 
     private Integer getUniqueParamIndex(Method method, Class<?> paramType) {

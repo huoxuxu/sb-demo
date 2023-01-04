@@ -21,6 +21,11 @@ public enum ResultEnum {
     PARAM_INVALID(2002, "参数校验失败"),
     COMMON_FAILED(2003, "接口调用失败"),
     FORBIDDEN(2004, "没有权限访问资源"),
+
+    NO_TOKEN(2100, "没有TOKEN"),
+    TOKEN_ERROR(2101, "TOKEN解析失败"),
+    REFRESH_TOKEN_EXPIRED(2102, "REFRESH_TOKEN过期"),
+
     UNKNOWN(-1, "系统异常");
 
     private final Integer code;

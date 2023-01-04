@@ -1,9 +1,7 @@
 package com.hxx.sbConsole.dynamicProxy.jdk;
 
 import com.hxx.sbConsole.service.Hello;
-import com.hxx.sbConsole.service.impl.biz.HelloImpl;
-import com.hxx.sbcommon.common.reflect.ReflectUtil;
-import com.hxx.sbcommon.common.reflect.autoProxy.JDKDynamicProxyHandler;
+import com.hxx.sbcommon.common.reflect.demo.ReflectUtil;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
