@@ -26,6 +26,8 @@ public enum ResultEnum {
     TOKEN_ERROR(2101, "TOKEN解析失败"),
     REFRESH_TOKEN_EXPIRED(2102, "REFRESH_TOKEN过期"),
 
+    CURRENT_LIMITING(2200, "已被限流"),
+
     UNKNOWN(-1, "系统异常");
 
     private final Integer code;

@@ -31,10 +31,11 @@ public class T1DeleteServiceImpl {
     @Autowired
     private T1Mapper t1Mapper;
 
-    // 编程式事务
+    // 编程式事务（Spring推荐）
     @Autowired
     TransactionTemplate transactionTemplate;
 
+    // 底层
     @Autowired
     PlatformTransactionManager transactionManager;
 
