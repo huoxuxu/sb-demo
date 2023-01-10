@@ -1,8 +1,10 @@
 package com.hxx.sbConsole.lock.distributed.impl;
 
 import com.hxx.sbConsole.lock.distributed.IDistributedLock;
+import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.TimeUnit;
@@ -57,4 +59,21 @@ public class RedissonDistributedLock implements IDistributedLock {
             }
         }
     }
+
+
+    /**
+     * 创建RLock
+     *
+     * @return
+     */
+    public static RLock getLock() {
+        String redisConnStr = "redis://localhost:6379";
+        Config config = new Config();
+        config.useSingleServer()
+                .setAddress(redisConnStr);
+        Redisson redisson = (Redisson) Redisson.create(config);
+        RLock lock = redisson.getLock("kkk");
+        return lock;
+    }
+
 }
