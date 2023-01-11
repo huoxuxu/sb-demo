@@ -6,7 +6,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.hxx.sbConsole.commons.jwt.JWTUtil;
 import com.hxx.sbConsole.model.User;
+import com.hxx.sbConsole.thread.ThreadDemo;
 import com.hxx.sbcommon.common.basic.OftenUtil;
+import com.hxx.sbcommon.common.hardware.NetUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.common.reflect.BeanConvertMapUtils;
 import com.hxx.sbcommon.common.reflect.ReflectorObjSetter;
@@ -14,9 +16,13 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
+import sun.net.util.IPAddressUtil;
 
+import java.net.InetAddress;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.bouncycastle.asn1.x500.style.RFC4519Style.l;
 
 /**
  * @Author: huoxuxu
@@ -124,7 +130,7 @@ public class DemoService {
                         // 判断 maxls 集合是否包含此项
                         boolean flag = maxls.stream()
                                 .allMatch(d -> CollectionUtils.isEmpty(CollectionUtils.intersection(d, arr1)));
-                        if(flag){
+                        if (flag) {
                             maxls.add(arr1);
                         }
                     }
@@ -145,6 +151,12 @@ public class DemoService {
                     }
                 }
             }
+        }
+        {
+            List<InetAddress> ls = NetUtil.getIPV4InetAddress();
+            List<InetAddress> ls1 = NetUtil.getIPV4InetAddress("Intel");
+            String localIP = NetUtil.getLocalIP();
+            System.out.println(localIP);
         }
     }
 

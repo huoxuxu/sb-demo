@@ -4,7 +4,6 @@ import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import com.hxx.sbrest.controller.base.BaseController;
 import com.hxx.sbrest.model.DataObject;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  **/
 @RestController
 @RequestMapping("/cache")
-public class CacheTestController extends BaseController {
+public class CacheTestController {
     // 手动设置的Cache
     static Cache<String, DataObject> cache;
     // 同步设置Cache
@@ -55,9 +54,9 @@ public class CacheTestController extends BaseController {
     @RequestMapping("/get")
     public String get() {
         DataObject dataObject = cache.getIfPresent(KEY);
-        if (dataObject == null) return ok("null");
+        if (dataObject == null) return "null";
 
-        return ok(dataObject.show());
+        return dataObject.show();
     }
 
     /**
@@ -70,7 +69,7 @@ public class CacheTestController extends BaseController {
     public String set(String val) {
         cache.put(KEY, DataObject.get(val));
 
-        return ok("set Cache " + val + " ok");
+        return "set Cache " + val + " ok";
     }
 
     /**
@@ -80,9 +79,9 @@ public class CacheTestController extends BaseController {
     @RequestMapping("/getSync")
     public String getSync() {
         DataObject dataObject = cacheSync.get(KEY);
-        if (dataObject == null) return ok("null");
+        if (dataObject == null) return "null";
 
-        return ok(dataObject.show());
+        return dataObject.show();
     }
 
     @RequestMapping("/getASync")
@@ -93,7 +92,7 @@ public class CacheTestController extends BaseController {
             System.out.println(val);
         });
 
-        return ok("1");
+        return "1";
     }
 
 }

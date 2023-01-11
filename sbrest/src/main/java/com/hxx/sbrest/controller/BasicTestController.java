@@ -1,6 +1,5 @@
 package com.hxx.sbrest.controller;
 
-import com.hxx.sbrest.controller.base.BaseController;
 import com.hxx.sbrest.service.BasicTestService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -20,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @RestController
 @RequestMapping("bt")
-public class BasicTestController extends BaseController {
+public class BasicTestController {
 
     @Autowired
     private BasicTestService basicTestService;
@@ -29,7 +28,7 @@ public class BasicTestController extends BaseController {
     public String switchTest(String str) {
         log.info("请求参数：{} {{}}{{++--}}", str, "889");
         String str1 = basicTestService.switchTest(str);
-        return ok(str1);
+        return str1;
     }
 
     @ResponseBody

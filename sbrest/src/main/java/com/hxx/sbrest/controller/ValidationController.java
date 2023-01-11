@@ -1,14 +1,12 @@
 package com.hxx.sbrest.controller;
 
-import com.hxx.sbrest.common.utils.JsonUtil;
-import com.hxx.sbrest.controller.base.BaseController;
+import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbrest.model.vo.UserVo;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +17,7 @@ import java.util.stream.Collectors;
  **/
 @RestController
 @RequestMapping("/valid")
-public class ValidationController extends BaseController {
+public class ValidationController {
     /**
      *
      * @param vo
@@ -40,7 +38,7 @@ public class ValidationController extends BaseController {
         }
 
         String s = JsonUtil.toJSON(vo);
-        return ok(s);
+        return s;
     }
 
     /**
@@ -62,7 +60,7 @@ public class ValidationController extends BaseController {
         }
 
         String s = JsonUtil.toJSON(vo);
-        return ok(s);
+        return s;
     }
 
 

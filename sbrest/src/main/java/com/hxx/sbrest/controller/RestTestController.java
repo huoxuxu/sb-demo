@@ -1,8 +1,6 @@
 package com.hxx.sbrest.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.hxx.sbrest.common.utils.JsonUtil;
-import com.hxx.sbrest.controller.base.BaseController;
+import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbrest.model.T1Model;
 import com.hxx.sbrest.service.BasicTestService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +18,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @RestController
 @RequestMapping("rest")
-public class RestTestController extends BaseController {
+public class RestTestController {
 
     @Autowired
     private BasicTestService basicTestService;

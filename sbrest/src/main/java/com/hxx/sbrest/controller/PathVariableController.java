@@ -1,10 +1,8 @@
 package com.hxx.sbrest.controller;
 
-import com.hxx.sbrest.common.utils.JsonUtil;
-import com.hxx.sbrest.controller.base.BaseController;
+import com.hxx.sbcommon.common.json.JsonUtil;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -17,7 +15,7 @@ import java.util.Map;
  **/
 @RestController
 @RequestMapping("pv")
-public class PathVariableController extends BaseController {
+public class PathVariableController {
 
     /**
      * /pv/t1/9998/hhhxxx

@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
 /**
+ * 指定时间可访问
+ *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2021-04-29 17:50:15
@@ -31,13 +33,15 @@ public class TimeBasedAccessInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
-        String url = request.getRequestURL().toString();
+        String url = request.getRequestURL()
+                .toString();
         if (mappingURL == null || url.matches(mappingURL)) {
             LocalDateTime now1 = LocalDateTime.now();
             int now = now1.getHour();
             if (now < openingTime || now > closingTime) {
                 request.setAttribute("msg", "注册开放时间：9：00-12：00");
-                request.getRequestDispatcher("/msg.jsp").forward(request, response);
+                request.getRequestDispatcher("/msg.jsp")
+                        .forward(request, response);
                 return false;
             }
             return true;

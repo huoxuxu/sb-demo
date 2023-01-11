@@ -1,10 +1,7 @@
-package com.hxx.sbweb.common.global;
+package com.hxx.sbrest.common.global;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.model.Result;
-import com.hxx.sbweb.common.global.model.RestResult;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -33,7 +30,7 @@ public class RestResultWrapper implements ResponseBodyAdvice<Object> {
     }
 
     /**
-     * 必须返回字符串，否则会报错
+     * 如果原方法返回字符串类型或Object类型的实际类型为字符串，则包装后必须返回字符串，否则会报错
      *
      * @param body
      * @param methodParameter

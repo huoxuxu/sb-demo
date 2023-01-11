@@ -1,7 +1,5 @@
 package com.hxx.sbrest.controller;
 
-import com.hxx.sbrest.controller.base.BaseController;
-import com.hxx.sbrest.service.BasicTestService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
@@ -24,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RestController
 @RequestMapping("rocketmq")
-public class RocketMQProducerTestController extends BaseController {
+public class RocketMQProducerTestController {
     final static String PRODUCER_GROUP = "please_rename_unique_group_name_111222333";
     final static String NAME_SRV_ADDR = "localhost:9876";
     final static String TOPIC = "Jodie_topic_1023";
@@ -55,7 +53,7 @@ public class RocketMQProducerTestController extends BaseController {
         } catch (Exception ex) {
             log.error("生产异常！", ex);
         }
-        return ok(1);
+        return 1 + "";
     }
 
     @RequestMapping("/send2")
@@ -105,7 +103,7 @@ public class RocketMQProducerTestController extends BaseController {
             log.error("生产异常！", ex);
         }
 
-        return ok(1);
+        return 1 + "";
     }
 
 
