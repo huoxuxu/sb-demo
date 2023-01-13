@@ -33,16 +33,44 @@ public class Result<T> {
         return new Result<>(ResultEnum.SUCCESS.getCode(), message, data);
     }
 
+    /**
+     * 未知异常
+     *
+     * @return
+     */
     public static Result<?> failed() {
-        return new Result<>(ResultEnum.UNKNOWN.getCode(), ResultEnum.UNKNOWN.getName(), null);
+        return failed(ResultEnum.UNKNOWN);
     }
 
+    /**
+     * 未知异常
+     *
+     * @param message
+     * @return
+     */
     public static Result<?> failed(String message) {
-        return new Result<>(ResultEnum.UNKNOWN.getCode(), message, null);
+        return failed(ResultEnum.UNKNOWN, message);
     }
 
+    /**
+     * 指定异常
+     *
+     * @param errorResult
+     * @return
+     */
     public static Result<?> failed(ResultEnum errorResult) {
-        return new Result<>(errorResult.getCode(), errorResult.getName(), null);
+        return failed(errorResult, errorResult.getName());
+    }
+
+    /**
+     * 指定异常，自定义消息
+     *
+     * @param errorResult
+     * @param message
+     * @return
+     */
+    public static Result<?> failed(ResultEnum errorResult, String message) {
+        return new Result<>(errorResult.getCode(), message, null);
     }
 
 }

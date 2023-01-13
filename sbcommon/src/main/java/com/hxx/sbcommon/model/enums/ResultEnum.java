@@ -28,7 +28,7 @@ public enum ResultEnum {
 
     CURRENT_LIMITING(2200, "已被限流"),
 
-    UNKNOWN(-1, "系统异常");
+    UNKNOWN(-1, "未知异常");
 
     private final Integer code;
 
