@@ -252,6 +252,7 @@ public class StreamTest {
 
     @Test
     public void Collector() {
+        // toMap
         {
             Map<Long, String> idToNameMap = listPersons()
                     .stream()
@@ -280,12 +281,13 @@ public class StreamTest {
                             (oldPerson, newPerson) -> newPerson.getIncome() > oldPerson.getIncome() ? newPerson : oldPerson));
             System.out.println(highestEarnerByGender);
         }
-
+        // toList
         {
             Stream<String> s = Stream.of("a", "b", "c");
             List<String> names = s.collect(Collectors.toList());
             System.out.println(names);
         }
+        // toSet
         {
             Stream<String> s = Stream.of("a", "b", "c");
             Set<String> names = s.collect(Collectors.toSet());
