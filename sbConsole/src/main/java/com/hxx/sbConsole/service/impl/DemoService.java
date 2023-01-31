@@ -1,28 +1,25 @@
 package com.hxx.sbConsole.service.impl;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.hxx.sbConsole.commons.jwt.JWTUtil;
+import com.hxx.sbConsole.model.Dog;
 import com.hxx.sbConsole.model.User;
-import com.hxx.sbConsole.thread.ThreadDemo;
 import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.hardware.NetUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
-import com.hxx.sbcommon.common.reflect.BeanConvertMapUtils;
-import com.hxx.sbcommon.common.reflect.ReflectorObjSetter;
+import com.hxx.sbcommon.common.reflect.BeanInfoUtil;
+import com.hxx.sbcommon.common.reflect.CopyObjUtil;
+import com.hxx.sbcommon.common.reflect.MethodSignature;
+import com.hxx.sbcommon.common.reflect.ReflectorObj;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
-import sun.net.util.IPAddressUtil;
 
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static org.bouncycastle.asn1.x500.style.RFC4519Style.l;
 
 /**
  * @Author: huoxuxu
@@ -36,6 +33,15 @@ public class DemoService {
             String hxy = OftenUtil.StringUtil.lowerFirstChar("HXY");
             System.out.println(hxy);
         }
+        System.out.println("==================================================");
+        {
+            Method[] methods = User.class.getMethods();
+            for (Method method : methods) {
+                String signStr = MethodSignature.getMethodSignature(method);
+                System.out.println(signStr);
+            }
+        }
+        System.out.println("==================================================");
         {
             User user = new User();
             {
@@ -44,11 +50,26 @@ public class DemoService {
                 user.setName("里斯");
             }
 
-            Map<String, Object> map = BeanConvertMapUtils.toMap(user);
-            System.out.println(JsonUtil.toJSON(map));
+            ReflectorObj rd = new ReflectorObj(User.class);
+            Map<String, Object> objMap = rd.getObjMap(user);
+            System.out.println("userMap：" + JsonUtil.toJSON(objMap));
+
+            Map<String, Object> map = BeanInfoUtil.toMap(user);
+            System.out.println("user对象：" + JsonUtil.toJSON(user));
+            System.out.println("userMap：" + JsonUtil.toJSON(map));
+
+            User dest = new User();
+            CopyObjUtil.copyTo(user, dest);
+            System.out.println("dest：" + JsonUtil.toJSON(dest));
+
+            Dog dog = new Dog();
+            CopyObjUtil.copyToObj(user, dog);
+            System.out.println("dog：" + JsonUtil.toJSON(dog));
+
         }
+        System.out.println("==================================================");
         {
-            ReflectorObjSetter rd = new ReflectorObjSetter(User.class);
+            ReflectorObj rd = new ReflectorObj(User.class);
 
             Map<String, Object> map = new HashMap<>();
             map.put("id", 111);
@@ -58,6 +79,7 @@ public class DemoService {
             User user = rd.setInstance(map);
             System.out.println(JsonUtil.toJSON(user));
         }
+        System.out.println("==================================================");
         {
             Map<String, Integer> map = new HashMap<>();
             {
@@ -70,6 +92,7 @@ public class DemoService {
                 System.out.println(i + ": " + str);
             }
         }
+        System.out.println("==================================================");
         {
             //加密的数据
             String userId = "51";
@@ -98,6 +121,7 @@ public class DemoService {
             String v2 = JWTUtil.verify(sign);
             System.out.println(v1);
         }
+        System.out.println("==================================================");
         {
 //            //前端传过来的令牌
 //            String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg1NTEyOTgsInVzZXJJZCI6ImhlbGxvIn0.mVXwBkBMO-Sr3FJPZSVLezUuxdvMwNsGgRqTCVufH8o";
@@ -110,6 +134,7 @@ public class DemoService {
 //            System.out.println(jwt.getClaim("userId")
 //                    .asInt());"""
         }
+        System.out.println("==================================================");
         {
             String str = "001,002,003==004==002==002==001==001,002==005,006";
             String[] arr = str.split("==");
@@ -152,6 +177,7 @@ public class DemoService {
                 }
             }
         }
+        System.out.println("==================================================");
         {
             List<InetAddress> ls = NetUtil.getIPV4InetAddress();
             List<InetAddress> ls1 = NetUtil.getIPV4InetAddress("Intel");

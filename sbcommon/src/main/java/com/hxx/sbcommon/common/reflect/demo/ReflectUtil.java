@@ -89,21 +89,21 @@ public class ReflectUtil {
     /**
      * 获取方法Map，key= 方法签名，val= 方法
      *
-     * @param currentClass
+     * @param cls
      * @return
      */
-    public static Map<String, Method> getMethods(Class<?> currentClass) {
+    public static Map<String, Method> getMethods(Class<?> cls) {
         Map<String, Method> uniqueMethods = new HashMap();
 
-        for (; currentClass != null && currentClass != Object.class; currentClass = currentClass.getSuperclass()) {
+        for (; cls != null && cls != Object.class; cls = cls.getSuperclass()) {
             // self
             {
-                Method[] methods = currentClass.getDeclaredMethods();
+                Method[] methods = cls.getDeclaredMethods();
                 addUniqueMethod(uniqueMethods, methods);
             }
 
             // 接口
-            Class<?>[] interfaces = currentClass.getInterfaces();
+            Class<?>[] interfaces = cls.getInterfaces();
             for (Class<?> interf : interfaces) {
                 Method[] methods = interf.getMethods();
                 addUniqueMethod(uniqueMethods, methods);

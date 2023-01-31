@@ -45,6 +45,13 @@ public class MethodSignature {
         }
     }
 
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public boolean isStatic() {
+        return isStatic;
+    }
 
     public Class<?> getReturnType() {
         return this.returnType;
@@ -57,6 +64,8 @@ public class MethodSignature {
 
     /**
      * 获取方法签名
+     * java.lang.String#getName
+     * void#setName:java.lang.String
      *
      * @param method
      * @return
