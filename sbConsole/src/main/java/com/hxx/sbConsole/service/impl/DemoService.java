@@ -12,6 +12,7 @@ import com.hxx.sbcommon.common.reflect.BeanInfoUtil;
 import com.hxx.sbcommon.common.reflect.CopyObjUtil;
 import com.hxx.sbcommon.common.reflect.MethodSignature;
 import com.hxx.sbcommon.common.reflect.ReflectorObj;
+import com.hxx.sbcommon.model.Result;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,11 @@ public class DemoService {
             CopyObjUtil.copyToObj(user, dog);
             System.out.println("dog：" + JsonUtil.toJSON(dog));
 
+            // =================泛型字段===================================
+            Result<String> result = new Result<>(1, "xx", "m12");
+            ReflectorObj rdf = new ReflectorObj(result.getClass());
+            Map<String, Object> objMap1 = rdf.getObjMap(result);
+            System.out.println("objMap：" + JsonUtil.toJSON(objMap1));
         }
         System.out.println("==================================================");
         {
