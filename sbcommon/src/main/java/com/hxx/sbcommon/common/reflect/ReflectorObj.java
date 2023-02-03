@@ -191,7 +191,9 @@ public class ReflectorObj {
             if (isGetter) {
                 // 反推field的名字
                 String fieldName = OftenUtil.StringUtil.lowerFirstChar(methodName.substring(3));
-                getters.add(new FieldGetter(fieldName, method));
+                if (isValidPropertyName(fieldName)) {
+                    getters.add(new FieldGetter(fieldName, method));
+                }
             }
         }
 
@@ -212,7 +214,9 @@ public class ReflectorObj {
             if (isSetter) {
                 // 反推field的名字
                 String fieldName = OftenUtil.StringUtil.lowerFirstChar(methodName.substring(3));
-                setters.add(new FieldSetter(fieldName, method));
+                if (isValidPropertyName(fieldName)) {
+                    setters.add(new FieldSetter(fieldName, method));
+                }
             }
         }
 
@@ -346,6 +350,10 @@ public class ReflectorObj {
         }
     }
 
+    // 是否有效的属性名
+    private boolean isValidPropertyName(String name) {
+        return !name.startsWith("$") && !"serialVersionUID".equals(name) && !"class".equals(name);
+    }
 
     private static boolean canAccessPrivateMethods() {
         try {
