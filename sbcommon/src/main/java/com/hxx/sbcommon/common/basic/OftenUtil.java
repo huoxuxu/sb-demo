@@ -263,7 +263,7 @@ public class OftenUtil {
      * @param num
      * @return
      */
-    public static BigDecimal convert2(String num) {
+    public static BigDecimal convert2BigDecimal(String num) {
         return new BigDecimal(num);
     }
 
