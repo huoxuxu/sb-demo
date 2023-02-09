@@ -1,5 +1,6 @@
 package com.hxx.sbrest.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Description:
  * @Date: 2021-04-29 14:57:52
  **/
+@Slf4j
 @RestController
 public class InterceptController {
     @RequestMapping("/index")

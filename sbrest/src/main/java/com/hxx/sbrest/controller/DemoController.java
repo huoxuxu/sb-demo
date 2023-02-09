@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
  **/
 @Slf4j
 @RestController
-@RequestMapping("rest")
-public class RestTestController {
+@RequestMapping("demo")
+public class DemoController {
 
     @Autowired
     private BasicTestService basicTestService;

@@ -1,6 +1,9 @@
 package com.hxx.sbcommon.common.reflect;
 
 import com.hxx.sbcommon.common.basic.OftenUtil;
+import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.LangTypeHandlerFactory;
+import com.hxx.sbcommon.common.reflect.demo.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.*;
@@ -23,6 +26,11 @@ public class ReflectorObj {
     // 对象Setter k=类名，v=所有Setter
     private final static Map<String, List<FieldSetter>> setterMap = new HashMap<>();
 
+    // 公开的实例方法
+    private final static Map<String, List<Method>> publicInstanceMethodMap = new HashMap<>();
+    // 公开的静态方法
+    private final static Map<String, List<Method>> publicStaticMethodMap = new HashMap<>();
+
     // 类
     private final Class<?> cls;
     // 类名
@@ -42,6 +50,7 @@ public class ReflectorObj {
                     Method[] methods = cls.getMethods();
                     this.initGetters(methods);
                     this.initSetters(methods);
+                    this.initMethod(methods);
                 }
             }
         }
@@ -179,6 +188,44 @@ public class ReflectorObj {
         return obj;
     }
 
+    // 调用方法
+    public Object callMethod(Object obj, List<Method> methods, String methodName, String[] parameterTypes, String returnType, Object[] methodParaVals) throws InvocationTargetException, IllegalAccessException {
+        String methodSignature = MethodSignature.getMethodSignature(methodName, parameterTypes, returnType);
+
+        Method method = methods.stream()
+                .filter(d -> methodSignature.equals(MethodSignature.getMethodSignature(d)))
+                .findFirst()
+                .orElse(null);
+        if (method == null) {
+            throw new IllegalArgumentException("未找到对应dubbo接口的方法，方法签名：" + methodSignature);
+        }
+
+        // 调用方法
+        Object result;
+        // 匹配参数
+        Class<?>[] paras = method.getParameterTypes();
+        if (paras == null || paras.length == 0) {
+            result = method.invoke(obj);
+            return result;
+        }
+
+        methodParaVals = methodParaVals == null ? new Object[0] : methodParaVals;
+        if (paras.length != methodParaVals.length) {
+            throw new IllegalArgumentException("未找到对应dubbo接口的方法，方法入参个数不一致");
+        }
+
+        Object[] methodParaArr = new Object[paras.length];
+        for (int i = 0; i < paras.length; i++) {
+            Class para = paras[i];
+            Object mp = methodParaVals[i];
+            // 转换类型
+            Object val = LangTypeHandlerFactory.convert(mp, para);
+            methodParaArr[i] = val;
+        }
+        result = method.invoke(obj, methodParaArr);
+        return result;
+    }
+
     // 初始化getter
     private void initGetters(Method[] methods) {
         List<FieldGetter> getters = new ArrayList<>();
@@ -222,6 +269,41 @@ public class ReflectorObj {
 
         // 缓存类的setter函数列表
         setterMap.put(this.className, setters);
+    }
+
+    private void initMethod(Method[] methods) {
+        List<Method> publicInstanceMethods = new ArrayList<>();
+        List<Method> publicStaticMethods = new ArrayList<>();
+
+        for (Method method : methods) {
+            String methodName = method.getName();
+
+            // 过滤Object 类中的getXX 方法
+            if (methodName.equals("getClass")) {
+                continue;
+            }
+
+            int modifiers = method.getModifiers();
+            // 公开的非静态
+            if (!Modifier.isPublic(modifiers)) {
+                continue;
+            }
+
+            // 非桥接
+            if (method.isBridge()) {
+                continue;
+            }
+
+            if (Modifier.isStatic(modifiers)) {
+                publicStaticMethods.add(method);
+            } else {
+                publicInstanceMethods.add(method);
+            }
+        }
+
+        // 缓存
+        publicInstanceMethodMap.put(this.className, publicInstanceMethods);
+        publicStaticMethodMap.put(this.className, publicStaticMethods);
     }
 
     // 获取字段Getter

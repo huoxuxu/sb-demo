@@ -17,8 +17,8 @@ public class Slf4jTestController {
 
     @RequestMapping("/w")
     public String w() {
-        log.info("请求参数：{} {{}}{{++--}}", 1, 2, 3, 4);
-        log.info("请求参数：\\{} {{}}{{++--}}", 1, 2, 3, 4);
+        log.info("请求参数：{} {{}}{{++--}}", 1, 2);
+        log.info("请求参数：\\{} {{}}{{++--}}", 1);
         return 999 + "";
     }
 

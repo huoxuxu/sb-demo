@@ -1,4 +1,4 @@
-package com.hxx.sbrest.controller;
+package com.hxx.sbrest.controller.rocketMQ;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.exception.MQClientException;

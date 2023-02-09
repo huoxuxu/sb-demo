@@ -40,6 +40,9 @@ public class LangTypeHandlerFactory {
         typeHandlerMap.put(Date.class, new DateTypeHandler());
         typeHandlerMap.put(LocalDateTime.class, new LocalDateTimeTypeHandler());
         typeHandlerMap.put(LocalDate.class, new LocalDateTypeHandler());
+
+        typeHandlerMap.put(Map.class, new MapTypeHandler());
+        typeHandlerMap.put(HashMap.class, new MapTypeHandler());
     }
 
     /**
@@ -48,7 +51,7 @@ public class LangTypeHandlerFactory {
      * @param cls
      * @return
      */
-    public static LangTypeHandler getTypeHandler(Class cls) {
+    public static LangTypeHandler getTypeHandler(Class<?> cls) {
         LangTypeHandler typeHandler = typeHandlerMap.getOrDefault(cls, null);
         return typeHandler;
     }
@@ -104,4 +107,27 @@ public class LangTypeHandlerFactory {
             throw new TypeException("Unable to find a usable constructor for " + typeHandlerClass, var4);
         }
     }
+
+    /**
+     * 将obj转为指定类型
+     *
+     * @param obj
+     * @param tarCls
+     * @return
+     */
+    public static Object convert(Object obj, Class<?> tarCls) {
+        if (obj == null) {
+            return null;
+        }
+
+        // 获取对应的处理方法
+        LangTypeHandler handler = LangTypeHandlerFactory.getTypeHandler(tarCls);
+        if (handler == null) {
+            Class<?> customTypeHandlerCls = LangTypeHandlerFactory.getCustomTypeHandlerCls();
+            handler = LangTypeHandlerFactory.getInstance(customTypeHandlerCls, tarCls);
+        }
+
+        return handler.convert(obj);
+    }
+
 }

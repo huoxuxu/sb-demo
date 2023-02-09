@@ -11,9 +11,9 @@ import com.hxx.sbcommon.common.json.JsonUtil;
  * @Date: 2022-10-27 11:10:27
  **/
 public class CustomTypeHandler implements LangTypeHandler<Object> {
-    private Class targetClass;
+    private Class<?> targetClass;
 
-    public CustomTypeHandler(Class targetClass) {
+    public CustomTypeHandler(Class<?> targetClass) {
         this.targetClass = targetClass;
     }
 
