@@ -13,8 +13,9 @@ import java.nio.charset.StandardCharsets;
  **/
 public class DemoIOServiceImpl {
     public static void demo() throws Exception {
-        File file= new File("d:/998.txt");
-        FileUtil.writeAllTxt(file, StandardCharsets.UTF_8,"aabbcc");
+        String path = FileUtil.combine("d:", "998.txt");
+        File file = new File(path);
+        FileUtil.writeAllTxt(file, StandardCharsets.UTF_8, "aabbcc");
 
     }
 

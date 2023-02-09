@@ -1,6 +1,7 @@
 package com.hxx.sbcommon.common.io;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.file.PathUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -10,8 +11,10 @@ import java.util.function.Consumer;
 /**
  * 文件工具类
  * 注意：FileReader不允许您指定平台默认编码以外的编码。
- * Charset cs=Charset.forName("US-ASCII")
- * "utf-8" Charsets.toCharset(charsetName)
+ * Charset.forName("US-ASCII")
+ * Charsets.toCharset("utf-8")
+ * StandardCharsets.UTF_8
+ * StandardCharsets.US_ASCII
  *
  * @Author: huoxuxu
  * @Description:
@@ -133,6 +136,36 @@ public class FileUtil {
      */
     public static void appendAllTxt(File file, Charset charset, String appendContent) throws IOException {
         FileUtils.writeStringToFile(file, appendContent, charset, true);
+    }
+
+    /**
+     * 连接两个路径
+     *
+     * @param path1
+     * @param path2
+     * @return
+     */
+    public static String combine(String path1, String path2) {
+        // 将\转换为/
+        path1 = path1.replace('\\', '/');
+        path2 = path2.replace('\\', '/');
+        // 兼容windows
+        path1 = path1.replace("//", "/");
+        path2 = path2.replace("//", "/");
+        // path1最后为/
+        if (path1.endsWith("/")) {
+            if (path2.startsWith("/")) {
+                path2 = path2.substring(1);
+            }
+            return path1 + path2;
+        }
+        // path1最后不为/
+        else {
+            if (path2.startsWith("/")) {
+                return path1 + path2;
+            }
+            return path1 + "/" + path2;
+        }
     }
 
 }

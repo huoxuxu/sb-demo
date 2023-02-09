@@ -1,5 +1,6 @@
 package stream;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.common.basic.array.ListUtil;
@@ -139,6 +140,17 @@ public class StreamTest {
         System.out.println(ss);
         Arrays.stream(ss)
                 .forEach(System.out::println);
+
+        // <A> A[] toArray(IntFunction<A[]> generator);
+        {
+            List<Long> dateLongs=new ArrayList<>();
+            dateLongs.add(1675650261000L);
+            dateLongs.add(1675650262000L);
+            Date[] dates = dateLongs.stream().map(Date::new).toArray(Date[]::new);
+            for (Date date : dates) {
+                System.out.println(date);
+            }
+        }
     }
 
     @Test
@@ -153,9 +165,7 @@ public class StreamTest {
             List<Integer> data = intls.stream()
                     .sorted(Comparator.reverseOrder())
                     .collect(Collectors.toList());
-            data.forEach(d -> {
-                System.out.println(d + "");
-            });
+            data.forEach(d -> System.out.println(d + ""));
         }
 
         // 多条件排序-带逆序
@@ -178,9 +188,7 @@ public class StreamTest {
             Comparator<Person> comp1 = Comparator.comparing(Person::getScore, Comparator.reverseOrder())
                     .thenComparing(Person::getId);
             people.sort(comp1);
-            people.forEach(d -> {
-                System.out.println(d.getName() + "");
-            });
+            people.forEach(d -> System.out.println(d.getName() + ""));
         }
 
         Comparator<Employee> comparator = (o1, o2) -> {
@@ -203,14 +211,14 @@ public class StreamTest {
                 .forEach(d -> System.out.println(d.getBirthday()));
 
         // 先按xx排序，后按xx排序
-        persons.stream()
+        List<String> ls1 = persons.stream()
                 .sorted(Comparator.comparing(Employee::getSalary)
                         .thenComparing(Employee::getAge))
                 .map(Employee::getName)
                 .collect(Collectors.toList());
 
         // 先按工资再按年龄自定义排序（降序）
-        persons.stream()
+        List<String> ls = persons.stream()
                 .sorted((p1, p2) -> {
                     if (p1.getSalary() == p2.getSalary()) {
                         return p2.getAge() - p1.getAge();
