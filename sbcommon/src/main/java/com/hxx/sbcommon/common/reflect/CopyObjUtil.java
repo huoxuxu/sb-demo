@@ -20,9 +20,11 @@ public class CopyObjUtil {
      * @throws Exception
      */
     public static <T> void copyTo(T src, T dest) {
-        ReflectorObj reflectorObj = new ReflectorObj(dest.getClass());
+        ReflectorObj reflectorObj = new ReflectorObj(src.getClass());
         Map<String, Object> objValMap = reflectorObj.getObjMap(src);
-        reflectorObj.setInstance(dest, objValMap);
+
+        ReflectorObj reflectorDestObj = new ReflectorObj(dest.getClass());
+        reflectorDestObj.setInstance(dest, objValMap);
     }
 
     /**
@@ -35,9 +37,11 @@ public class CopyObjUtil {
      * @throws Exception
      */
     public static <T> void copyToObj(T src, Object dest) {
-        ReflectorObj reflectorObj = new ReflectorObj(dest.getClass());
+        ReflectorObj reflectorObj = new ReflectorObj(src.getClass());
         Map<String, Object> objValMap = reflectorObj.getObjMap(src);
-        reflectorObj.setInstance(dest, objValMap);
+
+        ReflectorObj reflectorDestObj = new ReflectorObj(dest.getClass());
+        reflectorDestObj.setInstance(dest, objValMap);
     }
 
 

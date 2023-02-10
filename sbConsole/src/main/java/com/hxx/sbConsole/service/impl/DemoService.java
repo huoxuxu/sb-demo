@@ -6,6 +6,7 @@ import com.hxx.sbConsole.commons.jwt.JWTUtil;
 import com.hxx.sbConsole.model.Dog;
 import com.hxx.sbConsole.model.User;
 import com.hxx.sbcommon.common.basic.OftenUtil;
+import com.hxx.sbcommon.common.basic.langType.LangTypeHandlerFactory;
 import com.hxx.sbcommon.common.hardware.NetUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.common.reflect.BeanInfoUtil;
@@ -186,9 +187,26 @@ public class DemoService {
         System.out.println("==================================================");
         {
             List<InetAddress> ls = NetUtil.getIPV4InetAddress();
+            System.out.println(ls);
             List<InetAddress> ls1 = NetUtil.getIPV4InetAddress("Intel");
+            System.out.println(ls1);
             String localIP = NetUtil.getLocalIP();
             System.out.println(localIP);
+        }
+        System.out.println("==================================================");
+        {
+            {
+                Map<String, Object> map = new HashMap<>();
+                map.put("1", "11");
+                map.put("2", 22);
+                Object result = LangTypeHandlerFactory.convert(map, Map.class);
+                System.out.println(result);
+            }
+            {
+                String json = "{\"code\":\"11\",\"name\":22}";
+                Object result = LangTypeHandlerFactory.convert(json, Map.class);
+                System.out.println(result);
+            }
         }
     }
 
