@@ -7,6 +7,7 @@ import com.hxx.sbConsole.model.Dog;
 import com.hxx.sbConsole.model.User;
 import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandlerFactory;
+import com.hxx.sbcommon.common.basic.langType.impl.ListTypeHandler;
 import com.hxx.sbcommon.common.hardware.NetUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.common.reflect.BeanInfoUtil;
@@ -203,9 +204,43 @@ public class DemoService {
                 System.out.println(result);
             }
             {
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("1", "11");
+                map.put("2", 22);
+                Object result = LangTypeHandlerFactory.convert(map, Map.class);
+                System.out.println(result);
+            }
+            {
                 String json = "{\"code\":\"11\",\"name\":22}";
                 Object result = LangTypeHandlerFactory.convert(json, Map.class);
                 System.out.println(result);
+            }
+            {
+                ListTypeHandler lt=new ListTypeHandler();
+                {
+                    // [1,2,3]
+                    int[] arr={1,2,3};
+                    List<?> ls = lt.convert(arr);
+                    System.out.println(ls);
+                }
+                {
+                    // [1,2,3]
+                    Integer[] arr={1,2,3};
+                    List<?> ls = lt.convert(arr);
+                    System.out.println(ls);
+                }
+                {
+                    // [1,2,3]
+                    List<Integer> arr=new ArrayList<>(Arrays.asList(1,2,3));
+                    List<?> ls = lt.convert(arr);
+                    System.out.println(ls);
+                }
+                {
+                    // [{"code":"code1"}]
+                    String json="[{\"code\":\"code1\"}]";
+                    List<?> ls = lt.convert(json);
+                    System.out.println(ls);
+                }
             }
         }
     }
