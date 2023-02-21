@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace 关联此xml对应的Mapper接口全包名
+    select、insert、update、delete标签的id对应namespace对应的Mapper接口的方法名
+    parameterType属性指明查询时使用的参数类型
+    resultType属性指明查询返回的结果集类型
+ -->
+<mapper namespace="com.hxx.mbmtest.mapper.master.T1Mapper">
+
+    <!-- 查询全部-->
+    <select id="selectAll" resultType="com.hxx.mbmtest.entity.T1">
+         SELECT * FROM t1
+     </select>
+
+    <!-- 根据id查询 -->
+    <select id="selectUserById"
+            resultType="com.hxx.mbmtest.entity.T1">
+         select * from t1 where id = #{id}
+     </select>
+
+    <!-- 根据name查询得到一个user对象 -->
+    <select id="selectUser"
+            resultType="com.hxx.mbmtest.entity.T1">
+         select * from t1 where name = #{name}
+     </select>
+
+    <!-- 根据birthday查询得到一个user对象 -->
+    <select id="selectByBirthday"
+            resultType="com.hxx.mbmtest.entity.T1">
+         select *
+         from t1
+         where birthday &lt; #{birthday}
+         limit #{page},#{pageSize}
+     </select>
+
+    <!-- bymap -->
+    <select id="selectUserByMap" parameterType="java.util.Map"
+            resultType="com.hxx.mbmtest.entity.T1">
+         select * from t1 limit #{min},#{max}
+     </select>
+
+    <!-- 创建用户 -->
+    <insert id="addUser" parameterType="com.hxx.mbmtest.entity.T1">
+         insert into t1
+         (code,name,score,enabled,birthday,createTime)
+         values
+         (#{code},#{name},#{score},#{enabled},#{birthday},#{createTime})
+     </insert>
+
+    <!-- 修改用户 -->
+    <update id="updateUser" parameterType="com.hxx.mbmtest.entity.T1">
+         update t1
+         set name = #{name},createTime = #{createTime}
+         where id = #{id}
+     </update>
+
+    <!-- 删除用户 -->
+    <delete id="deleteUserById">
+         delete from t1 where id=#{id}
+     </delete>
+
+
+<!--    <resultMap id="mapTeacher" type="com.hxx.mbtest.entity.T1">-->
+<!--        <result property="id" column="id"/>-->
+<!--        <result property="name" column="name"/>-->
+<!--        <result property="createTime" column="createTime"/>-->
+<!--        <result property="remark" column="remark"/>-->
+<!--        <result property="theTeacher" column="theTeacher"/>-->
+<!--        <association property="teacher" javaType="com.hxx.sbweb.domain.Teacher">-->
+<!--            <result property="name" column="bname"/>-->
+<!--            <result property="createTime" column="bcreateTime"/>-->
+<!--        </association>-->
+<!--    </resultMap>-->
+
+</mapper>

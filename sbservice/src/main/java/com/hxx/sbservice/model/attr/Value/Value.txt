@@ -1,0 +1,19 @@
+@Value将外部的值动态注入到Bean中，
+使用的情况有：
+  注入普通字符串
+  注入操作系统属性
+  注入表达式结果
+  注入其他Bean属性：注入beanInject对象的属性another
+  注入文件资源
+  注入URL资源
+
+@Value(“${xxxx}”)注解从配置文件读取值的用法
+@Value(“#{}”) 表示SpEl表达式通常用来获取bean的属性，或者调用bean的某个方法。当然还有可以表示常量
+
+#{…} 用于执行SpEl表达式，并将内容赋值给属性
+${…} 主要用于加载外部属性文件中的值
+#{…} 和${…} 可以混合使用，但是必须#{}外面，${}在里面
+
+// 指定默认值为“unknown”
+@Value("${jdbc.userName1:unknownXXX}")
+private String userNameDef;

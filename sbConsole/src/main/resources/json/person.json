@@ -1,0 +1,6 @@
+[
+  {"age":18,"alive":true,"createTime":"2022-06-01T11:25:46","id":1,"name":"张三","score":90.5},
+  {"age":72,"alive":false,"createTime":"2022-06-05T11:25:46","id":2,"name":"李四","score":95.3},
+  {"age":20,"alive":true,"createTime":"2022-06-01T11:25:46","id":3,"name":"王二","score":88.5},
+  {"age":28,"alive":true,"createTime":"2022-06-01T11:25:46","id":4,"name":"麻子","score":90.5}
+]

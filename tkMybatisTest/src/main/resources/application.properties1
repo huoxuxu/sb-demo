@@ -1,0 +1,21 @@
+server.port=8083
+# db-config
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://local.huawu.xyz:3306/test?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=Hongkong&zeroDateTimeBehavior=ROUND&autoReconnect=true&failOverReadOnly=false&&allowMultiQueries=true
+spring.datasource.username=root
+spring.datasource.password=xx123
+# mybatis-config
+mybatis.mapper-locations=classpath:mapper/mysql/testDB/*.xml
+mybatis.config-location=classpath:mybatis-config.xml
+# mybatis console-log 不能与 mybatis.config-location 节点同时存在
+#mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
+# pageHelper
+pagehelper.helperDialect=mysql
+pagehelper.reasonable=true
+pagehelper.supportMethodsArguments=true
+pagehelper.params=count=countSql
+# log
+logging.level.root=INFO
+logging.level.com.hxx.mbtest.mapper=debug
+# customer-config
+myapp.code.sms.length=19
