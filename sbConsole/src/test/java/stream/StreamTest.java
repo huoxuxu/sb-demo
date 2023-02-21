@@ -1,6 +1,5 @@
 package stream;
 
-import cn.hutool.core.util.ArrayUtil;
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.common.basic.array.ListUtil;
