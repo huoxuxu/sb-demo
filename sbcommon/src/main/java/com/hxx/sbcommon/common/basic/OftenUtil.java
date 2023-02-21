@@ -455,7 +455,7 @@ public class OftenUtil {
     }
 
     /**
-     * 格式化为：yyyy-MM-dd HH:mm:ss
+     * 格式化为：yyyy-MM-dd
      *
      * @param dateTime
      * @return
