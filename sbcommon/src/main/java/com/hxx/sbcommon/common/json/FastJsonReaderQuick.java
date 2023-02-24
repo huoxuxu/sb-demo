@@ -12,6 +12,7 @@ import java.util.function.BiFunction;
 /**
  * JsonReader帮助类
  * 注意：如果jsonArray包含多个对象，如果只取一部分，则不要调用endArray()方法（报错）
+ * 不序列化某个属性：@JSONField(serialize=false)
  *
  * @Author: huoxuxu
  * @Description:
