@@ -51,8 +51,8 @@ public class LangTypeHandlerFactory {
      * @param cls
      * @return
      */
-    public static LangTypeHandler getTypeHandler(Class<?> cls) {
-        LangTypeHandler typeHandler = typeHandlerMap.getOrDefault(cls, null);
+    public static LangTypeHandler<?> getTypeHandler(Class<?> cls) {
+        LangTypeHandler<?> typeHandler = typeHandlerMap.getOrDefault(cls, null);
         return typeHandler;
     }
 
@@ -121,10 +121,16 @@ public class LangTypeHandlerFactory {
         }
 
         // 获取对应的处理方法
-        LangTypeHandler handler = LangTypeHandlerFactory.getTypeHandler(tarCls);
+        LangTypeHandler<?> handler = LangTypeHandlerFactory.getTypeHandler(tarCls);
         if (handler == null) {
-            Class<?> customTypeHandlerCls = LangTypeHandlerFactory.getCustomTypeHandlerCls();
-            handler = LangTypeHandlerFactory.getInstance(customTypeHandlerCls, tarCls);
+            // 是否枚举
+            if (tarCls.isEnum()) {
+                Class<?> enumTypeHandler = LangTypeHandlerFactory.getDefaultEnumTypeHandler();
+                handler = LangTypeHandlerFactory.getInstance(enumTypeHandler, tarCls);
+            } else {
+                Class<?> customTypeHandler = LangTypeHandlerFactory.getCustomTypeHandlerCls();
+                handler = LangTypeHandlerFactory.getInstance(customTypeHandler, tarCls);
+            }
         }
 
         return handler.convert(obj);

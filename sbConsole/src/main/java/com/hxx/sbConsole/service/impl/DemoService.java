@@ -5,7 +5,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.hxx.sbConsole.commons.jwt.JWTUtil;
 import com.hxx.sbConsole.model.Dog;
 import com.hxx.sbConsole.model.User;
+import com.hxx.sbConsole.model.enums.LinePatternEnum;
 import com.hxx.sbcommon.common.basic.OftenUtil;
+import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandlerFactory;
 import com.hxx.sbcommon.common.basic.langType.impl.ListTypeHandler;
 import com.hxx.sbcommon.common.hardware.NetUtil;
@@ -195,51 +197,87 @@ public class DemoService {
             System.out.println(localIP);
         }
         System.out.println("==================================================");
+        // LangTypeHandlerFactory
         {
+            // HashMap
             {
-                Map<String, Object> map = new HashMap<>();
-                map.put("1", "11");
-                map.put("2", 22);
-                Object result = LangTypeHandlerFactory.convert(map, Map.class);
-                System.out.println(result);
+                {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("1", "11");
+                    map.put("2", 22);
+                    Object result = LangTypeHandlerFactory.convert(map, Map.class);
+                    System.out.println(result);
+                }
+                {
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("1", "11");
+                    map.put("2", 22);
+                    Object result = LangTypeHandlerFactory.convert(map, Map.class);
+                    System.out.println(result);
+                }
+                {
+                    String json = "{\"code\":\"11\",\"name\":22}";
+                    Object result = LangTypeHandlerFactory.convert(json, Map.class);
+                    System.out.println(result);
+                }
             }
+            // List
             {
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("1", "11");
-                map.put("2", 22);
-                Object result = LangTypeHandlerFactory.convert(map, Map.class);
-                System.out.println(result);
-            }
-            {
-                String json = "{\"code\":\"11\",\"name\":22}";
-                Object result = LangTypeHandlerFactory.convert(json, Map.class);
-                System.out.println(result);
-            }
-            {
-                ListTypeHandler lt=new ListTypeHandler();
+                ListTypeHandler lt = new ListTypeHandler();
                 {
                     // [1,2,3]
-                    int[] arr={1,2,3};
+                    int[] arr = {1, 2, 3};
                     List<?> ls = lt.convert(arr);
                     System.out.println(ls);
                 }
                 {
                     // [1,2,3]
-                    Integer[] arr={1,2,3};
+                    Integer[] arr = {1, 2, 3};
                     List<?> ls = lt.convert(arr);
                     System.out.println(ls);
                 }
                 {
                     // [1,2,3]
-                    List<Integer> arr=new ArrayList<>(Arrays.asList(1,2,3));
+                    List<Integer> arr = new ArrayList<>(Arrays.asList(1, 2, 3));
                     List<?> ls = lt.convert(arr);
                     System.out.println(ls);
                 }
                 {
-                    // [{"code":"code1"}]
-                    String json="[{\"code\":\"code1\"}]";
-                    List<?> ls = lt.convert(json);
-                    System.out.println(ls);
+                    // 暂不支持
+                    // ["code","code1"]
+//                    String json = "[\"code\",\"code1\"]";
+//                    List<?> ls = lt.convert(json);
+//                    System.out.println(ls);
+                }
+            }
+            // 枚举
+            {
+                Class<LinePatternEnum> enumCls = LinePatternEnum.class;
+                LinePatternEnum linePatternEnum = LinePatternEnum.BIG;
+                {
+                    // 测试同类型
+                    LinePatternEnum eval = (LinePatternEnum) LangTypeHandlerFactory.convert(linePatternEnum, enumCls);
+                    System.out.println(eval);
+                }
+                {
+                    // 测试字符串
+                    LinePatternEnum eval = (LinePatternEnum) LangTypeHandlerFactory.convert("BIG", enumCls);
+                    System.out.println(eval);
+                }
+                {
+                    // 测试字符串  不通过
+//                    LinePatternEnum eval = (LinePatternEnum) LangTypeHandlerFactory.convert("big", enumCls);
+//                    System.out.println(eval);
+                }
+                {
+                    // 测试 指定枚举索引位
+                    LinePatternEnum eval = (LinePatternEnum) LangTypeHandlerFactory.convert(1, enumCls);
+                    System.out.println(eval);
+                }
+                {
+                    // 测试  指定枚举索引位
+                    LinePatternEnum eval = (LinePatternEnum) LangTypeHandlerFactory.convert(0L, enumCls);
+                    System.out.println(eval);
                 }
             }
         }

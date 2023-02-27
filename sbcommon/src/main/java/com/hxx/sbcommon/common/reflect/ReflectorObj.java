@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  **/
 @Slf4j
 public class ReflectorObj {
-    // setterMap锁
+    // 类信息初始化锁
     private final static Object lockObj = new Object();
     // 对象Getter k=类名，v=所有Getter
     private final static Map<String, List<FieldGetter>> getterMap = new HashMap<>();
