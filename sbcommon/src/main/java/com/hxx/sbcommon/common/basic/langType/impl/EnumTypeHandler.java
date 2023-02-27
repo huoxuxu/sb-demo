@@ -3,6 +3,8 @@ package com.hxx.sbcommon.common.basic.langType.impl;
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
 
 /**
+ * 枚举转换，支持传入：枚举名称、同类型枚举、枚举索引
+ *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2022-10-31 16:29:52

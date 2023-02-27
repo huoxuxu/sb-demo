@@ -4,6 +4,8 @@ import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,11 +33,27 @@ public class ListTypeHandler implements LangTypeHandler<List<?>> {
             return null;
         }
 
-        if (val instanceof String) {
-            String vv = (String) val;
-            if (!StringUtils.isEmpty(vv) && vv.trim().startsWith("[")) {
-                return JsonUtil.parseArray(vv, List.class);
+        // 基础类型数组
+        Class<?> cls = val.getClass();
+        if (cls.isArray()) {
+            // 获取数组长度
+            int length = java.lang.reflect.Array.getLength(val);
+            // 获取数组元素类型
+//            Class elementType = obj.getClass().getComponentType();
+            List<Object> ls = new ArrayList<>();
+            for (int i = 0; i < length; i++) {
+                Object item = Array.get(val, i);
+                ls.add(item);
             }
+            return ls;
+        }
+
+        if (val instanceof String) {
+//            String vv = (String) val;
+//            if (!StringUtils.isEmpty(vv) && vv.trim()
+//                    .startsWith("[")) {
+//                return JsonUtil.parseArray(vv, List.class);
+//            }
         }
 
         throw new IllegalArgumentException("转换类型失败，提供值：" + val);
