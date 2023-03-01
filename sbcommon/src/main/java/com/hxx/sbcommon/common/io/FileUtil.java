@@ -1,7 +1,6 @@
 package com.hxx.sbcommon.common.io;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.file.PathUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -75,7 +74,7 @@ public class FileUtil {
      * @param consumerReader
      * @throws IOException
      */
-    public static void readFileReader(File file, Charset charset, Consumer<Reader> consumerReader) throws IOException {
+    public static void readFileBufferedReader(File file, Charset charset, Consumer<BufferedReader> consumerReader) throws IOException {
         try (InputStream fis = getFileStream(file)) {
             try (InputStreamReader isr = new InputStreamReader(fis, charset)) {
                 try (BufferedReader reader = new BufferedReader(isr)) {
@@ -94,20 +93,17 @@ public class FileUtil {
      * @param rowAct
      * @throws IOException
      */
-    public static void readFileByFileInputStream(File file, Charset charset, Consumer<String> rowAct) throws IOException {
-        readFileReader(file, charset, reader -> {
-            if (reader instanceof BufferedReader) {
-                BufferedReader bfr = (BufferedReader) reader;
-                while (true) {
-                    try {
-                        String line = bfr.readLine();
-                        if (line == null) {
-                            break;
-                        }
-                        rowAct.accept(line);
-                    } catch (IOException ex) {
-                        throw new IllegalStateException(ex);
+    public static void readLines(File file, Charset charset, Consumer<String> rowAct) throws IOException {
+        readFileBufferedReader(file, charset, reader -> {
+            while (true) {
+                try {
+                    String line = reader.readLine();
+                    if (line == null) {
+                        break;
                     }
+                    rowAct.accept(line);
+                } catch (IOException ex) {
+                    throw new IllegalStateException(ex);
                 }
             }
         });

@@ -229,7 +229,7 @@ public class OftenUtil {
             return val.intValue() + "";
         }
 
-        return val + "";
+        return fmt2Str(new BigDecimal(val));
     }
 
     /**
