@@ -13,9 +13,9 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public enum DBTypeEnum {
-    SMALL(0, "MySQL"),
-    BIG(1, "SQLite"),
-    DWS(2, "OracleDB"),
+    MySQL(0, "MySQL"),
+    SQLite(1, "SQLite"),
+    OracleDB(2, "OracleDB"),
     UNKNOWN(-1, "UNKNOWN");
 
     private final Integer code;

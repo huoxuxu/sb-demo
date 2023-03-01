@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.service.face;
+package com.hxx.sbConsole.service.insertBatch.face;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
 public interface IInsertBatch {
 
     /**
-     * 处理
+     * 处理数据获取批量新增SQL
      *
      * @param titles
      * @param data
