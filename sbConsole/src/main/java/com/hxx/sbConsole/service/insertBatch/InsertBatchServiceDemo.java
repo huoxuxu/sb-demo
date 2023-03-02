@@ -5,9 +5,12 @@ import com.hxx.sbConsole.service.fileParse.face.IParseFile;
 import com.hxx.sbConsole.service.fileParse.impl.CsvParseFile;
 import com.hxx.sbConsole.service.insertBatch.face.IInsertBatch;
 import com.hxx.sbConsole.service.insertBatch.impl.MySQLInsertBatch;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author: huoxuxu
@@ -17,27 +20,49 @@ import java.util.List;
 public class InsertBatchServiceDemo {
     public static void main(String[] args) {
         try {
+            int batchSize = 3;
             // 数据来源
             IParseFile parseFile = new CsvParseFile();
+            // 目标数据
+            InsertBatchFactory fac = new InsertBatchFactory(DBTypeEnum.MySQL, "demo");
+            IInsertBatch insertBatch = fac.getInsertBatch();
 
             List<String> titles = new ArrayList<>();
             List<Object[]> data = new ArrayList<>();
             parseFile.read((num, row) -> {
                 System.out.println("开始处理第 " + num + " 行");
-
+                if (num == 1) {
+                    List<String> rowls = Arrays.stream(row)
+                            .map(d -> d == null ? "" : d + "")
+                            .collect(Collectors.toList());
+                    titles.addAll(rowls);
+                } else {
+                    data.add(row);
+                    if (data.size() == batchSize) {
+                        // 通知可以处理了
+                        consumer(insertBatch, titles, data);
+                        data.clear();
+                    }
+                }
                 return true;
             });
 
-            InsertBatchFactory fac = new InsertBatchFactory(DBTypeEnum.MySQL, "demo");
-            IInsertBatch insertBatch = fac.getInsertBatch();
-            List<String> sqls = insertBatch.proc(titles, data);
-            for (String sql : sqls) {
-                System.out.println(sql);
+            if(!CollectionUtils.isEmpty(data)){
+                // 通知可以处理了
+                consumer(insertBatch, titles, data);
+                data.clear();
             }
 
         } catch (Exception ex) {
             System.out.println(ex + "");
         }
         System.out.println("ok!");
+    }
+
+    private static void consumer(IInsertBatch insertBatch, List<String> titles, List<Object[]> data) {
+        List<String> sqls = insertBatch.proc(titles, data);
+        for (String sql : sqls) {
+            System.out.println("sql：" + sql);
+        }
     }
 }

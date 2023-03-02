@@ -2,6 +2,7 @@ package com.hxx.sbConsole.service.insertBatch.impl;
 
 import com.hxx.sbConsole.service.insertBatch.face.IInsertBatch;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +28,9 @@ public class MySQLInsertBatch implements IInsertBatch {
     @Override
     public List<String> proc(List<String> titles, List<Object[]> data) {
         // 生成MySQL支持的批量新增的SQL
-        return null;
+        List<String> ls = new ArrayList<>();
+        ls.add("INSERT INTO XXXX " + data.size());
+        return ls;
     }
 
 }

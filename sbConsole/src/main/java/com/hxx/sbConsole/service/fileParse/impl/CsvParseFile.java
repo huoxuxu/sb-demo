@@ -17,6 +17,9 @@ public class CsvParseFile implements IParseFile {
      */
     @Override
     public void read(BiFunction<Integer, Object[], Boolean> rowFunc) {
-
+        for (int i = 0; i < 8; i++) {
+            Object[] arr = {i, "A" + i};
+            rowFunc.apply(i + 1, arr);
+        }
     }
 }
