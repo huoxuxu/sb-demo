@@ -1,6 +1,6 @@
-package com.hxx.sbConsole.service.insertBatch.impl;
+package com.hxx.sbConsole.service.convertTransferStation.insertBatch.impl;
 
-import com.hxx.sbConsole.service.insertBatch.face.IInsertBatch;
+import com.hxx.sbConsole.service.convertTransferStation.insertBatch.face.IInsertBatch;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,9 @@
-package com.hxx.sbConsole.service.insertBatch;
+package com.hxx.sbConsole.service.convertTransferStation.insertBatch;
 
 import com.hxx.sbConsole.model.enums.DBTypeEnum;
-import com.hxx.sbConsole.service.fileParse.face.IParseFile;
-import com.hxx.sbConsole.service.fileParse.impl.CsvParseFile;
-import com.hxx.sbConsole.service.insertBatch.face.IInsertBatch;
-import com.hxx.sbConsole.service.insertBatch.impl.MySQLInsertBatch;
+import com.hxx.sbConsole.service.convertTransferStation.fileParse.face.IParseFile;
+import com.hxx.sbConsole.service.convertTransferStation.fileParse.impl.CsvParseFile;
+import com.hxx.sbConsole.service.convertTransferStation.insertBatch.face.IInsertBatch;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class InsertBatchServiceDemo {
             int batchSize = 3;
             // 数据来源
             IParseFile parseFile = new CsvParseFile();
-            // 目标数据
+            // 目标数据 数据库、文件
             InsertBatchFactory fac = new InsertBatchFactory(DBTypeEnum.MySQL, "demo");
             IInsertBatch insertBatch = fac.getInsertBatch();
 

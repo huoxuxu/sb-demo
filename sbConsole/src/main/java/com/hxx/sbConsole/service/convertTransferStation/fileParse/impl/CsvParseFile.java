@@ -1,6 +1,6 @@
-package com.hxx.sbConsole.service.fileParse.impl;
+package com.hxx.sbConsole.service.convertTransferStation.fileParse.impl;
 
-import com.hxx.sbConsole.service.fileParse.face.IParseFile;
+import com.hxx.sbConsole.service.convertTransferStation.fileParse.face.IParseFile;
 
 import java.util.function.BiFunction;
 

@@ -1,11 +1,9 @@
-package com.hxx.sbConsole.service.insertBatch;
+package com.hxx.sbConsole.service.convertTransferStation.insertBatch;
 
 import com.hxx.sbConsole.model.enums.DBTypeEnum;
-import com.hxx.sbConsole.service.insertBatch.face.IInsertBatch;
-import com.hxx.sbConsole.service.insertBatch.impl.MySQLInsertBatch;
-import com.hxx.sbConsole.service.insertBatch.impl.SQLiteInsertBatch;
-
-import java.util.List;
+import com.hxx.sbConsole.service.convertTransferStation.insertBatch.face.IInsertBatch;
+import com.hxx.sbConsole.service.convertTransferStation.insertBatch.impl.MySQLInsertBatch;
+import com.hxx.sbConsole.service.convertTransferStation.insertBatch.impl.SQLiteInsertBatch;
 
 /**
  * @Author: huoxuxu
