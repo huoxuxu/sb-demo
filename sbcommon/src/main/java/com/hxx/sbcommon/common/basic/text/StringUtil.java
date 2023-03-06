@@ -94,5 +94,52 @@ public class StringUtil {
             return s;
         }
     }
+
+    /**
+     * 左侧填充 001
+     *
+     * @param src
+     * @param len
+     * @param ch  待填充值
+     * @return
+     */
+    public static String padLeft(String src, int len, char ch) {
+        int diff = len - src.length();
+        if (diff <= 0) {
+            return src;
+        }
+
+        char[] charArr = new char[len];
+        System.arraycopy(src.toCharArray(), 0, charArr, diff, src.length());
+        for (int i = 0; i < diff; i++) {
+            charArr[i] = ch;
+        }
+        return new String(charArr);
+
+    }
+
+    /**
+     * 左侧填充 100
+     *
+     * @param src
+     * @param len
+     * @param ch  待填充值
+     * @return
+     */
+    public static String padRight(String src, int len, char ch) {
+        int diff = len - src.length();
+        if (diff <= 0) {
+            return src;
+        }
+
+        char[] charArr = new char[len];
+        System.arraycopy(src.toCharArray(), 0, charArr, 0, src.length());
+        for (int i = src.length(); i < len; i++) {
+            charArr[i] = ch;
+        }
+        return new String(charArr);
+
+    }
+
 }
 
