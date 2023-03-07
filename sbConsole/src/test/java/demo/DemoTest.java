@@ -1,25 +1,17 @@
 package demo;
 
 import com.alibaba.fastjson.*;
-import com.alibaba.fastjson.parser.ParserConfig;
-import com.alibaba.fastjson.serializer.JSONSerializable;
-import com.alibaba.fastjson.serializer.JavaBeanSerializer;
-import com.alibaba.fastjson.serializer.ObjectSerializer;
-import com.alibaba.fastjson.util.TypeUtils;
 import com.hxx.sbConsole.SbConsoleApplication;
-import com.hxx.sbConsole.service.impl.Demo;
 import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
-import models.KV;
+import com.hxx.sbConsole.model.KV;
 import models.Order;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaClass;
@@ -32,7 +24,6 @@ import org.apache.ibatis.session.defaults.DefaultSqlSession;
 import org.apache.ibatis.type.JdbcType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -40,10 +31,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
-
-import java.lang.reflect.Array;
-import java.time.LocalDateTime;
-import java.util.*;
 
 /**
  * @Author: huoxuxu

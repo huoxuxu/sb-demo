@@ -1,4 +1,4 @@
-package models;
+package com.hxx.sbConsole.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

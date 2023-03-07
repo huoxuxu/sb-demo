@@ -1,17 +1,12 @@
-package stream;
+package com.hxx.sbConsole.service.impl.test;
 
-import com.hxx.sbConsole.SbConsoleApplication;
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbConsole.model.Employee;
+import com.hxx.sbConsole.model.KV;
+import com.hxx.sbConsole.model.Person;
 import com.hxx.sbcommon.common.basic.array.ListUtil;
-import models.Employee;
-import models.KV;
-import models.Person;
+import com.hxx.sbcommon.common.json.JsonUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
@@ -26,14 +21,74 @@ import java.util.stream.Stream;
 /**
  * @Author: huoxuxu
  * @Description:
- * @Date: 2021-05-13 9:09:21
+ * @Date: 2023-03-07 15:24:36
  **/
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = SbConsoleApplication.class)
 public class StreamTest {
+    public static void main(String[] args) {
+        try {
+            Group();
+        } catch (Exception ex) {
+            System.out.println(ex + "");
+        }
+        System.out.println("ok");
+    }
+
+    /**
+     * 注意：
+     * 分组的字段不能为null
+     */
+    public static void Group() {
+        List<Employee> data = listPersons();
+        // 多字段分组
+        {
+            // 按名称和年龄分组
+            Map<String, Map<Integer, List<Employee>>> gyMap = data.stream()
+                    .collect(Collectors.groupingBy(Employee::getName, Collectors.groupingBy(Employee::getAge)));
+            System.out.println(gyMap);
+        }
+        {
+            Map<Employee.Gender, Long> countByGender = data.stream()
+                    .collect(Collectors.groupingBy(Employee::getGender, Collectors.counting()));
+            System.out.println(countByGender);
+        }
+        {
+            Map<Employee.Gender, String> namesByGender = listPersons()
+                    .stream()
+                    .collect(Collectors.groupingBy(Employee::getGender,
+                            Collectors.mapping(Employee::getName, Collectors.joining(", "))));
+            System.out.println(namesByGender);
+        }
+        {
+            Map<Employee.Gender, List<String>> namesByGender =
+                    listPersons()
+                            .stream()
+                            .collect(Collectors.groupingBy(Employee::getGender,
+                                    Collectors.mapping(Employee::getName, Collectors.toList())));
+
+            System.out.println(namesByGender);
+        }
+        {
+            Map personsByGenderAndDobMonth
+                    = listPersons()
+                    .stream()
+                    .collect(Collectors.groupingBy(Employee::getGender,
+                            Collectors.groupingBy(p -> p.getCreateTime()
+                                            .getMonth(),
+                                    Collectors.mapping(Employee::getName, Collectors.joining(", ")))));
+
+            System.out.println(personsByGenderAndDobMonth);
+        }
+        {
+            Map<Employee.Gender, DoubleSummaryStatistics> incomeStatsByGender = listPersons()
+                    .stream()//from  w  w  w . ja  v a 2  s  .c om
+                    .collect(Collectors.groupingBy(Employee::getGender, Collectors.summarizingDouble(Employee::getIncome)));
+
+            System.out.println(incomeStatsByGender);
+        }
+    }
 
     // 集合与数组互转
-    @Test
+
     public void ArrayOrListConvert() {
         // 数组转集合
         {
@@ -71,7 +126,7 @@ public class StreamTest {
         }
     }
 
-    @Test
+
     public void Run() {
         System.out.println("==============stream.StreamTest.Run==============");
         {
@@ -129,7 +184,7 @@ public class StreamTest {
     }
 
     // 集合转数组
-    @Test
+
     public void toArray() {
         List<String> listStrings = new ArrayList<>();
         listStrings.add("1");
@@ -142,17 +197,19 @@ public class StreamTest {
 
         // <A> A[] toArray(IntFunction<A[]> generator);
         {
-            List<Long> dateLongs=new ArrayList<>();
+            List<Long> dateLongs = new ArrayList<>();
             dateLongs.add(1675650261000L);
             dateLongs.add(1675650262000L);
-            Date[] dates = dateLongs.stream().map(Date::new).toArray(Date[]::new);
+            Date[] dates = dateLongs.stream()
+                    .map(Date::new)
+                    .toArray(Date[]::new);
             for (Date date : dates) {
                 System.out.println(date);
             }
         }
     }
 
-    @Test
+
     public void Sorted() {
         List<Person> people = listPerson();
 
@@ -232,7 +289,7 @@ public class StreamTest {
         System.out.println("ok");
     }
 
-    @Test
+
     public void limit() {
         List<Employee> persons = listPersons();
         persons.stream()
@@ -257,7 +314,7 @@ public class StreamTest {
         System.out.println();
     }
 
-    @Test
+
     public void Collector() {
         // toMap
         {
@@ -302,7 +359,7 @@ public class StreamTest {
         }
     }
 
-    @Test
+
     public void Find() {
         List<Employee> persons = listPersons();
         // Find any male
@@ -326,7 +383,7 @@ public class StreamTest {
 
     }
 
-    @Test
+
     public void Filter() {
         {
             listPersons()
@@ -352,7 +409,7 @@ public class StreamTest {
         }
     }
 
-    @Test
+
     public void Map() {
         {
             IntStream.rangeClosed(1, 5)
@@ -384,7 +441,7 @@ public class StreamTest {
         }
     }
 
-    @Test
+
     public void Count() {
         {
             long personCount = listPersons().stream()
@@ -413,7 +470,7 @@ public class StreamTest {
         }
     }
 
-    @Test
+
     public void Collects() {
         {
             List<String> names = listPersons()
@@ -454,7 +511,7 @@ public class StreamTest {
         }
     }
 
-    @Test
+
     public void CollectsMap() {
         {
             Map<Long, String> idToNameMap = listPersons()
@@ -487,57 +544,7 @@ public class StreamTest {
         }
     }
 
-    @Test
-    public void Group() {
-        List<Employee> data = listPersons();
-        // 多字段分组
-        {
-            // 按名称和年龄分组
-            Map<String, Map<Integer, List<Employee>>> gyMap = data.stream()
-                    .collect(Collectors.groupingBy(Employee::getName, Collectors.groupingBy(Employee::getAge)));
-        }
-        {
-            Map<Employee.Gender, Long> countByGender = data.stream()
-                    .collect(Collectors.groupingBy(Employee::getGender, Collectors.counting()));
-            System.out.println(countByGender);
-        }
-        {
-            Map<Employee.Gender, String> namesByGender = listPersons()
-                    .stream()
-                    .collect(Collectors.groupingBy(Employee::getGender,
-                            Collectors.mapping(Employee::getName, Collectors.joining(", "))));
-            System.out.println(namesByGender);
-        }
-        {
-            Map<Employee.Gender, List<String>> namesByGender =
-                    listPersons()
-                            .stream()
-                            .collect(Collectors.groupingBy(Employee::getGender,
-                                    Collectors.mapping(Employee::getName, Collectors.toList())));
 
-            System.out.println(namesByGender);
-        }
-        {
-            Map personsByGenderAndDobMonth
-                    = listPersons()
-                    .stream()
-                    .collect(Collectors.groupingBy(Employee::getGender,
-                            Collectors.groupingBy(p -> p.getCreateTime()
-                                            .getMonth(),
-                                    Collectors.mapping(Employee::getName, Collectors.joining(", ")))));
-
-            System.out.println(personsByGenderAndDobMonth);
-        }
-        {
-            Map<Employee.Gender, DoubleSummaryStatistics> incomeStatsByGender = listPersons()
-                    .stream()//from  w  w  w . ja  v a 2  s  .c om
-                    .collect(Collectors.groupingBy(Employee::getGender, Collectors.summarizingDouble(Employee::getIncome)));
-
-            System.out.println(incomeStatsByGender);
-        }
-    }
-
-    @Test
     public void Join() {
         {
             List<Employee> persons = listPersons();
@@ -559,7 +566,7 @@ public class StreamTest {
         }
     }
 
-    @Test
+
     public void Match() {
         {
             List<Employee> persons = listPersons();
@@ -586,7 +593,7 @@ public class StreamTest {
         }
     }
 
-    @Test
+
     public void Partitioning() {
         {
             Map<Boolean, List<Employee>> partionedByMaleGender =
@@ -604,7 +611,7 @@ public class StreamTest {
         }
     }
 
-    @Test
+
     public void Statistics() {
         {
             DoubleSummaryStatistics stats = new DoubleSummaryStatistics();
@@ -641,7 +648,7 @@ public class StreamTest {
         }
     }
 
-    @Test
+
     public void Aggregation() {
         {
             double totalIncome = listPersons()
@@ -678,7 +685,6 @@ public class StreamTest {
         }
     }
 
-    @Test
     public void Reduce() {
         {
             List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
@@ -775,7 +781,7 @@ public class StreamTest {
         }
     }
 
-    @Test
+
     public void Parallel() {
         {
             String names = listPersons()
@@ -846,4 +852,5 @@ public class StreamTest {
 
         return null;
     }
+
 }
