@@ -17,6 +17,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -416,11 +417,30 @@ public class OftenUtil {
      * @return
      * @throws Exception
      */
-    public static <T> T first(List<T> ls) throws Exception {
+    public static <T> T first(List<T> ls) {
         if (CollectionUtils.isEmpty(ls)) {
-            throw new Exception("集合不包含任何元素");
+            throw new IllegalStateException("集合不包含任何元素");
         }
         return ls.get(0);
+    }
+
+    /**
+     * 取第一个符合条件的元素，未找到返回null
+     *
+     * @param ls
+     * @param predicate
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    public static <T> T first(List<T> ls, Predicate<T> predicate) {
+        if (CollectionUtils.isEmpty(ls)) {
+            throw new IllegalStateException("集合不包含任何元素");
+        }
+        return ls.stream()
+                .filter(predicate)
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -436,6 +456,26 @@ public class OftenUtil {
             return defaultVal;
         }
         return ls.get(0);
+    }
+
+    /**
+     * 取第一个符合条件的元素
+     *
+     * @param ls
+     * @param predicate
+     * @param defaultVal
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    public static <T> T firstOrDefault(List<T> ls, Predicate<T> predicate, T defaultVal) {
+        if (CollectionUtils.isEmpty(ls)) {
+            throw new IllegalStateException("集合不包含任何元素");
+        }
+        return ls.stream()
+                .filter(predicate)
+                .findFirst()
+                .orElse(defaultVal);
     }
 
     // Date&LocalDateTime
