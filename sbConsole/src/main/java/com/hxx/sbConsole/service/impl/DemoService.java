@@ -10,6 +10,7 @@ import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandlerFactory;
 import com.hxx.sbcommon.common.basic.langType.impl.ListTypeHandler;
+import com.hxx.sbcommon.common.basic.text.StringUtil;
 import com.hxx.sbcommon.common.hardware.NetUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.common.reflect.BeanInfoUtil;
@@ -37,6 +38,10 @@ public class DemoService {
         {
             String hxy = OftenUtil.StringUtil.lowerFirstChar("HXY");
             System.out.println(hxy);
+            String padLeft = StringUtil.padLeft("1", 3, '0');
+            System.out.println(padLeft);
+            String padRight = StringUtil.padRight("1", 3, '0');
+            System.out.println(padRight);
         }
         System.out.println("==================================================");
         {

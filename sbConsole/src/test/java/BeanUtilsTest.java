@@ -1,6 +1,6 @@
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.json.JsonUtil;
-import models.Employee;
+import com.hxx.sbConsole.model.Employee;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeanUtils;

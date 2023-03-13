@@ -1,4 +1,4 @@
-package models;
+package com.hxx.sbConsole.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

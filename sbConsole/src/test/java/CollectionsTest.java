@@ -1,5 +1,5 @@
 import com.hxx.sbConsole.SbConsoleApplication;
-import models.Employee;
+import com.hxx.sbConsole.model.Employee;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;

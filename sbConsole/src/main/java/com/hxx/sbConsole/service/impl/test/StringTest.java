@@ -1,23 +1,14 @@
-package basic;
+package com.hxx.sbConsole.service.impl.test;
 
-import com.hxx.sbConsole.SbConsoleApplication;
-import com.hxx.sbcommon.common.basic.OftenUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @Author: huoxuxu
  * @Description:
- * @Date: 2021-05-13 9:09:21
+ * @Date: 2023-03-09 12:39:43
  **/
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = SbConsoleApplication.class)
 public class StringTest {
 
-    @Test
     public void test() {
         System.out.println("==============test==============");
         String str = "1,2-3^4$5";
@@ -31,7 +22,6 @@ public class StringTest {
         System.out.println("ok");
     }
 
-    @Test
     public void split() {
         System.out.println("==============test==============");
         String str = "1,2-3^4$5";
@@ -51,6 +41,4 @@ public class StringTest {
             System.out.println(s);
         }
     }
-
-
 }
