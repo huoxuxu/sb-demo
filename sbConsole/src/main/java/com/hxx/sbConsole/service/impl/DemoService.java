@@ -36,12 +36,34 @@ import java.util.stream.Collectors;
 public class DemoService {
     public static void demo() throws Exception {
         {
+            String cut = OftenUtil.StringUtil.cut("1", 1);
+            System.out.println(cut);
+            cut = OftenUtil.StringUtil.cut("12", 3);
+            System.out.println(cut);
             String hxy = OftenUtil.StringUtil.lowerFirstChar("HXY");
             System.out.println(hxy);
             String padLeft = StringUtil.padLeft("1", 3, '0');
             System.out.println(padLeft);
             String padRight = StringUtil.padRight("1", 3, '0');
             System.out.println(padRight);
+        }
+        System.out.println("==================================================");
+        {
+            List<String> ls = null;
+            List<String> ols = Optional.ofNullable(ls)
+                    .orElse(new ArrayList<>());
+            System.out.println(ols);
+
+            List<String> ss = Arrays.asList("1", "2");
+            ls = new ArrayList<>();
+            ols = Optional.ofNullable(ls)
+                    .orElse(new ArrayList<>(ss));
+            System.out.println(ols);
+
+            ls = new ArrayList<>(ss);
+            ols = Optional.ofNullable(ls)
+                    .orElse(new ArrayList<>());
+            System.out.println(ols);
         }
         System.out.println("==================================================");
         {

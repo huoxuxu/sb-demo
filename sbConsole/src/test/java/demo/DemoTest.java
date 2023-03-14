@@ -95,19 +95,19 @@ public class DemoTest {
         {
             String str = "123456";
             {
-                String str1 = OftenUtil.cut(str, 19);
+                String str1 = OftenUtil.StringUtil.cut(str, 19);
                 System.out.println(str1);
             }
             {
-                String str1 = OftenUtil.cut(str, 10);
+                String str1 = OftenUtil.StringUtil.cut(str, 10);
                 System.out.println(str1);
             }
             {
-                String str1 = OftenUtil.cut(str, 0);
+                String str1 = OftenUtil.StringUtil.cut(str, 0);
                 System.out.println(str1);
             }
             {
-                String str1 = OftenUtil.cut(str, 2);
+                String str1 = OftenUtil.StringUtil.cut(str, 2);
                 System.out.println(str1);
             }
         }
