@@ -216,15 +216,6 @@ public class DemoService {
             }
         }
         System.out.println("==================================================");
-        {
-            List<InetAddress> ls = NetUtil.getIPV4InetAddress();
-            System.out.println(ls);
-            List<InetAddress> ls1 = NetUtil.getIPV4InetAddress("Intel");
-            System.out.println(ls1);
-            String localIP = NetUtil.getLocalIP();
-            System.out.println(localIP);
-        }
-        System.out.println("==================================================");
         // LangTypeHandlerFactory
         {
             // HashMap
@@ -320,6 +311,20 @@ public class DemoService {
                 for (HttpTxtParser.HttpTxtInfo item : ls) {
                     System.out.println(JsonUtil.toJSON(item));
                 }
+
+                // 序列化为文件
+                String str = HttpTxtParser.writeTo(ls);
+                System.out.println(str);
+            }
+            System.out.println("==================================================");
+            // 获取硬件信息，慢！！！
+            {
+                List<InetAddress> ls = NetUtil.getIPV4InetAddress();
+                System.out.println(ls);
+                List<InetAddress> ls1 = NetUtil.getIPV4InetAddress("Intel");
+                System.out.println(ls1);
+                String localIP = NetUtil.getLocalIP();
+                System.out.println(localIP);
             }
             System.out.println("==================================================");
             //

@@ -444,6 +444,30 @@ public class OftenUtil {
                 return arr;
             }
         }
+
+        /**
+         * 修建开始位以 trimStr 开头的字符
+         *
+         * @param str
+         * @param trimStr
+         * @return
+         */
+        public static String trimStart(String str, String trimStr) {
+            if (StringUtils.isEmpty(trimStr)) {
+                return str;
+            }
+
+            if (str.equals(trimStr)) {
+                return "";
+            }
+            int ind = str.indexOf(trimStr);
+            if (ind == 0) {
+                str = str.substring(trimStr.length());
+                return trimStart(str, trimStr);
+            }
+
+            return str;
+        }
     }
 
     public static class DateTimeUtil {
