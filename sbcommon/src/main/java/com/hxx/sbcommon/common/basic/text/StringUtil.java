@@ -96,7 +96,7 @@ public class StringUtil {
     }
 
     /**
-     * 左侧填充 001
+     * 左侧填充 eg.001
      *
      * @param src
      * @param len
@@ -115,11 +115,10 @@ public class StringUtil {
             charArr[i] = ch;
         }
         return new String(charArr);
-
     }
 
     /**
-     * 左侧填充 100
+     * 左侧填充 eg.100
      *
      * @param src
      * @param len
@@ -138,7 +137,6 @@ public class StringUtil {
             charArr[i] = ch;
         }
         return new String(charArr);
-
     }
 
 }

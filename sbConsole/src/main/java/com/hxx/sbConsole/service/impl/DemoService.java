@@ -22,6 +22,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.*;
@@ -36,12 +37,34 @@ import java.util.stream.Collectors;
 public class DemoService {
     public static void demo() throws Exception {
         {
+            String cut = OftenUtil.StringUtil.cut("1", 1);
+            System.out.println(cut);
+            cut = OftenUtil.StringUtil.cut("12", 3);
+            System.out.println(cut);
             String hxy = OftenUtil.StringUtil.lowerFirstChar("HXY");
             System.out.println(hxy);
             String padLeft = StringUtil.padLeft("1", 3, '0');
             System.out.println(padLeft);
             String padRight = StringUtil.padRight("1", 3, '0');
             System.out.println(padRight);
+        }
+        System.out.println("==================================================");
+        {
+            List<String> ls = null;
+            List<String> ols = Optional.ofNullable(ls)
+                    .orElse(new ArrayList<>());
+            System.out.println(ols);
+
+            List<String> ss = Arrays.asList("1", "2");
+            ls = new ArrayList<>();
+            ols = Optional.ofNullable(ls)
+                    .orElse(new ArrayList<>(ss));
+            System.out.println(ols);
+
+            ls = new ArrayList<>(ss);
+            ols = Optional.ofNullable(ls)
+                    .orElse(new ArrayList<>());
+            System.out.println(ols);
         }
         System.out.println("==================================================");
         {
@@ -193,15 +216,6 @@ public class DemoService {
             }
         }
         System.out.println("==================================================");
-        {
-            List<InetAddress> ls = NetUtil.getIPV4InetAddress();
-            System.out.println(ls);
-            List<InetAddress> ls1 = NetUtil.getIPV4InetAddress("Intel");
-            System.out.println(ls1);
-            String localIP = NetUtil.getLocalIP();
-            System.out.println(localIP);
-        }
-        System.out.println("==================================================");
         // LangTypeHandlerFactory
         {
             // HashMap
@@ -226,6 +240,7 @@ public class DemoService {
                     System.out.println(result);
                 }
             }
+            System.out.println("==================================================");
             // List
             {
                 ListTypeHandler lt = new ListTypeHandler();
@@ -255,6 +270,7 @@ public class DemoService {
 //                    System.out.println(ls);
                 }
             }
+            System.out.println("==================================================");
             // 枚举
             {
                 Class<LinePatternEnum> enumCls = LinePatternEnum.class;
@@ -285,6 +301,33 @@ public class DemoService {
                     System.out.println(eval);
                 }
             }
+            System.out.println("==================================================");
+            // HttpTxtParser
+            {
+                String filePath = "D:\\OD\\OneDrive\\_Now\\Wode\\.http";
+                File file = new File(filePath);
+                HttpTxtParser httpTxtParser = new HttpTxtParser(file);
+                List<HttpTxtParser.HttpTxtInfo> ls = httpTxtParser.parse();
+                for (HttpTxtParser.HttpTxtInfo item : ls) {
+                    System.out.println(JsonUtil.toJSON(item));
+                }
+
+                // 序列化为文件
+                String str = HttpTxtParser.writeTo(ls);
+                System.out.println(str);
+            }
+            System.out.println("==================================================");
+            // 获取硬件信息，慢！！！
+            {
+                List<InetAddress> ls = NetUtil.getIPV4InetAddress();
+                System.out.println(ls);
+                List<InetAddress> ls1 = NetUtil.getIPV4InetAddress("Intel");
+                System.out.println(ls1);
+                String localIP = NetUtil.getLocalIP();
+                System.out.println(localIP);
+            }
+            System.out.println("==================================================");
+            //
         }
     }
 

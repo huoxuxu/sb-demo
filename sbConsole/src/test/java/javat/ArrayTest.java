@@ -27,18 +27,18 @@ public class ArrayTest {
 
         {
             String[] arr1 = {"ABC", "D1"};
-            boolean arrFlag2 = OftenUtil.isEmptyArray(arr1);
+            boolean arrFlag2 = OftenUtil.CollectionUtil.isEmptyArray(arr1);
             System.out.println("==>" + arrFlag2);
 
             Integer[] arr2;
             {
                 arr2 = new Integer[0];
-                boolean arr2Flag = OftenUtil.isEmptyArray(arr2);
+                boolean arr2Flag = OftenUtil.CollectionUtil.isEmptyArray(arr2);
                 System.out.println("==>" + arr2Flag);
             }
             {
                 arr2 = new Integer[1];
-                boolean arr2Flag = OftenUtil.isEmptyArray(arr2);
+                boolean arr2Flag = OftenUtil.CollectionUtil.isEmptyArray(arr2);
                 System.out.println("==>" + arr2Flag);
             }
         }
@@ -47,12 +47,12 @@ public class ArrayTest {
             int[] arr2;
             {
                 arr2 = new int[0];
-                boolean arr2Flag = OftenUtil.isEmptyArray(arr2);
+                boolean arr2Flag = OftenUtil.CollectionUtil.isEmptyArray(arr2);
                 System.out.println("==>" + arr2Flag);
             }
             {
                 arr2 = new int[1];
-                boolean arr2Flag = OftenUtil.isEmptyArray(arr2);
+                boolean arr2Flag = OftenUtil.CollectionUtil.isEmptyArray(arr2);
                 System.out.println("==>" + arr2Flag);
             }
         }
