@@ -90,7 +90,7 @@ public class OftenUtil {
      * @param condition
      * @param ex
      */
-    public static void assertCond(boolean condition, RuntimeException ex) {
+    public static <T extends RuntimeException> void assertCond(boolean condition, T ex) {
         if (condition) {
             throw ex;
         }

@@ -12,6 +12,7 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -31,60 +32,6 @@ public class StreamTest {
             System.out.println(ex + "");
         }
         System.out.println("ok");
-    }
-
-    /**
-     * 注意：
-     * 分组的字段不能为null
-     */
-    public static void Group() {
-        List<Employee> data = listPersons();
-        // 多字段分组
-        {
-            // 按名称和年龄分组
-            Map<String, Map<Integer, List<Employee>>> gyMap = data.stream()
-                    .collect(Collectors.groupingBy(Employee::getName, Collectors.groupingBy(Employee::getAge)));
-            System.out.println(gyMap);
-        }
-        {
-            Map<Employee.Gender, Long> countByGender = data.stream()
-                    .collect(Collectors.groupingBy(Employee::getGender, Collectors.counting()));
-            System.out.println(countByGender);
-        }
-        {
-            Map<Employee.Gender, String> namesByGender = listPersons()
-                    .stream()
-                    .collect(Collectors.groupingBy(Employee::getGender,
-                            Collectors.mapping(Employee::getName, Collectors.joining(", "))));
-            System.out.println(namesByGender);
-        }
-        {
-            Map<Employee.Gender, List<String>> namesByGender =
-                    listPersons()
-                            .stream()
-                            .collect(Collectors.groupingBy(Employee::getGender,
-                                    Collectors.mapping(Employee::getName, Collectors.toList())));
-
-            System.out.println(namesByGender);
-        }
-        {
-            Map personsByGenderAndDobMonth
-                    = listPersons()
-                    .stream()
-                    .collect(Collectors.groupingBy(Employee::getGender,
-                            Collectors.groupingBy(p -> p.getCreateTime()
-                                            .getMonth(),
-                                    Collectors.mapping(Employee::getName, Collectors.joining(", ")))));
-
-            System.out.println(personsByGenderAndDobMonth);
-        }
-        {
-            Map<Employee.Gender, DoubleSummaryStatistics> incomeStatsByGender = listPersons()
-                    .stream()//from  w  w  w . ja  v a 2  s  .c om
-                    .collect(Collectors.groupingBy(Employee::getGender, Collectors.summarizingDouble(Employee::getIncome)));
-
-            System.out.println(incomeStatsByGender);
-        }
     }
 
     // 集合与数组互转
@@ -126,6 +73,30 @@ public class StreamTest {
         }
     }
 
+    // 集合转数组
+    public void toArray() {
+        List<String> listStrings = new ArrayList<>();
+        listStrings.add("1");
+        listStrings.add("2");
+
+        String[] ss = listStrings.toArray(new String[0]);
+        System.out.println(ss);
+        Arrays.stream(ss)
+                .forEach(System.out::println);
+
+        // <A> A[] toArray(IntFunction<A[]> generator);
+        {
+            List<Long> dateLongs = new ArrayList<>();
+            dateLongs.add(1675650261000L);
+            dateLongs.add(1675650262000L);
+            Date[] dates = dateLongs.stream()
+                    .map(Date::new)
+                    .toArray(Date[]::new);
+            for (Date date : dates) {
+                System.out.println(date);
+            }
+        }
+    }
 
     public void Run() {
         System.out.println("==============stream.StreamTest.Run==============");
@@ -183,33 +154,51 @@ public class StreamTest {
         }
     }
 
-    // 集合转数组
-
-    public void toArray() {
-        List<String> listStrings = new ArrayList<>();
-        listStrings.add("1");
-        listStrings.add("2");
-
-        String[] ss = listStrings.toArray(new String[0]);
-        System.out.println(ss);
-        Arrays.stream(ss)
-                .forEach(System.out::println);
-
-        // <A> A[] toArray(IntFunction<A[]> generator);
+    /**
+     * 注意：
+     * 分组的字段不能为null
+     */
+    public static void Group() {
+        List<Employee> data = listPersons();
+        // 多字段分组
         {
-            List<Long> dateLongs = new ArrayList<>();
-            dateLongs.add(1675650261000L);
-            dateLongs.add(1675650262000L);
-            Date[] dates = dateLongs.stream()
-                    .map(Date::new)
-                    .toArray(Date[]::new);
-            for (Date date : dates) {
-                System.out.println(date);
-            }
+            // 按名称和年龄分组
+            Map<String, Map<Integer, List<Employee>>> gyMap = data.stream()
+                    .collect(Collectors.groupingBy(Employee::getName, Collectors.groupingBy(Employee::getAge)));
+            System.out.println(gyMap);
+        }
+        {
+            Map<Employee.Gender, Long> countByGender = data.stream()
+                    .collect(Collectors.groupingBy(Employee::getGender, Collectors.counting()));
+            System.out.println(countByGender);
+        }
+        {
+            Map<Employee.Gender, String> namesByGender = listPersons().stream()
+                    .collect(Collectors.groupingBy(Employee::getGender, Collectors.mapping(Employee::getName, Collectors.joining(", "))));
+            System.out.println(namesByGender);
+        }
+        {
+            Map<Employee.Gender, List<String>> namesByGender = listPersons().stream()
+                    .collect(Collectors.groupingBy(Employee::getGender, Collectors.mapping(Employee::getName, Collectors.toList())));
+
+            System.out.println(namesByGender);
+        }
+        {
+            Map personsByGenderAndDobMonth = listPersons().stream()
+                    .collect(Collectors.groupingBy(Employee::getGender, Collectors.groupingBy(p -> p.getCreateTime()
+                            .getMonth(), Collectors.mapping(Employee::getName, Collectors.joining(", ")))));
+
+            System.out.println(personsByGenderAndDobMonth);
+        }
+        {
+            Map<Employee.Gender, DoubleSummaryStatistics> incomeStatsByGender = listPersons().stream()//from  w  w  w . ja  v a 2  s  .c om
+                    .collect(Collectors.groupingBy(Employee::getGender, Collectors.summarizingDouble(Employee::getIncome)));
+
+            System.out.println(incomeStatsByGender);
         }
     }
 
-
+    // 排序
     public void Sorted() {
         List<Person> people = listPerson();
 
@@ -273,13 +262,13 @@ public class StreamTest {
                 .map(Employee::getName)
                 .collect(Collectors.toList());
 
-        // 先按工资再按年龄自定义排序（降序）
+        // 先按工资 再按id 自定义排序（降序）
         List<String> ls = persons.stream()
                 .sorted((p1, p2) -> {
                     if (p1.getSalary() == p2.getSalary()) {
                         return p2.getAge() - p1.getAge();
                     } else {
-                        return p2.getSalary() - p1.getSalary();
+                        return (int) (p2.getId() - p1.getId());
                     }
                 })
                 .map(Employee::getName)
@@ -288,7 +277,6 @@ public class StreamTest {
 
         System.out.println("ok");
     }
-
 
     public void limit() {
         List<Employee> persons = listPersons();
@@ -314,35 +302,27 @@ public class StreamTest {
         System.out.println();
     }
 
-
     public void Collector() {
         // toMap
         {
-            Map<Long, String> idToNameMap = listPersons()
-                    .stream()
+            Map<Long, String> idToNameMap = listPersons().stream()
                     .collect(Collectors.toMap(Employee::getId, Employee::getName));
             System.out.println(idToNameMap);
         }
         {
-            Map<Employee.Gender, String> genderToNamesMap = listPersons()
-                    .stream()
-                    .collect(Collectors.toMap(Employee::getGender,
-                            Employee::getName,
-                            (oldValue, newValue) -> String.join(", ", oldValue, newValue)));
+            Map<Employee.Gender, String> genderToNamesMap = listPersons().stream()
+                    .collect(Collectors.toMap(Employee::getGender, Employee::getName, (oldValue, newValue) -> String.join(", ", oldValue, newValue)));
             System.out.println(genderToNamesMap);
         }
         {
-            Map<Employee.Gender, Long> countByGender = listPersons()
-                    .stream()
+            Map<Employee.Gender, Long> countByGender = listPersons().stream()
                     .collect(Collectors.toMap(Employee::getGender, p -> 1L, (oldCount, newCount) -> newCount + oldCount));
 
             System.out.println(countByGender);
         }
         {
-            Map<Employee.Gender, Employee> highestEarnerByGender = listPersons()
-                    .stream()
-                    .collect(Collectors.toMap(Employee::getGender, Function.identity(),
-                            (oldPerson, newPerson) -> newPerson.getIncome() > oldPerson.getIncome() ? newPerson : oldPerson));
+            Map<Employee.Gender, Employee> highestEarnerByGender = listPersons().stream()
+                    .collect(Collectors.toMap(Employee::getGender, Function.identity(), (oldPerson, newPerson) -> newPerson.getIncome() > oldPerson.getIncome() ? newPerson : oldPerson));
             System.out.println(highestEarnerByGender);
         }
         // toList
@@ -359,213 +339,35 @@ public class StreamTest {
         }
     }
 
-
+    // findAny findFirst
     public void Find() {
         List<Employee> persons = listPersons();
         // Find any male
-        Optional<Employee> anyMale = persons.stream()
-                .filter(Employee::isMale)
-                .findAny();
-        if (anyMale.isPresent()) {
-            System.out.println("Any male:   " + anyMale.get());
-        } else {
-            System.out.println("No male  found.");
-        }
-        // Find the first male
-        Optional<Employee> firstMale = persons.stream()
-                .filter(Employee::isMale)
-                .findFirst();
-        if (firstMale.isPresent()) {
-            System.out.println("First male:   " + anyMale.get());
-        } else {
-            System.out.println("No male  found.");
-        }
-
-    }
-
-
-    public void Filter() {
         {
-            listPersons()
-                    .stream()
-                    .filter(Employee::isFemale)
-                    .map(Employee::getName)
-                    .forEach(System.out::println);
-        }
-        {
-            listPersons()
-                    .stream()
+            Employee anyMale = persons.stream()
                     .filter(Employee::isMale)
-                    .filter(p -> p.getIncome() > 5000.0)
-                    .map(Employee::getName)
-                    .forEach(System.out::println);
+                    .findAny()
+                    .orElse(null);
+            if (anyMale != null) {
+                System.out.println("Any male:   " + anyMale);
+            } else {
+                System.out.println("No male  found.");
+            }
         }
+
+        // Find the first male
         {
-            listPersons()
-                    .stream()
-                    .filter(p -> p.isMale() && p.getIncome() > 5000.0)
-                    .map(Employee::getName)
-                    .forEach(System.out::println);
+            Employee firstMale = persons.stream()
+                    .filter(Employee::isMale)
+                    .findFirst()
+                    .orElse(null);
+            if (firstMale != null) {
+                System.out.println("First male:   " + firstMale);
+            } else {
+                System.out.println("No male  found.");
+            }
         }
     }
-
-
-    public void Map() {
-        {
-            IntStream.rangeClosed(1, 5)
-                    .map(n -> n * n)
-                    .forEach(System.out::println);
-        }
-        {
-            listPersons()
-                    .stream()
-                    .map(Employee::getName)
-                    .forEach(System.out::println);
-        }
-        {
-            Stream.of(1, 2, 3)
-                    .flatMap(n -> Stream.of(n, n + 1))
-                    .forEach(System.out::println);
-        }
-        {
-            Stream.of("XML", "Java", "CSS")
-                    .map(name -> name.chars())
-                    .flatMap(intStream -> intStream.mapToObj(n -> (char) n))
-                    .forEach(System.out::println);
-        }
-        {
-            Stream.of("XML", "Java", "CSS")
-                    .flatMap(name -> IntStream.range(0, name.length())
-                            .mapToObj(name::charAt))
-                    .forEach(System.out::println);
-        }
-    }
-
-
-    public void Count() {
-        {
-            long personCount = listPersons().stream()
-                    .count();
-            System.out.println("Person count: " + personCount);
-        }
-        {
-            long personCount = listPersons()
-                    .stream()
-                    .mapToLong(p -> 1L)
-                    .sum();
-            System.out.println(personCount);
-        }
-        {
-            long personCount = listPersons()
-                    .stream()
-                    .map(p -> 1L)
-                    .reduce(0L, Long::sum);
-            System.out.println(personCount);
-        }
-        {
-            long personCount = listPersons()
-                    .stream()
-                    .reduce(0L, (partialCount, person) -> partialCount + 1L, Long::sum);
-            System.out.println(personCount);
-        }
-    }
-
-
-    public void Collects() {
-        {
-            List<String> names = listPersons()
-                    .stream()
-                    .map(Employee::getName)
-                    .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-            System.out.println(names);
-        }
-        {
-            List<String> names = listPersons()
-                    .stream()
-                    .map(Employee::getName)
-                    .collect(Collectors.toList());
-            System.out.println(names);
-        }
-        {
-            Set<String> uniqueNames = listPersons()
-                    .stream()
-                    .map(Employee::getName)
-                    .collect(Collectors.toSet());
-            System.out.println(uniqueNames);
-        }
-        {
-            SortedSet<String> uniqueSortedNames = listPersons()
-                    .stream()
-                    .map(Employee::getName)
-                    .collect(Collectors.toCollection(TreeSet::new));
-            System.out.println(uniqueSortedNames);
-            System.out.println(uniqueSortedNames);
-        }
-        {
-            List<String> names = listPersons()
-                    .stream()//from w w w  .j a v  a2s  .c o m
-                    .map(Employee::getName)
-                    .collect(Collectors.collectingAndThen(Collectors.toList(),
-                            result -> Collections.unmodifiableList(result)));
-            System.out.println(names);
-        }
-    }
-
-
-    public void CollectsMap() {
-        {
-            Map<Long, String> idToNameMap = listPersons()
-                    .stream()
-                    .collect(Collectors.toMap(Employee::getId, Employee::getName));
-            System.out.println(idToNameMap);
-        }
-        {
-            Map<Employee.Gender, String> genderToNamesMap =
-                    listPersons()
-                            .stream()
-                            .collect(Collectors.toMap(Employee::getGender,
-                                    Employee::getName,
-                                    (oldValue, newValue) -> String.join(", ", oldValue, newValue)));
-            System.out.println(genderToNamesMap);
-        }
-        {
-            Map<Employee.Gender, Long> countByGender = listPersons()
-                    .stream()
-                    .collect(Collectors.toMap(Employee::getGender, p -> 1L, (oldCount, newCount) -> newCount + oldCount));
-
-            System.out.println(countByGender);
-        }
-        {
-            Map<Employee.Gender, Employee> highestEarnerByGender = listPersons()
-                    .stream()
-                    .collect(Collectors.toMap(Employee::getGender, Function.identity(),
-                            (oldPerson, newPerson) -> newPerson.getIncome() > oldPerson.getIncome() ? newPerson : oldPerson));
-            System.out.println(highestEarnerByGender);
-        }
-    }
-
-
-    public void Join() {
-        {
-            List<Employee> persons = listPersons();
-            String names = persons.stream()
-                    .map(Employee::getName)
-                    .collect(Collectors.joining());
-
-            String delimitedNames = persons.stream()
-                    .map(Employee::getName)
-                    .collect(Collectors.joining(", "));
-
-            String prefixedNames = persons.stream()
-                    .map(Employee::getName)
-                    .collect(Collectors.joining(", ", "Hello ", ".  Goodbye."));
-
-            System.out.println("Joined names:  " + names);
-            System.out.println("Joined,  delimited names:  " + delimitedNames);
-            System.out.println(prefixedNames);
-        }
-    }
-
 
     public void Match() {
         {
@@ -593,20 +395,219 @@ public class StreamTest {
         }
     }
 
+    public void Filter() {
+        {
+            listPersons().stream()
+                    .filter(Employee::isFemale)
+                    .map(Employee::getName)
+                    .forEach(System.out::println);
+        }
+        {
+            listPersons().stream()
+                    .filter(Employee::isMale)
+                    .filter(p -> p.getIncome() > 5000.0)
+                    .map(Employee::getName)
+                    .forEach(System.out::println);
+        }
+        {
+            listPersons().stream()
+                    .filter(p -> p.isMale() && p.getIncome() > 5000.0)
+                    .map(Employee::getName)
+                    .forEach(System.out::println);
+        }
+    }
+
+    public void Map() {
+        {
+            IntStream.rangeClosed(1, 5)
+                    .map(n -> n * n)
+                    .forEach(System.out::println);
+        }
+        {
+            listPersons().stream()
+                    .map(Employee::getName)
+                    .forEach(System.out::println);
+        }
+        {
+            Stream.of(1, 2, 3)
+                    .flatMap(n -> Stream.of(n, n + 1))
+                    .forEach(System.out::println);
+        }
+        {
+            Stream.of("XML", "Java", "CSS")
+                    .map(name -> name.chars())
+                    .flatMap(intStream -> intStream.mapToObj(n -> (char) n))
+                    .forEach(System.out::println);
+        }
+        {
+            Stream.of("XML", "Java", "CSS")
+                    .flatMap(name -> IntStream.range(0, name.length())
+                            .mapToObj(name::charAt))
+                    .forEach(System.out::println);
+        }
+    }
+
+    private static final DecimalFormat df = new DecimalFormat("0.00");//保留两位小数点
+
+    public void mapTo() {
+        List<Employee> list = listPersons();
+        //和
+        double sum = list.stream()
+                .mapToDouble(Employee::getAge)
+                .sum();
+        System.out.println(sum);
+        //最大
+        double max = list.stream()
+                .mapToDouble(Employee::getAge)
+                .max()
+                .orElse(0);
+        System.out.println(max);
+        //最小
+        double min = list.stream()
+                .mapToDouble(Employee::getAge)
+                .min()
+                .orElse(0);
+        System.out.println(min);
+        //平均值
+        double average = list.stream()
+                .mapToDouble(Employee::getAge)
+                .average()
+                .orElse(0);
+        System.out.println(average);
+
+        // BigDecimal
+        {
+            BigDecimal add1 = list.stream()
+                    .map(Employee::getSalary)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            System.out.println("身高 总和：" + df.format(add1));
+            Employee maxModel = list.stream()
+                    .max((u1, u2) -> u1.getSalary()
+                            .compareTo(u2.getSalary()))
+                    .orElse(null);
+            System.out.println("身高 最大：" + df.format(maxModel.getSalary()));
+            Employee minModel = list.stream()
+                    .min((u1, u2) -> u1.getSalary()
+                            .compareTo(u2.getSalary()))
+                    .orElse(null);
+            System.out.println("身高 最小：" + df.format(minModel.getSalary()));
+        }
+    }
+
+    public void Count() {
+        {
+            long personCount = listPersons().stream()
+                    .count();
+            System.out.println("Person count: " + personCount);
+        }
+        {
+            long personCount = listPersons().stream()
+                    .mapToLong(p -> 1L)
+                    .sum();
+            System.out.println(personCount);
+        }
+        {
+            long personCount = listPersons().stream()
+                    .map(p -> 1L)
+                    .reduce(0L, Long::sum);
+            System.out.println(personCount);
+        }
+        {
+            long personCount = listPersons().stream()
+                    .reduce(0L, (partialCount, person) -> partialCount + 1L, Long::sum);
+            System.out.println(personCount);
+        }
+    }
+
+    public void Collects() {
+        {
+            List<String> names = listPersons().stream()
+                    .map(Employee::getName)
+                    .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+            System.out.println(names);
+        }
+        {
+            List<String> names = listPersons().stream()
+                    .map(Employee::getName)
+                    .collect(Collectors.toList());
+            System.out.println(names);
+        }
+        {
+            Set<String> uniqueNames = listPersons().stream()
+                    .map(Employee::getName)
+                    .collect(Collectors.toSet());
+            System.out.println(uniqueNames);
+        }
+        {
+            SortedSet<String> uniqueSortedNames = listPersons().stream()
+                    .map(Employee::getName)
+                    .collect(Collectors.toCollection(TreeSet::new));
+            System.out.println(uniqueSortedNames);
+            System.out.println(uniqueSortedNames);
+        }
+        {
+            List<String> names = listPersons().stream()//from w w w  .j a v  a2s  .c o m
+                    .map(Employee::getName)
+                    .collect(Collectors.collectingAndThen(Collectors.toList(), result -> Collections.unmodifiableList(result)));
+            System.out.println(names);
+        }
+    }
+
+    public void CollectsMap() {
+        {
+            Map<Long, String> idToNameMap = listPersons().stream()
+                    .collect(Collectors.toMap(Employee::getId, Employee::getName));
+            System.out.println(idToNameMap);
+        }
+        {
+            Map<Employee.Gender, String> genderToNamesMap = listPersons().stream()
+                    .collect(Collectors.toMap(Employee::getGender, Employee::getName, (oldValue, newValue) -> String.join(", ", oldValue, newValue)));
+            System.out.println(genderToNamesMap);
+        }
+        {
+            Map<Employee.Gender, Long> countByGender = listPersons().stream()
+                    .collect(Collectors.toMap(Employee::getGender, p -> 1L, (oldCount, newCount) -> newCount + oldCount));
+
+            System.out.println(countByGender);
+        }
+        {
+            Map<Employee.Gender, Employee> highestEarnerByGender = listPersons().stream()
+                    .collect(Collectors.toMap(Employee::getGender, Function.identity(), (oldPerson, newPerson) -> newPerson.getIncome() > oldPerson.getIncome() ? newPerson : oldPerson));
+            System.out.println(highestEarnerByGender);
+        }
+    }
+
+
+    public void Join() {
+        {
+            List<Employee> persons = listPersons();
+            String names = persons.stream()
+                    .map(Employee::getName)
+                    .collect(Collectors.joining());
+
+            String delimitedNames = persons.stream()
+                    .map(Employee::getName)
+                    .collect(Collectors.joining(", "));
+
+            String prefixedNames = persons.stream()
+                    .map(Employee::getName)
+                    .collect(Collectors.joining(", ", "Hello ", ".  Goodbye."));
+
+            System.out.println("Joined names:  " + names);
+            System.out.println("Joined,  delimited names:  " + delimitedNames);
+            System.out.println(prefixedNames);
+        }
+    }
 
     public void Partitioning() {
         {
-            Map<Boolean, List<Employee>> partionedByMaleGender =
-                    listPersons()//  w  w  w. ja v  a 2 s  . c  o m
-                            .stream()
-                            .collect(Collectors.partitioningBy(Employee::isMale));
+            Map<Boolean, List<Employee>> partionedByMaleGender = listPersons()//  w  w  w. ja v  a 2 s  . c  o m
+                    .stream()
+                    .collect(Collectors.partitioningBy(Employee::isMale));
             System.out.println(partionedByMaleGender);
         }
         {
-            Map<Boolean, String> partionedByMaleGender = listPersons()
-                    .stream()/*from   w  w  w.  jav  a2 s  .  c  o m*/
-                    .collect(Collectors.partitioningBy(Employee::isMale,
-                            Collectors.mapping(Employee::getName, Collectors.joining(", "))));
+            Map<Boolean, String> partionedByMaleGender = listPersons().stream()/*from   w  w  w.  jav  a2 s  .  c  o m*/.collect(Collectors.partitioningBy(Employee::isMale, Collectors.mapping(Employee::getName, Collectors.joining(", "))));
             System.out.println(partionedByMaleGender);
         }
     }
@@ -627,22 +628,16 @@ public class StreamTest {
             double avg = stats.getAverage();
             double max = stats.getMax();
 
-            System.out.printf(
-                    "count=%d, sum=%.2f,  min=%.2f,  average=%.2f, max=%.2f%n", count, sum,
-                    min, max, avg);
+            System.out.printf("count=%d, sum=%.2f,  min=%.2f,  average=%.2f, max=%.2f%n", count, sum, min, max, avg);
         }
         {
-            DoubleSummaryStatistics incomeStats = listPersons()
-                    .stream()
+            DoubleSummaryStatistics incomeStats = listPersons().stream()
                     .map(Employee::getIncome)
-                    .collect(DoubleSummaryStatistics::new,
-                            DoubleSummaryStatistics::accept,
-                            DoubleSummaryStatistics::combine);
+                    .collect(DoubleSummaryStatistics::new, DoubleSummaryStatistics::accept, DoubleSummaryStatistics::combine);
             System.out.println(incomeStats);
         }
         {
-            DoubleSummaryStatistics incomeStats = listPersons()
-                    .stream()
+            DoubleSummaryStatistics incomeStats = listPersons().stream()
                     .collect(Collectors.summarizingDouble(Employee::getIncome));
             System.out.println(incomeStats);
         }
@@ -651,8 +646,7 @@ public class StreamTest {
 
     public void Aggregation() {
         {
-            double totalIncome = listPersons()
-                    .stream()
+            double totalIncome = listPersons().stream()
                     .mapToDouble(Employee::getIncome)
                     .sum();
             System.out.println("Total Income:  " + totalIncome);
@@ -674,12 +668,10 @@ public class StreamTest {
             }
         }
         {
-            Double income =
-                    listPersons()
-                            .stream()
-                            .mapToDouble(Employee::getIncome)
-                            .max()
-                            .orElse(0);
+            Double income = listPersons().stream()
+                    .mapToDouble(Employee::getIncome)
+                    .max()
+                    .orElse(0);
 
             System.out.println("income: " + income);
         }
@@ -693,62 +685,44 @@ public class StreamTest {
             System.out.println(sum);
         }
         {
-            double sum = listPersons()
-                    .stream()
+            double sum = listPersons().stream()
                     .map(Employee::getIncome)
                     .reduce(0.0, Double::sum);
             System.out.println(sum);
         }
         {
-            double sum = listPersons()
-                    .stream()
+            double sum = listPersons().stream()
                     .reduce(0.0, (partialSum, person) -> partialSum + person.getIncome(), Double::sum);
             System.out.println(sum);
         }
         {
-            double sum = listPersons()
-                    .stream()
-                    .reduce(
-                            0.0,
-                            (Double partialSum, Employee p) -> {
-                                double accumulated = partialSum + p.getIncome();
-                                System.out.println(Thread.currentThread()
-                                        .getName()
-                                        + "  - Accumulator: partialSum  = " + partialSum
-                                        + ",  person = " + p + ", accumulated = " + accumulated);
-                                return accumulated;
-                            },
-                            (a, b) -> {
-                                double combined = a + b;
-                                System.out.println(Thread.currentThread()
-                                        .getName()
-                                        + "  - Combiner:  a  = " + a + ", b  = " + b
-                                        + ", combined  = " + combined);
-                                return combined;
-                            });
+            double sum = listPersons().stream()
+                    .reduce(0.0, (Double partialSum, Employee p) -> {
+                        double accumulated = partialSum + p.getIncome();
+                        System.out.println(Thread.currentThread()
+                                .getName() + "  - Accumulator: partialSum  = " + partialSum + ",  person = " + p + ", accumulated = " + accumulated);
+                        return accumulated;
+                    }, (a, b) -> {
+                        double combined = a + b;
+                        System.out.println(Thread.currentThread()
+                                .getName() + "  - Combiner:  a  = " + a + ", b  = " + b + ", combined  = " + combined);
+                        return combined;
+                    });
             System.out.println("--------------------------------------");
             System.out.println(sum);
 
-            sum = listPersons()
-                    .parallelStream()
-                    .reduce(
-                            0.0,
-                            (Double partialSum, Employee p) -> {
-                                double accumulated = partialSum + p.getIncome();
-                                System.out.println(Thread.currentThread()
-                                        .getName()
-                                        + "  - Accumulator: partialSum  = " + partialSum
-                                        + ",  person = " + p + ", accumulated = " + accumulated);
-                                return accumulated;
-                            },
-                            (a, b) -> {
-                                double combined = a + b;
-                                System.out.println(Thread.currentThread()
-                                        .getName()
-                                        + "  - Combiner:  a  = " + a + ", b  = " + b
-                                        + ", combined  = " + combined);
-                                return combined;
-                            });
+            sum = listPersons().parallelStream()
+                    .reduce(0.0, (Double partialSum, Employee p) -> {
+                        double accumulated = partialSum + p.getIncome();
+                        System.out.println(Thread.currentThread()
+                                .getName() + "  - Accumulator: partialSum  = " + partialSum + ",  person = " + p + ", accumulated = " + accumulated);
+                        return accumulated;
+                    }, (a, b) -> {
+                        double combined = a + b;
+                        System.out.println(Thread.currentThread()
+                                .getName() + "  - Combiner:  a  = " + a + ", b  = " + b + ", combined  = " + combined);
+                        return combined;
+                    });
             System.out.println(sum);
         }
         {
@@ -770,8 +744,7 @@ public class StreamTest {
             }
         }
         {
-            Optional<Employee> person = listPersons()
-                    .stream()
+            Optional<Employee> person = listPersons().stream()
                     .reduce((p1, p2) -> p1.getIncome() > p2.getIncome() ? p1 : p2);
             if (person.isPresent()) {
                 System.out.println("Highest earner: " + person.get());
@@ -784,15 +757,13 @@ public class StreamTest {
 
     public void Parallel() {
         {
-            String names = listPersons()
-                    .stream()
+            String names = listPersons().stream()
                     .filter(Employee::isMale)
                     .map(Employee::getName)
                     .collect(Collectors.joining(", "));
             System.out.println(names);
 
-            names = listPersons()
-                    .parallelStream()
+            names = listPersons().parallelStream()
                     .filter(Employee::isMale)
                     .map(Employee::getName)
                     .collect(Collectors.joining(", "));
@@ -820,20 +791,7 @@ public class StreamTest {
     }
 
     public static List<Employee> listPersons() {
-        String json = "[" +
-                "{\"age\":18,\"alive\":true,\"birthday\":32468640000,\"createTime\":\"2021-01-01\",\"female\":false," +
-                "\"gender\":\"MALE\",\"id\":0,\"income\":2343.0,\"male\":true,\"name\":\"Jake\",\"salary\":89}," +
-                "{\"age\":19,\"alive\":true,\"birthday\":31604640000,\"createTime\":\"1972-07-21\",\"female\":false," +
-                "\"gender\":\"MALE\",\"id\":0,\"income\":7100.0,\"male\":true,\"name\":\"Jack\",\"salary\":88}," +
-                "{\"age\":18,\"alive\":true,\"birthday\":31691040000,\"createTime\":\"1973-05-29\",\"female\":true," +
-                "\"gender\":\"FEMALE\",\"id\":0,\"income\":5455.0,\"male\":false,\"name\":\"Jane\",\"salary\":78}," +
-                "{\"age\":23,\"alive\":true,\"birthday\":31518240000,\"createTime\":\"1974-10-16\",\"female\":false," +
-                "\"gender\":\"MALE\",\"id\":0,\"income\":1800.0,\"male\":true,\"name\":\"Jode\",\"salary\":88}," +
-                "{\"age\":32,\"alive\":true,\"birthday\":31950240000,\"createTime\":\"1975-12-13\",\"female\":true," +
-                "\"gender\":\"FEMALE\",\"id\":0,\"income\":1234.0,\"male\":false,\"name\":\"Jeny\",\"salary\":100}," +
-                "{\"age\":35,\"alive\":true,\"birthday\":31604640000,\"createTime\":\"1976-06-09\",\"female\":false," +
-                "\"gender\":\"MALE\",\"id\":0,\"income\":3211.0,\"male\":true,\"name\":\"Jason\",\"salary\":96}" +
-                "]";
+        String json = "[" + "{\"age\":18,\"alive\":true,\"birthday\":32468640000,\"createTime\":\"2021-01-01\",\"female\":false," + "\"gender\":\"MALE\",\"id\":0,\"income\":2343.0,\"male\":true,\"name\":\"Jake\",\"salary\":89}," + "{\"age\":19,\"alive\":true,\"birthday\":31604640000,\"createTime\":\"1972-07-21\",\"female\":false," + "\"gender\":\"MALE\",\"id\":0,\"income\":7100.0,\"male\":true,\"name\":\"Jack\",\"salary\":88}," + "{\"age\":18,\"alive\":true,\"birthday\":31691040000,\"createTime\":\"1973-05-29\",\"female\":true," + "\"gender\":\"FEMALE\",\"id\":0,\"income\":5455.0,\"male\":false,\"name\":\"Jane\",\"salary\":78}," + "{\"age\":23,\"alive\":true,\"birthday\":31518240000,\"createTime\":\"1974-10-16\",\"female\":false," + "\"gender\":\"MALE\",\"id\":0,\"income\":1800.0,\"male\":true,\"name\":\"Jode\",\"salary\":88}," + "{\"age\":32,\"alive\":true,\"birthday\":31950240000,\"createTime\":\"1975-12-13\",\"female\":true," + "\"gender\":\"FEMALE\",\"id\":0,\"income\":1234.0,\"male\":false,\"name\":\"Jeny\",\"salary\":100}," + "{\"age\":35,\"alive\":true,\"birthday\":31604640000,\"createTime\":\"1976-06-09\",\"female\":false," + "\"gender\":\"MALE\",\"id\":0,\"income\":3211.0,\"male\":true,\"name\":\"Jason\",\"salary\":96}" + "]";
 
         List<Employee> ls = JsonUtil.parseArray(json, Employee.class);
         return ls;
