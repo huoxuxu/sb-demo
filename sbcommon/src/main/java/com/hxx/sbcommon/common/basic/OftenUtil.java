@@ -223,7 +223,7 @@ public class OftenUtil {
     }
 
     // 数字
-    public static class NumberUtil{
+    public static class NumberUtil {
         /**
          * 格式化为字符串，
          * 为null时返回空字符串，
@@ -358,7 +358,7 @@ public class OftenUtil {
     }
 
     // 字符串
-    public static class StringUtil{
+    public static class StringUtil {
         /**
          * 取字符串的前n位,
          * 超过字符串总长度不会报错
@@ -421,6 +421,28 @@ public class OftenUtil {
             }
 
             return str;
+        }
+
+        /**
+         * 获取第一个分隔符的键和值
+         *
+         * @param str
+         * @param splitStr
+         * @return
+         */
+        public static String[] splitFirst(String str, String splitStr) {
+            int i = str.indexOf(splitStr);
+            if (i == -1) {
+                String[] arr = {str, ""};
+                return arr;
+            } else {
+                String v = "";
+                if (str.length() > i + 1) {
+                    v = str.substring(i + 1);
+                }
+                String[] arr = {str.substring(0, i), v};
+                return arr;
+            }
         }
     }
 

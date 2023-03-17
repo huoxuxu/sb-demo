@@ -85,7 +85,7 @@ public class FileUtil {
     }
 
     /**
-     * 逐行读取文件
+     * 逐行读取文件,包含空行
      * 推荐使用
      *
      * @param file
@@ -142,6 +142,8 @@ public class FileUtil {
      * @return
      */
     public static String combine(String path1, String path2) {
+        path1 = path1.replace("\\\\", "/");
+        path2 = path2.replace("\\\\", "/");
         // 将\转换为/
         path1 = path1.replace('\\', '/');
         path2 = path2.replace('\\', '/');

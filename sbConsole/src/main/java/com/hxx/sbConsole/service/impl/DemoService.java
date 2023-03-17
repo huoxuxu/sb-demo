@@ -22,6 +22,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.*;
@@ -248,6 +249,7 @@ public class DemoService {
                     System.out.println(result);
                 }
             }
+            System.out.println("==================================================");
             // List
             {
                 ListTypeHandler lt = new ListTypeHandler();
@@ -277,6 +279,7 @@ public class DemoService {
 //                    System.out.println(ls);
                 }
             }
+            System.out.println("==================================================");
             // 枚举
             {
                 Class<LinePatternEnum> enumCls = LinePatternEnum.class;
@@ -307,6 +310,19 @@ public class DemoService {
                     System.out.println(eval);
                 }
             }
+            System.out.println("==================================================");
+            // HttpTxtParser
+            {
+                String filePath = "D:\\OD\\OneDrive\\_Now\\Wode\\.http";
+                File file = new File(filePath);
+                HttpTxtParser httpTxtParser = new HttpTxtParser(file);
+                List<HttpTxtParser.HttpTxtInfo> ls = httpTxtParser.parse();
+                for (HttpTxtParser.HttpTxtInfo item : ls) {
+                    System.out.println(JsonUtil.toJSON(item));
+                }
+            }
+            System.out.println("==================================================");
+            //
         }
     }
 
