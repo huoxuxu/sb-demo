@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -29,6 +30,7 @@ public class HttpTxtParser {
     private final static Set<String> methodSet = new HashSet<>(Arrays.asList("GET", "POST", "PUT", "DELETE"));
 
     private File file;
+    private Charset charset = StandardCharsets.UTF_8;
 
     // 开始解析 ###
     private boolean startTitleToken;
@@ -37,8 +39,22 @@ public class HttpTxtParser {
     private boolean startRequestBodyOrTitleToken;
     private HttpTxtInfo info = new HttpTxtInfo();
 
+    /**
+     * 默认使用UTF8
+     *
+     * @param file
+     */
     public HttpTxtParser(File file) {
         this.file = file;
+    }
+
+    /**
+     * @param file
+     * @param charset
+     */
+    public HttpTxtParser(File file, Charset charset) {
+        this.file = file;
+        this.charset = charset;
     }
 
     /**
@@ -94,7 +110,7 @@ public class HttpTxtParser {
         info = new HttpTxtInfo();
         List<String> requestBodys = new ArrayList<>();
 
-        FileUtil.readLines(this.file, StandardCharsets.UTF_8, line -> {
+        FileUtil.readLines(this.file, this.charset, line -> {
             // Title
             if (startTitleToken) {
                 if (StringUtils.isBlank(line)) {
