@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.service.impl;
+package com.hxx.sbConsole.service.impl.demo;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -6,6 +6,7 @@ import com.hxx.sbConsole.commons.jwt.JWTUtil;
 import com.hxx.sbConsole.model.Dog;
 import com.hxx.sbConsole.model.User;
 import com.hxx.sbConsole.model.enums.LinePatternEnum;
+import com.hxx.sbConsole.service.impl.HttpTxtParser;
 import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandlerFactory;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 @Service
 public class DemoService {
     public static void demo() throws Exception {
+        System.out.println("OftenUtil==================================================");
         {
             String cut = OftenUtil.StringUtil.cut("1", 1);
             System.out.println(cut);
@@ -66,7 +68,7 @@ public class DemoService {
                     .orElse(new ArrayList<>());
             System.out.println(ols);
         }
-        System.out.println("==================================================");
+        System.out.println("MethodSignature==================================================");
         {
             Method[] methods = User.class.getMethods();
             for (Method method : methods) {

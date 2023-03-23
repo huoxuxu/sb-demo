@@ -56,6 +56,32 @@ public class FileUtil {
     }
 
     /**
+     * 读取文件字节
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    public static byte[] readByteArr(File file) throws IOException {
+        int size = (int) file.length();
+        byte[] data = new byte[size];
+
+        try (InputStream is = new FileInputStream(file)) {
+            int offset = 0;
+            while (offset < size) {
+                int ret = is.read(data, offset, size - offset);
+                if (ret == -1) {
+                    break;
+                }
+
+                offset += ret;
+            }
+        }
+
+        return data;
+    }
+
+    /**
      * 获取文件流
      *
      * @param file
