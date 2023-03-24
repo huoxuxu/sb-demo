@@ -95,6 +95,7 @@ public class ControllerExceptionController {
      * @return
      */
     @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.OK)
     public String runtimeExceptionHandler(RuntimeException runtimeException,
                                           ModelMap modelMap) {
         log.error(runtimeException.getLocalizedMessage());
