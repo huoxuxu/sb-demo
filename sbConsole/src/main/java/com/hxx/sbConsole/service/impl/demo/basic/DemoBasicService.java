@@ -1,5 +1,6 @@
 package com.hxx.sbConsole.service.impl.demo.basic;
 
+import com.hxx.sbConsole.model.enums.LinePatternEnum;
 import com.hxx.sbConsole.model.validate.UserModel;
 import com.hxx.sbcommon.common.basic.validate.ValidateUtil;
 import lombok.extern.slf4j.Slf4j;

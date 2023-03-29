@@ -13,7 +13,7 @@ import javax.validation.ConstraintValidatorContext;
  **/
 public class StartsWithValidator implements ConstraintValidator<StartsWithAttr, String> {
     private String startsWithVal;
-    private Boolean not;
+    private boolean not;
 
     @Override
     public void initialize(StartsWithAttr constraintAnnotation) {
@@ -29,8 +29,6 @@ public class StartsWithValidator implements ConstraintValidator<StartsWithAttr, 
         }
 
         startsWithVal = startsWithVal == null ? "" : startsWithVal;
-        not = not == null ? false : not;
-
         return not ? !value.startsWith(startsWithVal) : value.startsWith(startsWithVal);
     }
 }

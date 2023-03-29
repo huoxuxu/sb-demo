@@ -3,6 +3,7 @@ package com.hxx.sbweb.controller.webDemo;
 import com.hxx.sbcommon.model.Result;
 import com.hxx.sbweb.common.JsonUtil;
 import com.hxx.sbweb.model.UserModel;
+import com.hxx.sbweb.model.enums.LinePatternEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
@@ -26,8 +27,11 @@ import java.util.List;
 @RequestMapping("/valid")
 public class ValidParaController {
 
-    @RequestMapping("/model")
-    public Result valid(@Validated UserModel u) {
+    @PostMapping("/model")
+    public Result valid(@RequestBody @Validated UserModel u) {
+        {
+            int[] codes = LinePatternEnum.getCodes();
+        }
         return Result.success(JsonUtil.toJSON(u));
     }
 
@@ -41,7 +45,15 @@ public class ValidParaController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Result handlerParamsException(MethodArgumentNotValidException ex) {
-        return Result.failed(ex.getMessage());
+        FieldError fieldError = ex.getFieldError();
+        if (fieldError != null) {
+            if (!fieldError.isBindingFailure()) {
+                String msg = fieldError.getDefaultMessage();
+                return Result.failed(msg);
+            }
+        }
+        log.error("模型校验异常：{}", ExceptionUtils.getStackTrace(ex));
+        return Result.failed("入参校验异常");
     }
 
     @ExceptionHandler(BindException.class)

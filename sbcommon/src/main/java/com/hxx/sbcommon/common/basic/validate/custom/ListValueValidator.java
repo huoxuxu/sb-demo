@@ -40,6 +40,9 @@ public class ListValueValidator implements ConstraintValidator<ListValueAttr, In
      */
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
+        if (value == null) {
+            return false;
+        }
         if (set.contains(value)) {
             return true;
         }
