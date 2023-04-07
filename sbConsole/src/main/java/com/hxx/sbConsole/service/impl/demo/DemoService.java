@@ -20,6 +20,7 @@ import com.hxx.sbcommon.common.reflect.MethodSignature;
 import com.hxx.sbcommon.common.reflect.ReflectorObj;
 import com.hxx.sbcommon.model.Result;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,17 @@ public class DemoService {
     public static void demo() throws Exception {
         System.out.println("OftenUtil==================================================");
         {
+            {
+                String[] arr = StringUtils.split("1aa,b，c", "a,");
+                System.out.println(JsonUtil.toJSON(arr));// ["1","b，c"]
+            }
+            {
+                String[] arr = StringUtils.splitByWholeSeparator("1aa,b，c", "a,");
+                System.out.println(JsonUtil.toJSON(arr));// ["1a","b，c"]
+            }
+        }
+        System.out.println("OftenUtil==================================================");
+        {
             String cut = OftenUtil.StringUtil.cut("1", 1);
             System.out.println(cut);
             cut = OftenUtil.StringUtil.cut("12", 3);
@@ -50,7 +62,7 @@ public class DemoService {
             String padRight = StringUtil.padRight("1", 3, '0');
             System.out.println(padRight);
         }
-        System.out.println("==================================================");
+        System.out.println("Optional==================================================");
         {
             List<String> ls = null;
             List<String> ols = Optional.ofNullable(ls)

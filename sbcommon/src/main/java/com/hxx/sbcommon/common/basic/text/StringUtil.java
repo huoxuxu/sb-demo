@@ -67,8 +67,31 @@ public class StringUtil {
         return StringUtils.contains(str, searchStr);
     }
 
+    /**
+     * 分割字符串
+     * 注意：
+     * StringUtils.split("1aa,b，c", "a,");
+     * 结果：["1","b，c"]
+     *
+     * @param str
+     * @param splitStr
+     * @return
+     */
     public static String[] split(String str, String splitStr) {
         return StringUtils.split(str, splitStr);
+    }
+
+    /**
+     * 分割字符串
+     * StringUtils.split("1aa,b，c", "a,");
+     * 结果：["1a","b，c"]
+     *
+     * @param str
+     * @param splitStr
+     * @return
+     */
+    public static String[] splitByWholeSeparator(String str, String splitStr) {
+        return StringUtils.splitByWholeSeparator(str, splitStr);
     }
 
     public static String replace(String text, String searchString, String replacement) {
