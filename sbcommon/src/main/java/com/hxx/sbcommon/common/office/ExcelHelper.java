@@ -40,12 +40,12 @@ public class ExcelHelper implements Closeable {
     public ExcelHelper(String fileName, InputStream inputStream) throws Exception {
         this.fileName = fileName;
         this.inputStream = inputStream;
-        OftenUtil.assertCond(StringUtils.isBlank(this.fileName), "excel名称不能为空");
-        OftenUtil.assertCond(this.inputStream == null, "excel流不能为空");
+        if (StringUtils.isBlank(this.fileName)) throw new IllegalArgumentException("excel名称不能为空");
+        if (this.inputStream == null) throw new IllegalArgumentException("excel流不能为空");
 
         this.is97_03Excel = fileName.endsWith(".xls");
         if (!this.is97_03Excel) {
-            OftenUtil.assertCond(!fileName.endsWith(".xlsx"), "excel只支持后缀为.xls和.xlsx");
+            if (!fileName.endsWith(".xlsx")) throw new IllegalArgumentException("excel只支持后缀为.xls和.xlsx");
 
             this.is97_03Excel = false;
         }
@@ -64,7 +64,7 @@ public class ExcelHelper implements Closeable {
             throw new Exception("加载excel出现异常：" + e.getMessage());
         }
 
-        OftenUtil.assertCond(this.sheetCount < 1, "未找到工作簿");
+        if (this.sheetCount < 1) throw new IllegalArgumentException("未找到工作簿");
     }
 
     @Override
@@ -105,9 +105,9 @@ public class ExcelHelper implements Closeable {
      * @param rowAct
      */
     public void parseExcelRows(int sheetIndex, int startRowIndex, int colCount, Consumer<RowItem> rowAct) {
-        OftenUtil.assertCond(sheetCount <= sheetIndex, "不包含工作簿，索引：" + sheetIndex);
+        if (sheetCount <= sheetIndex) throw new IllegalArgumentException("不包含工作簿，索引：" + sheetIndex);
         Sheet sheet = this.workbook.getSheetAt(sheetIndex);
-        OftenUtil.assertCond(sheet == null, "未正常解析工作簿，索引：" + sheetIndex);
+        if (sheet == null) throw new IllegalArgumentException("未正常解析工作簿，索引：" + sheetIndex);
 
         // 得到Excel的行数
         int totalRows = sheet.getPhysicalNumberOfRows();
@@ -175,26 +175,31 @@ public class ExcelHelper implements Closeable {
             return "";
         }
 
-        switch (cell.getCellType()) {
-            case STRING: {
-                RichTextString cellValue = cell.getRichStringCellValue();
-                if (cellValue != null) {
-                    String valStr = cellValue.getString();
-                    if (!StringUtils.isBlank(valStr)) {
-                        return valStr.trim();
+        try {
+            switch (cell.getCellType()) {
+                case STRING: {
+                    RichTextString cellValue = cell.getRichStringCellValue();
+                    if (cellValue != null) {
+                        String valStr = cellValue.getString();
+                        if (!StringUtils.isBlank(valStr)) {
+                            return valStr.trim();
+                        }
+                    } else {
+                        if (cell instanceof XSSFCell) {
+                            return ((XSSFCell) cell).getRawValue();
+                        } else {
+                            return cell.getStringCellValue() + "";
+                        }
                     }
-                } else {
-                    return ((XSSFCell) cell).getRawValue();
-                }
 
-                return "";
-            }
-            case NUMERIC: {
-                if (cell instanceof XSSFCell) {
-                    return ((XSSFCell) cell).getRawValue();
-                } else {
-                    return cell.getNumericCellValue() + "";
+                    return "";
                 }
+                case NUMERIC: {
+                    if (cell instanceof XSSFCell) {
+                        return ((XSSFCell) cell).getRawValue();
+                    } else {
+                        return cell.getNumericCellValue() + "";
+                    }
 //                boolean isDate = org.apache.poi.hssf.usermodel.HSSFDateUtil.isCellDateFormatted(cell);
 //                if (isDate) {
 //                    Date dateCellValue = cell.getDateCellValue();
@@ -207,14 +212,18 @@ public class ExcelHelper implements Closeable {
 //                } else {
 //                    return ((XSSFCell) cell).getRawValue();
 //                }
+                }
+                case BOOLEAN: {
+                    return (cell.getBooleanCellValue() + "").toLowerCase();
+                }
+                case FORMULA:
+                    return cell.getCellFormula();
+                default:
+                    return "";
             }
-            case BOOLEAN: {
-                return (cell.getBooleanCellValue() + "").toLowerCase();
-            }
-            case FORMULA:
-                return cell.getCellFormula();
-            default:
-                return "";
+        } catch (Exception ex) {
+            log.error("解析单元格出现异常：{}", ExceptionUtils.getStackTrace(ex));
+            return "";
         }
     }
 
@@ -270,8 +279,12 @@ public class ExcelHelper implements Closeable {
             this.fileName = fileName;
             this.inputStream = inputStream;
 
-            OftenUtil.assertCond(StringUtils.isBlank(this.fileName), "excel名称不能为空");
-            OftenUtil.assertCond(this.inputStream == null, "excel流不能为空");
+            if (StringUtils.isBlank(this.fileName)) {
+                throw new IllegalArgumentException("excel名称不能为空");
+            }
+            if (this.inputStream == null) {
+                throw new IllegalArgumentException("excel流不能为空");
+            }
 
             this.poifsFileSystem = new POIFSFileSystem(this.inputStream);
             this.workbook = new HSSFWorkbook(poifsFileSystem);
@@ -281,8 +294,7 @@ public class ExcelHelper implements Closeable {
         @Override
         public void close() throws IOException {
             if (this.workbook != null) {
-                this.workbook
-                        .close();
+                this.workbook.close();
             }
             if (this.poifsFileSystem != null) {
                 this.poifsFileSystem.close();
