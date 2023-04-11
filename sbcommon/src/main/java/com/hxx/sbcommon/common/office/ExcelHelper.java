@@ -1,6 +1,5 @@
 package com.hxx.sbcommon.common.office;
 
-import com.hxx.sbcommon.common.basic.OftenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,16 +13,15 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import lombok.Data;
-
 /**
  * @Author: huoxuxu
  * @Description:
- * @Date: 2022-09-09 10:09:20
+ * @Date: 2023-04-07 14:58:58
  **/
 @Slf4j
 public class ExcelHelper implements Closeable {
@@ -195,11 +193,14 @@ public class ExcelHelper implements Closeable {
                     return "";
                 }
                 case NUMERIC: {
+                    String cellv;
                     if (cell instanceof XSSFCell) {
-                        return ((XSSFCell) cell).getRawValue();
+                        cellv = ((XSSFCell) cell).getRawValue();
                     } else {
-                        return cell.getNumericCellValue() + "";
+                        cellv = cell.getNumericCellValue() + "";
                     }
+                    return new BigDecimal(cellv).stripTrailingZeros()
+                            .toPlainString();
 //                boolean isDate = org.apache.poi.hssf.usermodel.HSSFDateUtil.isCellDateFormatted(cell);
 //                if (isDate) {
 //                    Date dateCellValue = cell.getDateCellValue();
@@ -222,7 +223,7 @@ public class ExcelHelper implements Closeable {
                     return "";
             }
         } catch (Exception ex) {
-            log.error("解析单元格出现异常：{}", ExceptionUtils.getStackTrace(ex));
+            log.error("解析单元格({},{})出现异常：{}", cell.getRowIndex(), cell.getColumnIndex(), ExceptionUtils.getStackTrace(ex));
             return "";
         }
     }
@@ -246,7 +247,7 @@ public class ExcelHelper implements Closeable {
         return cell == null || cell.getCellType() == CellType.BLANK;
     }
 
-    @Data
+    @lombok.Data
     public static class RowItem {
         private int rowNum;
         private List<String> itemArray = new ArrayList<>();

@@ -2,6 +2,11 @@ package com.hxx.sbcommon.common.basic.text;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @Author: huoxuxu
  * @Description:
@@ -92,6 +97,64 @@ public class StringUtil {
      */
     public static String[] splitByWholeSeparator(String str, String splitStr) {
         return StringUtils.splitByWholeSeparator(str, splitStr);
+    }
+
+    /**
+     * 字符串分割，支持多分隔符
+     * 原始字符串："1,2,3，4"
+     * 分隔符：",","，"
+     * 结果：1 2 3 4
+     *
+     * @param str
+     * @param splitStrs
+     * @return
+     */
+    public static List<String> splitByWholeSeparators(String str, String... splitStrs) {
+        if (StringUtils.isBlank(str)) {
+            return new ArrayList<>();
+        }
+        if (splitStrs == null || splitStrs.length == 0) {
+            return new ArrayList<>(Arrays.asList(str));
+        }
+
+        List<String> ls = new ArrayList<>();
+        for (String splitStr : splitStrs) {
+            if (ls.size() == 0) {
+                String[] arr = StringUtils.splitByWholeSeparator(str, splitStr);
+                for (String item : arr) {
+                    if (!StringUtils.isBlank(item)) {
+                        ls.add(item.trim());
+                    }
+                }
+            } else {
+                List<String> result = splits(ls, splitStr);
+                ls = result;
+            }
+        }
+        return ls;
+    }
+
+    /**
+     * 输入字符串集合，集合元素都按 分隔符 分割后去除空或空格后返回,
+     *
+     * @param strs
+     * @param splitStr
+     * @return
+     */
+    public static List<String> splits(List<String> strs, String splitStr) {
+        List<String> ls = new ArrayList<>();
+        for (String str : strs) {
+            if (StringUtils.isBlank(str)) {
+                continue;
+            }
+            String[] arr = StringUtils.splitByWholeSeparator(str, splitStr);
+            for (String item : arr) {
+                if (!StringUtils.isBlank(item)) {
+                    ls.add(item.trim());
+                }
+            }
+        }
+        return ls;
     }
 
     public static String replace(String text, String searchString, String replacement) {

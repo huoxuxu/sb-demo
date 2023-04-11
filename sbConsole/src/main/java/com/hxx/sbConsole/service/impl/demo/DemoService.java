@@ -46,7 +46,28 @@ public class DemoService {
             }
             {
                 String[] arr = StringUtils.splitByWholeSeparator("1aa,b，c", "a,");
+                assert arr.length == 2;
                 System.out.println(JsonUtil.toJSON(arr));// ["1a","b，c"]
+            }
+            {
+                String[] arr = StringUtils.splitByWholeSeparator("1aa,", "1aa,");
+                assert arr.length == 1;
+                System.out.println(JsonUtil.toJSON(arr));// ["1a","b，c"]
+            }
+            {
+                List<String> ls = StringUtil.splitByWholeSeparators("1,2,3，4678,67", ",", "，", "67");
+                assert ls.size() == 5;
+                System.out.println(JsonUtil.toJSON(ls));
+            }
+            {
+                List<String> ls = StringUtil.splitByWholeSeparators("6767", "67");
+                assert ls.size() == 0;
+                System.out.println(JsonUtil.toJSON(ls));
+            }
+            {
+                List<String> ls = StringUtil.splitByWholeSeparators("67 67 6", "67");
+                assert ls.size() == 1;
+                System.out.println(JsonUtil.toJSON(ls));
             }
         }
         System.out.println("OftenUtil==================================================");
