@@ -855,6 +855,63 @@ public class OftenUtil {
         }
     }
 
+    // 对比
+    public static class CompareUtil {
+        /**
+         * 字符串是否相等,空字符串、null、空白字符串默认相等
+         *
+         * @param v1
+         * @param v2
+         * @return
+         */
+        public static boolean isEquals(String v1, String v2) {
+            if (StringUtils.isBlank(v1) && StringUtils.isBlank(v2)) {
+                return true;
+            }
+            if (StringUtils.isBlank(v1) || StringUtils.isBlank(v2)) {
+                return false;
+            }
+
+            return v1.trim()
+                    .equals(v2.trim());
+        }
+
+        /**
+         * 整型是否相等
+         *
+         * @param v1
+         * @param v2
+         * @return
+         */
+        public static boolean isEquals(Integer v1, Integer v2) {
+            if (v1 == null && v2 == null) {
+                return true;
+            }
+            if (v1 == null || v2 == null) {
+                return false;
+            }
+            return v1.intValue() == v2.intValue();
+        }
+
+        /**
+         * Byte是否相等
+         *
+         * @param v1
+         * @param v2
+         * @return
+         */
+        public static boolean isEquals(Byte v1, Byte v2) {
+            if (v1 == null && v2 == null) {
+                return true;
+            }
+            if (v1 == null || v2 == null) {
+                return false;
+            }
+            return v1.byteValue() == v2.byteValue();
+        }
+
+    }
+
     // 数据库
     public static class DBUtil {
         /**

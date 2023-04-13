@@ -72,16 +72,26 @@ public class DemoService {
         }
         System.out.println("OftenUtil==================================================");
         {
-            String cut = OftenUtil.StringUtil.cut("1", 1);
-            System.out.println(cut);
-            cut = OftenUtil.StringUtil.cut("12", 3);
-            System.out.println(cut);
-            String hxy = OftenUtil.StringUtil.lowerFirstChar("HXY");
-            System.out.println(hxy);
-            String padLeft = StringUtil.padLeft("1", 3, '0');
-            System.out.println(padLeft);
-            String padRight = StringUtil.padRight("1", 3, '0');
-            System.out.println(padRight);
+            {
+                String cut = OftenUtil.StringUtil.cut("1", 1);
+                System.out.println(cut);
+                cut = OftenUtil.StringUtil.cut("12", 3);
+                System.out.println(cut);
+                String hxy = OftenUtil.StringUtil.lowerFirstChar("HXY");
+                System.out.println(hxy);
+            }
+            {
+                String padLeft = StringUtil.padLeft("1", 3, '0');
+                System.out.println(padLeft);
+                String padRight = StringUtil.padRight("1", 3, '0');
+                System.out.println(padRight);
+            }
+            {
+                boolean r = OftenUtil.CompareUtil.isEquals((String) null, null);
+                System.out.println(r);
+                r = OftenUtil.CompareUtil.isEquals((String) null, "");
+                System.out.println(r);
+            }
         }
         System.out.println("Optional==================================================");
         {
@@ -91,7 +101,6 @@ public class DemoService {
             System.out.println(ols);
 
             List<String> ss = Arrays.asList("1", "2");
-            ls = new ArrayList<>();
             ols = Optional.ofNullable(ls)
                     .orElse(new ArrayList<>(ss));
             System.out.println(ols);
