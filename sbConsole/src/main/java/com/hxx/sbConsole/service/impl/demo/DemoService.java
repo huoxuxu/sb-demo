@@ -38,6 +38,12 @@ import java.util.stream.Collectors;
 @Service
 public class DemoService {
     public static void demo() throws Exception {
+        System.out.println("System==================================================");
+        {
+            String item = null;
+            String s = OftenUtil.BasicUtil.procFieldNull(item, "");
+            System.out.println(s);
+        }
         System.out.println("OftenUtil==================================================");
         {
             {

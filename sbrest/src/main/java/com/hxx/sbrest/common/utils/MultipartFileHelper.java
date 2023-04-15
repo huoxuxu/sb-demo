@@ -14,7 +14,7 @@ import java.io.InputStream;
  **/
 @Slf4j
 public class MultipartFileHelper {
-    private MultipartFile multipartFile;
+    private final MultipartFile multipartFile;
 
     private final String fileName;
     private final long fileSize;

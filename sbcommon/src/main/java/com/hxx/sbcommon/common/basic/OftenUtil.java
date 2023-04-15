@@ -470,6 +470,7 @@ public class OftenUtil {
         }
     }
 
+    // 日期
     public static class DateTimeUtil {
         // yyyy-MM-dd HH:mm:ss
         private final static DateTimeFormatter DateTime_Default_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -822,6 +823,43 @@ public class OftenUtil {
                 return defaultVal;
             }
             return ls.get(0);
+        }
+    }
+
+    // 基础字段处理
+    public static class BasicUtil{
+        /**
+         * 处理字段null
+         *
+         * @param t
+         * @param defaultVal
+         * @param <T>
+         * @return
+         */
+        public static <T> T procFieldNull(T t, T defaultVal) {
+            if (t == null) {
+                return defaultVal;
+            }
+
+            if (t instanceof String) {
+                return (T)procFieldEmpty((String) t, (String) defaultVal);
+            }
+
+            return t;
+        }
+
+        /**
+         * 处理字符串，为空时返回默认值，其他时去空格
+         *
+         * @param str
+         * @param defaultVal
+         * @return
+         */
+        public static String procFieldEmpty(String str, String defaultVal) {
+            if (StringUtils.isBlank(str)) {
+                return defaultVal;
+            }
+            return str.trim();
         }
     }
 
