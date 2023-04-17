@@ -14,6 +14,9 @@ import com.hxx.sbcommon.common.basic.langType.impl.ListTypeHandler;
 import com.hxx.sbcommon.common.basic.text.StringUtil;
 import com.hxx.sbcommon.common.hardware.NetUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.other.pageSeparate.GeneralPageable;
+import com.hxx.sbcommon.common.other.pageSeparate.PageSeparate;
+import com.hxx.sbcommon.common.other.pageSeparate.Pageable;
 import com.hxx.sbcommon.common.reflect.BeanInfoUtil;
 import com.hxx.sbcommon.common.reflect.CopyObjUtil;
 import com.hxx.sbcommon.common.reflect.MethodSignature;
@@ -38,11 +41,22 @@ import java.util.stream.Collectors;
 @Service
 public class DemoService {
     public static void demo() throws Exception {
+        System.out.println("PageSeparate==================================================");
+        {
+            Pageable page = new GeneralPageable(1, 10);
+            PageSeparate pageSeparate = new PageSeparate.MySQLPageSeparate(page);
+            String pageSql = pageSeparate.getPageSql("select * from demo");
+            System.out.println(pageSql);
+        }
         System.out.println("System==================================================");
         {
             String item = null;
             String s = OftenUtil.BasicUtil.procFieldNull(item, "");
             System.out.println(s);
+
+            String clsFullName="java.util.List";
+            Class<?> cls = Class.forName(clsFullName);
+            System.out.println(cls);
         }
         System.out.println("OftenUtil==================================================");
         {
