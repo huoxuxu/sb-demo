@@ -7,6 +7,7 @@ import com.hxx.sbConsole.model.Dog;
 import com.hxx.sbConsole.model.User;
 import com.hxx.sbConsole.model.enums.LinePatternEnum;
 import com.hxx.sbConsole.service.impl.HttpTxtParser;
+import com.hxx.sbConsole.service.impl.demo.reflect.PojoUtilsDemoService;
 import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandlerFactory;
@@ -43,6 +44,10 @@ public class DemoService {
     public static void demo() throws Exception {
         System.out.println("PageSeparate==================================================");
         {
+
+        }
+        System.out.println("PageSeparate==================================================");
+        {
             Pageable page = new GeneralPageable(1, 10);
             PageSeparate pageSeparate = new PageSeparate.MySQLPageSeparate(page);
             String pageSql = pageSeparate.getPageSql("select * from demo");
@@ -54,9 +59,30 @@ public class DemoService {
             String s = OftenUtil.BasicUtil.procFieldNull(item, "");
             System.out.println(s);
 
-            String clsFullName="java.util.List";
-            Class<?> cls = Class.forName(clsFullName);
-            System.out.println(cls);
+            {
+                String clsFullName="java.util.List";
+                Class<?> cls = Class.forName(clsFullName);
+                System.out.println(cls);
+                if (Collection.class.isAssignableFrom(cls)) {
+                    System.out.println("true");
+                }
+            }
+            {
+                String clsFullName="java.util.Map";
+                Class<?> cls = Class.forName(clsFullName);
+                System.out.println(cls);
+                if (!Collection.class.isAssignableFrom(cls)) {
+                    System.out.println("true");
+                }
+                if (Map.class.isAssignableFrom(cls)) {
+                    System.out.println("true");
+                }
+
+                Map<String,Integer> map=new HashMap<>();
+                map.put("HH1",1);
+                map.put("HH2",2);
+                System.out.println(JsonUtil.toJSON(map));
+            }
         }
         System.out.println("OftenUtil==================================================");
         {
