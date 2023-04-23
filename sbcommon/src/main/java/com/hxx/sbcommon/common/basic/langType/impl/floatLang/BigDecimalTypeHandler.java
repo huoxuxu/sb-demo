@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.basic.langType.impl;
+package com.hxx.sbcommon.common.basic.langType.impl.floatLang;
 
 
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
@@ -16,19 +16,12 @@ public class BigDecimalTypeHandler implements LangTypeHandler<BigDecimal> {
      * @return
      */
     @Override
-    public BigDecimal convert(Object val) {
+    public BigDecimal change(Object val) {
         if (val == null) {
             return null;
         }
-        if (val instanceof BigDecimal) {
-            return (BigDecimal) val;
-        }
 
-        if (val instanceof String) {
-            return new BigDecimal((String) val);
-        }
-
-        // 如果是整型、长整型、短整型
+        // 整型
         if (val instanceof Byte) {
             return BigDecimal.valueOf((Byte) val);
         }
@@ -48,6 +41,19 @@ public class BigDecimalTypeHandler implements LangTypeHandler<BigDecimal> {
         }
         if (val instanceof Double) {
             return BigDecimal.valueOf((Double) val);
+        }
+        if (val instanceof BigDecimal) {
+            return (BigDecimal) val;
+        }
+
+        // 布尔型
+        if (val instanceof Boolean) {
+            return ((Boolean) val) ? BigDecimal.ONE : BigDecimal.ZERO;
+        }
+
+        // 字符串
+        if (val instanceof String) {
+            return new BigDecimal((String) val);
         }
 
         throw new IllegalArgumentException("转换类型失败，提供值：" + val);

@@ -7,11 +7,9 @@ import com.hxx.sbConsole.model.Dog;
 import com.hxx.sbConsole.model.User;
 import com.hxx.sbConsole.model.enums.LinePatternEnum;
 import com.hxx.sbConsole.service.impl.HttpTxtParser;
-import com.hxx.sbConsole.service.impl.demo.reflect.PojoUtilsDemoService;
 import com.hxx.sbcommon.common.basic.OftenUtil;
-import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandlerFactory;
-import com.hxx.sbcommon.common.basic.langType.impl.ListTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.impl.listLang.ListTypeHandler;
 import com.hxx.sbcommon.common.basic.text.StringUtil;
 import com.hxx.sbcommon.common.hardware.NetUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
@@ -337,19 +335,19 @@ public class DemoService {
                 {
                     // [1,2,3]
                     int[] arr = {1, 2, 3};
-                    List<?> ls = lt.convert(arr);
+                    List<?> ls = lt.change(arr);
                     System.out.println(ls);
                 }
                 {
                     // [1,2,3]
                     Integer[] arr = {1, 2, 3};
-                    List<?> ls = lt.convert(arr);
+                    List<?> ls = lt.change(arr);
                     System.out.println(ls);
                 }
                 {
                     // [1,2,3]
                     List<Integer> arr = new ArrayList<>(Arrays.asList(1, 2, 3));
-                    List<?> ls = lt.convert(arr);
+                    List<?> ls = lt.change(arr);
                     System.out.println(ls);
                 }
                 {

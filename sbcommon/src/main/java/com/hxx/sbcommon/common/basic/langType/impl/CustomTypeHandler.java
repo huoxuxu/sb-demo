@@ -22,7 +22,7 @@ public class CustomTypeHandler implements LangTypeHandler<Object> {
      * @return
      */
     @Override
-    public Object convert(Object val) {
+    public Object change(Object val) {
         if (val == null) {
             return null;
         }

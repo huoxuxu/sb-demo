@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.basic.langType.impl;
+package com.hxx.sbcommon.common.basic.langType.impl.floatLang;
 
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
 
@@ -15,19 +15,12 @@ public class DoubleTypeHandler implements LangTypeHandler<Double> {
      * @return
      */
     @Override
-    public Double convert(Object val) {
+    public Double change(Object val) {
         if (val == null) {
             return null;
         }
-        if (val instanceof Double) {
-            return (Double) val;
-        }
 
-        if (val instanceof String) {
-            return Double.parseDouble((String) val);
-        }
-
-        // 如果是整型、长整型、短整型
+        // 整型
         if (val instanceof Byte) {
             return ((Byte) val).doubleValue();
         }
@@ -45,8 +38,21 @@ public class DoubleTypeHandler implements LangTypeHandler<Double> {
         if (val instanceof Float) {
             return ((Float) val).doubleValue();
         }
+        if (val instanceof Double) {
+            return (Double) val;
+        }
         if (val instanceof BigDecimal) {
             return ((BigDecimal) val).doubleValue();
+        }
+
+        // 布尔型
+        if (val instanceof Boolean) {
+            return ((Boolean) val) ? 1D : 0;
+        }
+
+        // 字符串
+        if (val instanceof String) {
+            return Double.parseDouble((String) val);
         }
 
         throw new IllegalArgumentException("转换类型失败，提供值：" + val);

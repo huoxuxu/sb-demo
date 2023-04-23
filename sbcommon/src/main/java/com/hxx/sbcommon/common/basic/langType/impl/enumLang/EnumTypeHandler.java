@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.basic.langType.impl;
+package com.hxx.sbcommon.common.basic.langType.impl.enumLang;
 
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
 
@@ -25,7 +25,7 @@ public class EnumTypeHandler<E extends Enum<E>> implements LangTypeHandler<E> {
      * @return
      */
     @Override
-    public E convert(Object val) {
+    public E change(Object val) {
         if (val == null) {
             return null;
         }

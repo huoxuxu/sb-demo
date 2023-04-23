@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.basic.langType.impl;
+package com.hxx.sbcommon.common.basic.langType.impl.dateTimeLang;
 
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class DateTypeHandler implements LangTypeHandler<Date> {
      * @return
      */
     @Override
-    public Date convert(Object val) {
+    public Date change(Object val) {
         if (val == null) {
             return null;
         }

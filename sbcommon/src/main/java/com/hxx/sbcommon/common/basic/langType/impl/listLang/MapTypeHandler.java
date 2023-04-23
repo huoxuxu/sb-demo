@@ -1,10 +1,9 @@
-package com.hxx.sbcommon.common.basic.langType.impl;
+package com.hxx.sbcommon.common.basic.langType.impl.listLang;
 
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -18,7 +17,7 @@ public class MapTypeHandler implements LangTypeHandler<Map<?, ?>> {
      * @return
      */
     @Override
-    public Map<?, ?> convert(Object val) {
+    public Map<?, ?> change(Object val) {
         if (val == null) {
             return null;
         }

@@ -1,6 +1,20 @@
 package com.hxx.sbcommon.common.basic.langType;
 
 import com.hxx.sbcommon.common.basic.langType.impl.*;
+import com.hxx.sbcommon.common.basic.langType.impl.booleanLang.BooleanTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.impl.dateTimeLang.DateTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.impl.dateTimeLang.LocalDateTimeTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.impl.dateTimeLang.LocalDateTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.impl.enumLang.EnumTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.impl.floatLang.BigDecimalTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.impl.floatLang.DoubleTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.impl.floatLang.FloatTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.impl.integerLang.ByteTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.impl.integerLang.IntegerTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.impl.integerLang.LongTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.impl.integerLang.ShortTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.impl.listLang.MapTypeHandler;
+import com.hxx.sbcommon.common.basic.langType.impl.stringLang.StringTypeHandler;
 import org.apache.ibatis.type.TypeException;
 
 import java.lang.reflect.Constructor;
@@ -133,7 +147,7 @@ public class LangTypeHandlerFactory {
             }
         }
 
-        return handler.convert(obj);
+        return handler.change(obj);
     }
 
 }
