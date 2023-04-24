@@ -5,11 +5,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.hxx.sbConsole.commons.jwt.JWTUtil;
 import com.hxx.sbConsole.model.Dog;
 import com.hxx.sbConsole.model.User;
-import com.hxx.sbConsole.model.enums.LinePatternEnum;
 import com.hxx.sbConsole.service.impl.HttpTxtParser;
+import com.hxx.sbConsole.service.impl.demo.basic.TypeHandlerDemoService;
 import com.hxx.sbcommon.common.basic.OftenUtil;
-import com.hxx.sbcommon.common.basic.langType.LangTypeHandlerFactory;
-import com.hxx.sbcommon.common.basic.langType.impl.listLang.ListTypeHandler;
 import com.hxx.sbcommon.common.basic.text.StringUtil;
 import com.hxx.sbcommon.common.hardware.NetUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
@@ -58,7 +56,7 @@ public class DemoService {
             System.out.println(s);
 
             {
-                String clsFullName="java.util.List";
+                String clsFullName = "java.util.List";
                 Class<?> cls = Class.forName(clsFullName);
                 System.out.println(cls);
                 if (Collection.class.isAssignableFrom(cls)) {
@@ -66,7 +64,7 @@ public class DemoService {
                 }
             }
             {
-                String clsFullName="java.util.Map";
+                String clsFullName = "java.util.Map";
                 Class<?> cls = Class.forName(clsFullName);
                 System.out.println(cls);
                 if (!Collection.class.isAssignableFrom(cls)) {
@@ -76,9 +74,9 @@ public class DemoService {
                     System.out.println("true");
                 }
 
-                Map<String,Integer> map=new HashMap<>();
-                map.put("HH1",1);
-                map.put("HH2",2);
+                Map<String, Integer> map = new HashMap<>();
+                map.put("HH1", 1);
+                map.put("HH2", 2);
                 System.out.println(JsonUtil.toJSON(map));
             }
         }
@@ -304,91 +302,7 @@ public class DemoService {
             }
         }
         System.out.println("==================================================");
-        // LangTypeHandlerFactory
         {
-            // HashMap
-            {
-                {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("1", "11");
-                    map.put("2", 22);
-                    Object result = LangTypeHandlerFactory.convert(map, Map.class);
-                    System.out.println(result);
-                }
-                {
-                    HashMap<String, Object> map = new HashMap<>();
-                    map.put("1", "11");
-                    map.put("2", 22);
-                    Object result = LangTypeHandlerFactory.convert(map, Map.class);
-                    System.out.println(result);
-                }
-                {
-                    String json = "{\"code\":\"11\",\"name\":22}";
-                    Object result = LangTypeHandlerFactory.convert(json, Map.class);
-                    System.out.println(result);
-                }
-            }
-            System.out.println("==================================================");
-            // List
-            {
-                ListTypeHandler lt = new ListTypeHandler();
-                {
-                    // [1,2,3]
-                    int[] arr = {1, 2, 3};
-                    List<?> ls = lt.change(arr);
-                    System.out.println(ls);
-                }
-                {
-                    // [1,2,3]
-                    Integer[] arr = {1, 2, 3};
-                    List<?> ls = lt.change(arr);
-                    System.out.println(ls);
-                }
-                {
-                    // [1,2,3]
-                    List<Integer> arr = new ArrayList<>(Arrays.asList(1, 2, 3));
-                    List<?> ls = lt.change(arr);
-                    System.out.println(ls);
-                }
-                {
-                    // 暂不支持
-                    // ["code","code1"]
-//                    String json = "[\"code\",\"code1\"]";
-//                    List<?> ls = lt.convert(json);
-//                    System.out.println(ls);
-                }
-            }
-            System.out.println("==================================================");
-            // 枚举
-            {
-                Class<LinePatternEnum> enumCls = LinePatternEnum.class;
-                LinePatternEnum linePatternEnum = LinePatternEnum.BIG;
-                {
-                    // 测试同类型
-                    LinePatternEnum eval = (LinePatternEnum) LangTypeHandlerFactory.convert(linePatternEnum, enumCls);
-                    System.out.println(eval);
-                }
-                {
-                    // 测试字符串
-                    LinePatternEnum eval = (LinePatternEnum) LangTypeHandlerFactory.convert("BIG", enumCls);
-                    System.out.println(eval);
-                }
-                {
-                    // 测试字符串  不通过
-//                    LinePatternEnum eval = (LinePatternEnum) LangTypeHandlerFactory.convert("big", enumCls);
-//                    System.out.println(eval);
-                }
-                {
-                    // 测试 指定枚举索引位
-                    LinePatternEnum eval = (LinePatternEnum) LangTypeHandlerFactory.convert(1, enumCls);
-                    System.out.println(eval);
-                }
-                {
-                    // 测试  指定枚举索引位
-                    LinePatternEnum eval = (LinePatternEnum) LangTypeHandlerFactory.convert(0L, enumCls);
-                    System.out.println(eval);
-                }
-            }
             System.out.println("==================================================");
             // HttpTxtParser
             {

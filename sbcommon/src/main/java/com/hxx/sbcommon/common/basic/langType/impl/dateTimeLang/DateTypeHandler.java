@@ -8,15 +8,35 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
+ * 支持：long、String、LocalDateTime、LocalDate
+ *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2022-10-27 10:53:05
  **/
 @Slf4j
 public class DateTypeHandler implements LangTypeHandler<Date> {
+    private SimpleDateFormat dateTimeFormatter;
+
+    /**
+     * 默认 yyyy-MM-dd HH:mm:ss
+     */
+    public DateTypeHandler() {
+        String defaultPattern = "yyyy-MM-dd HH:mm:ss";
+        dateTimeFormatter = new SimpleDateFormat(defaultPattern);
+    }
+
+    /**
+     * @param pattern yyyy-MM-dd HH:mm:ss
+     */
+    public DateTypeHandler(String pattern) {
+        dateTimeFormatter = new SimpleDateFormat(pattern);
+    }
+
     /**
      * @param val 待转型的值
      * @return
@@ -31,9 +51,8 @@ public class DateTypeHandler implements LangTypeHandler<Date> {
         }
 
         if (val instanceof String) {
-            SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
-                return format1.parse((String) val);
+                return dateTimeFormatter.parse((String) val);
             } catch (Exception e) {
                 log.error("出现异常：{}", ExceptionUtils.getStackTrace(e));
                 throw new IllegalArgumentException("转换类型失败，提供值：" + val);

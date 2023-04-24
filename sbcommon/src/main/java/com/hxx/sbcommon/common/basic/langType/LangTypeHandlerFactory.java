@@ -1,6 +1,5 @@
 package com.hxx.sbcommon.common.basic.langType;
 
-import com.hxx.sbcommon.common.basic.langType.impl.*;
 import com.hxx.sbcommon.common.basic.langType.impl.booleanLang.BooleanTypeHandler;
 import com.hxx.sbcommon.common.basic.langType.impl.dateTimeLang.DateTypeHandler;
 import com.hxx.sbcommon.common.basic.langType.impl.dateTimeLang.LocalDateTimeTypeHandler;
@@ -13,7 +12,6 @@ import com.hxx.sbcommon.common.basic.langType.impl.integerLang.ByteTypeHandler;
 import com.hxx.sbcommon.common.basic.langType.impl.integerLang.IntegerTypeHandler;
 import com.hxx.sbcommon.common.basic.langType.impl.integerLang.LongTypeHandler;
 import com.hxx.sbcommon.common.basic.langType.impl.integerLang.ShortTypeHandler;
-import com.hxx.sbcommon.common.basic.langType.impl.listLang.MapTypeHandler;
 import com.hxx.sbcommon.common.basic.langType.impl.stringLang.StringTypeHandler;
 import org.apache.ibatis.type.TypeException;
 
@@ -32,31 +30,27 @@ import java.util.Map;
  **/
 public class LangTypeHandlerFactory {
     private static final Map<Class<?>, LangTypeHandler<?>> typeHandlerMap = new HashMap<>();
-    // 自定义类型处理
-    private static final Class<?> customTypeHandlerCls = CustomTypeHandler.class;
-    // 枚举处理
+    // 枚举
     private static final Class<?> defaultEnumTypeHandler = EnumTypeHandler.class;
 
     static {
+        // 字符串
         typeHandlerMap.put(String.class, new StringTypeHandler());
-
+        // 布尔型
         typeHandlerMap.put(Boolean.class, new BooleanTypeHandler());
+        // 整型
         typeHandlerMap.put(Byte.class, new ByteTypeHandler());
-
-        typeHandlerMap.put(Float.class, new FloatTypeHandler());
-        typeHandlerMap.put(Double.class, new DoubleTypeHandler());
-        typeHandlerMap.put(BigDecimal.class, new BigDecimalTypeHandler());
-
         typeHandlerMap.put(Short.class, new ShortTypeHandler());
         typeHandlerMap.put(Integer.class, new IntegerTypeHandler());
         typeHandlerMap.put(Long.class, new LongTypeHandler());
-
+        // 浮点型
+        typeHandlerMap.put(Float.class, new FloatTypeHandler());
+        typeHandlerMap.put(Double.class, new DoubleTypeHandler());
+        typeHandlerMap.put(BigDecimal.class, new BigDecimalTypeHandler());
+        // 日期
         typeHandlerMap.put(Date.class, new DateTypeHandler());
         typeHandlerMap.put(LocalDateTime.class, new LocalDateTimeTypeHandler());
         typeHandlerMap.put(LocalDate.class, new LocalDateTypeHandler());
-
-        typeHandlerMap.put(Map.class, new MapTypeHandler());
-        typeHandlerMap.put(HashMap.class, new MapTypeHandler());
     }
 
     /**
@@ -71,15 +65,6 @@ public class LangTypeHandlerFactory {
     }
 
     /**
-     * 获取自定义类型处理器
-     *
-     * @return
-     */
-    public static Class<?> getCustomTypeHandlerCls() {
-        return customTypeHandlerCls;
-    }
-
-    /**
      * 获取枚举类型处理器
      *
      * @return
@@ -89,7 +74,29 @@ public class LangTypeHandlerFactory {
     }
 
     /**
-     * 获取类型处理器的实例
+     * 注册类型处理器,
+     * 已注册的不会重复注册
+     *
+     * @param newTypeCls     类型
+     * @param newTypeHandler 对应的类型处理器
+     */
+    public static void RegisterTypeHandler(Class newTypeCls, LangTypeHandler newTypeHandler) {
+        if (typeHandlerMap.containsKey(newTypeCls)) return;
+
+        typeHandlerMap.put(newTypeCls, newTypeHandler);
+    }
+
+    /**
+     * 取消注册类型处理器
+     *
+     * @param newTypeCls
+     */
+    public static void UnregisterTypeHandler(Class newTypeCls) {
+        typeHandlerMap.remove(newTypeCls);
+    }
+
+    /**
+     * 重新构造类型处理器的实例
      *
      * @param typeHandlerClass
      * @param ctorParams
@@ -105,6 +112,7 @@ public class LangTypeHandlerFactory {
             ctorParamTypes[i] = ctorParams[i].getClass();
         }
 
+        // 带参构造
         if (ctorParamTypes.length > 0) {
             try {
                 Constructor<?> c = typeHandlerClass.getConstructor(ctorParamTypes);
@@ -114,6 +122,7 @@ public class LangTypeHandlerFactory {
             }
         }
 
+        // 无参构造
         try {
             Constructor<?> c = typeHandlerClass.getConstructor();
             return (LangTypeHandler) c.newInstance();
@@ -126,7 +135,7 @@ public class LangTypeHandlerFactory {
      * 将obj转为指定类型
      *
      * @param obj
-     * @param tarCls
+     * @param tarCls 待转换为的类型
      * @return
      */
     public static Object convert(Object obj, Class<?> tarCls) {
@@ -142,8 +151,7 @@ public class LangTypeHandlerFactory {
                 Class<?> enumTypeHandler = LangTypeHandlerFactory.getDefaultEnumTypeHandler();
                 handler = LangTypeHandlerFactory.getInstance(enumTypeHandler, tarCls);
             } else {
-                Class<?> customTypeHandler = LangTypeHandlerFactory.getCustomTypeHandlerCls();
-                handler = LangTypeHandlerFactory.getInstance(customTypeHandler, tarCls);
+                throw new IllegalArgumentException("未找到对应的类型处理器！" + tarCls.getName());
             }
         }
 

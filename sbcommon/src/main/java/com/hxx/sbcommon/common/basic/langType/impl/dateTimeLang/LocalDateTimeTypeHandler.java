@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
+ * 支持long、String、Date、LocalDate、LocalDateTime
  * @Author: huoxuxu
  * @Description:
  * @Date: 2022-10-27 11:02:11

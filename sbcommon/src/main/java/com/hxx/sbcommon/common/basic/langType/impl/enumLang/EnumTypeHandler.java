@@ -3,16 +3,17 @@ package com.hxx.sbcommon.common.basic.langType.impl.enumLang;
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
 
 /**
- * 枚举转换，支持传入：枚举名称、同类型枚举、枚举索引
+ * 枚举转换，
+ * 支持传入：同类型枚举、枚举名称、枚举索引
  *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2022-10-31 16:29:52
  **/
-public class EnumTypeHandler<E extends Enum<E>> implements LangTypeHandler<E> {
-    private final Class<E> type;
+public class EnumTypeHandler<TEnum extends Enum<TEnum>> implements LangTypeHandler<TEnum> {
+    private final Class<TEnum> type;
 
-    public EnumTypeHandler(Class<E> type) {
+    public EnumTypeHandler(Class<TEnum> type) {
         if (type == null) {
             throw new IllegalArgumentException("Type argument cannot be null");
         }
@@ -25,7 +26,7 @@ public class EnumTypeHandler<E extends Enum<E>> implements LangTypeHandler<E> {
      * @return
      */
     @Override
-    public E change(Object val) {
+    public TEnum change(Object val) {
         if (val == null) {
             return null;
         }
@@ -36,26 +37,26 @@ public class EnumTypeHandler<E extends Enum<E>> implements LangTypeHandler<E> {
 
         Class<?> valCls = val.getClass();
         if (this.type == valCls) {
-            return (E) val;
+            return (TEnum) val;
         }
 
-        Integer ind = null;
+        Integer intVal = null;
         if (val instanceof Short) {
-            ind = ((Short) val).intValue();
-        }
-        if (val instanceof Long) {
-            ind = ((Long) val).intValue();
+            intVal = ((Short) val).intValue();
         }
         if (val instanceof Integer) {
-            ind = (Integer) val;
+            intVal = (Integer) val;
+        }
+        if (val instanceof Long) {
+            intVal = ((Long) val).intValue();
         }
 
-        if (ind != null) {
-            E[] enumConstants = this.type.getEnumConstants();
-            if (ind >= enumConstants.length - 1) {
+        if (intVal != null) {
+            TEnum[] enumConstants = this.type.getEnumConstants();
+            if (intVal >= enumConstants.length - 1) {
                 throw new IllegalArgumentException("转换类型失败，提供值的索引：" + val);
             }
-            return enumConstants[ind];
+            return enumConstants[intVal];
         }
 
         throw new IllegalArgumentException("转换类型失败，提供值：" + val);

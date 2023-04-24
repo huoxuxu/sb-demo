@@ -5,3 +5,11 @@
 布尔型：整型（）、浮点型（）、字符串（）
 日期型：整型（）、浮点型（）、字符串（）
 字符串：整型（）、浮点型（）、布尔型（）、日期型（）
+枚举值：同类型枚举、枚举名称、枚举索引
+
+注册自定义类型处理
+com.hxx.sbcommon.common.basic.langType.LangTypeHandlerFactory.RegisterTypeHandler
+取消注册类型处理
+com.hxx.sbcommon.common.basic.langType.LangTypeHandlerFactory.UnregisterTypeHandler
+
+

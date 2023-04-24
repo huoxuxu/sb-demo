@@ -1,7 +1,9 @@
-package com.hxx.sbcommon.common.reflect.demo;
+package com.hxx.sbcommon.common.reflect;
 
 import java.lang.reflect.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,6 +14,22 @@ import java.util.Map;
  * @Date: 2022-08-22 10:57:01
  **/
 public class ReflectUtil {
+
+    private static void procArray(Object val){
+        Class<?> cls = val.getClass();
+        // 判断是否数组
+        if (cls.isArray()) {
+            // 获取数组长度
+            int length = java.lang.reflect.Array.getLength(val);
+            // 获取数组元素类型
+            Class elementType = cls.getComponentType();
+            for (int i = 0; i < length; i++) {
+                Object item = Array.get(val, i);
+                System.out.println(item);
+            }
+        }
+    }
+
     /**
      * 创建数组实例
      *

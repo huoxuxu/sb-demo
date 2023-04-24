@@ -5,6 +5,8 @@ import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
 import java.math.BigDecimal;
 
 /**
+ * 支持 整型、浮点型、布尔型、字符串(忽略大小写的true、false)
+ * 整型、浮点型数据大于0则为true，
  * @Author: huoxuxu
  * @Description:
  * @Date: 2022-10-26 18:07:54
@@ -55,7 +57,6 @@ public class BooleanTypeHandler implements LangTypeHandler<Boolean> {
         if (val instanceof String) {
             return Boolean.parseBoolean((String) val);
         }
-
 
         throw new IllegalArgumentException("转换类型失败，提供值：" + val);
     }
