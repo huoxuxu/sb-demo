@@ -15,6 +15,15 @@ import java.time.LocalDateTime;
  **/
 @Slf4j
 public class DemoBasicService {
+    public static void main(String[] args) {
+        try {
+            demo();
+            System.out.println("ok!");
+        } catch (Exception e) {
+            System.out.println(ExceptionUtils.getStackTrace(e));
+        }
+    }
+
     public static void demo() {
         System.out.println("==================================================");
         {
@@ -31,12 +40,4 @@ public class DemoBasicService {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            demo();
-            System.out.println("ok!");
-        } catch (Exception e) {
-            System.out.println(ExceptionUtils.getStackTrace(e));
-        }
-    }
 }

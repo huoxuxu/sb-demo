@@ -58,14 +58,22 @@ public class TypeHandlerDemoService {
     }
 
     private static void unregisterHandlerCase() {
-        LangTypeHandlerFactory.UnregisterTypeHandler(KV.class);
-        DemoCls demoCls = new DemoCls();
         {
-            demoCls.setId(989);
-            demoCls.setName("刘德华");
+            LangTypeHandlerFactory.UnregisterTypeHandler(Integer.class);
+
+            Object val = LangTypeHandlerFactory.convert("1", Integer.class);
+            System.out.println("DemoCls =>KV: " + JsonUtil.toJSON(val) + " type: " + val.getClass());
         }
-        Object val = LangTypeHandlerFactory.convert(demoCls, KV.class);
-        System.out.println("DemoCls =>KV: " + JsonUtil.toJSON(val) + " type: " + val.getClass());
+        {
+            LangTypeHandlerFactory.UnregisterTypeHandler(KV.class);
+            DemoCls demoCls = new DemoCls();
+            {
+                demoCls.setId(989);
+                demoCls.setName("刘德华");
+            }
+            Object val = LangTypeHandlerFactory.convert(demoCls, KV.class);
+            System.out.println("DemoCls =>KV: " + JsonUtil.toJSON(val) + " type: " + val.getClass());
+        }
     }
 
     private static void registerHandlerCase() {
