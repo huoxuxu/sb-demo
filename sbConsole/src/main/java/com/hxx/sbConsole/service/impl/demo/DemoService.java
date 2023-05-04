@@ -37,10 +37,26 @@ import java.util.stream.Collectors;
  **/
 @Service
 public class DemoService {
-    public static void demo() throws Exception {
-        System.out.println("PageSeparate==================================================");
-        {
+    public static void main(String[] args) {
+        try {
+            demo();
+            System.out.println("ok!");
+        } catch (Exception e) {
+            System.out.println(ExceptionUtils.getStackTrace(e));
+        }
+    }
 
+    public static void demo() throws Exception {
+        System.out.println("BasicType==================================================");
+        {
+            {
+                // 32位单精度浮点数的有效位数是7位。
+                // 64位双精度浮点数的有效位数是16位。
+                Float dVal = 123456789.12345678F;
+                System.out.println(dVal);
+                dVal = 0.123456789F;
+                System.out.println(dVal);
+            }
         }
         System.out.println("PageSeparate==================================================");
         {
@@ -333,12 +349,4 @@ public class DemoService {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            demo();
-            System.out.println("ok!");
-        } catch (Exception e) {
-            System.out.println(ExceptionUtils.getStackTrace(e));
-        }
-    }
 }
