@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -22,7 +23,7 @@ public class BeanUtilsTest {
     @Test
     public void copyProperties() {
         System.out.println("==============test==============");
-        Employee src = new Employee(1, "hxx", Employee.Gender.FEMALE, LocalDate.now(), 98, true, new Date());
+        Employee src = new Employee(1, "hxx", Employee.Gender.FEMALE, 18, 98, true, new Date(), BigDecimal.ZERO);
         Employee tar = new Employee();
 
         BeanUtils.copyProperties(src, tar);

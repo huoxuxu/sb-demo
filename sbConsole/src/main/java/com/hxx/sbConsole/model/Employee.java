@@ -11,15 +11,27 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 public class Employee {
-    public Employee(int id, String jake, Gender male,
-                    LocalDate of, double v, boolean b, Date toDate) {
-        id = id;
-        name = jake;
-        gender = male;
-        createTime = of;
-        income = v;
-        alive = b;
-        birthday = toDate;
+    private long id;
+    private String name;
+    private Gender gender;
+    private int age;
+    private double income;
+    private boolean alive;
+    private Date birthday;
+    private BigDecimal salary;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private LocalDate createTime;
+
+    public Employee(int id, String name, Gender male, int age, double income, boolean alive, Date birthday, BigDecimal salary) {
+        this.id = id;
+        this.name = name;
+        this.gender = male;
+        this.age = age;
+        this.income = income;
+        this.alive = alive;
+        this.birthday = birthday;
+        this.salary = salary;
+        this.createTime = LocalDate.now();
     }
 
     public static enum Gender {
@@ -30,17 +42,6 @@ public class Employee {
 
     }
 
-    private long id;
-    private String name;
-    private Gender gender;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDate createTime;
-    private int age;
-    private double income;
-    private boolean alive;
-    private Date birthday;
-    private BigDecimal salary;
-
     public boolean isMale() {
         return this.gender == Gender.MALE;
     }
@@ -49,4 +50,7 @@ public class Employee {
         return this.gender == Gender.FEMALE;
     }
 
+    public String getUK() {
+        return gender + "-" + age;
+    }
 }

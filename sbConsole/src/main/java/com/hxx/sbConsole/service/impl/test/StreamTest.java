@@ -13,6 +13,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -159,16 +160,22 @@ public class StreamTest {
      * 分组的字段不能为null
      */
     public static void Group() {
-        List<Employee> data = listPersons();
-        // 多字段分组
+        List<Employee> ls = listPersons();
+        // 多字段组合分组（单层）
+        {
+            Map<String, List<Employee>> map = ls.stream()
+                    .collect(Collectors.groupingBy(Employee::getUK));
+            map.forEach((k, v) -> System.out.println(k + " : " + JsonUtil.toJSON(v)));
+        }
+        // 多字段分组（多层）
         {
             // 按名称和年龄分组
-            Map<String, Map<Integer, List<Employee>>> gyMap = data.stream()
+            Map<String, Map<Integer, List<Employee>>> gyMap = ls.stream()
                     .collect(Collectors.groupingBy(Employee::getName, Collectors.groupingBy(Employee::getAge)));
             System.out.println(gyMap);
         }
         {
-            Map<Employee.Gender, Long> countByGender = data.stream()
+            Map<Employee.Gender, Long> countByGender = ls.stream()
                     .collect(Collectors.groupingBy(Employee::getGender, Collectors.counting()));
             System.out.println(countByGender);
         }
@@ -191,7 +198,7 @@ public class StreamTest {
             System.out.println(personsByGenderAndDobMonth);
         }
         {
-            Map<Employee.Gender, DoubleSummaryStatistics> incomeStatsByGender = listPersons().stream()//from  w  w  w . ja  v a 2  s  .c om
+            Map<Employee.Gender, DoubleSummaryStatistics> incomeStatsByGender = listPersons().stream()
                     .collect(Collectors.groupingBy(Employee::getGender, Collectors.summarizingDouble(Employee::getIncome)));
 
             System.out.println(incomeStatsByGender);
@@ -428,6 +435,7 @@ public class StreamTest {
                     .map(Employee::getName)
                     .forEach(System.out::println);
         }
+        // flatMap
         {
             Stream.of(1, 2, 3)
                     .flatMap(n -> Stream.of(n, n + 1))
@@ -441,8 +449,8 @@ public class StreamTest {
         }
         {
             Stream.of("XML", "Java", "CSS")
-                    .flatMap(name -> IntStream.range(0, name.length())
-                            .mapToObj(name::charAt))
+                    .flatMap(d -> IntStream.range(0, d.length())
+                            .mapToObj(d::charAt))
                     .forEach(System.out::println);
         }
     }
@@ -754,7 +762,6 @@ public class StreamTest {
         }
     }
 
-
     public void Parallel() {
         {
             String names = listPersons().stream()
@@ -783,6 +790,16 @@ public class StreamTest {
         }
     }
 
+    // 常用于调试
+    public static void Peek() {
+        List<Employee> ls = listPersons();
+        List<Employee> data = ls.stream()
+                .filter(d -> d.getIncome() > 2000)
+                .peek(d -> System.out.println(JsonUtil.toJSON(d)))
+                .collect(Collectors.toList());
+        System.out.println(data);
+    }
+
     static int i = 0;
 
     private static int next() {
@@ -791,9 +808,26 @@ public class StreamTest {
     }
 
     public static List<Employee> listPersons() {
-        String json = "[" + "{\"age\":18,\"alive\":true,\"birthday\":32468640000,\"createTime\":\"2021-01-01\",\"female\":false," + "\"gender\":\"MALE\",\"id\":0,\"income\":2343.0,\"male\":true,\"name\":\"Jake\",\"salary\":89}," + "{\"age\":19,\"alive\":true,\"birthday\":31604640000,\"createTime\":\"1972-07-21\",\"female\":false," + "\"gender\":\"MALE\",\"id\":0,\"income\":7100.0,\"male\":true,\"name\":\"Jack\",\"salary\":88}," + "{\"age\":18,\"alive\":true,\"birthday\":31691040000,\"createTime\":\"1973-05-29\",\"female\":true," + "\"gender\":\"FEMALE\",\"id\":0,\"income\":5455.0,\"male\":false,\"name\":\"Jane\",\"salary\":78}," + "{\"age\":23,\"alive\":true,\"birthday\":31518240000,\"createTime\":\"1974-10-16\",\"female\":false," + "\"gender\":\"MALE\",\"id\":0,\"income\":1800.0,\"male\":true,\"name\":\"Jode\",\"salary\":88}," + "{\"age\":32,\"alive\":true,\"birthday\":31950240000,\"createTime\":\"1975-12-13\",\"female\":true," + "\"gender\":\"FEMALE\",\"id\":0,\"income\":1234.0,\"male\":false,\"name\":\"Jeny\",\"salary\":100}," + "{\"age\":35,\"alive\":true,\"birthday\":31604640000,\"createTime\":\"1976-06-09\",\"female\":false," + "\"gender\":\"MALE\",\"id\":0,\"income\":3211.0,\"male\":true,\"name\":\"Jason\",\"salary\":96}" + "]";
+        List<Employee> ls = new ArrayList<>();
 
-        List<Employee> ls = JsonUtil.parseArray(json, Employee.class);
+        Employee.Gender male = Employee.Gender.MALE;
+        Employee.Gender female = Employee.Gender.FEMALE;
+        {
+            Employee emp = new Employee(1, "jake", male, 18, 3120, true, new Date(), new BigDecimal("89.5"));
+            ls.add(emp);
+        }
+        {
+            Employee emp = new Employee(2, "rose", female, 22, 2800, true, new Date(), new BigDecimal("88.0"));
+            ls.add(emp);
+        }
+        {
+            Employee emp = new Employee(3, "jade", male, 56, 7800, true, new Date(), new BigDecimal("99.5"));
+            ls.add(emp);
+        }
+        {
+            Employee emp = new Employee(4, "loki", male, 18, 4200, true, new Date(), new BigDecimal("100.0"));
+            ls.add(emp);
+        }
         return ls;
     }
 

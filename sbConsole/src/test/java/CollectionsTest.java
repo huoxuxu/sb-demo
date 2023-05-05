@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,16 +26,18 @@ public class CollectionsTest {
     public void sort_LocalDate() {
         List<Employee> data = new ArrayList<>();
         {
-            Employee emp = new Employee(0, "name1", Employee.Gender.FEMALE, LocalDate.now(), 98.7, true, new Date());
+            Employee emp = new Employee(0, "name1", Employee.Gender.FEMALE, 22, 98.7, true, new Date(),
+                    BigDecimal.ZERO);
             data.add(emp);
         }
         {
-            Employee emp = new Employee(0, "name1", Employee.Gender.FEMALE, LocalDate.MIN, 98.7, true, new Date());
+            Employee emp = new Employee(0, "name1", Employee.Gender.FEMALE, 56, 98.7, true, new Date(), BigDecimal.ONE);
             data.add(emp);
         }
         data.sort(Comparator.comparing(Employee::getCreateTime));
 
-        data.stream().forEach(d -> System.out.println(d.getCreateTime()));
+        data.stream()
+                .forEach(d -> System.out.println(d.getCreateTime()));
     }
 
     @Test
@@ -51,7 +54,8 @@ public class CollectionsTest {
             int toIndex = i + batch >= tls.size() ? tls.size() : i + batch;
             List<String> data = tls.subList(i, toIndex);
 
-            data.stream().forEach(d -> System.out.print(d));
+            data.stream()
+                    .forEach(d -> System.out.print(d));
             System.out.println();
         }
     }
