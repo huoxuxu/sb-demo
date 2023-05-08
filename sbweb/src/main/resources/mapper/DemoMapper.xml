@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hxx.sbweb.mapper.DemoMapper">
+    <!--描述数据库结果集和对象的对应关系-->
+    <resultMap id="BaseResultMap" type="com.hxx.sbweb.domain.Demo">
+        <!--主键-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <!--简单属性-->
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="age" jdbcType="INTEGER" property="age"/>
+        <result column="score" jdbcType="DECIMAL" property="score"/>
+        <result column="birthday" jdbcType="TIMESTAMP" property="birthday"/>
+        <result column="enabled" jdbcType="INTEGER" property="enabled"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+
+    <!--查询-->
+    <select id="selectDemo" resultType="com.hxx.sbweb.domain.Demo" parameterType="com.hxx.sbweb.domain.Demo">
+        SELECT * FROM demo
+        <where>
+            <if test="ids != null and ids.size()>0">
+                and id in
+                <foreach collection="ids" item="item" index="index"
+                         open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test='id != null and id >= 0'>
+                and id = #{id}
+            </if>
+            <if test='code != null and code != ""'>
+                and code = #{code}
+            </if>
+            <if test='name != null and name != ""'>
+                and name = #{name}
+            </if>
+            <if test='age != null and age >= 0'>
+                and age = #{age}
+            </if>
+            <if test='score != null and score >= 0'>
+                and score = #{score}
+            </if>
+            <if test='birthday != null and birthday.getYear() > 1999'>
+                and birthday = #{birthday}
+            </if>
+            <if test='enabled != null and enabled >= 0'>
+                and enabled = #{enabled}
+            </if>
+            <if test='gmtCreate != null and gmtCreate >= 0'>
+                and gmt_create = #{gmtCreate}
+            </if>
+            <if test='gmtModified != null and gmtModified >= 0'>
+                and gmt_modified = #{gmtModified}
+            </if>
+
+        </where>
+    </select>
+
+    <!--更新-->
+    <update id="updateDemo" parameterType="com.hxx.sbweb.domain.Demo">
+        update demo
+        <set>
+
+            <if test='id != null and id >= 0'>id = #{id},</if>
+            <if test='code != null and code != ""'>code = #{code},</if>
+            <if test='name != null and name != ""'>name = #{name},</if>
+            <if test='age != null and age >= 0'>age = #{age},</if>
+            <if test='score != null and score >= 0'>score = #{score},</if>
+            <if test='birthday != null and birthday.getYear() > 1999'>birthday = #{birthday},</if>
+            <if test='enabled != null and enabled >= 0'>enabled = #{enabled},</if>
+            <if test='gmtCreate != null and gmtCreate >= 0'>gmt_create = #{gmtCreate},</if>
+            <if test='gmtModified != null and gmtModified >= 0'>gmt_modified = #{gmtModified},</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="updateM" parameterType="com.hxx.sbweb.domain.Demo">
+        update demo
+        <set>
+
+            id = #{id},
+            code = #{code},
+            name = #{name},
+            age = #{age},
+            score = #{score},
+            birthday = #{birthday},
+            enabled = #{enabled},
+            gmt_create = #{gmtCreate},
+            gmt_modified = #{gmtModified},
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--删除-->
+    <delete id="delDemo">
+        delete
+        from demo
+        where id = #{id}
+    </delete>
+    <!--批量删除-->
+    <delete id="batchDel">
+        delete
+        from zto_package_mix_config
+        where id in
+        <foreach collection="list" item="item" index="index"
+                 open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--新增-->
+    <insert id="insertDemo" parameterType="com.hxx.sbweb.domain.Demo">
+        insert into demo
+        (
+        <trim prefix="" suffixOverrides=",">
+
+            <if test='id != null and id >= 0'>id,</if>
+            <if test='code != null and code != ""'>code,</if>
+            <if test='name != null and name != ""'>name,</if>
+            <if test='age != null and age >= 0'>age,</if>
+            <if test='score != null and score >= 0'>score,</if>
+            <if test='birthday != null and birthday.getYear() > 1999'>birthday,</if>
+            <if test='enabled != null and enabled >= 0'>enabled,</if>
+            <if test='gmtCreate != null and gmtCreate >= 0'>gmt_create,</if>
+            <if test='gmtModified != null and gmtModified >= 0'>gmt_modified,</if>
+        </trim>
+        )
+        values (
+        <trim prefix="" suffixOverrides=",">
+
+            <if test='id != null and id >= 0'>#{id},</if>
+            <if test='code != null and code != ""'>#{code},</if>
+            <if test='name != null and name != ""'>#{name},</if>
+            <if test='age != null and age >= 0'>#{age},</if>
+            <if test='score != null and score >= 0'>#{score},</if>
+            <if test='birthday != null and birthday.getYear() > 1999'>#{birthday},</if>
+            <if test='enabled != null and enabled >= 0'>#{enabled},</if>
+            <if test='gmtCreate != null and gmtCreate >= 0'>#{gmtCreate},</if>
+            <if test='gmtModified != null and gmtModified >= 0'>#{gmtModified},</if>
+        </trim>
+        )
+    </insert>
+
+    <!--新增-->
+    <insert id="insertM" parameterType="com.hxx.sbweb.domain.Demo">
+        insert into demo
+        (
+        <trim prefix="" suffixOverrides=",">
+
+            id,
+            code,
+            name,
+            age,
+            score,
+            birthday,
+            enabled,
+            gmt_create,
+            gmt_modified,
+        </trim>
+        )
+        values (
+        <trim prefix="" suffixOverrides=",">
+
+            #{id},
+            #{code},
+            #{name},
+            #{age},
+            #{score},
+            #{birthday},
+            #{enabled},
+            #{gmtCreate},
+            #{gmtModified},
+        </trim>
+        )
+    </insert>
+
+    <!--批量新增-->
+    <!--int insertBatch(List<MM>list);-->
+    <insert id="insertBatch">
+        insert into demo (
+        <trim prefix="" suffixOverrides=",">
+
+            id,
+            code,
+            name,
+            age,
+            score,
+            birthday,
+            enabled,
+            gmt_create,
+            gmt_modified,
+        </trim>
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            <trim prefix="" suffixOverrides=",">
+
+                #{item.id},
+                #{item.code},
+                #{item.name},
+                #{item.age},
+                #{item.score},
+                #{item.birthday},
+                #{item.enabled},
+                #{item.gmtCreate},
+                #{item.gmtModified},
+            </trim>
+            )
+        </foreach>
+    </insert>
+</mapper>

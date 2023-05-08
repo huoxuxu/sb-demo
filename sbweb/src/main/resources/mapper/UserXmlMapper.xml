@@ -10,49 +10,69 @@
 
     <!-- 查询全部用户-->
     <select id="selectAll" resultType="com.hxx.sbweb.domain.User">
-         SELECT * FROM users
-     </select>
+        SELECT *
+        FROM users
+    </select>
 
     <!-- 根据id查询得到一个user对象 -->
     <select id="selectUserById" parameterType="int"
             resultType="com.hxx.sbweb.domain.User">
-         select * from users where id = #{id}
-     </select>
+        select *
+        from users
+        where id = #{id}
+    </select>
 
     <!-- 根据name查询得到一个user对象 -->
     <select id="selectUser" parameterType="String"
             resultType="com.hxx.sbweb.domain.User">
-         select * from users where name = #{name}
-     </select>
+        select *
+        from users
+        where name = #{name}
+    </select>
 
     <!-- bymap -->
     <select id="selectUserByMap" parameterType="Map"
             resultType="com.hxx.sbweb.domain.User">
-         select * from users limit #{min},#{max}
-     </select>
+        select *
+        from users limit #{min},#{max}
+    </select>
 
     <!-- 查询全部用户及与Teacher的关系，多对一 -->
     <select id="selectAll2" resultMap="mapTeacher">
-        SELECT a.ID ,a.Name ,a.CreateTime,b.ID bid,b.Name bname,b.CreateTime bcreatetime
+        SELECT a.ID, a.Name, a.CreateTime, b.ID bid, b.Name bname, b.CreateTime bcreatetime
         FROM users a
-        inner join teacher b on a.TheTeacher =b.ID
-     </select>
+                 inner join teacher b on a.TheTeacher = b.ID
+    </select>
 
 
     <!-- 创建用户 -->
     <insert id="addUser" parameterType="com.hxx.sbweb.domain.User">
-         insert into users (id,name,createTime) values (#{id},#{name},#{createTime})
-     </insert>
+        insert into users (id, name, createTime)
+        values (#{id}, #{name}, #{createTime})
+    </insert>
 
     <!-- 修改用户 -->
     <update id="updateUser" parameterType="com.hxx.sbweb.domain.User">
-         update users set name = #{name},createTime = #{createTime} where id = #{id}
-     </update>
+        update users
+        set name       = #{name},
+            createTime = #{createTime}
+        where id = #{id}
+    </update>
 
     <!-- 删除用户 -->
     <delete id="deleteUserById" parameterType="int">
-         delete from users where id=#{id}
-     </delete>
+        delete
+        from users
+        where id = #{id}
+    </delete>
+
+    <insert id="insertBatch">
+        insert into users ( name,age )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.name},#{item.age} )
+        </foreach>
+    </insert>
 
 
     <resultMap id="mapTeacher" type="com.hxx.sbweb.domain.User">
