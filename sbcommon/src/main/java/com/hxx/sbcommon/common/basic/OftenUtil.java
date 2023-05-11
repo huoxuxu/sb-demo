@@ -827,9 +827,9 @@ public class OftenUtil {
     }
 
     // 基础字段处理
-    public static class BasicUtil{
+    public static class BasicUtil {
         /**
-         * 处理字段null
+         * 处理字段null，为null时返回默认值，
          *
          * @param t
          * @param defaultVal
@@ -839,10 +839,6 @@ public class OftenUtil {
         public static <T> T procFieldNull(T t, T defaultVal) {
             if (t == null) {
                 return defaultVal;
-            }
-
-            if (t instanceof String) {
-                return (T)procFieldEmpty((String) t, (String) defaultVal);
             }
 
             return t;
@@ -860,6 +856,25 @@ public class OftenUtil {
                 return defaultVal;
             }
             return str.trim();
+        }
+
+        /**
+         * 简单缓存简化方法
+         *
+         * @param cache
+         * @param key
+         * @param getCacheValFunc
+         * @param <TKey>
+         * @param <TVal>
+         * @return
+         */
+        public static <TKey, TVal> TVal getCacheVal(Map<TKey, TVal> cache, TKey key, Function<TKey, TVal> getCacheValFunc) {
+            TVal val = cache.getOrDefault(key, null);
+            if (val == null) {
+                val = getCacheValFunc.apply(key);
+                cache.put(key, val);
+            }
+            return val;
         }
     }
 

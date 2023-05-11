@@ -168,7 +168,7 @@ public class ExcelHelper implements Closeable {
      * @param cell
      * @return
      */
-    private static String getCellValue(Cell cell) {
+    public static String getCellValue(Cell cell) {
         if (cell == null || cell.getCellType() == CellType.BLANK) {
             return "";
         }
