@@ -23,6 +23,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 public class DemoService {
     public static void main(String[] args) {
         try {
+            File mdFile = ResourceUtils.getFile("classpath:demo/Markdown示例.md");
             demo();
             System.out.println("ok!");
         } catch (Exception e) {
@@ -149,6 +151,16 @@ public class DemoService {
                 System.out.println(r);
                 r = OftenUtil.CompareUtil.isEquals((String) null, "");
                 System.out.println(r);
+            }
+            {
+                List<String> ls = new ArrayList<>();
+                ls.add("0");
+                ls.add(null);
+                ls.add("1");
+                Set<String> arr1 = OftenUtil.CollectionUtil.toFieldSet(ls, d -> d, false);
+                System.out.println("arr1:" + JsonUtil.toJSON(arr1));
+                Set<String> arr2 = OftenUtil.CollectionUtil.toFieldSet(ls, d -> d, true);
+                System.out.println("arr2:" + JsonUtil.toJSON(arr2));
             }
         }
         System.out.println("Optional==================================================");
@@ -320,20 +332,20 @@ public class DemoService {
         System.out.println("==================================================");
         {
             System.out.println("==================================================");
-            // HttpTxtParser
-            {
-                String filePath = "D:\\OD\\OneDrive\\_Now\\Wode\\.http";
-                File file = new File(filePath);
-                HttpTxtParser httpTxtParser = new HttpTxtParser(file);
-                List<HttpTxtParser.HttpTxtInfo> ls = httpTxtParser.parse();
-                for (HttpTxtParser.HttpTxtInfo item : ls) {
-                    System.out.println(JsonUtil.toJSON(item));
-                }
-
-                // 序列化为文件
-                String str = HttpTxtParser.writeTo(ls);
-                System.out.println(str);
-            }
+//            // HttpTxtParser
+//            {
+//                String filePath = "D:\\OD\\OneDrive\\_Now\\Wode\\.http";
+//                File file = new File(filePath);
+//                HttpTxtParser httpTxtParser = new HttpTxtParser(file);
+//                List<HttpTxtParser.HttpTxtInfo> ls = httpTxtParser.parse();
+//                for (HttpTxtParser.HttpTxtInfo item : ls) {
+//                    System.out.println(JsonUtil.toJSON(item));
+//                }
+//
+//                // 序列化为文件
+//                String str = HttpTxtParser.writeTo(ls);
+//                System.out.println(str);
+//            }
             System.out.println("==================================================");
             // 获取硬件信息，慢！！！
             {

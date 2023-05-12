@@ -99,5 +99,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.vladsch.flexmark/flexmark-all -->
+        <dependency>
+            <groupId>com.vladsch.flexmark</groupId>
+            <artifactId>flexmark-all</artifactId>
+            <version>0.64.4</version>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 </project>

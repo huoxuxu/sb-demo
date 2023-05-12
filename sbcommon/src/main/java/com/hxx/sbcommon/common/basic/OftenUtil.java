@@ -708,6 +708,25 @@ public class OftenUtil {
         }
 
         /**
+         * 将集合转为某字段的Set，会过滤null值
+         *
+         * @param ls
+         * @param getFieldFunc
+         * @param filterNull   是否过滤null值
+         * @param <T>
+         * @param <TField>
+         * @return
+         */
+        public static <T, TField> Set<TField> toFieldSet(List<T> ls, Function<T, TField> getFieldFunc, boolean filterNull) {
+            return Optional.ofNullable(ls)
+                    .orElse(new ArrayList<>())
+                    .stream()
+                    .map(getFieldFunc)
+                    .filter(d -> filterNull ? d != null : true)
+                    .collect(Collectors.toSet());
+        }
+
+        /**
          * 有且只有一个
          *
          * @param ls
