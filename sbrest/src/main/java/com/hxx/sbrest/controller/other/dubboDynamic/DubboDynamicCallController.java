@@ -1,4 +1,4 @@
-package com.hxx.sbrest.controller.other;
+package com.hxx.sbrest.controller.other.dubboDynamic;
 
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbrest.model.T1Model;

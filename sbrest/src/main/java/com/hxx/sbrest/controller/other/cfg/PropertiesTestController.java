@@ -1,4 +1,4 @@
-package com.hxx.sbrest.controller.cfg;
+package com.hxx.sbrest.controller.other.cfg;
 
 import com.hxx.sbrest.common.properties.MyAppProperties;
 import com.hxx.sbrest.service.ValueAttrService;

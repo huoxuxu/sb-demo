@@ -21,10 +21,6 @@ import java.time.temporal.TemporalAdjusters;
 public class SbrestApplication {
 
     public static void main(String[] args) {
-        // SignUtils.main(args);
-        Integer a = null;
-        boolean b = a == null;
-
         SpringApplication.run(SbrestApplication.class, args);
     }
 
