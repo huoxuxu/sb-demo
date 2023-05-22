@@ -14,6 +14,7 @@ import com.hxx.sbrest.model.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -88,23 +89,56 @@ public class CaffeineCacheController {
         return "";
     }
 
+    // 手动缓存
+    static Cache<String, Object> cache5 = Caffeine.newBuilder()
+            .expireAfterWrite(1000, TimeUnit.SECONDS)
+            .expireAfterAccess(1000, TimeUnit.SECONDS)
+            .maximumSize(30)
+            .build();
+
     @RequestMapping("/demo5")
     public String demo5() {
-        Cache<String, Object> cache = Caffeine.newBuilder()
-                .expireAfterWrite(1, TimeUnit.SECONDS)
-                .expireAfterAccess(1, TimeUnit.SECONDS)
-                .maximumSize(10)
-                .build();
+        ConcurrentMap<String, Object> map = cache5.asMap();
+        System.out.println(map + " size: " + map.size());
 
         String key = "hello";
+        for (int i = 0; i < 5; i++) {
+            cache5.put(key + i, key + i + "-val");
+        }
+        map = cache5.asMap();
+        System.out.println(map + " size: " + map.size());
+
         //如果一个key不存在，那么会进入指定的函数生成value
-        Object value = cache.get(key, t -> setValue(key).apply(key));
-        cache.put(key, value);
+        Object value = cache5.get(key, t -> setValue(key).apply(key));
+        System.out.println(value);
+        return "";
+    }
+
+    @RequestMapping("/demo5_1")
+    public String demo5_1() {
+        ConcurrentMap<String, Object> map = cache5.asMap();
+        System.out.println(map + " size: " + map.size());
+
+        String key = "hello";
+        for (int i = 0; i < 5; i++) {
+            cache5.put(key + i, key + i + "-val");
+        }
+        map = cache5.asMap();
+        System.out.println(map + " size: " + map.size());
+
+        //如果一个key不存在，那么会进入指定的函数生成value
+        Object value = cache5.get(key, t -> setValue(key).apply(key));
+        System.out.println(value);
+
+        // 写入缓存
+        cache5.put(key, value);
 
         //判断是否存在如果不存返回null
-        Object ifPresent = cache.getIfPresent(key);
+        Object ifPresent = cache5.getIfPresent(key);
+        System.out.println(ifPresent);
+
         //移除一个key
-        cache.invalidate(key);
+        cache5.invalidate(key);
 
         System.out.println(value);
         return "";
@@ -132,7 +166,7 @@ public class CaffeineCacheController {
                 .expireAfterWrite(1, TimeUnit.MINUTES)
                 .buildAsync(k -> setAsyncValue(key).get());
 
-        Object val= cache.get(key);
+        Object val = cache.get(key);
         System.out.println(val);
         return "";
     }
@@ -142,7 +176,7 @@ public class CaffeineCacheController {
         return t -> key + "value";
     }
 
-    public CompletableFuture<Object> setAsyncValue(String key){
+    public CompletableFuture<Object> setAsyncValue(String key) {
         return CompletableFuture.supplyAsync(() -> {
             return key + "value";
         });

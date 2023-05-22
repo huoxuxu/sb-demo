@@ -80,6 +80,15 @@ public class ExcelHelper implements Closeable {
     }
 
     /**
+     * 获取工作簿
+     *
+     * @return
+     */
+    public Workbook getWorkbook() {
+        return this.workbook;
+    }
+
+    /**
      * 解析Excel数据
      *
      * @param sheetIndex
