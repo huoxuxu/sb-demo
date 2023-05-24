@@ -40,6 +40,9 @@ import java.util.stream.Collectors;
 public class DemoService {
     public static void main(String[] args) {
         try {
+            File tempFile = new File(System.currentTimeMillis() + ".xls");
+            tempFile.delete();// 文件不存在，也可以直接删除
+
             File mdFile = ResourceUtils.getFile("classpath:demo/Markdown示例.md");
             demo();
             System.out.println("ok!");
