@@ -133,8 +133,13 @@ public class DemoService {
                 System.out.println(JsonUtil.toJSON(ls));
             }
         }
-        System.out.println("OftenUtil==================================================");
+        System.out.println("OftenUtil.StringUtil==================================================");
         {
+            {
+                String str = "12a3456q09874560";
+                String str1 = OftenUtil.StringUtil.getEndNumber(str);
+                System.out.println(str1);
+            }
             {
                 String cut = OftenUtil.StringUtil.cut("1", 1);
                 System.out.println(cut);

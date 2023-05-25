@@ -107,6 +107,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.roaringbitmap</groupId>
+            <artifactId>RoaringBitmap</artifactId>
+            <version>0.8.1</version>
+        </dependency>
+
 
     </dependencies>
 </project>

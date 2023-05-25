@@ -468,6 +468,55 @@ public class OftenUtil {
 
             return str;
         }
+
+        /**
+         * 获取字符串中最后的数字
+         *
+         * @param str
+         * @return
+         */
+        public static String getEndNumber(String str) {
+            List<Character> cls = new ArrayList<>();
+            for (int i = str.length() - 1; i > -1; i--) {
+                char c = str.charAt(i);
+                if (!Character.isDigit(c)) {
+                    break;
+                }
+                cls.add(c);
+            }
+            if (CollectionUtils.isEmpty(cls)) {
+                return "";
+            }
+
+            // 反转
+            Collections.reverse(cls);
+
+            StringBuilder sb = new StringBuilder();
+            for (Character cl : cls) {
+                sb.append(cl);
+            }
+
+            return sb.toString();
+        }
+
+        public static String aa1(String str) {
+            return "";
+//            char[] carr = new char[str.length()];
+//            int j = 0;
+//            for (int i = str.length() - 1; i > -1; i--) {
+//                char c = str.charAt(i);
+//                if (!Character.isDigit(c)) {
+//                    break;
+//                }
+//                carr[carr.length - 1 - j] = c;
+//                j++;
+//            }
+//            if (j == 0) {
+//                return "";
+//            }
+//            // 这里没测试
+//            return String.copyValueOf(carr, carr.length - j, j - 1);
+        }
     }
 
     // 日期

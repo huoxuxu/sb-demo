@@ -145,7 +145,6 @@ public class EasyExcelHelper {
             curRowIndex++;
         }
 
-
         //读取excel表头信息
         @Override
         public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
