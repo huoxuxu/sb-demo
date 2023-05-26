@@ -10,9 +10,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -258,7 +256,9 @@ public class ExcelHelper implements Closeable {
 
     @lombok.Data
     public static class RowItem {
+        // 行号
         private int rowNum;
+        // 行数据
         private List<String> itemArray = new ArrayList<>();
 
         public RowItem() {

@@ -81,7 +81,7 @@ public class EasyExcelHelper {
      */
     @lombok.Data
     @lombok.ToString
-    public class DemoEasyExcelVO {
+    public static class DemoEasyExcelVO {
         @ExcelProperty(value = "编码")
         private String code;
 
