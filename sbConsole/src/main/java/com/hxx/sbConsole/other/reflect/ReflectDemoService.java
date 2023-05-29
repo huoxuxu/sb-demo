@@ -2,6 +2,8 @@ package com.hxx.sbConsole.other.reflect;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.hxx.sbConsole.model.DemoCls;
+import com.hxx.sbConsole.model.HaBaDog;
+import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.common.office.EasyExcelHelper;
 import com.hxx.sbcommon.common.reflect.BeanInfoUtil;
 import com.hxx.sbcommon.common.reflect.ReflectUseful;
@@ -29,9 +31,9 @@ public class ReflectDemoService {
             Map<String, Object> map = BeanInfoUtil.toMap(demoVO);
 
             Class<DemoCls> type = DemoCls.class;
-            ReflectUseful reflectUseful=new ReflectUseful(type);
-            List<String> fieldHasGetter = reflectUseful.getFieldHasGetter();
-            List<String> fieldHasSetter = reflectUseful.getFieldHasSetter();
+            ReflectUseful reflectUseful = new ReflectUseful(HaBaDog.class);
+            List<String> props = reflectUseful.getProps();
+            System.out.println("props: " + JsonUtil.toJSON(props));
 
 
             ReflectorObj reflectorObj = new ReflectorObj(type);

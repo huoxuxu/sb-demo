@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.service.impl.demo.reflect;
+package com.hxx.sbConsole.other.reflect;
 
 import com.google.common.collect.ImmutableMap;
 import com.hxx.sbConsole.model.ExportParam;

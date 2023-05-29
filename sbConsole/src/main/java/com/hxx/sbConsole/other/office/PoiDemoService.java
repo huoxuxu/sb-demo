@@ -2,7 +2,9 @@ package com.hxx.sbConsole.other.office;
 
 import com.hxx.sbConsole.model.DemoCls;
 import com.hxx.sbcommon.common.office.ExcelWriteHelper;
+import com.hxx.sbcommon.common.office.POIBatchWriteUseful;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 
 import java.io.File;
@@ -40,6 +42,16 @@ public class PoiDemoService {
                 }
 
                 case0(file);
+            }
+            // 大量写入Excel
+            {
+                File file = new File("d:/tmp/poidemo-batchInsert.XLS");
+                if (file.exists()) {
+                    log.info("已删除：{}", file.getName());
+                    file.delete();
+                }
+
+                case1(file);
             }
 
         } catch (Exception ex) {
@@ -145,4 +157,43 @@ public class PoiDemoService {
         }
     }
 
+    static void case1(File file) throws Exception {
+        Map<Integer, String> fieldMap = new HashMap<>();
+        fieldMap.put(0, "id");
+        fieldMap.put(1, "code");
+        fieldMap.put(2, "name");
+
+        int cou = 0;
+        List<DemoCls> data = new ArrayList<>();
+        for (int i = 0; i < 2_0000; i++) {
+            DemoCls m = new DemoCls();
+            m.setId(i);
+            m.setCode("code" + i);
+            m.setName("name" + i);
+            data.add(m);
+
+            if (i > 0 && i % 5000 == 0) {
+                cou += write2Excel(file, "data", fieldMap, data);
+                data.clear();
+            }
+        }
+
+        if (!CollectionUtils.isEmpty(data)) {
+            cou += write2Excel(file, "data", fieldMap, data);
+            data.clear();
+        }
+        data = null;
+
+        System.out.println("批量生成：" + cou);
+    }
+
+    static <T> int write2Excel(File file, String sheetName, Map<Integer, String> fieldMap, List<T> data) {
+        try (POIBatchWriteUseful batchWrite = new POIBatchWriteUseful(file, sheetName)) {
+
+            batchWrite.writeDataWithModel(fieldMap, data);
+            return data.size();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

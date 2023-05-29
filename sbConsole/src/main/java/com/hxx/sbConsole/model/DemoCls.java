@@ -18,8 +18,8 @@ public class DemoCls {
 
     @lombok.Data
     public static class BasicTypeCls {
-        private Byte byteVal;
         private Boolean booleanVal;
+        private Byte byteVal;
         private Character characterVal;
 
         private String stringVal;

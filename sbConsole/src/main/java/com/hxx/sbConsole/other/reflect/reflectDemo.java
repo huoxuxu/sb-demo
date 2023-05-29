@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.service.impl.demo.reflect;
+package com.hxx.sbConsole.other.reflect;
 
 import com.hxx.sbConsole.model.DemoCls;
 import com.hxx.sbcommon.common.reflect.BeanInfoUtil;

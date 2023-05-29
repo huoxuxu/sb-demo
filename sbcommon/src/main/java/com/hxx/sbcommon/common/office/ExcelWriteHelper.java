@@ -184,7 +184,7 @@ public class ExcelWriteHelper implements AutoCloseable {
             for (PropertyDescriptor prop : props) {
                 //得到属性的name
                 String key = prop.getName();
-                if (!fieldMap.containsValue(key) || key == "class") {
+                if (!fieldMap.containsValue(key)) {
                     continue;
                 }
                 Method getMethod = prop.getReadMethod();
