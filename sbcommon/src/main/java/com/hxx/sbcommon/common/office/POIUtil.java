@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 public class POIUtil {
 
     /**
-     * 获取Workbook,
+     * 获取Workbook, 支持97-03和07以上的excel
      *
      * @param excel
      * @param readFlag 是否读取，读取时，excel必须存在，写入时，如果存在，则追加数据，如果不存在，则新增数据
@@ -61,6 +61,8 @@ public class POIUtil {
     /**
      * 保存Workbook 到文件
      *
+     * @param workbook
+     * @param targetExcel 保存到的excel文件
      * @throws IOException
      */
     public static void saveToFile(Workbook workbook, File targetExcel) throws IOException {
