@@ -2,7 +2,9 @@ package com.hxx.sbConsole.safeInit;
 
 import com.hxx.sbConsole.springReadConfig.ReadSingleConfig;
 import com.hxx.sbConsole.springReadConfig.UseConfigProperties;
+import com.hxx.sbcommon.common.intervalJob.IntervalJobDispatcher;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;

@@ -1,5 +1,6 @@
 package com.hxx.sbConsole.schedules;
 
+import com.hxx.sbcommon.common.intervalJob.IntervalJobDispatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -31,7 +32,7 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = 1000 * 3)
     public void doTask() {
         try {
-            System.out.println("Scheduling Tasks Examples By fixedRate: now " + LocalDateTime.now());
+            System.out.println("[fixedRate]: now " + LocalDateTime.now());
         } catch (Exception ex) {
             log.error("出现异常：{}", ExceptionUtils.getStackTrace(ex));
         }
@@ -41,8 +42,11 @@ public class ScheduledTasks {
     @Scheduled(fixedDelay = 1000 * 3)
     public void doTask2() {
         try {
-            Thread.sleep(5000);
-            System.out.println("Scheduling Tasks Examples By fixedDelay: now " + LocalDateTime.now());
+//            Thread.sleep(5000);
+            System.out.println("[fixedDelay]: now " + LocalDateTime.now());
+            // 开启调度
+            log.info("[TP(" + IntervalJobDispatcher.getThreadPool().getQueue().size() + ")]==============loop===============");
+            IntervalJobDispatcher.process();
         } catch (Exception ex) {
             log.error("出现异常：{}", ExceptionUtils.getStackTrace(ex));
         }
@@ -53,7 +57,7 @@ public class ScheduledTasks {
     @Scheduled(cron = "0 */1 *  * * * ")
     public void reportCurrentByCron() {
         try {
-            System.out.println("Scheduling Tasks Examples By Cron: now " + LocalDateTime.now());
+            System.out.println("[Cron]: now " + LocalDateTime.now());
         } catch (Exception ex) {
             log.error("出现异常：{}", ExceptionUtils.getStackTrace(ex));
         }

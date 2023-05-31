@@ -21,7 +21,7 @@ public class StartupApplicationListenerExample implements
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        log.info("Increment counter");
+        log.info("Increment1 counter");
         counter++;
     }
 }
