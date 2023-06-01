@@ -28,7 +28,7 @@ public class Demo8IntervalJob extends BaseIntervalJob {
             // 在run方法中编写任务逻辑
             log.info("[Job-" + jobCode + "] is running on thread " + Thread.currentThread().getName());
             // 模拟任务耗时
-            Thread.sleep(10 * 1000);
+            Thread.sleep(20 * 1000);
         } catch (Exception e) {
             System.out.println(e + "");
         }

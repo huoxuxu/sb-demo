@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  **/
 @Slf4j
 @Component
-public class DemoIntervalJobExecutorHandler extends IntervalJobDispatcher.IntervalJobExecutorHandler {
+public class DemoIntervalJobExecutorHandler extends IntervalJobDispatcher.BaseIntervalJobExecutorHandler {
 
     @Override
     public boolean onTaskSubmit(BaseIntervalJob task, ThreadPoolExecutor threadPool) {

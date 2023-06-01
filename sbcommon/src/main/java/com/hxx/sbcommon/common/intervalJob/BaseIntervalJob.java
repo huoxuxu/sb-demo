@@ -1,6 +1,5 @@
 package com.hxx.sbcommon.common.intervalJob;
 
-import com.hxx.sbcommon.common.json.JsonUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -8,9 +7,10 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
+ * 所有间隔运行的job继承此类
+ *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2023-05-30 14:24:52
@@ -20,7 +20,7 @@ public abstract class BaseIntervalJob implements Runnable {
     protected String jobCode;
 
     // 间隔，秒
-    private long intervalSecond = 5;
+    private long intervalSecond;
 
     // Task是否运行
     private volatile boolean running;
@@ -28,7 +28,9 @@ public abstract class BaseIntervalJob implements Runnable {
     // 任务是否已提交到线程池
     private volatile boolean submitted;
 
-    private List<IntervalJobDispatcher.IntervalJobExecutorHandler> handlers = new ArrayList<>();
+    private LocalDateTime startRunTime = LocalDateTime.MIN;
+
+    private List<IntervalJobDispatcher.BaseIntervalJobExecutorHandler> handlers = new ArrayList<>();
 
     public BaseIntervalJob(long intervalSecond) {
         UUID uuid = UUID.randomUUID();
@@ -64,6 +66,15 @@ public abstract class BaseIntervalJob implements Runnable {
     }
 
     /**
+     * 获取job运行开始时间
+     *
+     * @return
+     */
+    public LocalDateTime getStartRunTime() {
+        return this.startRunTime;
+    }
+
+    /**
      * 获取任务是否已提交到线程池
      *
      * @return
@@ -81,8 +92,38 @@ public abstract class BaseIntervalJob implements Runnable {
         this.submitted = submitted;
     }
 
-    public void setHandlers(List<IntervalJobDispatcher.IntervalJobExecutorHandler> handlers) {
+    /**
+     * 设置处理器
+     *
+     * @param handlers
+     */
+    public void setHandlers(List<IntervalJobDispatcher.BaseIntervalJobExecutorHandler> handlers) {
         this.handlers = handlers;
+    }
+
+    /**
+     * 获取Job运行时长
+     *
+     * @return
+     */
+    public long getRunningSecond() {
+        if (this.startRunTime.isEqual(LocalDateTime.MIN)) {
+            return 0;
+        }
+
+        Duration dur = Duration.between(this.startRunTime, LocalDateTime.now());
+        return dur.getSeconds();
+    }
+
+    @Override
+    public String toString() {
+        String durSecondsStr = "";
+        long runningSecond = this.getRunningSecond();
+        if (runningSecond > 0) {
+            durSecondsStr = "开始运行：" + this.startRunTime + "已耗时：" + runningSecond + "s";
+        }
+
+        return "[" + this.jobCode + "] " + durSecondsStr + " " + (this.running ? "RUNNING" : "") + " " + (this.submitted ? "SUBMITTED" : "");
     }
 
     /**
@@ -94,7 +135,8 @@ public abstract class BaseIntervalJob implements Runnable {
         IntervalJobContext context = new IntervalJobContext(this);
         try {
             running = true;
-            for (IntervalJobDispatcher.IntervalJobExecutorHandler handler : this.handlers) {
+            startRunTime = LocalDateTime.now();
+            for (IntervalJobDispatcher.BaseIntervalJobExecutorHandler handler : this.handlers) {
                 handler.onBeforeRun(context);
             }
 
@@ -102,13 +144,13 @@ public abstract class BaseIntervalJob implements Runnable {
             process(context);
             // 设置运行结果
             context.setComplete(true);
-            for (IntervalJobDispatcher.IntervalJobExecutorHandler handler : this.handlers) {
+            for (IntervalJobDispatcher.BaseIntervalJobExecutorHandler handler : this.handlers) {
                 handler.onSuccess(context);
             }
         } catch (Exception e) {
             context.setComplete(false, e);
             try {
-                for (IntervalJobDispatcher.IntervalJobExecutorHandler handler : this.handlers) {
+                for (IntervalJobDispatcher.BaseIntervalJobExecutorHandler handler : this.handlers) {
                     handler.onError(context);
                 }
             } catch (Exception e1) {
@@ -116,9 +158,10 @@ public abstract class BaseIntervalJob implements Runnable {
             }
         } finally {
             running = false;
+            startRunTime = LocalDateTime.MIN;
             submitted = false;
             try {
-                for (IntervalJobDispatcher.IntervalJobExecutorHandler handler : this.handlers) {
+                for (IntervalJobDispatcher.BaseIntervalJobExecutorHandler handler : this.handlers) {
                     handler.onCompleted(this, context);
                 }
             } catch (Exception e1) {

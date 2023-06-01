@@ -1,8 +1,5 @@
 package com.hxx.sbcommon.common.intervalJob;
 
-import com.hxx.sbcommon.common.intervalJob.job.DemoIntervalJob;
-import com.hxx.sbcommon.common.json.JsonUtil;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeansException;
@@ -12,12 +9,14 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * @Author: huoxuxu
@@ -55,9 +54,6 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
 //        // 从容器中获取所有实现了XX接口的bean
 //        Map<String, BaseIntervalJob> beans = applicationContext.getBeansOfType(BaseIntervalJob.class);
 //        log.info("找到Job个数：{}", beans.size());
-//        tls.addAll(beans.values());
-        // 添加handlers
-
     }
 
     /**
@@ -69,15 +65,6 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
         return threadPool;
     }
 
-//    public static List<IntervalJobExecutorHandler> getHandlers() {
-//        return handlers;
-//    }
-//
-//    public static void addHandlers(IntervalJobExecutorHandler handler) {
-//        handlers.add(handler);
-//    }
-
-
     /**
      * 调度核心方法，由外部驱动
      * 驱动器一般为定时器
@@ -85,16 +72,16 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
     public static void process() {
         log.debug("调度start...");
         Map<String, BaseIntervalJob> beans = applicationContext.getBeansOfType(BaseIntervalJob.class);
-        log.info("找到Job个数：{}", beans == null ? 0 : beans.size());
+        log.debug("找到Job个数：{}", beans == null ? 0 : beans.size());
         if (beans == null) return;
 
         // 找handlers
-        Map<String, IntervalJobExecutorHandler> handlerMap = applicationContext.getBeansOfType(IntervalJobExecutorHandler.class);
-        List<IntervalJobExecutorHandler> handlers = new ArrayList<>();
+        Map<String, BaseIntervalJobExecutorHandler> handlerMap = applicationContext.getBeansOfType(BaseIntervalJobExecutorHandler.class);
+        List<BaseIntervalJobExecutorHandler> handlers = new ArrayList<>();
         if (handlerMap != null) {
             handlers.addAll(handlerMap.values());
         }
-        log.info("找到Handler个数：{}", handlers.size());
+        log.debug("找到Handler个数：{}", handlers.size());
 
         // loop
         for (Map.Entry<String, BaseIntervalJob> entry : beans.entrySet()) {
@@ -104,7 +91,7 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
             task.setHandlers(handlers);
 
             boolean canRunFlag = true;
-            for (IntervalJobExecutorHandler handler : handlers) {
+            for (BaseIntervalJobExecutorHandler handler : handlers) {
                 boolean canRun = handler.onTaskSubmit(task, threadPool);
                 if (!canRun) {
                     canRunFlag = false;
@@ -117,7 +104,7 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
 
             threadPool.submit(task);
             task.setSubmitted(true);
-            for (IntervalJobExecutorHandler handler : handlers) {
+            for (BaseIntervalJobExecutorHandler handler : handlers) {
                 handler.onTaskSubmitted(task, threadPool);
             }
         }
@@ -128,33 +115,15 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
      * 调度处理器
      */
     @Slf4j
-    public static abstract class IntervalJobExecutorHandler {
-        // job运行map，key=job val=job上次运行完成时间
-        private static Map<String, LocalDateTime> runMap = new HashMap<>();
+    public static abstract class BaseIntervalJobExecutorHandler {
 
         /**
-         * 任务提交到线程池前调用，子类实现时，必须优先调用父类此方法，获取Job是否满足运行条件
+         * 任务提交到线程池前调用
          *
          * @param threadPool
          * @return true可以运行，false不运行
          */
         public boolean onTaskSubmit(BaseIntervalJob task, ThreadPoolExecutor threadPool) {
-            if (task.isRunning() || task.isSubmitted()) {
-                log.debug("SKIP-RUNORSUBMIT：[job-" + task.getJobCode() + "] [" + (task.isRunning() ? "RUNNING" : "") + "] [" + (task.isSubmitted() ? "SUBMITTED" : "") + "]");
-                return false;
-            }
-
-            // 判断是否可以执行
-            // 上次成功执行的时间
-            LocalDateTime preRunTime = runMap.getOrDefault(task.getJobCode(), null);
-            if (preRunTime != null) {
-                LocalDateTime next = preRunTime.plusSeconds(task.getIntervalSecond());
-                if (next.isAfter(LocalDateTime.now())) {
-                    // 不可执行
-                    log.debug("SKIP-TIME：[job-" + task.getJobCode() + "] [" + (task.isRunning() ? "RUNNING" : "") + "] [" + (task.isSubmitted() ? "SUBMITTED" : "") + "]");
-                    return false;
-                }
-            }
             return true;
         }
 
@@ -192,12 +161,7 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
          * @param context
          */
         public void onError(BaseIntervalJob.IntervalJobContext context) {
-            BaseIntervalJob job = context.getJob();
-            Exception error = context.getError();
-            if (error != null)
-                log.error("{},出现异常：{}", job.getJobCode(), ExceptionUtils.getStackTrace(context.getError()));
-            else
-                log.error("{},出现异常,无具体异常信息!", job.getJobCode());
+
         }
 
         /**
@@ -206,7 +170,87 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
          * @param context
          */
         public void onCompleted(BaseIntervalJob task, BaseIntervalJob.IntervalJobContext context) {
+
+        }
+    }
+
+    /**
+     * 内置的处理器，用于实现job间隔运行
+     *
+     * @Author: huoxuxu
+     * @Description:
+     * @Date: 2023-05-31 11:28:08
+     **/
+    @Slf4j
+    @Component
+    public static class InternalIntervalJobHandler extends BaseIntervalJobExecutorHandler {
+        // job运行map，key=job val=job上次运行完成时间
+        private static Map<String, LocalDateTime> runMap = new HashMap<>();
+        // 如果超过n 秒，则警告
+        private static final int WARN_RUN_SECOND = 10 * 60;
+
+
+        @Override
+        public boolean onTaskSubmit(BaseIntervalJob task, ThreadPoolExecutor threadPool) {
+            if (task.isRunning() || task.isSubmitted()) {
+                log.debug("SKIP-RUNORSUBMIT：{}", task);
+                // 如果一个job已经长时间运行，则提示
+                long durSeconds = task.getRunningSecond();
+                if (durSeconds > WARN_RUN_SECOND) {
+                    log.warn("LONG-RUNNING：Job已长时间运行，请及时关注！{}", task);
+                }
+                return false;
+            }
+
+            // 判断是否可以执行
+            // 上次成功执行的时间
+            LocalDateTime preRunTime = runMap.getOrDefault(task.getJobCode(), null);
+            if (preRunTime != null) {
+                LocalDateTime next = preRunTime.plusSeconds(task.getIntervalSecond());
+                if (next.isAfter(LocalDateTime.now())) {
+                    // 不可执行
+                    log.debug("SKIP-TIME：[job-" + task.getJobCode() + "] [" + (task.isRunning() ? "RUNNING" : "") + "] [" + (task.isSubmitted() ? "SUBMITTED" : "") + "]");
+                    return false;
+                }
+            }
+            return super.onTaskSubmit(task, threadPool);
+        }
+
+        @Override
+        public void onTaskSubmitted(BaseIntervalJob task, ThreadPoolExecutor threadPool) {
+            super.onTaskSubmitted(task, threadPool);
+        }
+
+        @Override
+        public void onBeforeRun(BaseIntervalJob.IntervalJobContext context) {
+            super.onBeforeRun(context);
+        }
+
+        @Override
+        public void onSuccess(BaseIntervalJob.IntervalJobContext context) {
+            super.onSuccess(context);
+        }
+
+        @Override
+        public void onError(BaseIntervalJob.IntervalJobContext context) {
+            super.onError(context);
+            BaseIntervalJob job = context.getJob();
+            Exception error = context.getError();
+            if (error != null)
+                log.error("{},出现异常：{}", job.getJobCode(), ExceptionUtils.getStackTrace(context.getError()));
+            else
+                log.error("{},出现异常,无具体异常信息!", job.getJobCode());
+        }
+
+        @Override
+        public void onCompleted(BaseIntervalJob task, BaseIntervalJob.IntervalJobContext context) {
             runMap.put(task.getJobCode(), LocalDateTime.now());
+            super.onCompleted(task, context);
+
+            long cost = context.getCostMs();
+            if (cost > 999) {
+                log.warn("{} 任务执行耗时：{}", task.getJobCode(), cost);
+            }
         }
 
     }
