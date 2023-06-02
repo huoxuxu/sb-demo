@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +35,7 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
                 16, // 最大线程数
                 60, // 空闲线程存活时间
                 TimeUnit.SECONDS, // 时间单位
-                new LinkedBlockingQueue<>(3000), // 工作队列
+                new LinkedBlockingQueue<>(500), // 工作队列
                 Executors.defaultThreadFactory(), // 线程工厂
                 new ThreadPoolExecutor.AbortPolicy() // 拒绝策略
         );
@@ -187,7 +186,7 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
         // job运行map，key=job val=job上次运行完成时间
         private static Map<String, LocalDateTime> runMap = new HashMap<>();
         // 如果超过n 秒，则警告
-        private static final int WARN_RUN_SECOND = 10 * 60;
+        private static final int WARN_RUN_SECOND = 5 * 60;
 
 
         @Override
@@ -209,7 +208,7 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
                 LocalDateTime next = preRunTime.plusSeconds(task.getIntervalSecond());
                 if (next.isAfter(LocalDateTime.now())) {
                     // 不可执行
-                    log.debug("SKIP-TIME：[job-" + task.getJobCode() + "] [" + (task.isRunning() ? "RUNNING" : "") + "] [" + (task.isSubmitted() ? "SUBMITTED" : "") + "]");
+                    log.debug("SKIP-TIME：{}", task);
                     return false;
                 }
             }
@@ -246,11 +245,6 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
         public void onCompleted(BaseIntervalJob task, BaseIntervalJob.IntervalJobContext context) {
             runMap.put(task.getJobCode(), LocalDateTime.now());
             super.onCompleted(task, context);
-
-            long cost = context.getCostMs();
-            if (cost > 999) {
-                log.warn("{} 任务执行耗时：{}", task.getJobCode(), cost);
-            }
         }
 
     }

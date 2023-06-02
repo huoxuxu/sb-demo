@@ -24,7 +24,7 @@ public class DemoIntervalJobExecutorHandler extends IntervalJobDispatcher.BaseIn
     @Override
     public void onTaskSubmitted(BaseIntervalJob task, ThreadPoolExecutor threadPool) {
         super.onTaskSubmitted(task, threadPool);
-        log.info("SUBMITED：[job-" + task.getJobCode() + "] [" + (task.isRunning() ? "RUNNING" : "") + "] [" + (task.isSubmitted() ? "SUBMITTED" : "") + "]");
+        log.info("SUBMITED：{}", task);
     }
 
     @Override
