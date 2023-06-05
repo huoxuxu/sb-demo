@@ -42,11 +42,8 @@ public class ScheduledTasks {
     @Scheduled(fixedDelay = 1000 * 3)
     public void doTask2() {
         try {
-//            Thread.sleep(5000);
             System.out.println("[fixedDelay]: now " + LocalDateTime.now());
-            // 开启调度
-            log.info("[TP(" + IntervalJobDispatcher.getThreadPool().getQueue().size() + ")]==============loop===============");
-            IntervalJobDispatcher.process();
+            Thread.sleep(5000);
         } catch (Exception ex) {
             log.error("出现异常：{}", ExceptionUtils.getStackTrace(ex));
         }
