@@ -55,6 +55,17 @@ public class DemoService {
         System.out.println("BasicType==================================================");
         {
             {
+                boolean a=false;
+                boolean b=false;
+                System.out.println(a||b);
+            }
+            {
+                long a1 = Long.MAX_VALUE;
+                System.out.println(a1);
+                System.out.println(a1 + 1);
+                System.out.println(a1 + 999);
+            }
+            {
                 // 32位单精度浮点数的有效位数是7位。
                 // 64位双精度浮点数的有效位数是16位。
                 Float dVal = 123456789.12345678F;
