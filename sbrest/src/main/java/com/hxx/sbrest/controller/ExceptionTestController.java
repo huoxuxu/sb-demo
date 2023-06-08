@@ -1,5 +1,6 @@
 package com.hxx.sbrest.controller;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.hxx.sbrest.service.BasicTestService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -31,6 +32,14 @@ public class ExceptionTestController {
         return str1;
     }
 
+    @ResponseBody
+    @ExceptionHandler({InvalidFormatException.class})
+    public String invalidFormatExceptionHandler(HttpServletRequest req, Exception e) {
+        log.error("出现异常：{}", ExceptionUtils.getStackTrace(e));
+        //return JsonUtil.toJSON(Result.error("SYSTEM_ERROR", "数据映射异常,请检查请求数据"));
+        return "数据映射异常,请检查请求数据";
+    }
+
     /**
      * 局部异常捕获，仅捕获当前Controller内的异常
      *
@@ -45,5 +54,4 @@ public class ExceptionTestController {
 //        return Result.error("SYSTEM_ERROR", "系统异常");
         return "系统异常";
     }
-
 }
