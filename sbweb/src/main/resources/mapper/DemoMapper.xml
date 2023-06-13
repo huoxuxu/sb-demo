@@ -210,4 +210,26 @@
             )
         </foreach>
     </insert>
+
+    <update id="batchUpdate" parameterType="com.hxx.sbweb.domain.Demo">
+        update demo
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="name = case id" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.name!=null">
+                        when #{item.id} then #{item.name}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix=" name = case id" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    when #{item.id} then #{item.name}
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" separator="or" item="item" index="index">
+            id = #{item.id}
+        </foreach>
+    </update>
 </mapper>
