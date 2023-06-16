@@ -5,9 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -21,6 +19,7 @@ public class ReflectUseful {
 
     // 所有方法
     private Method[] methods;
+    private Constructor[] constructors;
     // 公开的实例方法
     private List<Method> publicInstanceMethods = new ArrayList<>();
     private List<Method> publicStaticMethods = new ArrayList<>();
@@ -42,6 +41,7 @@ public class ReflectUseful {
         this.cls = cls;
 
         this.methods = cls.getMethods();
+        this.constructors = cls.getConstructors();
         initMethod();
         initField();
     }
@@ -161,6 +161,27 @@ public class ReflectUseful {
             }
         }
         return ls;
+    }
+
+    /**
+     * 反射创建数组
+     *
+     * @param cls
+     * @param length
+     */
+    public static void createArray(Class cls, int length) {
+        //创建一个元素类型为String，长度为10的数组
+        Object arr = Array.newInstance(cls, length);
+
+        //依次为arr数组中index为5、6的元素赋值
+        Array.set(arr, 5, "Byte");
+        Array.set(arr, 6, "科技");
+        //依次取出arr数组中index为5、6的元素的值；
+        Object str1 = Array.get(arr, 5);
+        Object str2 = Array.get(arr, 6);
+        //输出arr数组中index为5、6的元素
+        System.out.print(str1);
+        System.out.print(str2);
     }
 
     private void initField() {

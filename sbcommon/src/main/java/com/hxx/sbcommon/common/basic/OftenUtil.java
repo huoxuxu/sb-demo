@@ -2,7 +2,6 @@ package com.hxx.sbcommon.common.basic;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.WordUtils;
 import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MessageFormatter;
 
@@ -10,6 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -537,6 +537,17 @@ public class OftenUtil {
         }
 
         /**
+         * 格式化为：yyyy-MM-dd HH:mm:ss
+         *
+         * @param dateTime
+         * @return
+         */
+        public static String fmt2Str(Date dateTime) {
+            SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return f.format(dateTime);
+        }
+
+        /**
          * 格式化为：yyyy-MM-dd
          *
          * @param dateTime
@@ -544,6 +555,17 @@ public class OftenUtil {
          */
         public static String fmt2DateStr(LocalDateTime dateTime) {
             return dateTime.format(DateTime_Date_Formatter);
+        }
+
+        /**
+         * 格式化为：yyyy-MM-dd
+         *
+         * @param dateTime
+         * @return
+         */
+        public static String fmt2DateStr(Date dateTime) {
+            SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+            return f.format(dateTime);
         }
 
         /**
