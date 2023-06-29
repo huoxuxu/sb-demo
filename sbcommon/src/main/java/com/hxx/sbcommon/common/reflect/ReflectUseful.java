@@ -9,6 +9,12 @@ import java.lang.reflect.*;
 import java.util.*;
 
 /**
+ * // 允许调用私有方法
+ * constructor.setAccessible(true);
+ */
+
+/**
+ * 反射工具
  * @Author: huoxuxu
  * @Description:
  * @Date: 2023-05-25 18:09:25
