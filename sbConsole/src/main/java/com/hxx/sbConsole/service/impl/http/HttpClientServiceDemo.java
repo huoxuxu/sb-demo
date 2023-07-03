@@ -2,10 +2,12 @@ package com.hxx.sbConsole.service.impl.http;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hxx.sbConsole.model.HttpTestDemoModel;
-import com.hxx.sbcommon.common.http.HttpClientUtil;
+import com.hxx.sbcommon.common.http.ApacheHttpClientUseful;
 import com.hxx.sbcommon.common.json.FastJsonReaderQuick;
 import com.hxx.sbcommon.common.json.JsonUtil;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,24 +18,61 @@ import java.util.Map;
  * @Date: 2022-12-05 12:59:30
  **/
 public class HttpClientServiceDemo {
+    static String url = "http://127.0.0.1:666/HttpTest/Index?k=k1";
+    static Map<String, String> headers = new HashMap<>();
+
     public static void main(String[] args) throws Exception {
-        String url = "http://127.0.0.1:666/HttpTest/Index";
-        {
-            Map<String, String> headers = new HashMap<>();
-            {
-                headers.put("a", "a1");
-            }
-            final String html;
-            {
-                html = HttpClientUtil.get(url);
-            }
-            {
-                HttpClientUtil.get(url, headers, null, HttpClientServiceDemo::parseReader);
-            }
-            System.out.println(html);
+        headers.put("a", "a1");
+        headers.put("b", "b1");
+
+        // get
+        case1();
+        // post
+        case2();
+        // upload
+        case3();
+
+        for (int i = 0; i < 10; i++) {
+
         }
         System.out.println("=====================================================");
 
+    }
+
+    // get
+    static void case1() throws IOException {
+        String html = ApacheHttpClientUseful.sendHttpGet(url, headers, null);
+        System.out.println("=====================================================");
+        System.out.println(html);
+    }
+
+    // post
+    static void case2() throws IOException {
+        {
+            String html = ApacheHttpClientUseful.sendJsonPost(url, headers, "[{\"id\":1}]");
+            System.out.println("=====================================================");
+            System.out.println(html);
+        }
+
+        {
+            Map<String, String> paramDic = new HashMap<>();
+            paramDic.put("code", "1");
+            paramDic.put("name", "kt");
+            String html = ApacheHttpClientUseful.sendHttpUrlEncodedPost(url, headers, paramDic);
+            System.out.println("=====================================================");
+            System.out.println(html);
+        }
+    }
+
+    static void case3() throws IOException {
+        Map<String, String> params = new HashMap<>();
+        params.put("pa", "pa1");
+        params.put("pb", "pb1");
+        File file = new File("d:/tmp/tmp1.txt");
+        File file2 = new File("d:/tmp/tmp1.txt");
+        String html = ApacheHttpClientUseful.sendFileUpload(url, headers, params, "file", file, file2);
+        System.out.println("=====================================================");
+        System.out.println(html);
     }
 
     // 解析Reader
