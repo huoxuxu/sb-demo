@@ -1,5 +1,7 @@
 package com.hxx.sbcommon.common.basic.text;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,9 +21,32 @@ public class RegexUtil {
      */
     public static boolean isHasAlphabet(String str) {
         String regex = ".*[a-zA-Z]+.*";
-        Matcher m = Pattern.compile(regex).matcher(str);
-        return m.matches();
+        return regexMatch(str, regex);
     }
 
 
+    /**
+     * 判断输入是否符合正则
+     *
+     * @param input
+     * @param regex
+     * @return
+     */
+    public static boolean regexMatch(String input, String regex) {
+        Matcher m = Pattern.compile(regex).matcher(input);
+        return m.matches();
+    }
+
+    public static List<String> regexMatchGroups(String input, String regex) {
+        Matcher m = Pattern.compile(regex).matcher(input);
+        List<String> ls = new ArrayList<>();
+        for (int i = 0; true; i++) {
+            if (!m.find()) break;
+
+            String group = m.group(0);
+            ls.add(group);
+            System.out.println("Found value: " + group);
+        }
+        return ls;
+    }
 }

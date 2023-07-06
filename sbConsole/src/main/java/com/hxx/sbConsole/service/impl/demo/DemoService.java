@@ -8,6 +8,7 @@ import com.hxx.sbConsole.model.User;
 import com.hxx.sbConsole.service.impl.HttpTxtParser;
 import com.hxx.sbConsole.service.impl.demo.basic.TypeHandlerDemoService;
 import com.hxx.sbcommon.common.basic.OftenUtil;
+import com.hxx.sbcommon.common.basic.text.RegexUtil;
 import com.hxx.sbcommon.common.basic.text.StringUtil;
 import com.hxx.sbcommon.common.hardware.NetUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
@@ -29,6 +30,8 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -54,6 +57,20 @@ public class DemoService {
     public static void demo() throws Exception {
         System.out.println("BasicType==================================================");
         {
+            {
+                {
+                    List<String> ls = RegexUtil.regexMatchGroups("A-B-C-D-", "[A-Z]{1}-");
+                    System.out.println(ls);
+                }
+                {
+                    String[] interfCodes = {"001", "001-A", "0001", "0001-A"};
+                    for (String interfCode : interfCodes) {
+                        Pattern pattern = Pattern.compile("(^\\d{3,4}+$)|(^\\d{3,4}-[A-Z]{1}+$)");
+                        Matcher isThreeNum = pattern.matcher(interfCode);
+                        System.out.println(interfCode + "  " + (isThreeNum.matches() ? "ok" : "no match"));
+                    }
+                }
+            }
             {
                 boolean a=false;
                 boolean b=false;
