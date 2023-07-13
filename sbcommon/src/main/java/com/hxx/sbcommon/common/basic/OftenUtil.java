@@ -336,25 +336,6 @@ public class OftenUtil {
             BigDecimal decimal = numerator.multiply(new BigDecimal(100));
             return divide(decimal, denominator, scale);
         }
-
-        /**
-         * 分子乘以100后，与分母相除后保留指定位数
-         *
-         * @param numerator   分子
-         * @param denominator 分母
-         * @param scale       保留精度
-         * @return
-         */
-        public static String roundPercent2Str(BigDecimal numerator, BigDecimal denominator, int scale) {
-            if (null == numerator || null == denominator || numerator.compareTo(BigDecimal.ZERO) == 0 || denominator.compareTo(BigDecimal.ZERO) == 0) {
-                return "0";
-            }
-
-            BigDecimal decimal = numerator.multiply(new BigDecimal(100));
-            // 4舍，5入，其他未测
-            BigDecimal divVal = roundPercent(decimal, denominator, scale);
-            return fmt2Str(divVal);
-        }
     }
 
     // 字符串
