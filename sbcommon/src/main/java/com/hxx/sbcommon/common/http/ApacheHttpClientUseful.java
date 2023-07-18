@@ -6,12 +6,21 @@ import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -23,8 +32,13 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.CharArrayBuffer;
 import org.apache.http.util.EntityUtils;
 
+import javax.net.ssl.SSLContext;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -391,6 +405,40 @@ public class ApacheHttpClientUseful {
 //        }
     }
 
+    private static HttpClient createHttpClient(int poolMaxTotal, int poolDefaultMaxPerRoute, int connectionRequestTimeout, int connectTimeout, int socketTimeout) {
+        RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.<ConnectionSocketFactory>create();
+        ConnectionSocketFactory plainSF = new PlainConnectionSocketFactory();
+        registryBuilder.register("http", plainSF);
+        // 指定信任密钥存储对象和连接套接字工厂
+        try {
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            // 信任任何链接
+            TrustStrategy anyTrustStrategy = (x509Certificates, s) -> true;
+            SSLContext sslContext = SSLContexts.custom().useTLS().loadTrustMaterial(trustStore, anyTrustStrategy).build();
+            LayeredConnectionSocketFactory sslSF = new SSLConnectionSocketFactory(sslContext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            registryBuilder.register("https", sslSF);
+        } catch (Exception e) {
+            log.error("CreateHttpClientException", e);
+            throw new RuntimeException(e);
+        }
+
+        Registry<ConnectionSocketFactory> registry = registryBuilder.build();
+        //设置连接管理器
+        PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(registry);
+        connManager.setMaxTotal(poolMaxTotal);
+        connManager.setDefaultMaxPerRoute(poolDefaultMaxPerRoute);
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectionRequestTimeout(connectionRequestTimeout)
+                .setConnectTimeout(connectTimeout)
+                .setSocketTimeout(socketTimeout)
+                .build();
+
+        CloseableHttpClient httpClient = HttpClientBuilder.create().setConnectionManager(connManager)
+                .setDefaultRequestConfig(requestConfig).build();
+
+        return httpClient;
+    }
+
     @Data
     public static class HttpApiResp implements Closeable {
 
@@ -415,7 +463,8 @@ public class ApacheHttpClientUseful {
          */
         private InputStream netInputStream;
 
-        //public HttpApiResp(){}
+        public HttpApiResp() {
+        }
 
         public HttpApiResp(CloseableHttpResponse response) throws IOException {
             this.response = response;
