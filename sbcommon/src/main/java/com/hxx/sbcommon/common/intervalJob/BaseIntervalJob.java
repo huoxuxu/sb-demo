@@ -30,7 +30,7 @@ public abstract class BaseIntervalJob implements Runnable {
 
     private LocalDateTime startRunTime = LocalDateTime.MIN;
 
-    private List<IntervalJobDispatcher.BaseIntervalJobExecutorHandler> handlers = new ArrayList<>();
+    private List<BaseIntervalJobExecutorHandler> handlers = new ArrayList<>();
 
     public BaseIntervalJob(long intervalSecond) {
         UUID uuid = UUID.randomUUID();
@@ -97,7 +97,7 @@ public abstract class BaseIntervalJob implements Runnable {
      *
      * @param handlers
      */
-    public void setHandlers(List<IntervalJobDispatcher.BaseIntervalJobExecutorHandler> handlers) {
+    public void setHandlers(List<BaseIntervalJobExecutorHandler> handlers) {
         this.handlers = handlers;
     }
 
@@ -136,7 +136,7 @@ public abstract class BaseIntervalJob implements Runnable {
         try {
             running = true;
             startRunTime = LocalDateTime.now();
-            for (IntervalJobDispatcher.BaseIntervalJobExecutorHandler handler : this.handlers) {
+            for (BaseIntervalJobExecutorHandler handler : this.handlers) {
                 handler.onBeforeRun(context);
             }
 
@@ -144,13 +144,13 @@ public abstract class BaseIntervalJob implements Runnable {
             process(context);
             // 设置运行结果
             context.setComplete(true);
-            for (IntervalJobDispatcher.BaseIntervalJobExecutorHandler handler : this.handlers) {
+            for (BaseIntervalJobExecutorHandler handler : this.handlers) {
                 handler.onSuccess(context);
             }
         } catch (Exception e) {
             context.setComplete(false, e);
             try {
-                for (IntervalJobDispatcher.BaseIntervalJobExecutorHandler handler : this.handlers) {
+                for (BaseIntervalJobExecutorHandler handler : this.handlers) {
                     handler.onError(context);
                 }
             } catch (Exception e1) {
@@ -161,7 +161,7 @@ public abstract class BaseIntervalJob implements Runnable {
             startRunTime = LocalDateTime.MIN;
             submitted = false;
             try {
-                for (IntervalJobDispatcher.BaseIntervalJobExecutorHandler handler : this.handlers) {
+                for (BaseIntervalJobExecutorHandler handler : this.handlers) {
                     handler.onCompleted(this, context);
                 }
             } catch (Exception e1) {

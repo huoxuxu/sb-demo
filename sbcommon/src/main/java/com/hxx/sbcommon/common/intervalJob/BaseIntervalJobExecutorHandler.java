@@ -5,7 +5,7 @@ import com.hxx.sbcommon.common.intervalJob.BaseIntervalJob;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * 调度处理器
+ * 调度处理器，每个Job，每次运行时触发
  *
  * @Author: huoxuxu
  * @Description:
@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public interface BaseIntervalJobExecutorHandler {
 
     /**
-     * 任务提交到线程池前调用
+     * 任务提交到线程池前调用，返回值影响任务是否提交到线程池
      *
      * @param threadPool
      * @return true可以运行，false不运行
