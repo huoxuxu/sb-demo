@@ -1,7 +1,7 @@
 package com.hxx.sbcommon.common.intervalJob.handler;
 
 import com.hxx.sbcommon.common.intervalJob.BaseIntervalJob;
-import com.hxx.sbcommon.common.intervalJob.IntervalJobDispatcher;
+import com.hxx.sbcommon.common.intervalJob.BaseIntervalJobExecutorHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -14,38 +14,32 @@ import java.util.concurrent.ThreadPoolExecutor;
  **/
 @Slf4j
 @Component
-public class DemoIntervalJobExecutorHandler extends IntervalJobDispatcher.BaseIntervalJobExecutorHandler {
+public class DemoIntervalJobExecutorHandler implements BaseIntervalJobExecutorHandler {
 
     @Override
     public boolean onTaskSubmit(BaseIntervalJob task, ThreadPoolExecutor threadPool) {
-        return super.onTaskSubmit(task, threadPool);
+        return true;
     }
 
     @Override
     public void onTaskSubmitted(BaseIntervalJob task, ThreadPoolExecutor threadPool) {
-        super.onTaskSubmitted(task, threadPool);
         log.info("SUBMITED：{}", task);
     }
 
     @Override
     public void onBeforeRun(BaseIntervalJob.IntervalJobContext context) {
-        super.onBeforeRun(context);
     }
 
     @Override
     public void onSuccess(BaseIntervalJob.IntervalJobContext context) {
-        super.onSuccess(context);
     }
 
     @Override
     public void onError(BaseIntervalJob.IntervalJobContext context) {
-        super.onError(context);
     }
 
     @Override
     public void onCompleted(BaseIntervalJob task, BaseIntervalJob.IntervalJobContext context) {
-        super.onCompleted(task, context);
-
         long cost = context.getCostMs();
         if (cost > 999) {
             log.warn("{} 任务执行耗时：{}", task.getJobCode(), cost);
