@@ -5,6 +5,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -55,6 +56,12 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
 //        log.info("找到Job个数：{}", beans.size());
     }
 
+    @Bean
+    public InternalIntervalJobHandler getInternalIntervalJobHandler() {
+        log.info("创建Bean：InternalIntervalJobHandler");
+        return new InternalIntervalJobHandler();
+    }
+
     /**
      * 获取线程池实例
      *
@@ -90,6 +97,7 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
             task.setHandlers(handlers);
 
             boolean canRunFlag = true;
+//            handlers.stream().anyMatch(d->!d.onTaskSubmit(task,threadPool));
             for (BaseIntervalJobExecutorHandler handler : handlers) {
                 boolean canRun = handler.onTaskSubmit(task, threadPool);
                 if (!canRun) {
@@ -111,69 +119,6 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
     }
 
     /**
-     * 调度处理器
-     */
-    @Slf4j
-    public static abstract class BaseIntervalJobExecutorHandler {
-
-        /**
-         * 任务提交到线程池前调用
-         *
-         * @param threadPool
-         * @return true可以运行，false不运行
-         */
-        public boolean onTaskSubmit(BaseIntervalJob task, ThreadPoolExecutor threadPool) {
-            return true;
-        }
-
-        /**
-         * 任务提交线程池后调用
-         *
-         * @param task
-         * @param threadPool
-         */
-        public void onTaskSubmitted(BaseIntervalJob task, ThreadPoolExecutor threadPool) {
-
-        }
-
-        /**
-         * 任务被线程池中的线程开始运行时调用
-         *
-         * @param context
-         */
-        public void onBeforeRun(BaseIntervalJob.IntervalJobContext context) {
-
-        }
-
-        /**
-         * 任务运行成功时调用
-         *
-         * @param context
-         */
-        public void onSuccess(BaseIntervalJob.IntervalJobContext context) {
-
-        }
-
-        /**
-         * 任务运行失败时调用
-         *
-         * @param context
-         */
-        public void onError(BaseIntervalJob.IntervalJobContext context) {
-
-        }
-
-        /**
-         * 任务运行完成时调用，运行结果可能成功或失败，可通过上下文中的Ok 判断是否运行成功
-         *
-         * @param context
-         */
-        public void onCompleted(BaseIntervalJob task, BaseIntervalJob.IntervalJobContext context) {
-
-        }
-    }
-
-    /**
      * 内置的处理器，用于实现job间隔运行
      *
      * @Author: huoxuxu
@@ -181,8 +126,7 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
      * @Date: 2023-05-31 11:28:08
      **/
     @Slf4j
-    @Component
-    public static class InternalIntervalJobHandler extends BaseIntervalJobExecutorHandler {
+    static class InternalIntervalJobHandler implements BaseIntervalJobExecutorHandler {
         // job运行map，key=job val=job上次运行完成时间
         private static Map<String, LocalDateTime> runMap = new HashMap<>();
         // 如果超过n 秒，则警告
@@ -212,27 +156,24 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
                     return false;
                 }
             }
-            return super.onTaskSubmit(task, threadPool);
+            return true;
         }
 
         @Override
         public void onTaskSubmitted(BaseIntervalJob task, ThreadPoolExecutor threadPool) {
-            super.onTaskSubmitted(task, threadPool);
+
         }
 
         @Override
         public void onBeforeRun(BaseIntervalJob.IntervalJobContext context) {
-            super.onBeforeRun(context);
         }
 
         @Override
         public void onSuccess(BaseIntervalJob.IntervalJobContext context) {
-            super.onSuccess(context);
         }
 
         @Override
         public void onError(BaseIntervalJob.IntervalJobContext context) {
-            super.onError(context);
             BaseIntervalJob job = context.getJob();
             Exception error = context.getError();
             if (error != null)
@@ -244,7 +185,6 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
         @Override
         public void onCompleted(BaseIntervalJob task, BaseIntervalJob.IntervalJobContext context) {
             runMap.put(task.getJobCode(), LocalDateTime.now());
-            super.onCompleted(task, context);
         }
 
     }
