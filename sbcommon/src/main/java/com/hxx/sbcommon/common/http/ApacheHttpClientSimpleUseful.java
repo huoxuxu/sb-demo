@@ -6,7 +6,6 @@ import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -23,8 +22,6 @@ import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -34,13 +31,11 @@ import org.apache.http.util.EntityUtils;
 
 import javax.net.ssl.SSLContext;
 import java.io.*;
-import java.nio.charset.Charset;
-import java.security.KeyManagementException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -57,7 +52,7 @@ import java.util.concurrent.TimeUnit;
  * @Date: 2023-06-29 12:57:35
  **/
 @Slf4j
-public class ApacheHttpClientUseful {
+public class ApacheHttpClientSimpleUseful {
     private static final String CONTENT_VALUE_FORM_DATA = "multipart/form-data";
     private static final String CONTENT_VALUE_FORM = "application/x-www-form-urlencoded";
     private static final String CONTENT_VALUE_JSON = "application/json";
@@ -66,11 +61,11 @@ public class ApacheHttpClientUseful {
     public static final String CHAR_SET = "UTF-8";
 
     // 指定与远程主机建立连接的超时时间
-    public static final Integer DEFAULT_CONNECTION_TIMEOUT = 5000;
+    public static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
     // 指定建立连接后等待数据的超时时间
-    public static final Integer DEFAULT_SOCKET_TIMEOUT = 5000;
+    public static final int DEFAULT_SOCKET_TIMEOUT = 5000;
     // 指定从连接池获取连接的超时时间
-    public static final Integer DEFAULT_CONNECTION_REQUEST_TIMEOUT = 60000;
+    public static final int DEFAULT_CONNECTION_REQUEST_TIMEOUT = 60000;
 
     public static final int maxConnectionSize = 500;
     public static final int maxPerRouteSize = 500;
@@ -82,6 +77,15 @@ public class ApacheHttpClientUseful {
     private static PoolingHttpClientConnectionManager cm;
     private static final CloseableHttpClient HTTP_CLIENT;
 
+    /**
+     * 发起 GET 请求
+     *
+     * @param url
+     * @param header
+     * @param params
+     * @return
+     * @throws IOException
+     */
     public static HttpApiResp sendHttpGetResp(String url, Map<String, String> header, Map<String, String> params) throws IOException {
         if (params != null) {
             // 追加到url中
@@ -96,6 +100,15 @@ public class ApacheHttpClientUseful {
         return execute(httpGet, header);
     }
 
+    /**
+     * 发起 GET 请求
+     *
+     * @param url
+     * @param header
+     * @param params
+     * @return
+     * @throws IOException
+     */
     public static String sendHttpGet(String url, Map<String, String> header, Map<String, String> params) throws IOException {
         try (HttpApiResp resp = sendHttpGetResp(url, header, params)) {
             log.debug("sendHttpGet-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
@@ -108,27 +121,15 @@ public class ApacheHttpClientUseful {
         }
     }
 
-    public static String sendHttpGet(String url) throws IOException {
-        return sendHttpGet(url, null, null);
-    }
-
-    public static HttpApiResp sendHttpUrlEncodedPostResp(String url, Map<String, String> header, Map<String, String> params) throws IOException {
-        HttpPost httpPost = new HttpPost(url);
-//        httpPost.setConfig(requestConfig);
-        if (params != null && !params.isEmpty()) {
-            // 追加到url中
-            List<NameValuePair> nvps = new ArrayList();
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                nvps.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-            }
-            httpPost.setEntity(new UrlEncodedFormEntity(nvps, CHAR_SET));
-            log.debug("sendHttpUrlEncodedPost url={}, param={}", url, nvps);
-        }
-        httpPost.setHeader("Content-type", getContentType(CONTENT_VALUE_FORM, CHAR_SET));
-
-        return execute(httpPost, header);
-    }
-
+    /**
+     * 发起 POST 请求
+     *
+     * @param url
+     * @param header
+     * @param json
+     * @return
+     * @throws IOException
+     */
     public static HttpApiResp sendJsonPostResp(String url, Map<String, String> header, String json) throws IOException {
         HttpPost httpPost = new HttpPost(url);
 //        httpPost.setConfig(requestConfig);
@@ -141,18 +142,15 @@ public class ApacheHttpClientUseful {
         return execute(httpPost, header);
     }
 
-    public static String sendHttpUrlEncodedPost(String url, Map<String, String> header, Map<String, String> params) throws IOException {
-        try (HttpApiResp resp = sendHttpUrlEncodedPostResp(url, header, params)) {
-            log.debug("sendHttpUrlEncodedPost-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-            if (!resp.ok) {
-                log.warn("sendHttpUrlEncodedPost-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-                return null;
-            }
-
-            return processResp(resp);
-        }
-    }
-
+    /**
+     * 发起 POST 请求
+     *
+     * @param url
+     * @param header
+     * @param json
+     * @return
+     * @throws IOException
+     */
     public static String sendJsonPost(String url, Map<String, String> header, String json) throws IOException {
         try (HttpApiResp resp = sendJsonPostResp(url, header, json)) {
             log.debug("sendJsonPost-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
@@ -165,150 +163,7 @@ public class ApacheHttpClientUseful {
         }
     }
 
-    public static String sendFileUpload(String url, Map<String, String> header, Map<String, String> param, String name, File... files) throws IOException {
-        HttpPost httpPost = new HttpPost(url);
-//        httpPost.setConfig(requestConfig);
-        MultipartEntityBuilder mEntityBuilder = MultipartEntityBuilder.create();
-        mEntityBuilder.setCharset(Charset.forName(CHAR_SET));
-        mEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-
-        // 写入文本
-        if (param != null) {
-            param.forEach((key, value) -> {
-                mEntityBuilder.addTextBody(key, value, TEXT_PLAIN_UTF_8);
-            });
-        }
-
-        List<FileInputStream> fls = new ArrayList<>();
-        try {
-            // 写入文件
-            for (File file : files) {
-                // 123.abc
-                String filename = file.getName();
-                FileInputStream fis = new FileInputStream(file);
-                fls.add(fis);
-                mEntityBuilder.addBinaryBody(name, fis, ContentType.MULTIPART_FORM_DATA, filename);
-
-//        if (file instanceof byte[]) {
-//
-//        } else if (file instanceof InputStream) {
-//            mEntityBuilder.addBinaryBody(name, (InputStream) file, ContentType.MULTIPART_FORM_DATA, filename);
-//        }
-            }
-
-            httpPost.setEntity(mEntityBuilder.build());
-            log.debug("sendFileUpload url={}, param={}", url, param);
-
-            try (HttpApiResp resp = execute(httpPost, header)) {
-                log.debug("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-                if (!resp.ok) {
-                    log.warn("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-                    return null;
-                }
-
-                return processResp(resp);
-            }
-        } finally {
-            for (FileInputStream item : fls) {
-                try {
-                    item.close();
-                } catch (Exception ignore) {
-
-                }
-            }
-        }
-    }
-
-    public static String sendFileUpload(String url, Map<String, String> header, Map<String, String> param, String name, String[] fileNames, InputStream... files) throws IOException {
-        HttpPost httpPost = new HttpPost(url);
-//        httpPost.setConfig(requestConfig);
-        MultipartEntityBuilder mEntityBuilder = MultipartEntityBuilder.create();
-        mEntityBuilder.setCharset(Charset.forName(CHAR_SET));
-        mEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-
-        // 写入文本
-        param.forEach((key, value) -> {
-            mEntityBuilder.addTextBody(key, value, TEXT_PLAIN_UTF_8);
-        });
-
-        // 写入文件
-        for (int i = 0; i < fileNames.length; i++) {
-            String fileName = fileNames[i];
-            InputStream file = files[i];
-            mEntityBuilder.addBinaryBody(name, file, ContentType.MULTIPART_FORM_DATA, fileName);
-        }
-
-        httpPost.setEntity(mEntityBuilder.build());
-        log.debug("sendFileUpload url={}, param={}", url, param);
-
-        try (HttpApiResp resp = execute(httpPost, header)) {
-            log.debug("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-            if (!resp.ok) {
-                log.warn("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-                return null;
-            }
-
-            return processResp(resp);
-        }
-    }
-
-    public static String sendFileUpload(String url, Map<String, String> header, Map<String, String> param, String name, String[] fileNames, byte[]... files) throws IOException {
-        HttpPost httpPost = new HttpPost(url);
-//        httpPost.setConfig(requestConfig);
-        MultipartEntityBuilder mEntityBuilder = MultipartEntityBuilder.create();
-        mEntityBuilder.setCharset(Charset.forName(CHAR_SET));
-        mEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-
-        // 写入文本
-        param.forEach((key, value) -> {
-            mEntityBuilder.addTextBody(key, value, TEXT_PLAIN_UTF_8);
-        });
-
-        // 写入文件
-        for (int i = 0; i < fileNames.length; i++) {
-            String fileName = fileNames[i];
-            byte[] file = files[i];
-            mEntityBuilder.addBinaryBody(name, file, ContentType.MULTIPART_FORM_DATA, fileName);
-        }
-
-        httpPost.setEntity(mEntityBuilder.build());
-        log.debug("sendFileUpload url={}, param={}", url, param);
-
-        try (HttpApiResp resp = execute(httpPost, header)) {
-            log.debug("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-            if (!resp.ok) {
-                log.warn("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-                return null;
-            }
-
-            return processResp(resp);
-        }
-    }
-
-    /**
-     * 获取请求配置
-     *
-     * @param connectTimeout           指定与远程主机建立连接的超时时间
-     * @param socketTimeout            指定建立连接后等待数据的超时时间
-     * @param connectionRequestTimeout 指定从连接池获取连接的超时时间
-     * @return
-     */
-    public static RequestConfig getRequestConfig(int connectTimeout, int socketTimeout, int connectionRequestTimeout) {
-        return RequestConfig.custom()
-                .setSocketTimeout(socketTimeout)
-                .setConnectTimeout(connectTimeout)
-                .setConnectionRequestTimeout(connectionRequestTimeout)
-                .build();
-    }
-
-    public static RequestConfig getRequestConfig(int connectTimeout, int socketTimeout) {
-        return getRequestConfig(connectTimeout, socketTimeout, DEFAULT_CONNECTION_REQUEST_TIMEOUT);
-    }
-
-    public static RequestConfig getRequestConfig() {
-        return getRequestConfig(DEFAULT_CONNECTION_TIMEOUT, DEFAULT_SOCKET_TIMEOUT, DEFAULT_CONNECTION_REQUEST_TIMEOUT);
-    }
-
+    // 处理响应
     private static String processResp(HttpApiResp resp) throws IOException {
         int capacity = (int) resp.getContentLength();
         if (capacity < 0) capacity = 4096;
@@ -326,6 +181,7 @@ public class ApacheHttpClientUseful {
         return buffer.toString();
     }
 
+    // 处理QueryString
     private static String appendQueryString(String url, Map<String, String> params) throws IOException {
         if (params.isEmpty()) return url;
 
@@ -347,6 +203,7 @@ public class ApacheHttpClientUseful {
         return MessageFormat.format("{0};charset={1}", contentType, charSet);
     }
 
+    // 执行 http 请求
     private static HttpApiResp execute(HttpUriRequest request, Map<String, String> header) throws IOException {
         // 处理header
         if (header != null) {
@@ -369,6 +226,7 @@ public class ApacheHttpClientUseful {
                 DEFAULT_CONNECTION_REQUEST_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
     }
 
+    // 创建 Http 驱动
     private static CloseableHttpClient createHttpClient(int poolMaxTotal, int poolDefaultMaxPerRoute, int maxIdleSecond,
                                                         int connectionRequestTimeout, int connectTimeout, int socketTimeout) {
         RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.<ConnectionSocketFactory>create();
