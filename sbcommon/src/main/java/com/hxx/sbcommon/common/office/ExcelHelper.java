@@ -12,7 +12,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -32,6 +34,7 @@ public class ExcelHelper implements Closeable {
 
     private final Workbook workbook;
     private final int sheetCount;
+    private final FormulaEvaluator evaluator;
 
     public ExcelHelper(String fileName, InputStream inputStream) throws Exception {
         this.fileName = fileName;
@@ -55,6 +58,7 @@ public class ExcelHelper implements Closeable {
                 this.workbook = new XSSFWorkbook(this.inputStream);
             }
             this.sheetCount = this.workbook.getNumberOfSheets();
+            this.evaluator = this.workbook.getCreationHelper().createFormulaEvaluator();
         } catch (Exception e) {
             log.error("加载excel出现异常：{}", ExceptionUtils.getStackTrace(e));
             throw new Exception("加载excel出现异常：" + e.getMessage());
@@ -133,6 +137,13 @@ public class ExcelHelper implements Closeable {
             List<String> data = new ArrayList<>();
             for (int i = 0; i < colCount; i++) {
                 Cell cell = row.getCell(i);
+                if (cell == null) {
+                    data.add(null);
+                    continue;
+                }
+
+                // 获取单元格数据
+//                getCellDisplayVal(cell, this.evaluator);
                 String cellValue = getCellValue(cell);
                 data.add(cellValue);
             }
@@ -234,6 +245,88 @@ public class ExcelHelper implements Closeable {
             return "";
         }
     }
+
+    /**
+     * 获取单元格显示值
+     * 日期显示和excel不一致，重新格式化为了：yyyy-MM-dd HH:mm:ss
+     *
+     * @param cell
+     * @param evaluator
+     * @return
+     */
+    public static String getCellDisplayVal(Cell cell, FormulaEvaluator evaluator) {
+        CellType cellType = cell.getCellType();
+        if (CellType._NONE == cellType || CellType.BLANK == cellType || CellType.ERROR == cellType) return "";
+
+        // 单元格是否日期格式
+        if (CellType.NUMERIC == cellType && org.apache.poi.hssf.usermodel.HSSFDateUtil.isCellDateFormatted(cell)) {
+            Date dateCellValue = cell.getDateCellValue();
+            if (dateCellValue == null) return "";
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return format.format(dateCellValue);
+        } else {
+            DataFormatter formatter = new DataFormatter();
+            String value = formatter.formatCellValue(cell, evaluator);
+            return value;
+        }
+    }
+
+//    public static void getCellVal(Cell cell){
+//        //获取当前单元格的数据类型
+//        int cellType = cell.getCellType();
+//        //最终读取的值
+//        String cellValue = "";
+//        //根据单元格数据类型来读取数据
+//        switch (cellType) {
+//            //字符串类型
+//            case HSSFCell.CELL_TYPE_STRING:
+//                System.out.print("字符串类型数据：");
+//                //字符串类型数据获取方法
+//                cellValue = cell.getStringCellValue();
+//                break;
+//            //布尔类型，一般不会见到这个类型的值
+//            case HSSFCell.CELL_TYPE_BOOLEAN:
+//                System.out.print("布尔类型的数据：");
+//                //布尔类型数据获取方法
+//                cellValue = String.valueOf(cell.getBooleanCellValue());
+//                break;
+//            //空数据
+//            case HSSFCell.CELL_TYPE_BLANK:
+//                System.out.print("为空的数据：");
+//                break;
+//            //数值类型
+//            //数值类型一共有两种，时间戳和数值
+//            case HSSFCell.CELL_TYPE_NUMERIC:
+//                //判断当前的数值是否是一个时间戳
+//                if (HSSFDateUtil.isCellDateFormatted(cell)) {
+//                    System.out.print("日期：");
+//                    //时间数据类型转换
+//                    Date date = cell.getDateCellValue();
+//                    cellValue = new DateTime(date).toString("yyyy-MM-dd HH:mm:ss");
+//                } else {
+//                    // 不是日期格式，则防止当数字过长时以科学计数法显示
+//                    System.out.print("数值类型的数据：");
+//                    //数值类型的数据转换成字符串类型
+//                    cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+//                    cellValue = cell.toString();
+//                }
+//                break;
+//            //公式类型的数据
+//            case HSSFCell.CELL_TYPE_FORMULA:
+//                //得到单元格使用的公式
+//                String formula = cell.getCellFormula();
+//                System.out.print("单元格使用的公式是:" + formula);
+//                //得到计算的数据
+//                double value = cell.getNumericCellValue();
+//                System.out.print("计算的数据为：" + value);
+//                break;
+//            //错误的数据类型
+//            case Cell.CELL_TYPE_ERROR:
+//                System.out.print("数据类型错误");
+//                break;
+//        }
+//    }
 
     private static boolean isEmpty(Row row) {
         if (row == null) {

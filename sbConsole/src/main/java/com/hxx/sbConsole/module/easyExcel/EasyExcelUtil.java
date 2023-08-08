@@ -51,4 +51,20 @@ public class EasyExcelUtil {
                 .doWrite(data);
     }
 
+    /**
+     * 生成Excel，使用动态表头
+     *
+     * @param excelPath
+     * @param dynamicHeaders
+     * @param data
+     */
+    public static void generateExcelWithDynamicHeader(String excelPath, List<List<String>> dynamicHeaders, List<List<Object>> data) {
+        EasyExcel.write(excelPath)
+                // 这里放入动态头
+                .head(dynamicHeaders)
+                .sheet("模板")
+                // 当然这里数据也可以用 List<List<String>> 去传入
+                .doWrite(data);
+    }
+
 }

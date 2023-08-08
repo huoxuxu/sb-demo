@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -95,6 +96,40 @@ public class OftenUtil {
             throw ex;
         }
     }
+
+    /**
+     * 调用指定方法，并返回值，
+     * 如果抛出异常，则返回null
+     *
+     * @param t
+     * @param act
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> R tryRun(T t, Function<T, R> act) {
+        try {
+            return act.apply(t);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 调用并忘记
+     *
+     * @param t
+     * @param act
+     * @param <T>
+     */
+    public static <T> void tryRun(T t, Consumer<T> act) {
+        try {
+            act.accept(t);
+        } catch (Exception ignored) {
+        }
+    }
+
+    // 校验
 
     /**
      * 字符是否null或空白字符
