@@ -602,9 +602,11 @@ public class OftenUtil {
          * @return
          */
         public static LocalDateTime parseDateTime(String text, LocalDateTime defaultVal) {
+            if (StringUtils.isBlank(text)) return defaultVal;
+
             try {
                 return LocalDateTime.parse(text, DateTime_Default_Formatter);
-            } catch (Exception e) {
+            } catch (Exception ignore) {
                 return defaultVal;
             }
         }
@@ -925,10 +927,7 @@ public class OftenUtil {
          * @return
          */
         public static <T> T firstOrDefault(List<T> ls, T defaultVal) {
-            if (CollectionUtils.isEmpty(ls)) {
-                return defaultVal;
-            }
-            return ls.get(0);
+            return CollectionUtils.isEmpty(ls) ? defaultVal : ls.get(0);
         }
     }
 
