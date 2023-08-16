@@ -165,6 +165,25 @@ public class OftenUtil {
         return ldt != null && ldt.getYear() > 2000;
     }
 
+    // 通用操作
+
+    /**
+     * 查询实体中字段的值，支持实体为null
+     *
+     * @param t
+     * @param func
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> R getFieldVal(T t, Function<T, R> func) {
+        if (t == null) return null;
+        return Arrays.asList(t).stream()
+                .map(func)
+                .findFirst()
+                .orElse(null);
+    }
+
     // UUID
 
     /**
