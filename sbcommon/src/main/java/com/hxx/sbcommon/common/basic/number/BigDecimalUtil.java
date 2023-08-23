@@ -65,6 +65,23 @@ public class BigDecimalUtil {
     }
 
     /**
+     * 两数相除保留指定精度
+     *
+     * @param numerator   分子
+     * @param denominator 分母
+     * @param scale       精度
+     * @return
+     */
+    public static BigDecimal divide(BigDecimal numerator, BigDecimal denominator, int scale) {
+        if (null == numerator || null == denominator || numerator.compareTo(BigDecimal.ZERO) == 0 || denominator.compareTo(BigDecimal.ZERO) == 0) {
+            return BigDecimal.valueOf(0);
+        }
+
+        // 4舍，5入，其他未测
+        return numerator.divide(denominator, scale, BigDecimal.ROUND_HALF_UP);
+    }
+
+    /**
      * 转换为不以科学计数法的字符串，且去除小数点后无意义的零
      *
      * @param b
