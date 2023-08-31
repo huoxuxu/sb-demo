@@ -31,16 +31,16 @@ public class EasyExcelWriteHelper implements AutoCloseable {
         this.excelWriter = EasyExcel.write(excelOutputStream).build();
     }
 
+
     /**
-     * 写入工作簿
+     * 创建工作簿
      *
      * @param sheetIndex
      * @param sheetName
-     * @param sheetData
      * @param voCls
-     * @param <T>
+     * @return
      */
-    public <T> void writeSheet(int sheetIndex, String sheetName, List<T> sheetData, Class voCls) {
+    public static WriteSheet createSheet(int sheetIndex, String sheetName, Class voCls) {
         // 表头样式
         WriteCellStyle headWriteCellStyle = new WriteCellStyle();
         // 单元格样式
@@ -52,7 +52,32 @@ public class EasyExcelWriteHelper implements AutoCloseable {
                 .head(voCls)
                 .registerWriteHandler(horizontalCellStyleStrategy)
                 .build();
+        return sheet;
+    }
+
+    /**
+     * 数据写入工作簿，可多次写入
+     *
+     * @param sheet
+     * @param sheetData
+     * @param <T>
+     */
+    public <T> void writeSheet(WriteSheet sheet, List<T> sheetData) {
         excelWriter = excelWriter.write(sheetData, sheet);
+    }
+
+    /**
+     * 写入工作簿，创建工作簿并写入，适合一次写入工作簿
+     *
+     * @param sheetIndex
+     * @param sheetName
+     * @param sheetData
+     * @param voCls
+     * @param <T>
+     */
+    public <T> void writeSheet(int sheetIndex, String sheetName, List<T> sheetData, Class voCls) {
+        WriteSheet sheet = createSheet(sheetIndex, sheetName, voCls);
+        writeSheet(sheet, sheetData);
     }
 
     @Override

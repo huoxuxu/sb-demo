@@ -1,12 +1,15 @@
 package com.hxx.sbConsole.module.easyExcel;
 
+import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.hxx.sbcommon.common.io.FileUtil;
 import com.hxx.sbcommon.common.io.cfg.ResourcesUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.common.office.easyExcel.EasyExcelReadHelper;
 import com.hxx.sbcommon.common.office.easyExcel.EasyExcelWriteHelper;
 import lombok.Data;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -30,7 +33,12 @@ public class EasyExcelDemo2 {
             List<ParkInfo> data = JsonUtil.parseArray(json, ParkInfo.class);
 
             try (EasyExcelWriteHelper writeHelper = new EasyExcelWriteHelper(excelPath)) {
-                writeHelper.writeSheet(0, "data", data, ParkInfo.class);
+                List<List<ParkInfo>> parts = ListUtils.partition(data, 10);
+                // 工作簿
+                WriteSheet sheet = writeHelper.createSheet(0, "data", ParkInfo.class);
+                for (List<ParkInfo> part : parts) {
+                    writeHelper.writeSheet(sheet, part);
+                }
                 data.get(0).parkId = "hh";
                 writeHelper.writeSheet(1, "data1", data, ParkInfo.class);
             }
