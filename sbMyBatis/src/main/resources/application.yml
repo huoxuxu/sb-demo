@@ -1,0 +1,33 @@
+server:
+  port: 8083
+logging:
+  level:
+    root: INFO
+    com:
+      hxx:
+        sbMyBatis:
+          dal:
+            mapper: debug
+
+# mybatis-config
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/mysql/demo/*.xml
+# mybatis console-log 不能与 mybatis.config-location 节点同时存在
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#mybatis
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/demo?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: xx123
+
+myapp:
+  code:
+    sms:
+      length: 19
+
+

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hxx.sbMyBatis.dal.mapper.DemoTabMapper">
+    <resultMap id="BaseResultMap" type="com.hxx.sbMyBatis.dal.entity.DemoTab">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="age" jdbcType="INTEGER" property="age"/>
+        <result column="score" jdbcType="DECIMAL" property="score"/>
+        <result column="enabled" jdbcType="TINYINT" property="enabled"/>
+        <result column="remark" jdbcType="LONGVARCHAR" property="remark"/>
+        <result column="createTime" jdbcType="TIMESTAMP" property="createtime"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT *
+        FROM demo_tab
+    </select>
+
+    <select id="selectMap" resultType="java.util.Map">
+        SELECT code,name
+        FROM demo_tab
+    </select>
+
+</mapper>
