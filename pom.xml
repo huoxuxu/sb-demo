@@ -19,6 +19,7 @@
         <module>tkMybatisTest</module>
         <module>nettydemo</module>
         <module>sbConsole</module>
+        <module>sbMyBatis</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
@@ -87,6 +88,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
+            <version>4.5.14</version>
         </dependency>
 
         <dependency>

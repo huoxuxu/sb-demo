@@ -14,12 +14,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)// 拦截所有异常
     public Result handle(Exception e) {
+        log.error("全局异常捕获:{}", ExceptionUtils.getStackTrace(e));
 
 //        if (e instanceof NullAttrException) {
 //            return ResultHandler.error(ResultEnum.NULL_ATTR);
 //        }
 
-        log.error("全局异常捕获:{}", ExceptionUtils.getStackTrace(e));
+        if (e instanceof org.springframework.web.HttpRequestMethodNotSupportedException) {
+            return Result.failed("HTTP请求方式错误，请联系管理员!");
+        }
+
 
         return Result.failed("未知异常，请联系管理员");
     }

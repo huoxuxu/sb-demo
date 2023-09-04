@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.io;
+package com.hxx.sbcommon.common.io.fileOrDir;
 
 import org.apache.commons.io.FileUtils;
 
@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  *
  * @Author: huoxuxu
  * @Description:
- * @Date: 2022-11-22 14:17:30
+ * @Date: 2023-09-04 13:16:38
  **/
 public class FileUtil {
 
@@ -29,7 +29,7 @@ public class FileUtil {
      * @return
      * @throws IOException
      */
-    public static String readAllTxt(File file, Charset charset) throws IOException {
+    public static String readAllText(File file, Charset charset) throws IOException {
         return FileUtils.readFileToString(file, charset);
     }
 
@@ -159,37 +159,4 @@ public class FileUtil {
     public static void appendAllTxt(File file, Charset charset, String appendContent) throws IOException {
         FileUtils.writeStringToFile(file, appendContent, charset, true);
     }
-
-    /**
-     * 连接两个路径
-     *
-     * @param path1
-     * @param path2
-     * @return
-     */
-    public static String combine(String path1, String path2) {
-        path1 = path1.replace("\\\\", "/");
-        path2 = path2.replace("\\\\", "/");
-        // 将\转换为/
-        path1 = path1.replace('\\', '/');
-        path2 = path2.replace('\\', '/');
-        // 兼容windows
-        path1 = path1.replace("//", "/");
-        path2 = path2.replace("//", "/");
-        // path1最后为/
-        if (path1.endsWith("/")) {
-            if (path2.startsWith("/")) {
-                path2 = path2.substring(1);
-            }
-            return path1 + path2;
-        }
-        // path1最后不为/
-        else {
-            if (path2.startsWith("/")) {
-                return path1 + path2;
-            }
-            return path1 + "/" + path2;
-        }
-    }
-
 }

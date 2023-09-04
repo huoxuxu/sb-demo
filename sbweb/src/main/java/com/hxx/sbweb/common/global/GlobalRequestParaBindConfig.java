@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.InitBinder;
 @ControllerAdvice
 public class GlobalRequestParaBindConfig {
 
-    @InitBinder("user")
-    public void init1(WebDataBinder binder) {
-        binder.setFieldDefaultPrefix("user.");
-    }
+//    @InitBinder("user")
+//    public void init1(WebDataBinder binder) {
+//        binder.setFieldDefaultPrefix("user.");
+//    }
 
     @InitBinder("book")
     public void init2(WebDataBinder binder) {
