@@ -1,7 +1,7 @@
 package com.hxx.sbConsole.service.impl;
 
 import com.hxx.sbcommon.common.basic.OftenUtil;
-import com.hxx.sbcommon.common.io.FileUtil;
+import com.hxx.sbcommon.common.io.fileOrDir.FileUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 

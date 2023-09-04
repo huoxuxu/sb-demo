@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.http;
+package com.hxx.sbcommon.common.io.http;
 
 import java.io.BufferedReader;
 import java.io.IOException;

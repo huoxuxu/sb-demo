@@ -2,7 +2,8 @@ package com.hxx.sbConsole.service.impl.http;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hxx.sbConsole.model.HttpTestDemoModel;
-import com.hxx.sbcommon.common.http.ApacheHttpClientUseful;
+import com.hxx.sbcommon.common.io.http.ApacheHttpClientSimpleUseful;
+import com.hxx.sbcommon.common.io.http.ApacheHttpClientUseful;
 import com.hxx.sbcommon.common.json.FastJsonReaderQuick;
 import com.hxx.sbcommon.common.json.JsonUtil;
 
@@ -41,7 +42,7 @@ public class HttpClientServiceDemo {
 
     // get
     static void case1() throws IOException {
-        String html = ApacheHttpClientUseful.sendHttpGet(url, headers, null);
+        String html = ApacheHttpClientSimpleUseful.sendGet(url, headers, null);
         System.out.println("=====================================================");
         System.out.println(html);
     }
@@ -49,7 +50,7 @@ public class HttpClientServiceDemo {
     // post
     static void case2() throws IOException {
         {
-            String html = ApacheHttpClientUseful.sendJsonPost(url, headers, "[{\"id\":1}]");
+            String html = ApacheHttpClientSimpleUseful.sendPostJson(url, headers, "[{\"id\":1}]");
             System.out.println("=====================================================");
             System.out.println(html);
         }
@@ -58,7 +59,7 @@ public class HttpClientServiceDemo {
             Map<String, String> paramDic = new HashMap<>();
             paramDic.put("code", "1");
             paramDic.put("name", "kt");
-            String html = ApacheHttpClientUseful.sendHttpUrlEncodedPost(url, headers, paramDic);
+            String html = ApacheHttpClientSimpleUseful.sendPostUrlEncoded(url, headers, paramDic);
             System.out.println("=====================================================");
             System.out.println(html);
         }
