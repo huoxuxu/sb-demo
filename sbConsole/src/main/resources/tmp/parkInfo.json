@@ -1,109 +1,200 @@
-﻿[{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "1"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "2"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "3"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "4"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "5"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "6"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "7"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "8"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "9"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "10"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "11"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "12"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "13"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "14"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "15"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "16"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "17"
-},{
-  "parkId": "1",
-  "buildId": "23",
-  "florId": "46",
-  "roomId": "373",
-  "platformId": "18"
-}]
+﻿[
+  {
+    "createTime": 1693900871511,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "1",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871871,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "2",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871872,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "3",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871873,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "4",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871874,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "5",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871874,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "6",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871874,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "7",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871875,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "8",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871875,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "9",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871875,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "10",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871876,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "11",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871876,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "12",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871877,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "13",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871877,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "14",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871877,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "15",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871878,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "16",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871895,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "17",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  },
+  {
+    "createTime": 1693900871895,
+    "enabled": false,
+    "loadRate": 99.86,
+    "peopleTotal": 0,
+    "platformId": "18",
+    "remark": "",
+    "total": 10,
+    "updateTime": "2023-09-05 16:01:11",
+    "useTotal": 0
+  }
+]

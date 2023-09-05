@@ -14,27 +14,27 @@ import java.util.Date;
 
 /**
  * 支持long、String、Date、LocalDate、LocalDateTime
+ *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2022-10-27 11:02:11
  **/
 @Slf4j
 public class LocalDateTimeTypeHandler implements LangTypeHandler<LocalDateTime> {
-    private DateTimeFormatter dateTimeFormatter;
+    private final String formatPattern;
 
     /**
      * 默认 yyyy-MM-dd HH:mm:ss
      */
     public LocalDateTimeTypeHandler() {
-        String defaultPattern = "yyyy-MM-dd HH:mm:ss";
-        dateTimeFormatter = DateTimeFormatter.ofPattern(defaultPattern);
+        this("yyyy-MM-dd HH:mm:ss");
     }
 
     /**
      * @param pattern yyyy-MM-dd HH:mm:ss
      */
     public LocalDateTimeTypeHandler(String pattern) {
-        dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
+        this.formatPattern = pattern;
     }
 
     /**
@@ -91,6 +91,7 @@ public class LocalDateTimeTypeHandler implements LangTypeHandler<LocalDateTime> 
         // 字符串
         if (val instanceof String) {
             try {
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(this.formatPattern);
                 return LocalDateTime.parse((String) val, dateTimeFormatter);
             } catch (Exception e) {
                 log.error("出现异常：{}", ExceptionUtils.getStackTrace(e));

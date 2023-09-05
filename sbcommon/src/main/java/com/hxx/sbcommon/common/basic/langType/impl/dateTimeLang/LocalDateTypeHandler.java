@@ -18,14 +18,13 @@ import java.util.Date;
  **/
 @Slf4j
 public class LocalDateTypeHandler implements LangTypeHandler<LocalDate> {
-    private LocalDateTimeTypeHandler localDateTimeTypeHandler;
+    private final LocalDateTimeTypeHandler localDateTimeTypeHandler;
 
     /**
      * 默认 yyyy-MM-dd HH:mm:ss
      */
     public LocalDateTypeHandler() {
-        String pattern = "yyyy-MM-dd";
-        localDateTimeTypeHandler = new LocalDateTimeTypeHandler(pattern);
+        this("yyyy-MM-dd");
     }
 
     /**

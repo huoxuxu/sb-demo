@@ -43,9 +43,7 @@ public class BeanInfoUtil {
             //得到属性的name
             String key = prop.getName();
             Method getMethod = prop.getReadMethod();
-            if (getMethod == null) {
-                continue;
-            }
+            if (getMethod == null) continue;
 
             //执行get方法得到属性的值
             Object value = getMethod.invoke(bean);
@@ -56,15 +54,14 @@ public class BeanInfoUtil {
     }
 
     /**
-     * 处理字段中的NULL设置为默认值
+     * 将map中key对应的属性名赋值给对应的对象
      *
      * @param bean
+     * @param map
      * @param <T>
-     * @throws IntrospectionException
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
+     * @throws Exception
      */
-    public static <T> void procFieldNull(T bean) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+    public static <T> void copyToBean(T bean, Map<String, Object> map) throws Exception {
         //获取类的属性描述器
         BeanInfo beaninfo = Introspector.getBeanInfo(bean.getClass(), Object.class);
         //获取类的属性集
@@ -72,64 +69,40 @@ public class BeanInfoUtil {
         for (PropertyDescriptor prop : props) {
             //得到属性的name
             String key = prop.getName();
-            Method getMethod = prop.getReadMethod();
-            if (getMethod == null) {
-                continue;
-            }
-            Method writeMethod = prop.getWriteMethod();
-            if (writeMethod == null) {
-                continue;
-            }
+            Object val = map.getOrDefault(key, null);
+            if (val == null) continue;
 
-            //执行get方法得到属性的值
-            Object value = getMethod.invoke(bean);
-            if (value == null) {
-                Class<?> propType = prop.getPropertyType();
-                if (propType == BigDecimal.class) {
-                    value = BigDecimal.ZERO;
-                } else if (propType == BigInteger.class) {
-                    value = BigInteger.ZERO;
-                }
-                // 日期
-                else if (propType == Date.class) {
-                    value = new Date(0);
-                } else if (propType == LocalDateTime.class) {
-                    value = LocalDateTime.MIN;
-                } else if (propType == LocalDate.class) {
-                    value = LocalDate.MIN;
-                }
-                // boolean byte
-                else if (propType == Boolean.class) {
-                    value = false;
-                } else if (propType == Byte.class) {
-                    value = (byte) 0;
-                }
-                // 整型
-                else if (propType == Short.class) {
-                    value = (short) 0;
-                } else if (propType == Integer.class) {
-                    value = 0;
-                } else if (propType == Long.class) {
-                    value = (long) 0;
-                }
-                // 浮点型
-                else if (propType == Float.class) {
-                    value = (float) 0;
-                } else if (propType == Double.class) {
-                    value = (double) 0;
-                }
-                // 字符串
-                else if (propType == String.class) {
-                    value = "";
-                } else if (propType == Character.class) {
-                    value = Character.MIN_VALUE;
-                } else {
-                    throw new NotImplementedException("不支持的数据类型：" + key + " （" + propType.getTypeName() + "）");
-                }
-                // 枚举？
-                writeMethod.invoke(bean, value);
-            }
+            Method writeMethod = prop.getWriteMethod();
+            if (writeMethod == null) continue;
+
+            writeMethod.invoke(bean, val);
         }
+    }
+
+    /**
+     * 复制src对象的属性到tar对象中
+     *
+     * @param src
+     * @param tar
+     * @param <T>
+     * @throws Exception
+     */
+    public static <T> void copyTo(T src, T tar) throws Exception {
+        Map<String, Object> srcMap = toMap(src);
+        copyToBean(tar, srcMap);
+    }
+
+    /**
+     * 复制src对象的属性值到tar对象对应的属性中
+     *
+     * @param src
+     * @param tar
+     * @param <T>
+     * @throws Exception
+     */
+    public static <T> void copyToObj(T src, Object tar) throws Exception {
+        Map<String, Object> srcMap = toMap(src);
+        copyToBean(tar, srcMap);
     }
 
 }

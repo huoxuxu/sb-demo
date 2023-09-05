@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.office;
+package com.hxx.sbcommon.common.office.poi;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -24,7 +24,7 @@ import java.util.function.Consumer;
  * @Date: 2023-04-07 14:58:58
  **/
 @Slf4j
-public class ExcelHelper implements Closeable {
+public class POIExcelUseful implements Closeable {
     private final String fileName;
     private final InputStream inputStream;
 
@@ -36,7 +36,7 @@ public class ExcelHelper implements Closeable {
     private final int sheetCount;
     private final FormulaEvaluator evaluator;
 
-    public ExcelHelper(String fileName, InputStream inputStream) throws Exception {
+    public POIExcelUseful(String fileName, InputStream inputStream) throws Exception {
         this.fileName = fileName;
         this.inputStream = inputStream;
         if (StringUtils.isBlank(this.fileName)) throw new IllegalArgumentException("excel名称不能为空");

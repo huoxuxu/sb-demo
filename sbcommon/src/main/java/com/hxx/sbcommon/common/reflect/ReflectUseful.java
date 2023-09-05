@@ -15,23 +15,28 @@ import java.util.*;
 
 /**
  * 反射工具
+ *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2023-05-25 18:09:25
  **/
 @Slf4j
 public class ReflectUseful {
-    private Class<?> cls;
+    // 当前类
+    private Class currentCls;
 
+    // 所有字段
+    private List<Field> fields;
     // 所有方法
-    private Method[] methods;
+    private List<Method> methods;
+    // 构造函数
     private Constructor[] constructors;
     // 公开的实例方法
     private List<Method> publicInstanceMethods = new ArrayList<>();
     private List<Method> publicStaticMethods = new ArrayList<>();
 
     // 属性对应的字段
-    private List<Field> fields = new ArrayList<>();
+    private List<Field> propFields = new ArrayList<>();
     // 属性对应字段包含的特性集合
     private Map<String, Annotation[]> fieldAnnotationMap = new HashMap<>();
 
@@ -43,13 +48,19 @@ public class ReflectUseful {
     // 属性集合
     private List<String> props = new ArrayList<>();
 
-    public ReflectUseful(Class<?> cls) {
-        this.cls = cls;
+    public ReflectUseful(Class<?> currentCls) {
+        this.currentCls = currentCls;
 
-        this.methods = cls.getMethods();
-        this.constructors = cls.getConstructors();
-        initMethod();
-        initField();
+        // 获取类的所有属性
+        this.fields = getFields(currentCls);
+        if (CollectionUtils.isEmpty(fields)) return;
+
+        this.methods = getMethods(currentCls);
+        if (CollectionUtils.isEmpty(methods)) return;
+
+        this.constructors = currentCls.getConstructors();
+        initMethod(this.methods);
+        initField(this.fields);
     }
 
     /**
@@ -61,13 +72,121 @@ public class ReflectUseful {
         return props;
     }
 
+    // 初始化
+    public static List<Field> getFields(Class<?> clazz) {
+        List<Field> ls = new ArrayList<>();
+        if (clazz == null || clazz == Object.class) return ls;
+
+        Field[] fieldArr = clazz.getDeclaredFields();
+        ls.addAll(Arrays.asList(fieldArr));
+
+        List<Field> fs = getFields(clazz.getSuperclass());
+        if (!CollectionUtils.isEmpty(fs)) {
+            for (Field field : fs) {
+                String name = field.getName();
+                boolean flag = ls.stream().anyMatch(d -> name.equals(d.getName()));
+                if (flag) continue;
+                ls.add(field);
+            }
+        }
+        return ls;
+    }
+
+    public static List<Method> getMethods(Class<?> clazz) {
+        List<Method> ls = new ArrayList<>();
+        if (clazz == null || clazz == Object.class) return ls;
+
+        Method[] fieldArr = clazz.getDeclaredMethods();
+        ls.addAll(Arrays.asList(fieldArr));
+
+        List<Method> fs = getMethods(clazz.getSuperclass());
+        if (!CollectionUtils.isEmpty(fs)) {
+            for (Method item : fs) {
+                String name = item.getName();
+                boolean flag = ls.stream().anyMatch(d -> name.equals(d.getName()));
+                if (flag) continue;
+
+                ls.add(item);
+            }
+        }
+        return ls;
+    }
+
+    private void initField(List<Field> fields) {
+        if (CollectionUtils.isEmpty(fields)) return;
+
+        for (Field field : fields) {
+            String name = field.getName();
+
+            if (fieldHasGetter.contains(name) && fieldHasSetter.contains(name)) {
+                this.propFields.add(field);
+                this.props.add(name);
+                // 查询注解
+                Annotation[] annotations = field.getAnnotations();
+                fieldAnnotationMap.put(name, annotations);
+            }
+        }
+    }
+
+    private void initMethod(List<Method> methods) {
+        for (Method method : methods) {
+            String methodName = method.getName();
+
+            int modifiers = method.getModifiers();
+            // 公开的非静态
+            if (!Modifier.isPublic(modifiers)) {
+                continue;
+            }
+
+            // 非桥接
+            if (method.isBridge()) {
+                continue;
+            }
+
+            // 静态方法
+            if (Modifier.isStatic(modifiers)) {
+                publicStaticMethods.add(method);
+                continue;
+            }
+
+            if (Modifier.isFinal(modifiers)) continue;
+
+            publicInstanceMethods.add(method);
+
+            // 公开的实例方法&&get开头&&无参&&非桥接
+            boolean isGetter = checkGetterMethod(methodName, method);
+            if (isGetter) {
+                // 反推field的名字
+                String fieldName = "";
+                if (method.getReturnType() == boolean.class) {
+                    fieldName = OftenUtil.StringUtil.lowerFirstChar(methodName.substring(2));
+                } else {
+                    fieldName = OftenUtil.StringUtil.lowerFirstChar(methodName.substring(3));
+                }
+                if (isValidPropertyName(fieldName)) {
+                    fieldHasGetter.add(fieldName);
+                }
+            }
+
+            // 校验此方法是否合适（公开的实例方法&&set开头&&只有一个入参无返回值&&非桥接方法）
+            boolean isSetter = checkSetterMethod(methodName, method);
+            if (isSetter) {
+                // 反推field的名字
+                String fieldName = OftenUtil.StringUtil.lowerFirstChar(methodName.substring(3));
+                if (isValidPropertyName(fieldName)) {
+                    fieldHasSetter.add(fieldName);
+                }
+            }
+        }
+    }
+
     /**
      * 是否有效的属性名
      *
      * @param name
      * @return
      */
-    public static boolean isValidPropertyName(String name) {
+    private static boolean isValidPropertyName(String name) {
         return !name.startsWith("$") && !"serialVersionUID".equals(name) && !"class".equals(name);
     }
 
@@ -78,7 +197,7 @@ public class ReflectUseful {
      * @param method
      * @return
      */
-    public static boolean checkGetterMethod(String methodName, Method method) {
+    private static boolean checkGetterMethod(String methodName, Method method) {
         // 过滤Object 类中的getXX 方法
         if (methodName.equals("getClass")) {
             return false;
@@ -118,7 +237,7 @@ public class ReflectUseful {
     }
 
     // 校验Setter方法
-    public static boolean checkSetterMethod(String methodName, Method method) {
+    private static boolean checkSetterMethod(String methodName, Method method) {
         int modifiers = method.getModifiers();
         // 公开的非静态
         if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) {
@@ -148,114 +267,4 @@ public class ReflectUseful {
 
         return true;
     }
-
-    // 初始化
-    public static List<Field> getFields(Class<?> clazz) {
-        List<Field> ls = new ArrayList<>();
-        if (clazz == null || clazz == Object.class) return ls;
-
-        Field[] fieldArr = clazz.getDeclaredFields();
-        ls.addAll(Arrays.asList(fieldArr));
-
-        List<Field> fs = getFields(clazz.getSuperclass());
-        if (!CollectionUtils.isEmpty(fs)) {
-            for (Field field : fs) {
-                String name = field.getName();
-                boolean flag = ls.stream().anyMatch(d -> name.equals(d.getName()));
-                if (flag) continue;
-                ls.add(field);
-            }
-        }
-        return ls;
-    }
-
-    /**
-     * 反射创建数组
-     *
-     * @param cls
-     * @param length
-     */
-    public static void createArray(Class cls, int length) {
-        //创建一个元素类型为String，长度为10的数组
-        Object arr = Array.newInstance(cls, length);
-
-        //依次为arr数组中index为5、6的元素赋值
-        Array.set(arr, 5, "Byte");
-        Array.set(arr, 6, "科技");
-        //依次取出arr数组中index为5、6的元素的值；
-        Object str1 = Array.get(arr, 5);
-        Object str2 = Array.get(arr, 6);
-        //输出arr数组中index为5、6的元素
-        System.out.print(str1);
-        System.out.print(str2);
-    }
-
-    private void initField() {
-        // 获取类的所有属性
-        List<Field> fields = getFields(cls);
-        if (CollectionUtils.isEmpty(fields)) return;
-
-        for (Field field : fields) {
-            String name = field.getName();
-
-            if (fieldHasGetter.contains(name) && fieldHasSetter.contains(name)) {
-                this.fields.add(field);
-                this.props.add(name);
-                // 查询注解
-                Annotation[] annotations = field.getAnnotations();
-                fieldAnnotationMap.put(name, annotations);
-            }
-        }
-    }
-
-    private void initMethod() {
-        if (methods == null || methods.length == 0) return;
-
-        for (Method method : methods) {
-            String methodName = method.getName();
-
-            int modifiers = method.getModifiers();
-            // 公开的非静态
-            if (!Modifier.isPublic(modifiers)) {
-                continue;
-            }
-
-            // 非桥接
-            if (method.isBridge()) {
-                continue;
-            }
-
-            if (Modifier.isStatic(modifiers)) {
-                publicStaticMethods.add(method);
-            } else {
-                publicInstanceMethods.add(method);
-
-                // 公开的实例方法&&get开头&&无参&&非桥接
-                boolean isGetter = checkGetterMethod(methodName, method);
-                if (isGetter) {
-                    // 反推field的名字
-                    String fieldName = "";
-                    if (method.getReturnType() == boolean.class) {
-                        fieldName = OftenUtil.StringUtil.lowerFirstChar(methodName.substring(2));
-                    } else {
-                        fieldName = OftenUtil.StringUtil.lowerFirstChar(methodName.substring(3));
-                    }
-                    if (isValidPropertyName(fieldName)) {
-                        fieldHasGetter.add(fieldName);
-                    }
-                }
-
-                // 校验此方法是否合适（公开的实例方法&&set开头&&只有一个入参无返回值&&非桥接方法）
-                boolean isSetter = checkSetterMethod(methodName, method);
-                if (isSetter) {
-                    // 反推field的名字
-                    String fieldName = OftenUtil.StringUtil.lowerFirstChar(methodName.substring(3));
-                    if (isValidPropertyName(fieldName)) {
-                        fieldHasSetter.add(fieldName);
-                    }
-                }
-            }
-        }
-    }
-
 }

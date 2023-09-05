@@ -15,7 +15,28 @@ import java.util.Map;
  **/
 public class ReflectUtil {
 
-    private static void procArray(Object val){
+    /**
+     * 反射创建数组
+     *
+     * @param cls    数组类型
+     * @param length 数组长度
+     */
+    public static void createArray(Class cls, int length) {
+        //创建一个元素类型为String，长度为10的数组
+        Object arr = Array.newInstance(cls, length);
+
+        //依次为arr数组中index为5、6的元素赋值
+        Array.set(arr, 5, "Byte");
+        Array.set(arr, 6, "科技");
+        //依次取出arr数组中index为5、6的元素的值；
+        Object str1 = Array.get(arr, 5);
+        Object str2 = Array.get(arr, 6);
+        //输出arr数组中index为5、6的元素
+        System.out.print(str1);
+        System.out.print(str2);
+    }
+
+    private static void procArray(Object val) {
         Class<?> cls = val.getClass();
         // 判断是否数组
         if (cls.isArray()) {
@@ -23,6 +44,8 @@ public class ReflectUtil {
             int length = java.lang.reflect.Array.getLength(val);
             // 获取数组元素类型
             Class elementType = cls.getComponentType();
+            System.out.println(elementType);
+            // loop
             for (int i = 0; i < length; i++) {
                 Object item = Array.get(val, i);
                 System.out.println(item);
@@ -103,34 +126,6 @@ public class ReflectUtil {
         }
     }
 
-
-    /**
-     * 获取方法Map，key= 方法签名，val= 方法
-     *
-     * @param cls
-     * @return
-     */
-    public static Map<String, Method> getMethods(Class<?> cls) {
-        Map<String, Method> uniqueMethods = new HashMap();
-
-        for (; cls != null && cls != Object.class; cls = cls.getSuperclass()) {
-            // self
-            {
-                Method[] methods = cls.getDeclaredMethods();
-                addUniqueMethod(uniqueMethods, methods);
-            }
-
-            // 接口
-            Class<?>[] interfaces = cls.getInterfaces();
-            for (Class<?> interf : interfaces) {
-                Method[] methods = interf.getMethods();
-                addUniqueMethod(uniqueMethods, methods);
-            }
-        }
-
-        return uniqueMethods;
-    }
-
     /**
      * 获取方法签名
      * com.zto.base.bean.ConfigResponse#pageQuerySecCode:com.zto.base.bean.request.TSecCodeRequest,java.lang.Integer,java.lang.Integer
@@ -174,41 +169,4 @@ public class ReflectUtil {
     public static <T> T createInstance(Class clsT) throws InstantiationException, IllegalAccessException {
         return (T) clsT.newInstance();
     }
-
-    private static void addUniqueMethod(Map<String, Method> uniqueMethods, Method[] methods) {
-        for (Method method : methods) {
-            Method method1 = getMethod(method);
-            if (method1 == null) {
-                continue;
-            }
-
-            String methodSign = getMethodSignature(method);
-            if (!uniqueMethods.containsKey(methodSign)) {
-                uniqueMethods.put(methodSign, method);
-            }
-        }
-    }
-
-    private static Method getMethod(Method method) {
-        if (method.isBridge()) {
-            return null;
-        }
-
-        return method;
-    }
-
-    /**
-     * 是否Object类的方法
-     *
-     * @param method
-     * @return
-     */
-    private static boolean isObjMethod(Method method) {
-        if (Object.class.equals(method.getDeclaringClass())) {
-            return true;
-        }
-
-        return false;
-    }
-
 }
