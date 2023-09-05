@@ -6,6 +6,7 @@ import com.hxx.sbcommon.common.io.http.ApacheHttpClientSimpleUseful;
 import com.hxx.sbcommon.common.io.http.ApacheHttpClientUseful;
 import com.hxx.sbcommon.common.json.FastJsonReaderQuick;
 import com.hxx.sbcommon.common.json.JsonUtil;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,18 +27,23 @@ public class HttpClientServiceDemo {
         headers.put("a", "a1");
         headers.put("b", "b1");
 
-        // get
-        case1();
-        // post
-        case2();
-        // upload
-        case3();
+        try {
+            // get
+            case1();
+            // post
+            case2();
+            // upload
+            case3();
+            // Client
+            case4();
 
-        for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 10; i++) {
 
+            }
+        } catch (Exception e) {
+            System.out.println(ExceptionUtils.getStackTrace(e));
         }
-        System.out.println("=====================================================");
-
+        System.out.println("ok!");
     }
 
     // get
@@ -74,6 +80,11 @@ public class HttpClientServiceDemo {
         String html = ApacheHttpClientUseful.sendFileUpload(url, headers, params, "file", file, file2);
         System.out.println("=====================================================");
         System.out.println(html);
+    }
+
+    static void case4() throws IOException {
+        String txt = BaiduHttpApiClient.getContent();
+        System.out.println(txt);
     }
 
     // 解析Reader

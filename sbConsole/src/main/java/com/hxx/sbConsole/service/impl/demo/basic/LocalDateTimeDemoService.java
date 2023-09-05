@@ -1,7 +1,10 @@
 package com.hxx.sbConsole.service.impl.demo.basic;
 
+import com.hxx.sbcommon.common.basic.OftenUtil;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
@@ -44,16 +47,18 @@ public class LocalDateTimeDemoService {
                     System.out.println(durSeconds);
                 }
                 {
-                    LocalDateTime st = LocalDateTime.parse("2023-06-05 00:00:00", df);
-                    LocalDateTime et = LocalDateTime.parse("2023-06-12 00:00:00", df);
+                    // 相差的总秒数
+                    LocalDateTime st = OftenUtil.DateTimeUtil.parseDateTime("2023-06-05 00:00:00");
+                    LocalDateTime et = OftenUtil.DateTimeUtil.parseDateTime("2023-06-05 23:59:59");
 
                     Duration dur = Duration.between(st, et);
-                    long days = dur.toDays();// 7
-                    long hours = dur.toHours();// 168
-                    long minutes = dur.toMinutes();// 10080
-                    long millis = dur.toMillis();// 604800000
+                    long days = dur.toDays();// 0
+                    long hours = dur.toHours();// 23
+                    long minutes = dur.toMinutes();// 1439
+                    // 相差总秒数
+                    long durSeconds = dur.getSeconds();// 86399
+                    long millis = dur.toMillis();// 86399000
 
-                    long durSeconds = dur.getSeconds();// 604800
                     System.out.println(durSeconds);
                 }
                 {

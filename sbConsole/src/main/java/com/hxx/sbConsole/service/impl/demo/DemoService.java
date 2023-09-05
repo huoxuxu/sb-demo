@@ -23,12 +23,15 @@ import com.hxx.sbcommon.model.Result;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,6 +46,41 @@ import java.util.stream.Collectors;
 public class DemoService {
     public static void main(String[] args) {
         try {
+            {
+                String[] arr = "&&".split("&&");
+                System.out.println(arr);
+            }
+            List<String> strls = new ArrayList<>();
+            Map<String, Integer> strlMap = strls.stream().collect(Collectors.toMap(d -> d, d -> d.length()));
+
+            Set<String> set1 = new HashSet<>();
+            String str1 = null;
+            System.out.println(set1.contains(str1));
+            Map<String, Integer> map1 = new HashMap<>();
+            System.out.println(map1.containsKey(str1));
+
+            List<String> ls = null;
+            List<String> ls1 = Optional.ofNullable(ls).orElse(new ArrayList<>());
+
+            Integer integer1 = NumberUtils.toInt("987654", 0);
+            int integer2 = 987654;
+            boolean flag = Objects.equals(integer2, integer1);
+
+            LocalDateTime begin = OftenUtil.DateTimeUtil.parseDateTime("2023-07-01 00:00:00");
+            LocalDateTime end = OftenUtil.DateTimeUtil.parseDateTime("2023-07-07 23:59:59");
+            long days = Duration.between(begin, end).toDays();// 6
+            System.out.println(days);
+
+            begin = OftenUtil.DateTimeUtil.parseDateTime("2023-07-01 00:00:00");
+            end = OftenUtil.DateTimeUtil.parseDateTime("2023-07-01 23:59:59");
+            days = Duration.between(begin, end).toDays();// 0
+            System.out.println(days);
+
+            // String... 需要判断null
+            argArr();
+            argArr(null);
+            argArr("");
+
             File tempFile = new File(System.currentTimeMillis() + ".xls");
             tempFile.delete();// 文件不存在，也可以直接删除
 
@@ -72,9 +110,9 @@ public class DemoService {
                 }
             }
             {
-                boolean a=false;
-                boolean b=false;
-                System.out.println(a||b);
+                boolean a = false;
+                boolean b = false;
+                System.out.println(a || b);
             }
             {
                 long a1 = Long.MAX_VALUE;
@@ -395,6 +433,14 @@ public class DemoService {
             System.out.println("==================================================");
             //
         }
+    }
+
+    public static void argArr(String... args) {
+        if (args == null) {
+            System.out.println("args = null");
+            return;
+        }
+        System.out.println("args = " + args);
     }
 
 }

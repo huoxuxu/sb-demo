@@ -1,6 +1,7 @@
 package com.hxx.sbweb.mapper;
 
 import com.hxx.sbweb.domain.Demo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -11,5 +12,11 @@ import java.util.List;
  **/
 public interface DemoMapper {
 
+    List<Demo> selectDemo(Demo demo);
+
     int batchUpdate(List<Demo> demos);
+
+    List<Demo> selectAll();
+
+    Demo selectByCode(@Param("code") String code);
 }

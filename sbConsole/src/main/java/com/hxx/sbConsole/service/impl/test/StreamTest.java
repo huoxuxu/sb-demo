@@ -13,7 +13,6 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -155,19 +154,38 @@ public class StreamTest {
         }
     }
 
+    static void group1(Function<? super Employee, String> gyFunc) {
+        List<Employee> ls = listPersons();
+
+        Map<String, List<Employee>> gys = ls.stream()
+                .collect(Collectors.groupingBy(gyFunc));
+        for (Map.Entry<String, List<Employee>> entry : gys.entrySet()) {
+            System.out.println(entry.getKey() + " " + entry.getValue());
+        }
+    }
+
     /**
      * 注意：
      * 分组的字段不能为null
      */
     public static void Group() {
+        group1(d -> d.getGender().name() + "-" + d.getAge());
+
         List<Employee> ls = listPersons();
-        // 多字段组合分组（单层）
+        // 多字段字符串连接后排序
+        {
+            Map<String, List<Employee>> gys = ls.stream().collect(Collectors.groupingBy(d -> d.getGender().name() + "-" + d.getAge()));
+            for (Map.Entry<String, List<Employee>> entry : gys.entrySet()) {
+                System.out.println(entry.getKey() + " " + entry.getValue());
+            }
+        }
+        // 单字段 分组
         {
             Map<String, List<Employee>> map = ls.stream()
                     .collect(Collectors.groupingBy(Employee::getUK));
             map.forEach((k, v) -> System.out.println(k + " : " + JsonUtil.toJSON(v)));
         }
-        // 多字段分组（多层）
+        // 多字段 分组
         {
             // 按名称和年龄分组
             Map<String, Map<Integer, List<Employee>>> gyMap = ls.stream()

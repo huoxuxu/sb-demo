@@ -1,14 +1,14 @@
 package com.hxx.sbConsole.service.impl.demo.io;
 
-import com.hxx.sbcommon.common.io.FileUtil;
+import com.hxx.sbcommon.common.basic.OftenUtil;
+import com.hxx.sbcommon.common.io.fileOrDir.FileUtil;
+import com.hxx.sbcommon.common.io.fileOrDir.PathUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +20,7 @@ import java.util.List;
 public class DemoIOServiceImpl {
     public static void main(String[] args) {
         try {
+            PathUtil_Demo();
             case1();
             demo();
             System.out.println("ok!");
@@ -28,10 +29,27 @@ public class DemoIOServiceImpl {
         }
     }
 
+    static void PathUtil_Demo() {
+        String pathVal = "d:/998.txt";
+        String path = "";
+        path = PathUtil.combine("d:", "998.txt");
+        OftenUtil.assertCond(!path.equals(pathVal), "验证失败！");
+        path = PathUtil.combine("d:/", "998.txt");
+        OftenUtil.assertCond(!path.equals(pathVal), "验证失败！");
+        path = PathUtil.combine("d:", "/998.txt");
+        OftenUtil.assertCond(!path.equals(pathVal), "验证失败！");
+        path = PathUtil.combine("d:/", "/998.txt");
+        OftenUtil.assertCond(!path.equals(pathVal), "验证失败！");
+        path = PathUtil.combine("d://", "//998.txt");
+        OftenUtil.assertCond(!path.equals(pathVal), "验证失败！");
+
+        System.out.println(path);
+    }
+
     public static void demo() throws Exception {
         System.out.println("FileUtil==================================================");
         {
-            String path = FileUtil.combine("d:", "998.txt");
+            String path = PathUtil.combine("d:", "998.txt");
             File file = new File(path);
 
             String content = "aabbcc";
@@ -65,10 +83,10 @@ public class DemoIOServiceImpl {
             ls.add(msg);
         });
 
-        System.out.println("["+StringUtils.join(ls,",")+"]");
+        System.out.println("[" + StringUtils.join(ls, ",") + "]");
     }
 
-    public static void case2(){
+    public static void case2() {
 
     }
 

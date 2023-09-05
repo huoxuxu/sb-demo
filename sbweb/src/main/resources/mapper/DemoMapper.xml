@@ -232,4 +232,15 @@
             id = #{item.id}
         </foreach>
     </update>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM demo
+    </select>
+
+    <select id="selectByCode" resultType="com.hxx.sbweb.domain.Demo">
+        SELECT * FROM demo
+        <where>
+            and code = #{code}
+        </where>
+    </select>
 </mapper>

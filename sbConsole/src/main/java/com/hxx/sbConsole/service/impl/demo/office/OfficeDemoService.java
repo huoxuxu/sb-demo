@@ -1,6 +1,6 @@
 package com.hxx.sbConsole.service.impl.demo.office;
 
-import com.hxx.sbcommon.common.io.FileUtil;
+import com.hxx.sbcommon.common.io.fileOrDir.FileUtil;
 import com.hxx.sbcommon.common.office.ExcelHelper;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
