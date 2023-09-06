@@ -1,4 +1,4 @@
-package completableFuture;
+package javat.thread.completableFuture;
 
 import com.hxx.sbConsole.SbConsoleApplication;
 import org.apache.commons.lang3.exception.ExceptionUtils;

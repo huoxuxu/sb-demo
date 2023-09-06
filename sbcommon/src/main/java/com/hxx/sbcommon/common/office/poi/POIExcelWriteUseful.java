@@ -115,7 +115,10 @@ public class POIExcelWriteUseful implements AutoCloseable {
             if (procCellStyle != null) procCellStyle.accept(i, cell);
 
             Object val = data.get(i);
-            if (val == null) continue;
+            if (val == null) {
+                cell.setCellType(CellType.BLANK);
+                continue;
+            }
             // 写入单元格
             ExcelCellTools.write2Cell(val, cell);
         }

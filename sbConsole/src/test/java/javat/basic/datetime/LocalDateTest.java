@@ -1,3 +1,5 @@
+package javat.basic.datetime;
+
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.basic.datetime.LocalDateUtil;
 import org.junit.Test;

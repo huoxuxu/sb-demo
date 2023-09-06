@@ -1,4 +1,4 @@
-package javat;
+package javat.simpleTools;
 
 import com.hxx.sbConsole.SbConsoleApplication;
 import org.junit.Test;
@@ -17,9 +17,18 @@ import org.springframework.util.StopWatch;
 public class StopWatchTest {
 
     @Test
-    public void test() {
+    public void qs() {
         System.out.println("==============test==============");
-
+        StopWatch sw = new StopWatch();
+        sw.start();
+        try {
+            Thread.sleep(3000);
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            sw.stop();
+            System.out.println("耗时：" + sw.getTotalTimeMillis());
+        }
     }
 
     @Test

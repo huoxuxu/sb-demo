@@ -1,3 +1,5 @@
+package javat.basic;
+
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.basic.number.BigDecimalUtil;
 import org.junit.Test;

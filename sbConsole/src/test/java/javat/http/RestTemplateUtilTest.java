@@ -1,3 +1,5 @@
+package javat.http;
+
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.common.io.http.restTemplate.RestTemplateUtil;

@@ -1,3 +1,5 @@
+package javat.basic;
+
 import com.hxx.sbConsole.SbConsoleApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -5,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * @Author: huoxuxu
@@ -36,27 +39,32 @@ public class EqualsTest {
         Integer integer1 = new Integer(12);
         Integer integer2 = new Integer(12);
 
-        Integer integer3 = new Integer(127);
+        Integer newInteger127 = new Integer(127);
 
-        Integer a1 = 127;
-        Integer b1 = 127;
+        Integer a127 = 127;
+        Integer b127 = 127;
 
-        int int3 = 128880;
-        int int4 = 128880;
+        int int128880 = 128880;
+        int int128880Same = 128880;
 
-        Integer a = 128880;
-        Integer b = Integer.valueOf(128880);
+        Integer integer128880 = 128880;
+        Integer integerValueOf128880 = Integer.valueOf(128880);
+        Integer newInteger128880 = new Integer(128880);
 
         System.out.println("int1 == int2 -> " + (int1 == int2));
         System.out.println("int1 == integer1 -> " + (int1 == integer1));
-        System.out.println("a1 == b1 -> " + (a1 == b1));
-        System.out.println("int3 == int4 -> " + (int3 == int4));
+        System.out.println("a127 == b127 -> " + (a127 == b127));
+        System.out.println("int128880 == int128880Same -> " + (int128880 == int128880Same));
         System.out.println();
-        System.out.println("integer1 == integer2 -> " + (integer1 == integer2));
-        System.out.println("integer3 == a1 -> " + (integer3 == a1));
-        System.out.println("a == b -> " + (a == b));
-        System.out.println("a eq b -> " + (a.equals(b)));
-        System.out.println("int3 == a -> " + (int3 == a));
+        System.out.println("integer1 == integer2 -> " + (integer1 == integer2)); // false
+        System.out.println("integer1 Objects.equals integer2 -> " + Objects.equals(integer1, integer2));
+        System.out.println("newInteger127 == a127 -> " + (newInteger127 == a127)); // false
+        System.out.println("newInteger127 Objects.equals  a127 -> " + Objects.equals(newInteger127, a127));
+        System.out.println("integer128880 == integerValueOf128880 -> " + (integer128880 == integerValueOf128880)); // false
+        System.out.println("integer128880 eq integerValueOf128880 -> " + (integer128880.equals(integerValueOf128880)));
+        System.out.println("int128880 == integer128880 -> " + (int128880 == integer128880));
+        System.out.println("int128880 == integerValueOf128880 -> " + (int128880 == integerValueOf128880));
+        System.out.println("int128880 == newInteger128880 -> " + (int128880 == newInteger128880));
     }
 
     @Test

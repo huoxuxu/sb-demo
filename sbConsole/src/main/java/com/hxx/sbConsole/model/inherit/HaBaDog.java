@@ -1,28 +1,27 @@
-package com.hxx.sbConsole.model;
+package com.hxx.sbConsole.model.inherit;
 
+import com.hxx.sbConsole.model.inherit.Dog;
 import lombok.Data;
 
 /**
- *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2022-06-14 9:34:16
  **/
-@Data
-public class HaBaDog extends Dog{
-    private String name;
+public class HaBaDog extends Dog {
 
-    private boolean haba;
+    private boolean haba = true;
 
-    public HaBaDog(){
-        score=1;
+    public HaBaDog() {
+        score = 1;
     }
 
-    public void demo(){
+    public void demo() {
         this.demoMethod();
     }
 
     // get&set==================
+
     public boolean isHaba() {
         return haba;
     }
@@ -30,5 +29,4 @@ public class HaBaDog extends Dog{
     public void setHaba(boolean haba) {
         this.haba = haba;
     }
-
 }

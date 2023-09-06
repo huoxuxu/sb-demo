@@ -1,4 +1,4 @@
-package javat;
+package javat.basic.datetime;
 
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.basic.datetime.LocalDateTimeUtil;

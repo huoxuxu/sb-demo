@@ -1,5 +1,7 @@
 package com.hxx.sbConsole.service.impl.test;
 
+import java.util.Objects;
+
 /**
  * @Author: huoxuxu
  * @Description:
@@ -18,7 +20,9 @@ public class EqualsTest {
         int a = 1024089;
         Integer b = Integer.valueOf("1024089");
         Integer b1 = Integer.valueOf("1024089");
-        System.out.println(a == b);
-        System.out.println(b1 == b);
+        System.out.println(a == b);// true
+        System.out.println(b1 == b);// false
+        System.out.println(Objects.equals(a, b)); // true
+        System.out.println(Objects.equals(b1, b)); // true
     }
 }

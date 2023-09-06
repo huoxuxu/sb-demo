@@ -1,4 +1,4 @@
-package javat;
+package javat.simpleTools;
 
 import com.hxx.sbConsole.SbConsoleApplication;
 import org.junit.Test;
@@ -48,7 +48,7 @@ public class OptionalTest {
      * 如果有值，输出长度
      */
     @Test
-    public void ifPresent2() {
+    public void ifPresent() {
         // 如果没有值，获取默认值
         Optional<String> helloOptional = Optional.of("Hello");
         Optional<String> emptyOptional = Optional.empty();
@@ -63,9 +63,13 @@ public class OptionalTest {
     public void getVal() {
         Optional<String> stringOptional = Optional.of("hello");
         System.out.println(stringOptional.get());
-        // 如果没有值，会抛异常
-        Optional<String> emptyOptional = Optional.empty();
-        System.out.println(emptyOptional.get());
+        try {
+            // 如果没有值，会抛异常
+            Optional<String> emptyOptional = Optional.empty();
+            System.out.println(emptyOptional.get());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     /**

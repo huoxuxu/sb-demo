@@ -52,4 +52,14 @@ public class PathUtil {
         return FileUtil.readAllText(f, StandardCharsets.UTF_8);
     }
 
+    /**
+     * 获取临时目录
+     * C:\Users\UserXX\AppData\Local\Temp\
+     *
+     * @return
+     */
+    public static String getTmpPath() {
+        String tmpPath = System.getProperty("java.io.tmpdir");
+        return tmpPath;
+    }
 }

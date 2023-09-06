@@ -1,13 +1,12 @@
 package com.hxx.sbConsole.commons.config;
 
-import com.hxx.sbConsole.model.Dog;
+import com.hxx.sbConsole.model.inherit.Dog;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

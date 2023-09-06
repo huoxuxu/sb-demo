@@ -731,7 +731,7 @@ public class OftenUtil {
         }
 
         /**
-         * 数组是否为空
+         * 数组是否为空，支持包装类型
          *
          * @param arr
          * @param <T>
@@ -947,6 +947,23 @@ public class OftenUtil {
          */
         public static <T> T firstOrDefault(List<T> ls, T defaultVal) {
             return CollectionUtils.isEmpty(ls) ? defaultVal : ls.get(0);
+        }
+
+        /**
+         * 分区消费
+         *
+         * @param ls
+         * @param batchSize
+         * @param partConsumer
+         * @param <T>
+         */
+        public static <T> void partitionConsumer(List<T> ls, int batchSize, Consumer<List<T>> partConsumer) {
+            int size = ls.size();
+            for (int i = 0; i < size; i += batchSize) {
+                int toIndex = Math.min(i + batchSize, size);
+                List<T> data = ls.subList(i, toIndex);
+                partConsumer.accept(data);
+            }
         }
     }
 

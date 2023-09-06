@@ -1,6 +1,6 @@
 package com.hxx.sbConsole.commons.config;
 
-import com.hxx.sbConsole.model.Dog;
+import com.hxx.sbConsole.model.inherit.Dog;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;

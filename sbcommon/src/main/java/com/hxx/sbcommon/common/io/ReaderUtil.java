@@ -58,7 +58,7 @@ public class ReaderUtil {
         for (int i = 0; i < ls.size(); i++) {
             charArr[i] = ls.get(i);
         }
-        return new String(charArr, 0, charArr.length);
+        return new String(charArr);
     }
 
 }

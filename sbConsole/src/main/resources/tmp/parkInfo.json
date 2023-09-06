@@ -5,7 +5,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "1",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -16,7 +16,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "2",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -27,7 +27,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "3",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -38,7 +38,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "4",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -49,7 +49,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "5",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -60,7 +60,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "6",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -71,7 +71,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "7",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -82,7 +82,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "8",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -93,7 +93,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "9",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -104,7 +104,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "10",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -115,7 +115,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "11",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -126,7 +126,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "12",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -137,7 +137,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "13",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -148,7 +148,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "14",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -159,7 +159,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "15",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -170,7 +170,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "16",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -181,7 +181,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "17",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0
@@ -192,7 +192,7 @@
     "loadRate": 99.86,
     "peopleTotal": 0,
     "platformId": "18",
-    "remark": "",
+    "remark": null,
     "total": 10,
     "updateTime": "2023-09-05 16:01:11",
     "useTotal": 0

@@ -3,10 +3,7 @@ package com.hxx.sbConsole.service.impl.demo;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.hxx.sbConsole.commons.jwt.JWTUtil;
-import com.hxx.sbConsole.model.Dog;
 import com.hxx.sbConsole.model.User;
-import com.hxx.sbConsole.service.impl.HttpTxtParser;
-import com.hxx.sbConsole.service.impl.demo.basic.TypeHandlerDemoService;
 import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.basic.text.RegexUtil;
 import com.hxx.sbcommon.common.basic.text.StringUtil;
@@ -15,11 +12,7 @@ import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.common.other.pageSeparate.GeneralPageable;
 import com.hxx.sbcommon.common.other.pageSeparate.PageSeparate;
 import com.hxx.sbcommon.common.other.pageSeparate.Pageable;
-import com.hxx.sbcommon.common.reflect.BeanInfoUtil;
-import com.hxx.sbcommon.common.reflect.CopyObjUtil;
 import com.hxx.sbcommon.common.reflect.MethodSignature;
-import com.hxx.sbcommon.common.reflect.ReflectorObj;
-import com.hxx.sbcommon.model.Result;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -261,49 +254,6 @@ public class DemoService {
                 String signStr = MethodSignature.getMethodSignature(method);
                 System.out.println(signStr);
             }
-        }
-        System.out.println("==================================================");
-        {
-            User user = new User();
-            {
-                user.setId(123);
-                user.setCode("ls");
-                user.setName("里斯");
-            }
-
-            ReflectorObj rd = new ReflectorObj(User.class);
-            Map<String, Object> objMap = rd.getObjMap(user);
-            System.out.println("userMap：" + JsonUtil.toJSON(objMap));
-
-            Map<String, Object> map = BeanInfoUtil.toMap(user);
-            System.out.println("user对象：" + JsonUtil.toJSON(user));
-            System.out.println("userMap：" + JsonUtil.toJSON(map));
-
-            User dest = new User();
-            CopyObjUtil.copyTo(user, dest);
-            System.out.println("dest：" + JsonUtil.toJSON(dest));
-
-            Dog dog = new Dog();
-            CopyObjUtil.copyToObj(user, dog);
-            System.out.println("dog：" + JsonUtil.toJSON(dog));
-
-            // =================泛型字段===================================
-            Result<String> result = new Result<>(1, "xx", "m12");
-            ReflectorObj rdf = new ReflectorObj(result.getClass());
-            Map<String, Object> objMap1 = rdf.getObjMap(result);
-            System.out.println("objMap：" + JsonUtil.toJSON(objMap1));
-        }
-        System.out.println("==================================================");
-        {
-            ReflectorObj rd = new ReflectorObj(User.class);
-
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", 111);
-            map.put("code", "zs");
-            map.put("name", "张三");
-
-            User user = rd.setInstance(map);
-            System.out.println(JsonUtil.toJSON(user));
         }
         System.out.println("==================================================");
         {

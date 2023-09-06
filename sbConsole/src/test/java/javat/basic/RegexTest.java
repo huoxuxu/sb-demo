@@ -1,3 +1,5 @@
+package javat.basic;
+
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.basic.text.RegexUtil;
 import org.junit.Test;
@@ -17,13 +19,12 @@ public class RegexTest {
     @Test
     public void test() {
         System.out.println("==============test==============");
-        String tmpPath = System.getProperty("java.io.tmpdir");
-        System.out.println("临时目录：" + tmpPath);
+
     }
 
     @Test
     public void isHasAlphabet() {
-        System.out.println("==============test==============");
+        System.out.println("==============包含字母==============");
         {
             boolean flag = RegexUtil.isHasAlphabet("aAzZ");
             System.out.println("包含字母a-zA-Z：" + flag);

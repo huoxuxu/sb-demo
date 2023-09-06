@@ -1,10 +1,14 @@
 package com.hxx.sbcommon.common.io.cfg;
 
 import com.hxx.sbcommon.common.io.ReaderUtil;
+import org.apache.commons.io.FileUtils;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @Author: huoxuxu
@@ -28,5 +32,14 @@ public class ResourcesUtil {
         try (InputStreamReader isr = new InputStreamReader(in)) {
             return ReaderUtil.readTxt(isr, 16 * 1024);
         }
+    }
+
+    public void loadResFile() throws IOException {
+        //获取文件的URL
+        File file = ResourceUtils.getFile("classpath:json/person.json");
+        System.out.println("文件:" + file.getPath());
+        //转成string输入文本
+        String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+        System.out.println("内容：" + content);
     }
 }

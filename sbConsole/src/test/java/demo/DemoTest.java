@@ -5,7 +5,7 @@ import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbConsole.model.KV;
-import models.Order;
+import javat.models.Order;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;

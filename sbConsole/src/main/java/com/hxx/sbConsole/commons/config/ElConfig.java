@@ -28,8 +28,8 @@ public class ElConfig {
     @Value("#{ T(java.lang.Math).random()*100.0}")
     private double number;
     // #{} 表示SpEl表达式通常用来获取bean的属性，或者调用bean的某个方法。当然还有可以表示常量
-    @Value("#{demo.anothor}")
-    private String fromAnthor;
+//    @Value("#{demo.anothor}")
+//    private String fromAnthor;
     @Value("classpath:test.txt")
     private Resource testFile;
     @Value("http://www.baidu.com")
@@ -50,7 +50,7 @@ public class ElConfig {
         System.out.println(normal);
         System.out.println(osName);
         System.out.println(number);
-        System.out.println(fromAnthor);
+//        System.out.println(fromAnthor);
         //System.out.println(IOUtils.toString(testFile.getInputStream()));
         System.out.println(bookname);
         System.out.println(environment.getProperty("book.author"));

@@ -1,7 +1,7 @@
 package com.hxx.sbConsole.service.impl;
 
 import com.hxx.sbConsole.commons.annotation.LogAction;
-import com.hxx.sbConsole.model.Dog;
+import com.hxx.sbConsole.model.inherit.Dog;
 import com.hxx.sbConsole.model.User;
 import com.hxx.sbConsole.service.UserService;
 import org.springframework.stereotype.Service;

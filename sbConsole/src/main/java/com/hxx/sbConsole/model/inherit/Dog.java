@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.model;
+package com.hxx.sbConsole.model.inherit;
 
 import lombok.Data;
 

@@ -1,73 +1,27 @@
 package com.hxx.sbweb.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+@Data
 public class User {
     private int id;
+    @NotNull
     private String name;
     private int age;
+    @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")// 出参解析
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")// 入参解析
     private LocalDateTime createTime;
     private String remark;
     private int theTeacher;
 
+    @Valid
+    @NotNull
     private Teacher teacher;
-
-    //
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public int getTheTeacher() {
-        return theTeacher;
-    }
-
-    public void setTheTeacher(int theTeacher) {
-        this.theTeacher = theTeacher;
-    }
-
-    public Teacher getTeacher() {
-        return teacher;
-    }
-
-    public void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
-    }
-
-
 }

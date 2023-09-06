@@ -1,3 +1,5 @@
+package javat.basic.datetime;
+
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.basic.datetime.LocalDateTimeUtil;
 import org.junit.Test;
@@ -20,7 +22,9 @@ public class DateTest {
     @Test
     public void of() {
         Date now = new Date();
-        Long requestTime = now.getTime();//1639556697045  UTC时间
+        Long utc = now.getTime();//1639556697045  UTC时间 13位 毫秒
+        System.out.println(utc);
+
     }
 
     @Test

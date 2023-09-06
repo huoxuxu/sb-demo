@@ -1,3 +1,5 @@
+package javat.basic;
+
 import com.hxx.sbConsole.SbConsoleApplication;
 import org.apache.ibatis.type.JdbcType;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package models;
+package javat.models;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

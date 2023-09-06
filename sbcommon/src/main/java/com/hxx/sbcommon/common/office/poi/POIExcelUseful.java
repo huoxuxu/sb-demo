@@ -187,9 +187,8 @@ public class POIExcelUseful implements Closeable {
      * @return
      */
     public static String getCellValue(Cell cell) {
-        if (cell == null || cell.getCellType() == CellType.BLANK) {
-            return "";
-        }
+        if (cell == null) return null;
+        if (cell.getCellType() == CellType.BLANK) return null;
 
         try {
             switch (cell.getCellType()) {
