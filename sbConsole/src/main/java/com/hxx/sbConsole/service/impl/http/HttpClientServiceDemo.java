@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hxx.sbConsole.model.HttpTestDemoModel;
 import com.hxx.sbcommon.common.io.http.ApacheHttpClientSimpleUseful;
 import com.hxx.sbcommon.common.io.http.ApacheHttpClientUseful;
+import com.hxx.sbcommon.common.io.http.client.HttpApiClient;
 import com.hxx.sbcommon.common.json.FastJsonReaderQuick;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -48,7 +49,8 @@ public class HttpClientServiceDemo {
 
     // get
     static void case1() throws IOException {
-        String html = ApacheHttpClientSimpleUseful.sendGet(url, headers, null);
+        String apiName = "Test-Http-Get";
+        String html = HttpApiClient.get(apiName, url, headers);
         System.out.println("=====================================================");
         System.out.println(html);
     }
@@ -56,16 +58,16 @@ public class HttpClientServiceDemo {
     // post
     static void case2() throws IOException {
         {
-            String html = ApacheHttpClientSimpleUseful.sendPostJson(url, headers, "[{\"id\":1}]");
+            String apiName = "Test-Http-PostJson";
+            String html = HttpApiClient.postJson(apiName, url, headers, "[{\"id\":\"哈喽\"}]");
             System.out.println("=====================================================");
             System.out.println(html);
         }
 
         {
-            Map<String, String> paramDic = new HashMap<>();
-            paramDic.put("code", "1");
-            paramDic.put("name", "kt");
-            String html = ApacheHttpClientSimpleUseful.sendPostUrlEncoded(url, headers, paramDic);
+            String apiName = "Test-Http-PostUrlEncoded";
+            String para = "code=1&name=kt";
+            String html = HttpApiClient.postUrlEncoded(apiName, url, headers, para);
             System.out.println("=====================================================");
             System.out.println(html);
         }
@@ -83,8 +85,18 @@ public class HttpClientServiceDemo {
     }
 
     static void case4() throws IOException {
-        String txt = BaiduHttpApiClient.getContent();
-        System.out.println(txt);
+        try {
+            String txt = BaiduHttpApiClient.getContent();
+            System.out.println(txt);
+        } catch (Exception e) {
+            System.out.println(e + "");
+        }
+        try {
+            String txt = BaiduHttpApiClient.getContent2();
+            System.out.println(txt);
+        } catch (Exception e) {
+            System.out.println(e + "");
+        }
     }
 
     // 解析Reader

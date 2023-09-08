@@ -121,14 +121,10 @@ public class ApacheHttpClientUseful {
             httpPost.setEntity(mEntityBuilder.build());
             log.debug("sendFileUpload url={}, param={}", url, param);
 
-            try (ApacheHttpClientSimpleUseful.HttpApiResp resp = ApacheHttpClientSimpleUseful.HttpClientTools.execute(httpPost, header)) {
+            try (ApacheHttpClientSimpleUseful.HttpApiResp resp = ApacheHttpClientSimpleUseful.HttpClientTools.execute(url, httpPost, header)) {
                 log.debug("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-                if (!resp.isOk()) {
-                    log.warn("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-                    return null;
-                }
 
-                return ApacheHttpClientSimpleUseful.HttpClientTools.processResp(resp);
+                return resp.readString();
             }
         } finally {
             for (FileInputStream item : fls) {
@@ -175,14 +171,10 @@ public class ApacheHttpClientUseful {
         httpPost.setEntity(mEntityBuilder.build());
         log.debug("sendFileUpload url={}, param={}", url, param);
 
-        try (ApacheHttpClientSimpleUseful.HttpApiResp resp = ApacheHttpClientSimpleUseful.HttpClientTools.execute(httpPost, header)) {
+        try (ApacheHttpClientSimpleUseful.HttpApiResp resp = ApacheHttpClientSimpleUseful.HttpClientTools.execute(url, httpPost, header)) {
             log.debug("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-            if (!resp.isOk()) {
-                log.warn("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-                return null;
-            }
 
-            return ApacheHttpClientSimpleUseful.HttpClientTools.processResp(resp);
+            return resp.readString();
         }
     }
 
@@ -220,14 +212,10 @@ public class ApacheHttpClientUseful {
         httpPost.setEntity(mEntityBuilder.build());
         log.debug("sendFileUpload url={}, param={}", url, param);
 
-        try (ApacheHttpClientSimpleUseful.HttpApiResp resp = ApacheHttpClientSimpleUseful.HttpClientTools.execute(httpPost, header)) {
+        try (ApacheHttpClientSimpleUseful.HttpApiResp resp = ApacheHttpClientSimpleUseful.HttpClientTools.execute(url, httpPost, header)) {
             log.debug("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-            if (!resp.isOk()) {
-                log.warn("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-                return null;
-            }
 
-            return ApacheHttpClientSimpleUseful.HttpClientTools.processResp(resp);
+            return resp.readString();
         }
     }
 

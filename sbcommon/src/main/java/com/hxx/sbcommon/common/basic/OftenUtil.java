@@ -403,13 +403,8 @@ public class OftenUtil {
          * @return
          */
         public static String cut(String str, int count) {
-            if (StringUtils.isEmpty(str)) {
-                return str;
-            }
-
-            if (count == 0) {
-                return "";
-            }
+            if (StringUtils.isEmpty(str)) return str;
+            if (count == 0) return "";
 
             int len = str.length();
             if (count >= len) {
