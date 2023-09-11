@@ -1,6 +1,8 @@
 package com.hxx.sbcommon.common.other.pageSeparate;
 
 /**
+ * 分页工具类，传入SQL，生成对应的分页SQL语句
+ *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2023-04-15 12:36:21

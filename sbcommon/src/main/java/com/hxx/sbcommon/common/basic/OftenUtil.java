@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -973,11 +974,23 @@ public class OftenUtil {
          * @return
          */
         public static <T> T procFieldNull(T t, T defaultVal) {
+            return t == null ? defaultVal : t;
+        }
+
+        /**
+         * 处理字段的值，如果为null则不处理，直接返回否则，按func处理后返回
+         *
+         * @param t
+         * @param func
+         * @param <T>
+         * @return
+         */
+        public static <T> T procFieldNull(T t, Function<T, T> func) {
             if (t == null) {
-                return defaultVal;
+                return t;
             }
 
-            return t;
+            return func.apply(t);
         }
 
         /**

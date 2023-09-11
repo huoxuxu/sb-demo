@@ -243,6 +243,10 @@ public class ApacheHttpClientSimpleUseful {
             registryBuilder.register("http", plainSF);
             // 指定信任密钥存储对象和连接套接字工厂
             try {
+                {
+//                    SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (arg0, arg1) -> true).build();
+//                    httpClientBuilder.setSSLContext(sslContext);
+                }
                 KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
                 // 信任任何链接
                 TrustStrategy anyTrustStrategy = (x509Certificates, s) -> true;

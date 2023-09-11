@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.service.impl;
+package com.hxx.sbConsole.module.httpTxtParser;
 
 import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.io.fileOrDir.FileUtil;
