@@ -29,6 +29,11 @@ public class DemoBasicService {
     public static void main(String[] args) {
         try {
             // 包含基本类型的类
+            DemoCls demoCls = new DemoCls();
+            {
+                boolean enabled = demoCls.isEnabled();
+                demoCls.setEnabled(true);
+            }
             DemoCls.BasicTypeCls basicTypeCls = new DemoCls.BasicTypeCls();
 
             case0();

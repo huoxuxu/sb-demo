@@ -199,7 +199,10 @@ public class ReflectUseful {
      */
     private static boolean checkGetterMethod(String methodName, Method method) {
         // 过滤Object 类中的getXX 方法
-        if (methodName.equals("getClass")) {
+        if ("getClass".equals(methodName)
+                // 过滤方法名等于 get is
+                || "get".equals(methodName)
+                || "is".equals(methodName)) {
             return false;
         }
 
@@ -238,6 +241,12 @@ public class ReflectUseful {
 
     // 校验Setter方法
     private static boolean checkSetterMethod(String methodName, Method method) {
+        /**
+         * boolean enabled = demoCls.isEnabled();
+         * demoCls.setEnabled(true);
+         * */
+        if ("set".equals(methodName)) return false;
+
         int modifiers = method.getModifiers();
         // 公开的非静态
         if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) {

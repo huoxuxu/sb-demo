@@ -24,7 +24,6 @@ public class RegexUtil {
         return regexMatch(str, regex);
     }
 
-
     /**
      * 判断输入是否符合正则
      *
@@ -39,13 +38,13 @@ public class RegexUtil {
 
     public static List<String> regexMatchGroups(String input, String regex) {
         Matcher m = Pattern.compile(regex).matcher(input);
-        List<String> ls = new ArrayList<>();
-        for (int i = 0; true; i++) {
-            if (!m.find()) break;
+        int groupCount = m.groupCount();
 
+        List<String> ls = new ArrayList<>();
+        while (m.find()) {
             String group = m.group(0);
             ls.add(group);
-            System.out.println("Found value: " + group);
+//            System.out.println("Found value: " + group);
         }
         return ls;
     }
