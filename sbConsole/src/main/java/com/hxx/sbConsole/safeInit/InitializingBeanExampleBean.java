@@ -21,6 +21,7 @@ public class InitializingBeanExampleBean implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        log.info("init-InitializingBean");
         //environment 已经注入
         String[] defaultProfiles = environment.getDefaultProfiles();
         log.info(String.join("\n", defaultProfiles));

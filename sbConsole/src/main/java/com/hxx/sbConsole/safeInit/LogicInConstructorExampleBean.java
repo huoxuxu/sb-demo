@@ -21,6 +21,7 @@ public class LogicInConstructorExampleBean {
 
     @Autowired
     public LogicInConstructorExampleBean(Environment environment) {
+        log.info("init-LogicInConstructorExampleBean");
         //environment实例已初始化
         this.environment = environment;
 

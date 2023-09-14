@@ -31,6 +31,7 @@ public class AppRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         log.info("Application started with option names : {}",
                 args.getOptionNames());
+        log.info("init-ApplicationRunner");
         log.info("Increment counter");
         counter++;
         readSingleConfig.show();

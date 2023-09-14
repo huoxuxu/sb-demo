@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerA
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -40,8 +41,13 @@ public class SbConsoleApplication {
             System.out.println("本机信息：" + localIP + " " + localMac);
         }
         // 标准
-        SpringApplication.run(SbConsoleApplication.class, args);
-
+        ConfigurableApplicationContext context = SpringApplication.run(SbConsoleApplication.class, args);
+        System.out.println("应用已启动！");
+        // 终止应用程序
+        {
+//            int exitCode = SpringApplication.exit(context);
+//            System.exit(exitCode);
+        }
     }
 
     // 测试 AnnotationConfigApplicationContext 功能

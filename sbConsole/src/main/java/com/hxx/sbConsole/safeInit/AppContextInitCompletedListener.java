@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
  **/
 @Slf4j
 @Component
-public class StartupApplicationListenerExample implements
-        ApplicationListener<ContextRefreshedEvent> {
+public class AppContextInitCompletedListener implements ApplicationListener<ContextRefreshedEvent> {
     public static int counter;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
+        log.info("init-ApplicationListener<ContextRefreshedEvent>");
         log.info("Increment1 counter");
         counter++;
     }

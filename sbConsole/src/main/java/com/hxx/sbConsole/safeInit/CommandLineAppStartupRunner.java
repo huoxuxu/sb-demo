@@ -21,7 +21,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         //上下文已初始化完成
-        log.info("Increment counter");
+        log.info("init-CommandLineRunner");
         counter++;
     }
 }

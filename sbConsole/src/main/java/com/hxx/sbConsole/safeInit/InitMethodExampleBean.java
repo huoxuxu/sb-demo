@@ -25,6 +25,7 @@ public class InitMethodExampleBean {
     }
 
     private void init() {
+        log.info("init-initMethod");
         String[] defaultProfiles = environment.getDefaultProfiles();
         log.info(String.join("\n",defaultProfiles));
     }

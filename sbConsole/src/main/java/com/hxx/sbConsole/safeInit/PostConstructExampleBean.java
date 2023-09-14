@@ -22,6 +22,7 @@ public class PostConstructExampleBean {
 
     @PostConstruct
     public void init() {
+        log.info("init-@PostConstruct");
         //environment 已经注入
         String[] defaultProfiles = environment.getDefaultProfiles();
         log.info(String.join("\n", defaultProfiles));
