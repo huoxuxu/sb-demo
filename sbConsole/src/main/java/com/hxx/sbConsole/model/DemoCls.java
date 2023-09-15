@@ -15,6 +15,7 @@ public class DemoCls {
     private int id;
     private String code;
     private String name;
+    private boolean enabled;
 
     @lombok.Data
     public static class BasicTypeCls {

@@ -22,7 +22,9 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.net.InetAddress;
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -40,7 +42,13 @@ public class DemoService {
     public static void main(String[] args) {
         try {
             {
-                String[] arr = "&&".split("&&");
+                float num = new BigDecimal("45.6789614").floatValue();
+                String str = OftenUtil.NumberUtil.fmt2Str(num);
+                System.out.println(str);
+            }
+            {
+                // split 这种情况下会有空项
+                String[] arr = "&&1".split("&&");
                 System.out.println(arr);
             }
             List<String> strls = new ArrayList<>();
@@ -87,41 +95,6 @@ public class DemoService {
 
     public static void demo() throws Exception {
         System.out.println("BasicType==================================================");
-        {
-            {
-                {
-                    List<String> ls = RegexUtil.regexMatchGroups("A-B-C-D-", "[A-Z]{1}-");
-                    System.out.println(ls);
-                }
-                {
-                    String[] interfCodes = {"001", "001-A", "0001", "0001-A"};
-                    for (String interfCode : interfCodes) {
-                        Pattern pattern = Pattern.compile("(^\\d{3,4}+$)|(^\\d{3,4}-[A-Z]{1}+$)");
-                        Matcher isThreeNum = pattern.matcher(interfCode);
-                        System.out.println(interfCode + "  " + (isThreeNum.matches() ? "ok" : "no match"));
-                    }
-                }
-            }
-            {
-                boolean a = false;
-                boolean b = false;
-                System.out.println(a || b);
-            }
-            {
-                long a1 = Long.MAX_VALUE;
-                System.out.println(a1);
-                System.out.println(a1 + 1);
-                System.out.println(a1 + 999);
-            }
-            {
-                // 32位单精度浮点数的有效位数是7位。
-                // 64位双精度浮点数的有效位数是16位。
-                Float dVal = 123456789.12345678F;
-                System.out.println(dVal);
-                dVal = 0.123456789F;
-                System.out.println(dVal);
-            }
-        }
         System.out.println("PageSeparate==================================================");
         {
             Pageable page = new GeneralPageable(1, 10);
@@ -133,6 +106,10 @@ public class DemoService {
         {
             String item = null;
             String s = OftenUtil.BasicUtil.procFieldNull(item, "");
+            s = OftenUtil.BasicUtil.procFieldNull(item, String::trim);
+            item = " 98 ";
+            s = OftenUtil.BasicUtil.procFieldNull(item, String::trim);
+
             System.out.println(s);
 
             {
@@ -200,10 +177,22 @@ public class DemoService {
                 System.out.println(str1);
             }
             {
-                String cut = OftenUtil.StringUtil.cut("1", 1);
-                System.out.println(cut);
-                cut = OftenUtil.StringUtil.cut("12", 3);
-                System.out.println(cut);
+                {
+                    String cut = OftenUtil.StringUtil.cut("1", 1);
+                    System.out.println(cut);
+                }
+                {
+                    String cut = OftenUtil.StringUtil.cut("ab", 1);
+                    System.out.println(cut);
+                }
+                {
+                    String cut = OftenUtil.StringUtil.cut("abc", 2);
+                    System.out.println(cut);
+                }
+                {
+                    String cut = OftenUtil.StringUtil.cut("12", 3);
+                    System.out.println(cut);
+                }
                 String hxy = OftenUtil.StringUtil.lowerFirstChar("HXY");
                 System.out.println(hxy);
             }

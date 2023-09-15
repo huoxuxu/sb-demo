@@ -6,3 +6,12 @@ https://mp.weixin.qq.com/s/XJ8wGiN9LTYA_i7Z1YB3CQ
 3.InitializingBean的afterPropertiesSet()
 4.Bean定义的initMethod属性方法
 
+应用初始化顺序
+init-InitializingBean
+init-LogicInConstructorExampleBean
+init-@PostConstruct
+init-initMethod
+init-ApplicationListener<ContextRefreshedEvent>
+init-@EventListener
+init-ApplicationRunner
+init-CommandLineRunner
