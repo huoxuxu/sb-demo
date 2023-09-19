@@ -280,6 +280,109 @@ public class OftenUtil {
     // 数字
     public static class NumberUtil {
         /**
+         * 对象相等比较，
+         * 仅支持Short、Integer、Long、Float、Double、BigDecimal、Byte之间互相比较
+         *
+         * @param obj
+         * @param eqObj
+         * @return
+         */
+        public static boolean eq(Object obj, Object eqObj) {
+            if (obj == null) return eqObj == null;
+
+            if (obj instanceof Short) {
+                if (eqObj == null) return false;
+
+                if (eqObj instanceof Integer) return obj.equals(((Integer) eqObj).shortValue());
+                if (eqObj instanceof Short) return obj.equals(eqObj);
+                if (eqObj instanceof Long) return obj.equals(((Long) eqObj).shortValue());
+
+                if (eqObj instanceof Float) return obj.equals(((Float) eqObj).shortValue());
+                if (eqObj instanceof Double) return obj.equals(((Double) eqObj).shortValue());
+                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).shortValue());
+
+                if (eqObj instanceof Byte) return obj.equals(((Byte) eqObj).shortValue());
+            } else if (obj instanceof Integer) {
+                if (eqObj == null) return false;
+
+                if (eqObj instanceof Integer) return obj.equals(eqObj);
+                if (eqObj instanceof Short) return obj.equals(((Short) eqObj).intValue());
+                if (eqObj instanceof Long) return obj.equals(((Long) eqObj).intValue());
+
+                if (eqObj instanceof Float) return obj.equals(((Float) eqObj).intValue());
+                if (eqObj instanceof Double) return obj.equals(((Double) eqObj).intValue());
+                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).intValue());
+
+                if (eqObj instanceof Byte) return obj.equals(((Byte) eqObj).intValue());
+            } else if (obj instanceof Long) {
+                if (eqObj == null) return false;
+
+                if (eqObj instanceof Integer) return obj.equals(((Integer) eqObj).longValue());
+                if (eqObj instanceof Short) return obj.equals(((Short) eqObj).longValue());
+                if (eqObj instanceof Long) return obj.equals(eqObj);
+
+                if (eqObj instanceof Float) return obj.equals(((Float) eqObj).longValue());
+                if (eqObj instanceof Double) return obj.equals(((Double) eqObj).longValue());
+                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).longValue());
+
+                if (eqObj instanceof Byte) return obj.equals(((Byte) eqObj).longValue());
+            }
+            // 浮点数
+            else if (obj instanceof Float) {
+                if (eqObj == null) return false;
+
+                if (eqObj instanceof Integer) return obj.equals(((Integer) eqObj).floatValue());
+                if (eqObj instanceof Short) return obj.equals(((Short) eqObj).floatValue());
+                if (eqObj instanceof Long) return obj.equals(((Long) eqObj).floatValue());
+
+                if (eqObj instanceof Float) return obj.equals(eqObj);
+                if (eqObj instanceof Double) return obj.equals(((Double) eqObj).floatValue());
+                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).floatValue());
+
+                if (eqObj instanceof Byte) return obj.equals(((Byte) eqObj).floatValue());
+            } else if (obj instanceof Double) {
+                if (eqObj == null) return false;
+
+                if (eqObj instanceof Integer) return obj.equals(((Integer) eqObj).doubleValue());
+                if (eqObj instanceof Short) return obj.equals(((Short) eqObj).doubleValue());
+                if (eqObj instanceof Long) return obj.equals(((Long) eqObj).doubleValue());
+
+                if (eqObj instanceof Float) return obj.equals(((Float) eqObj).doubleValue());
+                if (eqObj instanceof Double) return obj.equals(eqObj);
+                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).doubleValue());
+
+                if (eqObj instanceof Byte) return obj.equals(((Byte) eqObj).doubleValue());
+            } else if (obj instanceof BigDecimal) {
+                if (eqObj == null) return false;
+
+                if (eqObj instanceof Integer) return obj.equals(BigDecimal.valueOf((Integer) eqObj));
+                if (eqObj instanceof Short) return obj.equals(BigDecimal.valueOf((Short) eqObj));
+                if (eqObj instanceof Long) return obj.equals(BigDecimal.valueOf((Long) eqObj));
+
+                if (eqObj instanceof Float) return obj.equals(BigDecimal.valueOf((Float) eqObj));
+                if (eqObj instanceof Double) return obj.equals(BigDecimal.valueOf((Double) eqObj));
+                if (eqObj instanceof BigDecimal) return obj.equals(eqObj);
+
+                if (eqObj instanceof Byte) return obj.equals(BigDecimal.valueOf((Byte) eqObj));
+            }
+            // byte
+            else if (obj instanceof Byte) {
+                if (eqObj == null) return false;
+
+                if (eqObj instanceof Integer) return obj.equals(((Integer) eqObj).byteValue());
+                if (eqObj instanceof Short) return obj.equals(((Short) eqObj).byteValue());
+                if (eqObj instanceof Long) return obj.equals(((Long) eqObj).byteValue());
+
+                if (eqObj instanceof Float) return obj.equals(((Float) eqObj).byteValue());
+                if (eqObj instanceof Double) return obj.equals(((Double) eqObj).byteValue());
+                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).byteValue());
+
+                if (eqObj instanceof Byte) return obj.equals(eqObj);
+            }
+            return false;
+        }
+
+        /**
          * 格式化为字符串，
          * 为null时返回空字符串，
          * 去除1.00后的无意义0
@@ -727,49 +830,6 @@ public class OftenUtil {
         }
 
         /**
-         * 数组是否为空，支持包装类型
-         *
-         * @param arr
-         * @param <T>
-         * @return
-         */
-        public static <T> boolean isEmptyArray(T[] arr) {
-            return arr == null || arr.length == 0;
-        }
-
-        public static boolean isEmptyArray(boolean[] arr) {
-            return arr == null || arr.length == 0;
-        }
-
-        public static boolean isEmptyArray(char[] arr) {
-            return arr == null || arr.length == 0;
-        }
-
-        public static boolean isEmptyArray(byte[] arr) {
-            return arr == null || arr.length == 0;
-        }
-
-        public static boolean isEmptyArray(int[] arr) {
-            return arr == null || arr.length == 0;
-        }
-
-        public static boolean isEmptyArray(short[] arr) {
-            return arr == null || arr.length == 0;
-        }
-
-        public static boolean isEmptyArray(long[] arr) {
-            return arr == null || arr.length == 0;
-        }
-
-        public static boolean isEmptyArray(float[] arr) {
-            return arr == null || arr.length == 0;
-        }
-
-        public static boolean isEmptyArray(double[] arr) {
-            return arr == null || arr.length == 0;
-        }
-
-        /**
          * 集合转数组
          *
          * @param list
@@ -812,7 +872,7 @@ public class OftenUtil {
         }
 
         /**
-         * 将集合转为某字段的Set，会过滤null值
+         * 将集合转为某字段的Set
          *
          * @param ls
          * @param getFieldFunc
@@ -821,7 +881,7 @@ public class OftenUtil {
          * @param <TField>
          * @return
          */
-        public static <T, TField> Set<TField> toFieldSet(List<T> ls, Function<T, TField> getFieldFunc, boolean filterNull) {
+        public static <T, TField> Set<TField> getFieldSet(List<T> ls, Function<T, TField> getFieldFunc, boolean filterNull) {
             return Optional.ofNullable(ls)
                     .orElse(new ArrayList<>())
                     .stream()
