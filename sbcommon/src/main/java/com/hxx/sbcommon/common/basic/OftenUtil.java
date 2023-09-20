@@ -224,18 +224,17 @@ public class OftenUtil {
      */
     public static String toHexString(String str, String charsetName, String splitStr) throws UnsupportedEncodingException {
         byte[] arr = str.getBytes(charsetName);
-        return toHexString(arr, charsetName, splitStr);
+        return toHexString(arr, splitStr);
     }
 
     /**
      * 字节数组转HEX字符串
      *
      * @param arr
-     * @param charsetName
      * @param splitStr
      * @return
      */
-    public static String toHexString(byte[] arr, String charsetName, String splitStr) {
+    public static String toHexString(byte[] arr, String splitStr) {
         splitStr = splitStr == null ? "" : splitStr;
 
         StringBuilder sb = new StringBuilder();
@@ -280,8 +279,9 @@ public class OftenUtil {
     // 数字
     public static class NumberUtil {
         /**
-         * 对象相等比较，
-         * 仅支持Short、Integer、Long、Float、Double、BigDecimal、Byte之间互相比较
+         * 基础类型相等比较，
+         * 仅支持Java的8大基础类型（Short、Integer、Long、Float、Double、Byte、Boolean、Character）
+         * 以及BigDecimal之间互相比较
          *
          * @param obj
          * @param eqObj
@@ -290,7 +290,17 @@ public class OftenUtil {
         public static boolean eq(Object obj, Object eqObj) {
             if (obj == null) return eqObj == null;
 
-            if (obj instanceof Short) {
+            if (obj instanceof Boolean) {
+                if (eqObj == null) return false;
+
+                if (eqObj instanceof Boolean) return obj.equals(eqObj);
+            } else if (obj instanceof Character) {
+                if (eqObj == null) return false;
+
+                if (eqObj instanceof Character) return obj.equals(eqObj);
+            }
+            // 整型
+            else if (obj instanceof Short) {
                 if (eqObj == null) return false;
 
                 if (eqObj instanceof Integer) return obj.equals(((Integer) eqObj).shortValue());
