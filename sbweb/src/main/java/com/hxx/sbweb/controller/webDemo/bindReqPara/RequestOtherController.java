@@ -1,17 +1,33 @@
 package com.hxx.sbweb.controller.webDemo.bindReqPara;
 
+import com.hxx.sbcommon.common.io.StreamUtil;
+import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.web.HttpServletRequestUtil;
+import com.hxx.sbcommon.model.HttpMultipartFormDataInfo;
 import com.hxx.sbweb.controller.base.BaseRestController;
 import com.hxx.sbweb.domain.Book;
 import com.hxx.sbweb.domain.User;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * @Author: huoxuxu
@@ -23,14 +39,63 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/reqother")
 public class RequestOtherController extends BaseRestController {
 
-    @RequestMapping("/testHeaderParam")
-    public void testHeaderParam(@RequestHeader String param1) {
-        System.out.println("通过RequestHeader获取的参数param1=" + param1);
+    /**
+     * /reqother/all
+     *
+     * @param request
+     * @param response
+     */
+    @RequestMapping("/all")
+    public Map<String, Object> all(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        Map<String, String> headerMap = HttpServletRequestUtil.getHeaderMap(request);
+
+        // body 只能读取一次body
+        String body = HttpServletRequestUtil.getRequestBody(request);
+        // multipart
+        List<HttpMultipartFormDataInfo> files = HttpServletRequestUtil.getMultipartFormData(request);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("requestURL", request.getRequestURL());
+        map.put("requestURI", request.getRequestURI());
+        map.put("queryString", request.getQueryString());
+        map.put("headers", headerMap);
+        map.put("body", body);
+        map.put("files", files);
+        map.put("cookie", headerMap.getOrDefault("cookie", null));
+
+        return map;
     }
 
-    @RequestMapping("/testCookieParam")
-    public void testCookieParam(HttpServletRequest request, HttpServletResponse response, @CookieValue String sessionid) {
+    /**
+     * /reqother/header
+     *
+     * @param hk1
+     */
+    @RequestMapping("/header")
+    public String testHeaderParam(@RequestHeader String hk1, @CookieValue String sessionid) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("cookie", "");
+        map.put("sessionid", sessionid);
+        map.put("hk1", hk1);
+        return JsonUtil.toJSON(map);
+    }
+
+    /**
+     * CookieValue
+     *
+     * @param request
+     * @param response
+     * @param sessionid
+     */
+    @RequestMapping("/cookie")
+    public void cookie(HttpServletRequest request, HttpServletResponse response, @CookieValue String sessionid) {
         System.out.println("通过CookieValue获取的参数sessionid=" + sessionid);
+    }
+
+    @RequestMapping("/cookie2")
+    public void cookie2(HttpServletRequest request, HttpServletResponse response, @CookieValue("token") String
+            token) {
+        System.out.println("通过CookieValue获取的参数sessionid=" + token);
     }
 
     @RequestMapping("/testHttpEntity")
