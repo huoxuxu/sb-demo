@@ -3,10 +3,13 @@ package com.hxx.sbweb.controller.base;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -46,10 +49,24 @@ public class BaseRestController {
      * @return
      */
     @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({javax.validation.ConstraintViolationException.class})
     public String constraintViolationExceptionHandler(HttpServletRequest req, javax.validation.ConstraintViolationException e) {
         log.error("出现异常：{}", ExceptionUtils.getStackTrace(e));
         return "参数校验失败，请修改后重试[" + e.getMessage() + "]";
+    }
+
+    /**
+     *
+     * @param req
+     * @param e
+     * @return
+     */
+    @ResponseBody
+    @ExceptionHandler({MissingServletRequestParameterException.class})
+    public String missingServletRequestParameterExceptionHandler(HttpServletRequest req, MissingServletRequestParameterException e) {
+        log.error("出现异常：{}", ExceptionUtils.getStackTrace(e));
+        return "参数校验失败，请修改后重试";
     }
 
 //    /**
