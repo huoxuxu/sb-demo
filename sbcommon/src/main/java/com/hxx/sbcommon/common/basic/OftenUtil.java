@@ -830,16 +830,6 @@ public class OftenUtil {
     // 集合
     public static class CollectionUtil {
         /**
-         * 集合是否为空
-         *
-         * @param ls
-         * @return
-         */
-        public static boolean isEmpty(Collection<?> ls) {
-            return CollectionUtils.isEmpty(ls);
-        }
-
-        /**
          * 集合转数组
          *
          * @param list
@@ -859,26 +849,7 @@ public class OftenUtil {
          * @return
          */
         public static <T> List<T> toList(T[] array) {
-            //Arrays.stream(arr).boxed().collect(Collectors.toList());// 不通用，仅支持int long double 等基础类型
-            List<T> resultList = new ArrayList<>(array.length);
-            //Collections.addAll(resultList, array);
-            for (T item : array) {
-                resultList.add(item);
-            }
-
-            return resultList;
-        }
-
-        /**
-         * 数组转集合，使用Stream
-         *
-         * @param array
-         * @param <T>
-         * @return
-         */
-        public static <T> List<T> toListUseStream(T[] array) {
-            return Arrays.stream(array)
-                    .collect(Collectors.toList());
+            return new ArrayList<T>(Arrays.asList(array));
         }
 
         /**
@@ -898,6 +869,69 @@ public class OftenUtil {
                     .map(getFieldFunc)
                     .filter(d -> filterNull ? d != null : true)
                     .collect(Collectors.toSet());
+        }
+
+        /**
+         * 字符串集合 去空、去空格
+         *
+         * @param ls
+         * @return
+         */
+        public static List<String> filterNoEmptyAndTrim(Collection<String> ls) {
+            return Optional.ofNullable(ls)
+                    .orElse(new ArrayList<>())
+                    .stream()
+                    .filter(d -> !StringUtils.isBlank(d))
+                    .map(d -> d.trim())
+                    .collect(Collectors.toList());
+        }
+
+        /**
+         * 字符串集合去空，去前后空格，去重
+         *
+         * @param ls
+         * @return
+         */
+        public static Set<String> filterNoEmptyAndTrimToSet(Collection<String> ls) {
+            return Optional.ofNullable(ls)
+                    .orElse(new ArrayList<>())
+                    .stream()
+                    .filter(d -> !StringUtils.isBlank(d))
+                    .map(d -> d.trim())
+                    .collect(Collectors.toSet());
+        }
+
+        /**
+         * 集合投影指定字段,并过滤null值
+         *
+         * @param ls
+         * @param fieldGetter
+         * @param <T>
+         * @param <R>
+         * @return
+         */
+        public static <T, R> List<R> mapAndFilterNull(List<T> ls, Function<T, R> fieldGetter) {
+            return Optional.ofNullable(ls).orElse(new ArrayList<>())
+                    .stream()
+                    .map(fieldGetter)
+                    .filter(d -> d != null)
+                    .collect(Collectors.toList());
+        }
+
+        /**
+         * 集合投影指定字段，并过滤空
+         *
+         * @param ls
+         * @param fieldGetter
+         * @param <T>
+         * @return
+         */
+        public static <T> List<String> mapAndFilterNotBlank(List<T> ls, Function<T, String> fieldGetter) {
+            return Optional.ofNullable(ls).orElse(new ArrayList<>())
+                    .stream()
+                    .map(fieldGetter)
+                    .filter(d -> !StringUtils.isBlank(d))
+                    .collect(Collectors.toList());
         }
 
         /**

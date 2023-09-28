@@ -20,6 +20,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -32,6 +33,8 @@ import java.time.LocalDateTime;
 @ConfigurationPropertiesScan
 // 排除数据库配置扫描
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class})
+// 指定资源文件读取的位置，支持*.properties和xml yaml
+@PropertySource(value = {"classpath:propSource.properties"})
 public class SbConsoleApplication {
 
     public static void main(String[] args) {
