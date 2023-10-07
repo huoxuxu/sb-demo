@@ -102,6 +102,10 @@ public class HttpApiClient {
                 case POST_URL_ENCODED:
                     respJson = ApacheHttpClientSimpleUseful.sendPostUrlEncoded(url, headerMap, formBody);
                     break;
+                case POST_MULTIPART_FORMDATA:
+
+                    respJson = "";
+                    break;
                 case UNKNOWN:
                 default:
                     throw new IllegalArgumentException("请求类型无效！");
@@ -129,6 +133,7 @@ public class HttpApiClient {
         GET(0, "HttpGet"),
         POST_JSON(1, "HttpPostJson"),
         POST_URL_ENCODED(1, "HttpPostUrlEncoded"),
+        POST_MULTIPART_FORMDATA(2, "HttpPostMultipartFormData"),
         UNKNOWN(-1, "");
 
         private final Integer code;

@@ -327,8 +327,8 @@ public class ApacheHttpClientSimpleUseful {
                     request.setHeader(entry.getKey(), entry.getValue());
                 }
             }
-            Header connection = request.getFirstHeader("Connection");
-            if (connection == null) {
+            Header headerConnection = request.getFirstHeader("Connection");
+            if (headerConnection == null) {
                 request.addHeader("Connection", "close");
             }
             // 发起请求

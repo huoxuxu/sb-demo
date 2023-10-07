@@ -75,19 +75,17 @@ public class ApacheHttpClientUseful {
 
     private static final CloseableHttpClient HTTP_CLIENT;
 
-
     /**
      * 上传文件
      *
      * @param url
      * @param header
      * @param param
-     * @param name
-     * @param files
+     * @param uploadFiles
      * @return
      * @throws IOException
      */
-    public static String sendFileUpload(String url, Map<String, String> header, Map<String, String> param, String name, File... files) throws IOException {
+    public static String sendFileUploadByStream(String url, Map<String, String> header, Map<String, String> param, Collection<MultipartFormDataStreamInfo> uploadFiles) throws IOException {
         HttpPost httpPost = new HttpPost(url);
 //        httpPost.setConfig(requestConfig);
         MultipartEntityBuilder mEntityBuilder = MultipartEntityBuilder.create();
@@ -101,75 +99,17 @@ public class ApacheHttpClientUseful {
             });
         }
 
-        List<FileInputStream> fls = new ArrayList<>();
-        try {
-            // 写入文件
-            for (File file : files) {
-                // 123.abc
-                String filename = file.getName();
-                FileInputStream fis = new FileInputStream(file);
-                fls.add(fis);
-                mEntityBuilder.addBinaryBody(name, fis, ContentType.MULTIPART_FORM_DATA, filename);
-
-//        if (file instanceof byte[]) {
-//
-//        } else if (file instanceof InputStream) {
-//            mEntityBuilder.addBinaryBody(name, (InputStream) file, ContentType.MULTIPART_FORM_DATA, filename);
-//        }
-            }
-
-            httpPost.setEntity(mEntityBuilder.build());
-            log.debug("sendFileUpload url={}, param={}", url, param);
-
-            try (ApacheHttpClientSimpleUseful.HttpApiResp resp = ApacheHttpClientSimpleUseful.HttpClientTools.execute(url, httpPost, header)) {
-                log.debug("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-
-                return resp.readString();
-            }
-        } finally {
-            for (FileInputStream item : fls) {
-                try {
-                    item.close();
-                } catch (Exception ignore) {
-
-                }
-            }
-        }
-    }
-
-    /**
-     * 上传文件
-     *
-     * @param url
-     * @param header
-     * @param param
-     * @param name
-     * @param fileNames
-     * @param files
-     * @return
-     * @throws IOException
-     */
-    public static String sendFileUpload(String url, Map<String, String> header, Map<String, String> param, String name, String[] fileNames, InputStream... files) throws IOException {
-        HttpPost httpPost = new HttpPost(url);
-//        httpPost.setConfig(requestConfig);
-        MultipartEntityBuilder mEntityBuilder = MultipartEntityBuilder.create();
-        mEntityBuilder.setCharset(Charset.forName(CHAR_SET));
-        mEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-
-        // 写入文本
-        param.forEach((key, value) -> {
-            mEntityBuilder.addTextBody(key, value, TEXT_PLAIN_UTF_8);
-        });
-
         // 写入文件
-        for (int i = 0; i < fileNames.length; i++) {
-            String fileName = fileNames[i];
-            InputStream file = files[i];
-            mEntityBuilder.addBinaryBody(name, file, ContentType.MULTIPART_FORM_DATA, fileName);
+        if (uploadFiles != null) {
+            for (MultipartFormDataStreamInfo uploadFile : uploadFiles) {
+                String fileName = uploadFile.getFileName();
+                InputStream file = uploadFile.getFile();
+                mEntityBuilder.addBinaryBody(uploadFile.getFormName(), file, ContentType.MULTIPART_FORM_DATA, fileName);
+            }
         }
-
-        httpPost.setEntity(mEntityBuilder.build());
-        log.debug("sendFileUpload url={}, param={}", url, param);
+        HttpEntity httpEntity = mEntityBuilder.build();
+        httpPost.setEntity(httpEntity);
+        log.debug("sendFileUploadByStream url={}, param={}", url, param);
 
         try (ApacheHttpClientSimpleUseful.HttpApiResp resp = ApacheHttpClientSimpleUseful.HttpClientTools.execute(url, httpPost, header)) {
             log.debug("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
@@ -184,13 +124,11 @@ public class ApacheHttpClientUseful {
      * @param url
      * @param header
      * @param param
-     * @param name
-     * @param fileNames
-     * @param files
+     * @param uploadFiles
      * @return
      * @throws IOException
      */
-    public static String sendFileUpload(String url, Map<String, String> header, Map<String, String> param, String name, String[] fileNames, byte[]... files) throws IOException {
+    public static String sendFileUploadByBytes(String url, Map<String, String> header, Map<String, String> param, Collection<MultipartFormDataBytesInfo> uploadFiles) throws IOException {
         HttpPost httpPost = new HttpPost(url);
 //        httpPost.setConfig(requestConfig);
         MultipartEntityBuilder mEntityBuilder = MultipartEntityBuilder.create();
@@ -198,18 +136,64 @@ public class ApacheHttpClientUseful {
         mEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
         // 写入文本
-        param.forEach((key, value) -> {
-            mEntityBuilder.addTextBody(key, value, TEXT_PLAIN_UTF_8);
-        });
-
+        if (param != null) {
+            param.forEach((key, value) -> mEntityBuilder.addTextBody(key, value, TEXT_PLAIN_UTF_8));
+        }
         // 写入文件
-        for (int i = 0; i < fileNames.length; i++) {
-            String fileName = fileNames[i];
-            byte[] file = files[i];
-            mEntityBuilder.addBinaryBody(name, file, ContentType.MULTIPART_FORM_DATA, fileName);
+        if (uploadFiles != null) {
+            for (MultipartFormDataBytesInfo uploadFile : uploadFiles) {
+                String fileName = uploadFile.getFileName();
+                byte[] file = uploadFile.getFile();
+                mEntityBuilder.addBinaryBody(uploadFile.getFormName(), file, ContentType.MULTIPART_FORM_DATA, fileName);
+            }
+        }
+        HttpEntity httpEntity = mEntityBuilder.build();
+        httpPost.setEntity(httpEntity);
+        log.debug("sendFileUploadByBytes url={}, param={}", url, param);
+
+        try (ApacheHttpClientSimpleUseful.HttpApiResp resp = ApacheHttpClientSimpleUseful.HttpClientTools.execute(url, httpPost, header)) {
+            log.debug("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
+
+            return resp.readString();
+        }
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param url
+     * @param header
+     * @param param
+     * @param uploadFiles
+     * @return
+     * @throws IOException
+     */
+    private static String sendFileUpload(String url, Map<String, String> header, Map<String, String> param, Collection<MultipartFormDataInfo> uploadFiles) throws IOException {
+        // 不知道内部是否关闭了文件流
+        HttpPost httpPost = new HttpPost(url);
+//        httpPost.setConfig(requestConfig);
+        MultipartEntityBuilder mEntityBuilder = MultipartEntityBuilder.create();
+        mEntityBuilder.setCharset(Charset.forName(CHAR_SET));
+        mEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+
+        // 写入文本
+        if (param != null) {
+            param.forEach((key, value) -> mEntityBuilder.addTextBody(key, value, TEXT_PLAIN_UTF_8));
         }
 
-        httpPost.setEntity(mEntityBuilder.build());
+        // 写入文件
+        if (uploadFiles != null) {
+            for (MultipartFormDataInfo uploadFile : uploadFiles) {
+                String formName = uploadFile.getFormName();
+                File file = uploadFile.getFile();
+
+                // 123.abc
+                String filename = uploadFile.getFileName();
+                mEntityBuilder.addBinaryBody(formName, file, ContentType.MULTIPART_FORM_DATA, filename);
+            }
+        }
+        HttpEntity httpEntity = mEntityBuilder.build();
+        httpPost.setEntity(httpEntity);
         log.debug("sendFileUpload url={}, param={}", url, param);
 
         try (ApacheHttpClientSimpleUseful.HttpApiResp resp = ApacheHttpClientSimpleUseful.HttpClientTools.execute(url, httpPost, header)) {
@@ -247,4 +231,57 @@ public class ApacheHttpClientUseful {
         HTTP_CLIENT = ApacheHttpClientSimpleUseful.getHttpClient();
     }
 
+    @Data
+    public static class MultipartFormDataInfo implements Serializable {
+        private static final long serialVersionUID = 7597145995412707761L;
+
+        private String formName;
+        private String fileName;
+
+        private File file;
+
+        public MultipartFormDataInfo(String formName, String fileName, File file) {
+            this.formName = formName;
+            this.fileName = fileName;
+            this.file = file;
+        }
+
+        public MultipartFormDataInfo(String formName, File file) {
+            this.formName = formName;
+            this.fileName = file.getName();
+            this.file = file;
+        }
+    }
+
+    @Data
+    public static class MultipartFormDataStreamInfo implements Serializable {
+        private static final long serialVersionUID = 7597145995412707761L;
+
+        private String formName;
+        private String fileName;
+
+        private InputStream file;
+
+        public MultipartFormDataStreamInfo(String formName, String fileName, InputStream file) {
+            this.formName = formName;
+            this.fileName = fileName;
+            this.file = file;
+        }
+    }
+
+    @Data
+    public static class MultipartFormDataBytesInfo implements Serializable {
+        private static final long serialVersionUID = 7597145995412707761L;
+
+        private String formName;
+        private String fileName;
+
+        private byte[] file;
+
+        public MultipartFormDataBytesInfo(String formName, String fileName, byte[] file) {
+            this.formName = formName;
+            this.fileName = fileName;
+            this.file = file;
+        }
+    }
 }
