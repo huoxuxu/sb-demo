@@ -168,38 +168,22 @@ public class ApacheHttpClientUseful {
      * @return
      * @throws IOException
      */
-    private static String sendFileUpload(String url, Map<String, String> header, Map<String, String> param, Collection<MultipartFormDataInfo> uploadFiles) throws IOException {
-        // 不知道内部是否关闭了文件流
-        HttpPost httpPost = new HttpPost(url);
-//        httpPost.setConfig(requestConfig);
-        MultipartEntityBuilder mEntityBuilder = MultipartEntityBuilder.create();
-        mEntityBuilder.setCharset(Charset.forName(CHAR_SET));
-        mEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-
-        // 写入文本
-        if (param != null) {
-            param.forEach((key, value) -> mEntityBuilder.addTextBody(key, value, TEXT_PLAIN_UTF_8));
-        }
-
-        // 写入文件
-        if (uploadFiles != null) {
-            for (MultipartFormDataInfo uploadFile : uploadFiles) {
-                String formName = uploadFile.getFormName();
-                File file = uploadFile.getFile();
-
-                // 123.abc
-                String filename = uploadFile.getFileName();
-                mEntityBuilder.addBinaryBody(formName, file, ContentType.MULTIPART_FORM_DATA, filename);
+    public static String sendFileUpload(String url, Map<String, String> header, Map<String, String> param, Collection<MultipartFormDataInfo> uploadFiles) throws IOException {
+        List<MultipartFormDataStreamInfo> uploads = new ArrayList<>();
+        try {
+            if (uploadFiles != null) {
+                for (MultipartFormDataInfo item : uploadFiles) {
+                    InputStream fileStream = new FileInputStream(item.getFile());
+                    MultipartFormDataStreamInfo vo = new MultipartFormDataStreamInfo(item.getFormName(), item.getFileName(), fileStream);
+                    uploads.add(vo);
+                }
             }
-        }
-        HttpEntity httpEntity = mEntityBuilder.build();
-        httpPost.setEntity(httpEntity);
-        log.debug("sendFileUpload url={}, param={}", url, param);
-
-        try (ApacheHttpClientSimpleUseful.HttpApiResp resp = ApacheHttpClientSimpleUseful.HttpClientTools.execute(url, httpPost, header)) {
-            log.debug("sendFileUpload-resp url:{} statusCode:{} contentLength:{}", url, resp.getStatusCode(), resp.getContentLength());
-
-            return resp.readString();
+            // send
+            return sendFileUploadByStream(url, header, param, uploads);
+        } finally {
+            for (MultipartFormDataStreamInfo item : uploads) {
+                if (item.file != null) item.file.close();
+            }
         }
     }
 
