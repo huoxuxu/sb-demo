@@ -1,11 +1,15 @@
 package com.hxx.sbweb.controller.webDemo.bindReqPara;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.model.Result;
 import com.hxx.sbweb.controller.base.BaseRestController;
 import com.hxx.sbweb.domain.Book;
 import com.hxx.sbweb.domain.User;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,9 +26,8 @@ import javax.validation.Valid;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * 请求参数映射示例
@@ -45,120 +48,92 @@ public class RequestParaController extends BaseRestController {
 
     /**
      * 请求参数名和方法参数名一致
-     * http://localhost:8082/reqpara/getname2?str=jay1
+     * http://localhost:8082/reqpara/get?p=jay1
      *
-     * @param str
+     * @param p
      * @return
      */
-    @GetMapping("/getname2")
-    public String getname2(String str) {
-        return "name is:" + str;
-    }
-
-    /**
-     * /reqpara/t1/9998/hhhxxx
-     *
-     * @param id
-     * @param name
-     * @return
-     */
-    @GetMapping("t1/{id}/{name}")
-    public String test5(@PathVariable("id") Long id, @PathVariable("name") String name) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", id);
-        map.put("name", name);
-
-        return JsonUtil.toJSON(map);
-    }
-
-    /**
-     * /reqpara/demo/9998
-     *
-     * @param id
-     * @return
-     */
-    @GetMapping("demo/{id}")
-    public Result<Map<String, Object>> demo1(@PathVariable("id") Long id) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", id);
-
-        return Result.success(map);
-    }
-
-    /**
-     * 映射URLPath参数
-     * http://localhost:8082/reqpara/id/199
-     *
-     * @param id
-     * @return
-     */
-    @GetMapping("/id/{id}")
-    public String id(@PathVariable("id") Integer id) {
-        return "id:" + id;
-    }
-
-    @GetMapping("/testUrlPathParam/{param1}/{param2}")
-    public String testUrlPathParam(@PathVariable String param1, @PathVariable String param2) {
-        System.out.println("通过PathVariable获取的参数param1=" + param1);
-        System.out.println("通过PathVariable获取的参数param2=" + param2);
-        return "";
+    @GetMapping("/get")
+    public String get(String p) {
+        return "name is:" + p;
     }
 
     /**
      * 请求参数名和方法参数名不一致
-     * http://localhost:8082/reqpara/getname?name=jay
+     * http://localhost:8082/reqpara/getNoSame?name=jay
      *
      * @param str
      * @return
      */
-    @GetMapping("/getname")
-    public String getname(@RequestParam(value = "name") String str) {
+    @GetMapping("/getNoSame")
+    public String getNoSame(@RequestParam(value = "name") String str) {
         return "name is:" + str;
     }
 
     /**
      * 请求参数名和方法名不一致且包含默认值
-     * http://localhost:8082/reqpara/get_default
+     * http://localhost:8082/reqpara/getParaDefault
      *
      * @param str
      * @return
      */
-    @GetMapping("/get_default")
+    @GetMapping("/getParaDefault")
     public String getnameWithDefaultParam(@RequestParam(value = "name", defaultValue = "sx1999") String str) {
         return "name is:" + str;
     }
 
-
     /**
-     * 只在当前的Controller里面起作用
-     * RequestParam特性 会抛出此异常
+     * /reqpara/model?id=1&name=2
      *
-     * @param ex
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void processMethod(MissingServletRequestParameterException ex, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("抛异常了！" + ex.getLocalizedMessage());
-        log.error("抛异常了！" + ex.getLocalizedMessage());
-        response.getWriter()
-                .printf(ex.getMessage());
-        response.flushBuffer();
-    }
-
-    /**
-     * 异常页面控制，会跳转到对应的ModelAndView
-     *
-     * @param runtimeException
+     * @param u
      * @return
      */
-    @ExceptionHandler(RuntimeException.class)
-    public String runtimeExceptionHandler(RuntimeException runtimeException, ModelMap modelMap) {
-        log.error(runtimeException.getLocalizedMessage());
-
-        modelMap.put("status", false);
-        return "exception";
+    @GetMapping("/model")
+    public String getModel(User u) {
+        return JsonUtil.toJSON(u);
     }
+
+    /**
+     * /reqpara/arr?kk=1&kk=2
+     *
+     * @param kk
+     * @return
+     */
+    @GetMapping("/arr")
+    public String getArr(String[] kk) {
+        return StringUtils.join(kk, ",");
+    }
+
+    /**
+     * /reqpara/list?kk=1&kk=2
+     * 必须使用@RequestParam 修饰入参
+     *
+     * @param kk
+     * @return
+     */
+    @GetMapping("/list")
+    public String getList(@RequestParam List<String> kk) {
+        return StringUtils.join(kk, ",");
+    }
+
+    /**
+     * /reqpara/dataParam?date=2088/08/08&date1=2088-08-18&date2=2088/08/28 8:08:08
+     *
+     * @param date
+     * @param date1
+     * @param date2
+     * @return
+     */
+    @RequestMapping("/dataParam")
+    public String dataParam(Date date,
+                            @DateTimeFormat(pattern = "yyyy-MM-dd") Date date1,
+                            @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss") Date date2) {
+        System.out.println("参数传递 date ==> " + OftenUtil.DateTimeUtil.fmt2Str(date));
+        System.out.println("参数传递 date1(yyyy-MM-dd) ==> " + OftenUtil.DateTimeUtil.fmt2Str(date1));
+        System.out.println("参数传递 date2(yyyy/MM/dd HH:mm:ss) ==> " + OftenUtil.DateTimeUtil.fmt2Str(date2));
+        return JsonUtil.toJSON(Arrays.asList(OftenUtil.DateTimeUtil.fmt2Str(date),
+                OftenUtil.DateTimeUtil.fmt2Str(date1),
+                OftenUtil.DateTimeUtil.fmt2Str(date2)));
+    }
+
 }

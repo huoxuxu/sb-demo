@@ -4,12 +4,14 @@ import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbweb.controller.base.BaseRestController;
 import com.hxx.sbweb.domain.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,6 +23,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/reqbody")
 public class RequestBodyController extends BaseRestController {
+
+    /**
+     * /reqbody/formencoded
+     *
+     * @param u
+     * @return
+     */
+    @PostMapping("/formencoded")
+    public String formencoded(User u) {
+        return JsonUtil.toJSON(u);
+    }
 
     /**
      * http://localhost:8082/reqbody/json

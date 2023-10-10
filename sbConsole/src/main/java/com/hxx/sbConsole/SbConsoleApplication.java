@@ -34,7 +34,7 @@ import java.time.LocalDateTime;
 // 排除数据库配置扫描
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class})
 // 指定资源文件读取的位置，支持*.properties和xml yaml
-@PropertySource(value = {"classpath:propSource.properties"})
+@PropertySource(value = {"classpath:propSource.properties", "classpath:person.properties", "classpath:test.properties"})
 public class SbConsoleApplication {
 
     public static void main(String[] args) {
