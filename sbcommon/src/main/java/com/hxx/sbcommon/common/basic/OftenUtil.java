@@ -9,6 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.Collator;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -281,115 +282,134 @@ public class OftenUtil {
         /**
          * 基础类型相等比较，
          * 仅支持Java的8大基础类型（Short、Integer、Long、Float、Double、Byte、Boolean、Character）
-         * 以及BigDecimal之间互相比较
+         * 以及BigDecimal、String之间互相比较
+         * 注意：整型之间和浮点型之间可以互相比较
          *
          * @param obj
          * @param eqObj
          * @return
          */
-        public static boolean eq(Object obj, Object eqObj) {
+        public static boolean basicEquals(Object obj, Object eqObj) {
             if (obj == null) return eqObj == null;
 
-            if (obj instanceof Boolean) {
+            // 字符串
+            if (obj instanceof String) {
                 if (eqObj == null) return false;
 
-                if (eqObj instanceof Boolean) return obj.equals(eqObj);
-            } else if (obj instanceof Character) {
+                if (eqObj instanceof String) return obj.equals(eqObj);
+            }
+            // 布尔
+            else if (obj instanceof Boolean) {
                 if (eqObj == null) return false;
 
-                if (eqObj instanceof Character) return obj.equals(eqObj);
+                boolean objVal = (Boolean) obj;
+                if (eqObj instanceof Boolean) return objVal == (Boolean) eqObj;
+            }
+            // 字符
+            else if (obj instanceof Character) {
+                if (eqObj == null) return false;
+
+                char objVal = (Character) obj;
+                if (eqObj instanceof Character) return objVal == (Character) eqObj;
+            }
+            // 字节
+            else if (obj instanceof Byte) {
+                if (eqObj == null) return false;
+
+                byte objVal = (Byte) obj;
+                if (eqObj instanceof Integer) return objVal == ((Integer) eqObj).byteValue();
+                if (eqObj instanceof Short) return objVal == ((Short) eqObj).byteValue();
+                if (eqObj instanceof Long) return objVal == ((Long) eqObj).byteValue();
+
+//                if (eqObj instanceof Float) return obj.equals(((Float) eqObj).byteValue());
+//                if (eqObj instanceof Double) return obj.equals(((Double) eqObj).byteValue());
+//                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).byteValue());
+
+                if (eqObj instanceof Byte) return objVal == (Byte) eqObj;
             }
             // 整型
             else if (obj instanceof Short) {
                 if (eqObj == null) return false;
 
-                if (eqObj instanceof Integer) return obj.equals(((Integer) eqObj).shortValue());
-                if (eqObj instanceof Short) return obj.equals(eqObj);
-                if (eqObj instanceof Long) return obj.equals(((Long) eqObj).shortValue());
+                short objVal = (Short) obj;
+                if (eqObj instanceof Integer) return objVal == ((Integer) eqObj).shortValue();
+                if (eqObj instanceof Short) return objVal == (Short) eqObj;
+                if (eqObj instanceof Long) return objVal == ((Long) eqObj).shortValue();
 
-                if (eqObj instanceof Float) return obj.equals(((Float) eqObj).shortValue());
-                if (eqObj instanceof Double) return obj.equals(((Double) eqObj).shortValue());
-                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).shortValue());
+//                if (eqObj instanceof Float) return obj.equals(((Float) eqObj).shortValue());
+//                if (eqObj instanceof Double) return obj.equals(((Double) eqObj).shortValue());
+//                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).shortValue());
 
-                if (eqObj instanceof Byte) return obj.equals(((Byte) eqObj).shortValue());
+                if (eqObj instanceof Byte) return objVal == ((Byte) eqObj).shortValue();
             } else if (obj instanceof Integer) {
                 if (eqObj == null) return false;
 
-                if (eqObj instanceof Integer) return obj.equals(eqObj);
-                if (eqObj instanceof Short) return obj.equals(((Short) eqObj).intValue());
-                if (eqObj instanceof Long) return obj.equals(((Long) eqObj).intValue());
+                int objVal = (Integer) obj;
+                if (eqObj instanceof Integer) return objVal == (Integer) eqObj;
+                if (eqObj instanceof Short) return objVal == ((Short) eqObj).intValue();
+                if (eqObj instanceof Long) return objVal == ((Long) eqObj).intValue();
 
-                if (eqObj instanceof Float) return obj.equals(((Float) eqObj).intValue());
-                if (eqObj instanceof Double) return obj.equals(((Double) eqObj).intValue());
-                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).intValue());
+//                if (eqObj instanceof Float) return obj.equals(((Float) eqObj).intValue());
+//                if (eqObj instanceof Double) return obj.equals(((Double) eqObj).intValue());
+//                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).intValue());
 
-                if (eqObj instanceof Byte) return obj.equals(((Byte) eqObj).intValue());
+                if (eqObj instanceof Byte) return objVal == ((Byte) eqObj).intValue();
             } else if (obj instanceof Long) {
                 if (eqObj == null) return false;
 
-                if (eqObj instanceof Integer) return obj.equals(((Integer) eqObj).longValue());
-                if (eqObj instanceof Short) return obj.equals(((Short) eqObj).longValue());
-                if (eqObj instanceof Long) return obj.equals(eqObj);
+                long objVal = (Long) obj;
+                if (eqObj instanceof Integer) return objVal == ((Integer) eqObj).longValue();
+                if (eqObj instanceof Short) return objVal == ((Short) eqObj).longValue();
+                if (eqObj instanceof Long) return objVal == (Long) eqObj;
 
-                if (eqObj instanceof Float) return obj.equals(((Float) eqObj).longValue());
-                if (eqObj instanceof Double) return obj.equals(((Double) eqObj).longValue());
-                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).longValue());
+//                if (eqObj instanceof Float) return obj.equals(((Float) eqObj).longValue());
+//                if (eqObj instanceof Double) return obj.equals(((Double) eqObj).longValue());
+//                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).longValue());
 
-                if (eqObj instanceof Byte) return obj.equals(((Byte) eqObj).longValue());
+                if (eqObj instanceof Byte) return objVal == ((Byte) eqObj).longValue();
             }
             // 浮点数
             else if (obj instanceof Float) {
                 if (eqObj == null) return false;
 
-                if (eqObj instanceof Integer) return obj.equals(((Integer) eqObj).floatValue());
-                if (eqObj instanceof Short) return obj.equals(((Short) eqObj).floatValue());
-                if (eqObj instanceof Long) return obj.equals(((Long) eqObj).floatValue());
+//                if (eqObj instanceof Integer) return obj.equals(((Integer) eqObj).floatValue());
+//                if (eqObj instanceof Short) return obj.equals(((Short) eqObj).floatValue());
+//                if (eqObj instanceof Long) return obj.equals(((Long) eqObj).floatValue());
 
-                if (eqObj instanceof Float) return obj.equals(eqObj);
-                if (eqObj instanceof Double) return obj.equals(((Double) eqObj).floatValue());
-                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).floatValue());
+                float objVal = (Float) obj;
+                if (eqObj instanceof Float) return objVal == (Float) eqObj;
+                if (eqObj instanceof Double) return objVal == ((Double) eqObj).floatValue();
+                if (eqObj instanceof BigDecimal) return objVal == ((BigDecimal) eqObj).floatValue();
 
-                if (eqObj instanceof Byte) return obj.equals(((Byte) eqObj).floatValue());
+//                if (eqObj instanceof Byte) return obj.equals(((Byte) eqObj).floatValue());
             } else if (obj instanceof Double) {
                 if (eqObj == null) return false;
 
-                if (eqObj instanceof Integer) return obj.equals(((Integer) eqObj).doubleValue());
-                if (eqObj instanceof Short) return obj.equals(((Short) eqObj).doubleValue());
-                if (eqObj instanceof Long) return obj.equals(((Long) eqObj).doubleValue());
+//                if (eqObj instanceof Integer) return obj.equals(((Integer) eqObj).doubleValue());
+//                if (eqObj instanceof Short) return obj.equals(((Short) eqObj).doubleValue());
+//                if (eqObj instanceof Long) return obj.equals(((Long) eqObj).doubleValue());
 
-                if (eqObj instanceof Float) return obj.equals(((Float) eqObj).doubleValue());
-                if (eqObj instanceof Double) return obj.equals(eqObj);
-                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).doubleValue());
+                double objVal = (Double) obj;
+                if (eqObj instanceof Float) return objVal == ((Float) eqObj).doubleValue();
+                if (eqObj instanceof Double) return objVal == (Double) eqObj;
+                if (eqObj instanceof BigDecimal) return objVal == ((BigDecimal) eqObj).doubleValue();
 
-                if (eqObj instanceof Byte) return obj.equals(((Byte) eqObj).doubleValue());
+//                if (eqObj instanceof Byte) return obj.equals(((Byte) eqObj).doubleValue());
             } else if (obj instanceof BigDecimal) {
                 if (eqObj == null) return false;
 
-                if (eqObj instanceof Integer) return obj.equals(BigDecimal.valueOf((Integer) eqObj));
-                if (eqObj instanceof Short) return obj.equals(BigDecimal.valueOf((Short) eqObj));
-                if (eqObj instanceof Long) return obj.equals(BigDecimal.valueOf((Long) eqObj));
+//                if (eqObj instanceof Integer) return obj.equals(BigDecimal.valueOf((Integer) eqObj));
+//                if (eqObj instanceof Short) return obj.equals(BigDecimal.valueOf((Short) eqObj));
+//                if (eqObj instanceof Long) return obj.equals(BigDecimal.valueOf((Long) eqObj));
 
-                if (eqObj instanceof Float) return obj.equals(BigDecimal.valueOf((Float) eqObj));
-                if (eqObj instanceof Double) return obj.equals(BigDecimal.valueOf((Double) eqObj));
-                if (eqObj instanceof BigDecimal) return obj.equals(eqObj);
+                BigDecimal objVal = (BigDecimal) obj;
+                if (eqObj instanceof Float) return objVal.equals(BigDecimal.valueOf((Float) eqObj));
+                if (eqObj instanceof Double) return objVal.equals(BigDecimal.valueOf((Double) eqObj));
+                if (eqObj instanceof BigDecimal) return objVal.equals(eqObj);
 
-                if (eqObj instanceof Byte) return obj.equals(BigDecimal.valueOf((Byte) eqObj));
+//                if (eqObj instanceof Byte) return obj.equals(BigDecimal.valueOf((Byte) eqObj));
             }
-            // byte
-            else if (obj instanceof Byte) {
-                if (eqObj == null) return false;
-
-                if (eqObj instanceof Integer) return obj.equals(((Integer) eqObj).byteValue());
-                if (eqObj instanceof Short) return obj.equals(((Short) eqObj).byteValue());
-                if (eqObj instanceof Long) return obj.equals(((Long) eqObj).byteValue());
-
-                if (eqObj instanceof Float) return obj.equals(((Float) eqObj).byteValue());
-                if (eqObj instanceof Double) return obj.equals(((Double) eqObj).byteValue());
-                if (eqObj instanceof BigDecimal) return obj.equals(((BigDecimal) eqObj).byteValue());
-
-                if (eqObj instanceof Byte) return obj.equals(eqObj);
-            }
-            return false;
+            throw new IllegalArgumentException("不支持的类型比较");
         }
 
         /**
@@ -401,12 +421,7 @@ public class OftenUtil {
          * @return
          */
         public static String fmt2Str(Float val) {
-            Double dval = null;
-            if (val != null) {
-                dval = val.doubleValue();
-            }
-
-            return fmt2Str(dval);
+            return fmt2Str(val == null ? null : val.doubleValue());
         }
 
         /**
@@ -503,163 +518,6 @@ public class OftenUtil {
 
             BigDecimal decimal = numerator.multiply(new BigDecimal(100));
             return divide(decimal, denominator, scale);
-        }
-    }
-
-    // 字符串
-    public static class StringUtil {
-        /**
-         * 取字符串的前n位,
-         * 超过字符串总长度不会报错
-         *
-         * @param str
-         * @param count
-         * @return
-         */
-        public static String cut(String str, int count) {
-            if (StringUtils.isEmpty(str)) return str;
-            if (count == 0) return "";
-
-            int len = str.length();
-            if (count >= len) {
-                return str;
-            }
-
-            return str.substring(0, count);
-        }
-
-        /**
-         * 小写第一位
-         */
-        public static String lowerFirstChar(String str) {
-            if (null == str) {
-                return null;
-            }
-
-            if (str.length() > 0) {
-                char firstChar = str.charAt(0);
-                if (Character.isUpperCase(firstChar)) {
-                    return Character.toLowerCase(firstChar) + str.substring(1);
-                }
-            }
-
-            return str;
-        }
-
-        /**
-         * 大写第一位
-         *
-         * @param str
-         * @return
-         */
-        public static String upperFirstChar(String str) {
-            if (null == str) {
-                return null;
-            }
-
-            if (str.length() > 0) {
-                char firstChar = str.charAt(0);
-                if (Character.isLowerCase(firstChar)) {
-                    return Character.toUpperCase(firstChar) + str.substring(1);
-                }
-            }
-
-            return str;
-        }
-
-        /**
-         * 获取第一个分隔符的键和值
-         *
-         * @param str
-         * @param splitStr
-         * @return
-         */
-        public static String[] splitFirst(String str, String splitStr) {
-            int i = str.indexOf(splitStr);
-            if (i == -1) {
-                String[] arr = {str, ""};
-                return arr;
-            } else {
-                String v = "";
-                if (str.length() > i + 1) {
-                    v = str.substring(i + 1);
-                }
-                String[] arr = {str.substring(0, i), v};
-                return arr;
-            }
-        }
-
-        /**
-         * 修建开始位以 trimStr 开头的字符
-         *
-         * @param str
-         * @param trimStr
-         * @return
-         */
-        public static String trimStart(String str, String trimStr) {
-            if (StringUtils.isEmpty(trimStr)) {
-                return str;
-            }
-
-            if (str.equals(trimStr)) {
-                return "";
-            }
-            int ind = str.indexOf(trimStr);
-            if (ind == 0) {
-                str = str.substring(trimStr.length());
-                return trimStart(str, trimStr);
-            }
-
-            return str;
-        }
-
-        /**
-         * 获取字符串中最后的数字
-         *
-         * @param str
-         * @return
-         */
-        public static String getEndNumber(String str) {
-            List<Character> cls = new ArrayList<>();
-            for (int i = str.length() - 1; i > -1; i--) {
-                char c = str.charAt(i);
-                if (!Character.isDigit(c)) {
-                    break;
-                }
-                cls.add(c);
-            }
-            if (CollectionUtils.isEmpty(cls)) {
-                return "";
-            }
-
-            // 反转
-            Collections.reverse(cls);
-
-            StringBuilder sb = new StringBuilder();
-            for (Character cl : cls) {
-                sb.append(cl);
-            }
-
-            return sb.toString();
-        }
-
-        public static String aa1(String str) {
-            return "";
-//            char[] carr = new char[str.length()];
-//            int j = 0;
-//            for (int i = str.length() - 1; i > -1; i--) {
-//                char c = str.charAt(i);
-//                if (!Character.isDigit(c)) {
-//                    break;
-//                }
-//                carr[carr.length - 1 - j] = c;
-//                j++;
-//            }
-//            if (j == 0) {
-//                return "";
-//            }
-//            // 这里没测试
-//            return String.copyValueOf(carr, carr.length - j, j - 1);
         }
     }
 
@@ -830,26 +688,61 @@ public class OftenUtil {
     // 集合
     public static class CollectionUtil {
         /**
-         * 集合转数组
+         * 排序集合，按字段
+         * 支持多字段连接为字符串排序
          *
-         * @param list
-         * @param cls  范型集合的元素类型
+         * @param ls
+         * @param getFieldFunc 排序字段
+         * @param <T>
+         * @param <TField>
          * @return
          */
-        public static <T> T[] toArray(List<T> list, Class<T> cls) {
-            @SuppressWarnings("unchecked") final T[] array = (T[]) Array.newInstance(cls, list.size());
-            return list.toArray(array);
+        public static <T, TField extends Comparable<TField>> List<T> sortList(List<T> ls, Function<T, TField> getFieldFunc, boolean asc) {
+            if (CollectionUtils.isEmpty(ls)) return new ArrayList<>();
+
+            List<T> nullData = ls.stream()
+                    .filter(d -> getFieldFunc.apply(d) == null)
+                    .collect(Collectors.toList());
+            Comparator<T> comparing;
+            if (asc) comparing = Comparator.comparing(getFieldFunc);
+            else comparing = Comparator.comparing(getFieldFunc, Comparator.reverseOrder());
+            List<T> notNullData = ls.stream()
+                    .filter(d -> getFieldFunc.apply(d) != null)
+                    .sorted(comparing)
+                    .collect(Collectors.toList());
+            notNullData.addAll(nullData);
+            return notNullData;
         }
 
         /**
-         * 数组转集合
+         * 按中文拼音排序
          *
-         * @param array
+         * @param ls
+         * @param getFieldFunc
+         * @param asc
          * @param <T>
+         * @param <TField>
          * @return
          */
-        public static <T> List<T> toList(T[] array) {
-            return new ArrayList<T>(Arrays.asList(array));
+        public static <T, TField extends Comparable<TField>> List<T> sortListUseCollator(List<T> ls, Function<T, TField> getFieldFunc, boolean asc) {
+            if (CollectionUtils.isEmpty(ls)) return new ArrayList<>();
+
+            List<T> nullData = ls.stream()
+                    .filter(d -> getFieldFunc.apply(d) == null)
+                    .collect(Collectors.toList());
+            Comparator<T> collatorComparator = (T o1, T o2) -> {
+                Collator instance = Collator.getInstance(Locale.CHINA);
+                if (asc)
+                    return instance.compare(getFieldFunc.apply(o1), getFieldFunc.apply(o2));
+                else
+                    return instance.compare(getFieldFunc.apply(o2), getFieldFunc.apply(o1));
+            };
+            List<T> notNullData = ls.stream()
+                    .filter(d -> getFieldFunc.apply(d) != null)
+                    .sorted(collatorComparator)
+                    .collect(Collectors.toList());
+            notNullData.addAll(nullData);
+            return notNullData;
         }
 
         /**
@@ -869,6 +762,42 @@ public class OftenUtil {
                     .map(getFieldFunc)
                     .filter(d -> filterNull ? d != null : true)
                     .collect(Collectors.toSet());
+        }
+
+        /**
+         * 获取字段值Set集合
+         *
+         * @param ls
+         * @param getFieldFunc
+         * @param <T>
+         * @param <TField>
+         * @return
+         */
+        public static <T, TField> Set<TField> getFieldSet(List<T> ls, Function<T, TField> getFieldFunc, Predicate<TField> filterPred) {
+            return Optional.ofNullable(ls)
+                    .orElse(new ArrayList<>())
+                    .stream()
+                    .map(getFieldFunc)
+                    .filter(filterPred)
+                    .collect(Collectors.toSet());
+        }
+
+        /**
+         * 获取字段值SortedSet集合
+         *
+         * @param ls
+         * @param getFieldFunc
+         * @param <T>
+         * @param <TField>
+         * @return
+         */
+        public static <T, TField> SortedSet<TField> getFieldSortedSet(List<T> ls, Function<T, TField> getFieldFunc, Predicate<TField> filterPred) {
+            return Optional.ofNullable(ls)
+                    .orElse(new ArrayList<>())
+                    .stream()
+                    .map(getFieldFunc)
+                    .filter(filterPred)
+                    .collect(Collectors.toCollection(TreeSet::new));
         }
 
         /**
