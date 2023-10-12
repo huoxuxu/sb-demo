@@ -12,7 +12,9 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -79,7 +81,12 @@ public class HttpClientServiceDemo {
         params.put("pb", "pb1");
         File file = new File("d:/tmp/tmp1.txt");
         File file2 = new File("d:/tmp/tmp1.txt");
-        String html = ApacheHttpClientUseful.sendFileUpload(url, headers, params, "file", file, file2);
+
+        List<ApacheHttpClientUseful.MultipartFormDataInfo> uploadFiles = new ArrayList<>();
+        uploadFiles.add(new ApacheHttpClientUseful.MultipartFormDataInfo("file", file));
+        uploadFiles.add(new ApacheHttpClientUseful.MultipartFormDataInfo("file2", file2));
+        // send http
+        String html = ApacheHttpClientUseful.sendFileUpload(url, headers, params, uploadFiles);
         System.out.println("=====================================================");
         System.out.println(html);
     }
