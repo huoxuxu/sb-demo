@@ -1,6 +1,7 @@
 package com.hxx.sbcommon.common.reflect;
 
 import com.hxx.sbcommon.common.basic.OftenUtil;
+import com.hxx.sbcommon.common.basic.text.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -159,9 +160,9 @@ public class ReflectUseful {
                 // 反推field的名字
                 String fieldName = "";
                 if (method.getReturnType() == boolean.class) {
-                    fieldName = OftenUtil.StringUtil.lowerFirstChar(methodName.substring(2));
+                    fieldName = StringUtil.lowerFirstChar(methodName.substring(2));
                 } else {
-                    fieldName = OftenUtil.StringUtil.lowerFirstChar(methodName.substring(3));
+                    fieldName = StringUtil.lowerFirstChar(methodName.substring(3));
                 }
                 if (isValidPropertyName(fieldName)) {
                     fieldHasGetter.add(fieldName);
@@ -172,7 +173,7 @@ public class ReflectUseful {
             boolean isSetter = checkSetterMethod(methodName, method);
             if (isSetter) {
                 // 反推field的名字
-                String fieldName = OftenUtil.StringUtil.lowerFirstChar(methodName.substring(3));
+                String fieldName = StringUtil.lowerFirstChar(methodName.substring(3));
                 if (isValidPropertyName(fieldName)) {
                     fieldHasSetter.add(fieldName);
                 }

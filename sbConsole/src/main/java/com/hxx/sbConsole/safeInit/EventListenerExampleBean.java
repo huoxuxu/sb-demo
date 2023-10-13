@@ -20,7 +20,7 @@ public class EventListenerExampleBean {
 
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        log.info("init-@EventListener");
+        log.info("init-@EventListener-ContextRefreshedEvent");
         counter++;
     }
 }
