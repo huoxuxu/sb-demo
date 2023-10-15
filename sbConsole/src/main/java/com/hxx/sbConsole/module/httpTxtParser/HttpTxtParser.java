@@ -1,6 +1,7 @@
 package com.hxx.sbConsole.module.httpTxtParser;
 
 import com.hxx.sbcommon.common.basic.OftenUtil;
+import com.hxx.sbcommon.common.basic.text.StringUtil;
 import com.hxx.sbcommon.common.io.fileOrDir.FileUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -131,9 +132,9 @@ public class HttpTxtParser {
 
                     line = line.trim();
                     if (line.startsWith("@")) {
-                        String[] arr = OftenUtil.StringUtil.splitFirst(line, "=");
+                        String[] arr = StringUtil.splitFirst(line, "=");
                         info.getEmbedParaMap()
-                                .put(OftenUtil.StringUtil.trimStart(arr[0], "@"), arr[1]);
+                                .put(StringUtil.trimStart(arr[0], "@"), arr[1]);
                     }
                     // 不包含@ Http信息行
                     else {

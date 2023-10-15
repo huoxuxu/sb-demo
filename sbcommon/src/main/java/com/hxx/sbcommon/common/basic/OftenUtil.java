@@ -11,10 +11,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.Collator;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -96,38 +93,6 @@ public class OftenUtil {
     public static <T extends RuntimeException> void assertCond(boolean condition, T ex) {
         if (condition) {
             throw ex;
-        }
-    }
-
-    /**
-     * 调用指定方法，并返回值，
-     * 如果抛出异常，则返回null
-     *
-     * @param t
-     * @param act
-     * @param <T>
-     * @param <R>
-     * @return
-     */
-    public static <T, R> R tryRun(T t, Function<T, R> act) {
-        try {
-            return act.apply(t);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * 调用并忘记
-     *
-     * @param t
-     * @param act
-     * @param <T>
-     */
-    public static <T> void tryRun(T t, Consumer<T> act) {
-        try {
-            act.accept(t);
-        } catch (Exception ignored) {
         }
     }
 
@@ -649,6 +614,19 @@ public class OftenUtil {
                     .toInstant());
         }
 
+        /**
+         * 验证时间段是否超过指定最大天数
+         *
+         * @param begin
+         * @param end
+         * @param maxDay
+         * @return
+         */
+        public static boolean check(LocalDateTime begin, LocalDateTime end, int maxDay) {
+            Duration dur = Duration.between(begin, end);
+            return dur.getSeconds() < maxDay * 24 * 60 * 60L;
+        }
+
         // 日期计算
 
         /**
@@ -687,223 +665,7 @@ public class OftenUtil {
 
     // 集合
     public static class CollectionUtil {
-        /**
-         * 排序集合，按字段
-         * 支持多字段连接为字符串排序
-         *
-         * @param ls
-         * @param getFieldFunc 排序字段
-         * @param <T>
-         * @param <TField>
-         * @return
-         */
-        public static <T, TField extends Comparable<TField>> List<T> sortList(List<T> ls, Function<T, TField> getFieldFunc, boolean asc) {
-            if (CollectionUtils.isEmpty(ls)) return new ArrayList<>();
 
-            List<T> nullData = ls.stream()
-                    .filter(d -> getFieldFunc.apply(d) == null)
-                    .collect(Collectors.toList());
-            Comparator<T> comparing;
-            if (asc) comparing = Comparator.comparing(getFieldFunc);
-            else comparing = Comparator.comparing(getFieldFunc, Comparator.reverseOrder());
-            List<T> notNullData = ls.stream()
-                    .filter(d -> getFieldFunc.apply(d) != null)
-                    .sorted(comparing)
-                    .collect(Collectors.toList());
-            notNullData.addAll(nullData);
-            return notNullData;
-        }
-
-        /**
-         * 按中文拼音排序
-         *
-         * @param ls
-         * @param getFieldFunc
-         * @param asc
-         * @param <T>
-         * @param <TField>
-         * @return
-         */
-        public static <T, TField extends Comparable<TField>> List<T> sortListUseCollator(List<T> ls, Function<T, TField> getFieldFunc, boolean asc) {
-            if (CollectionUtils.isEmpty(ls)) return new ArrayList<>();
-
-            List<T> nullData = ls.stream()
-                    .filter(d -> getFieldFunc.apply(d) == null)
-                    .collect(Collectors.toList());
-            Comparator<T> collatorComparator = (T o1, T o2) -> {
-                Collator instance = Collator.getInstance(Locale.CHINA);
-                if (asc)
-                    return instance.compare(getFieldFunc.apply(o1), getFieldFunc.apply(o2));
-                else
-                    return instance.compare(getFieldFunc.apply(o2), getFieldFunc.apply(o1));
-            };
-            List<T> notNullData = ls.stream()
-                    .filter(d -> getFieldFunc.apply(d) != null)
-                    .sorted(collatorComparator)
-                    .collect(Collectors.toList());
-            notNullData.addAll(nullData);
-            return notNullData;
-        }
-
-        /**
-         * 将集合转为某字段的Set
-         *
-         * @param ls
-         * @param getFieldFunc
-         * @param filterNull   是否过滤null值
-         * @param <T>
-         * @param <TField>
-         * @return
-         */
-        public static <T, TField> Set<TField> getFieldSet(List<T> ls, Function<T, TField> getFieldFunc, boolean filterNull) {
-            return Optional.ofNullable(ls)
-                    .orElse(new ArrayList<>())
-                    .stream()
-                    .map(getFieldFunc)
-                    .filter(d -> filterNull ? d != null : true)
-                    .collect(Collectors.toSet());
-        }
-
-        /**
-         * 获取字段值Set集合
-         *
-         * @param ls
-         * @param getFieldFunc
-         * @param <T>
-         * @param <TField>
-         * @return
-         */
-        public static <T, TField> Set<TField> getFieldSet(List<T> ls, Function<T, TField> getFieldFunc, Predicate<TField> filterPred) {
-            return Optional.ofNullable(ls)
-                    .orElse(new ArrayList<>())
-                    .stream()
-                    .map(getFieldFunc)
-                    .filter(filterPred)
-                    .collect(Collectors.toSet());
-        }
-
-        /**
-         * 获取字段值SortedSet集合
-         *
-         * @param ls
-         * @param getFieldFunc
-         * @param <T>
-         * @param <TField>
-         * @return
-         */
-        public static <T, TField> SortedSet<TField> getFieldSortedSet(List<T> ls, Function<T, TField> getFieldFunc, Predicate<TField> filterPred) {
-            return Optional.ofNullable(ls)
-                    .orElse(new ArrayList<>())
-                    .stream()
-                    .map(getFieldFunc)
-                    .filter(filterPred)
-                    .collect(Collectors.toCollection(TreeSet::new));
-        }
-
-        /**
-         * 字符串集合 去空、去空格
-         *
-         * @param ls
-         * @return
-         */
-        public static List<String> filterNoEmptyAndTrim(Collection<String> ls) {
-            return Optional.ofNullable(ls)
-                    .orElse(new ArrayList<>())
-                    .stream()
-                    .filter(d -> !StringUtils.isBlank(d))
-                    .map(d -> d.trim())
-                    .collect(Collectors.toList());
-        }
-
-        /**
-         * 字符串集合去空，去前后空格，去重
-         *
-         * @param ls
-         * @return
-         */
-        public static Set<String> filterNoEmptyAndTrimToSet(Collection<String> ls) {
-            return Optional.ofNullable(ls)
-                    .orElse(new ArrayList<>())
-                    .stream()
-                    .filter(d -> !StringUtils.isBlank(d))
-                    .map(d -> d.trim())
-                    .collect(Collectors.toSet());
-        }
-
-        /**
-         * 集合投影指定字段,并过滤null值
-         *
-         * @param ls
-         * @param fieldGetter
-         * @param <T>
-         * @param <R>
-         * @return
-         */
-        public static <T, R> List<R> mapAndFilterNull(List<T> ls, Function<T, R> fieldGetter) {
-            return Optional.ofNullable(ls).orElse(new ArrayList<>())
-                    .stream()
-                    .map(fieldGetter)
-                    .filter(d -> d != null)
-                    .collect(Collectors.toList());
-        }
-
-        /**
-         * 集合投影指定字段，并过滤空
-         *
-         * @param ls
-         * @param fieldGetter
-         * @param <T>
-         * @return
-         */
-        public static <T> List<String> mapAndFilterNotBlank(List<T> ls, Function<T, String> fieldGetter) {
-            return Optional.ofNullable(ls).orElse(new ArrayList<>())
-                    .stream()
-                    .map(fieldGetter)
-                    .filter(d -> !StringUtils.isBlank(d))
-                    .collect(Collectors.toList());
-        }
-
-        /**
-         * 简单的分组
-         *
-         * @param ls
-         * @param filter
-         * @param groupByFunc
-         * @param <T>
-         * @param <TK>
-         * @return
-         */
-        public static <T, TK> Map<TK, List<T>> getGroupByMap(List<T> ls, Predicate<? super T> filter, Function<? super T, ? extends TK> groupByFunc) {
-            if (filter == null) filter = (T t) -> true;
-            return Optional.ofNullable(ls)
-                    .orElse(new ArrayList<>())
-                    .stream()
-                    .filter(filter)
-                    .collect(Collectors.groupingBy(groupByFunc));
-        }
-
-        /**
-         * 简单的分组
-         *
-         * @param ls
-         * @param filter
-         * @param groupByFunc
-         * @param groupByValFunc
-         * @param <T>
-         * @param <TK>
-         * @param <TV>
-         * @return
-         */
-        public static <T, TK, TV> Map<TK, TV> getGroupByMap(List<T> ls, Predicate<? super T> filter,
-                                                            Function<? super T, ? extends TK> groupByFunc,
-                                                            Function<? super List<T>, ? extends TV> groupByValFunc) {
-            Map<TK, List<T>> groupByMap = getGroupByMap(ls, filter, groupByFunc);
-            Map<TK, TV> map = new HashMap<>();
-            for (Map.Entry<TK, List<T>> entry : groupByMap.entrySet()) {
-                map.put(entry.getKey(), groupByValFunc.apply(entry.getValue()));
-            }
-            return map;
-        }
 
         /**
          * 有且只有一个
@@ -1018,23 +780,6 @@ public class OftenUtil {
          */
         public static <T> T firstOrDefault(List<T> ls, T defaultVal) {
             return CollectionUtils.isEmpty(ls) ? defaultVal : ls.get(0);
-        }
-
-        /**
-         * 分区消费
-         *
-         * @param ls
-         * @param batchSize
-         * @param partConsumer
-         * @param <T>
-         */
-        public static <T> void partitionConsumer(List<T> ls, int batchSize, Consumer<List<T>> partConsumer) {
-            int size = ls.size();
-            for (int i = 0; i < size; i += batchSize) {
-                int toIndex = Math.min(i + batchSize, size);
-                List<T> data = ls.subList(i, toIndex);
-                partConsumer.accept(data);
-            }
         }
     }
 

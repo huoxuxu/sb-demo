@@ -1,5 +1,6 @@
 package com.hxx.sbcommon.common.basic.langType.impl.dateTimeLang;
 
+import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.basic.langType.LangTypeHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -21,13 +22,15 @@ import java.util.Date;
  **/
 @Slf4j
 public class LocalDateTimeTypeHandler implements LangTypeHandler<LocalDateTime> {
+    private static final String dateTimeFormatPattern = "yyyy-MM-dd HH:mm:ss";
+    private static final String dateformatPattern = "yyyy-MM-dd";
     private final String formatPattern;
 
     /**
      * 默认 yyyy-MM-dd HH:mm:ss
      */
     public LocalDateTimeTypeHandler() {
-        this("yyyy-MM-dd HH:mm:ss");
+        this(dateTimeFormatPattern);
     }
 
     /**
@@ -77,7 +80,7 @@ public class LocalDateTimeTypeHandler implements LangTypeHandler<LocalDateTime> 
 
         // 日期
         if (val instanceof Date) {
-            return LocalDateTime.ofInstant(((Date) val).toInstant(), ZoneId.systemDefault());
+            return OftenUtil.DateTimeUtil.parse((Date) val);// LocalDateTime.ofInstant(((Date) val).toInstant(), ZoneId.systemDefault());
         }
 
         if (val instanceof LocalDateTime) {
@@ -91,8 +94,14 @@ public class LocalDateTimeTypeHandler implements LangTypeHandler<LocalDateTime> 
         // 字符串
         if (val instanceof String) {
             try {
+                String curVal = (String) val;
+                if (curVal.length() == dateformatPattern.length()) {
+                    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateformatPattern);
+                    return LocalDateTime.parse(curVal, dateTimeFormatter);
+                }
+
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(this.formatPattern);
-                return LocalDateTime.parse((String) val, dateTimeFormatter);
+                return LocalDateTime.parse(curVal, dateTimeFormatter);
             } catch (Exception e) {
                 log.error("出现异常：{}", ExceptionUtils.getStackTrace(e));
                 throw new IllegalArgumentException("转换类型失败，提供值：" + val);

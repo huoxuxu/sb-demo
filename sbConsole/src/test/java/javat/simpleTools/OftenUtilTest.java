@@ -4,6 +4,7 @@ import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbConsole.module.easyExcel.EasyExcelDemo2;
 import com.hxx.sbConsole.service.impl.CommonDataService;
 import com.hxx.sbcommon.common.basic.OftenUtil;
+import com.hxx.sbcommon.common.basic.array.CollectionUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +44,7 @@ public class OftenUtilTest {
     public void CollectionUtil_partitionConsumer() throws Exception {
         System.out.println("==============test==============");
         List<Integer> data = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);
-        OftenUtil.CollectionUtil.partitionConsumer(data, 4, d -> {
+        CollectionUtil.partitionConsumer(data, 4, d -> {
             System.out.println("partition: " + d.size() + " data: " + JsonUtil.toJSON(d));
         });
     }

@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Http请求端
+ *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2023-09-04 15:30:59
@@ -110,6 +112,12 @@ public class HttpApiClient {
                 default:
                     throw new IllegalArgumentException("请求类型无效！");
             }
+            if (sw.isRunning()) sw.stop();
+            if (respJson.length() < 500)
+                log.info(apiName + "，http耗时：{} 出参：{}", sw.getTotalTimeMillis(), respJson);
+            else
+                log.info(apiName + "，http耗时：{}", sw.getTotalTimeMillis());
+
             log.debug(apiName + "，出参：{}", respJson);
             if (StringUtils.isBlank(respJson))
                 throw new IllegalStateException(apiName + "，接口未响应数据");
@@ -118,11 +126,11 @@ public class HttpApiClient {
         } catch (java.net.UnknownHostException
                  | org.apache.http.conn.ConnectTimeoutException
                  | java.net.SocketTimeoutException e) {
-            log.error("访问外部接口网络超时：{} {}", url, ExceptionUtils.getStackTrace(e));
-            throw new IllegalStateException("访问外部接口网络超时！", e);
+            if (sw.isRunning()) sw.stop();
+            long cost = sw.getTotalTimeMillis();
+            log.error("访问外部接口网络超时：{} [耗时：{}] {}", url, cost, ExceptionUtils.getStackTrace(e));
+            throw new IllegalStateException("访问外部接口网络超时！[耗时：" + cost + "ms]", e);
         } finally {
-            sw.stop();
-            log.info(apiName + "，http耗时：{}", sw.getTotalTimeMillis());
         }
     }
 

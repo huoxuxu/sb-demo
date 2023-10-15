@@ -13,96 +13,176 @@ import java.util.stream.Collectors;
  * @Date: 2021-05-10 16:58:08
  **/
 public class StringUtil {
-    public StringUtil() {
-    }
 
-    public static boolean equals(String str1, String str2) {
-        return StringUtils.equals(str1, str2);
-    }
+    /**
+     * 取字符串的前n位,
+     * 超过字符串总长度不会报错
+     *
+     * @param str
+     * @param count
+     * @return
+     */
+    public static String cut(String str, int count) {
+        if (StringUtils.isEmpty(str)) return str;
+        if (count == 0) return "";
 
-    public static boolean equalsIgnoreCase(String str1, String str2) {
-        return StringUtils.equalsIgnoreCase(str1, str2);
-    }
+        int len = str.length();
+        if (count >= len) return str;
 
-    public static boolean isEmpty(String str) {
-        return StringUtils.isEmpty(str);
-    }
-
-    public static boolean isBlank(String str) {
-        return StringUtils.isBlank(str);
-    }
-
-    public static boolean isNotEmpty(String str) {
-        return StringUtils.isNotEmpty(str);
-    }
-
-    public static boolean isNotBlank(String str) {
-        return StringUtils.isNotBlank(str);
-    }
-
-    public static String trim(String str) {
-        return StringUtils.trim(str);
-    }
-
-    public static String upperCase(String str) {
-        return StringUtils.upperCase(str);
-    }
-
-    public static String lowerCase(String str) {
-        return StringUtils.lowerCase(str);
-    }
-
-    public static boolean isAlpha(String str) {
-        return StringUtils.isAlpha(str);
-    }
-
-    public static boolean isNumeric(String str) {
-        return StringUtils.isNumeric(str);
-    }
-
-    public static boolean startsWith(String str1, String prefix) {
-        return StringUtils.startsWith(str1, prefix);
-    }
-
-    public static boolean endsWith(String str, String suffix) {
-        return StringUtils.endsWith(str, suffix);
-    }
-
-    public static boolean contains(String str, String searchStr) {
-        return StringUtils.contains(str, searchStr);
+        return str.substring(0, count);
     }
 
     /**
-     * 分割字符串
-     * 注意：
-     * StringUtils.split("1aa,b，c", "a,");
-     * 结果：["1","b，c"]
+     * 截取到指定字符串截止，但不包含指定字符串
+     *
+     * @param src
+     * @param subStr
+     * @return
+     */
+    private static String substring(String src, String subStr) {
+        int ind = src.indexOf(subStr);
+        return ind == -1 ? src : src.substring(0, ind);
+    }
+
+    /**
+     * 小写第一位
+     */
+    public static String lowerFirstChar(String str) {
+        if (null == str) return null;
+
+        if (str.length() > 0) {
+            char firstChar = str.charAt(0);
+            if (Character.isUpperCase(firstChar)) {
+                return Character.toLowerCase(firstChar) + str.substring(1);
+            }
+        }
+        return str;
+    }
+
+    /**
+     * 大写第一位
+     *
+     * @param str
+     * @return
+     */
+    public static String upperFirstChar(String str) {
+        if (null == str) return null;
+
+        if (str.length() > 0) {
+            char firstChar = str.charAt(0);
+            if (Character.isLowerCase(firstChar)) {
+                return Character.toUpperCase(firstChar) + str.substring(1);
+            }
+        }
+        return str;
+    }
+
+    public static String toLowerCaseFirstOne(String s) {
+        if (s != null && s.length() != 0) {
+            return Character.isLowerCase(s.charAt(0)) ? s : Character.toLowerCase(s.charAt(0)) + s.substring(1);
+        } else {
+            return s;
+        }
+    }
+
+    public static String toUpperCaseFirstOne(String s) {
+        if (s != null && s.length() != 0) {
+            return Character.isUpperCase(s.charAt(0)) ? s : Character.toUpperCase(s.charAt(0)) + s.substring(1);
+        } else {
+            return s;
+        }
+    }
+
+    /**
+     * 获取第一个分隔符的键和值
      *
      * @param str
      * @param splitStr
      * @return
      */
-    public static String[] split(String str, String splitStr) {
-        return StringUtils.split(str, splitStr);
+    public static String[] splitFirst(String str, String splitStr) {
+        int i = str.indexOf(splitStr);
+        if (i == -1) {
+            String[] arr = {str, ""};
+            return arr;
+        } else {
+            String v = "";
+            if (str.length() > i + 1) {
+                v = str.substring(i + 1);
+            }
+            String[] arr = {str.substring(0, i), v};
+            return arr;
+        }
     }
 
     /**
-     * 分割字符串
-     * StringUtils.split("1aa,b，c", "a,");
-     * 结果：["1a","b，c"]
+     * 修剪开始位以 trimStr 开头的字符
      *
      * @param str
-     * @param splitStr
+     * @param trimStr
      * @return
      */
-    public static String[] splitByWholeSeparator(String str, String splitStr) {
-        return StringUtils.splitByWholeSeparator(str, splitStr);
+    public static String trimStart(String str, String trimStr) {
+        if (StringUtils.isEmpty(trimStr)) return str;
+
+        if (str.equals(trimStr)) return "";
+
+        int ind = str.indexOf(trimStr);
+        if (ind == 0) {
+            str = str.substring(trimStr.length());
+            return trimStart(str, trimStr);
+        }
+
+        return str;
     }
 
     /**
-     * 字符串分割，支持多分隔符
+     * 获取字符串中最后的数字
+     *
+     * @param str
+     * @return
+     */
+    public static String getEndNumber(String str) {
+        char[] carr = new char[str.length()];
+        int j = 0;
+        // 逆序遍历
+        for (int i = str.length() - 1; i > -1; i--) {
+            char c = str.charAt(i);
+            if (!Character.isDigit(c)) break;
+
+            carr[carr.length - 1 - j] = c;
+            j++;
+        }
+        if (j == 0) return "";
+
+        // 这里没测试
+        return String.copyValueOf(carr, carr.length - j, j);
+//            List<Character> cls = new ArrayList<>();
+//            for (int i = str.length() - 1; i > -1; i--) {
+//                char c = str.charAt(i);
+//                if (!Character.isDigit(c)) {
+//                    break;
+//                }
+//                cls.add(c);
+//            }
+//            if (CollectionUtils.isEmpty(cls)) return "";
+//
+//            // 反转
+//            Collections.reverse(cls);
+//
+//            StringBuilder sb = new StringBuilder();
+//            for (Character cl : cls) {
+//                sb.append(cl);
+//            }
+//
+//            return sb.toString();
+    }
+
+
+    /**
+     * 分割字符串，支持多分隔符
      * 原始字符串："1,2,3，4"
-     * 分隔符：",","，"
+     * 分隔符：[",","，"]
      * 结果：1 2 3 4
      *
      * @param str
@@ -110,9 +190,8 @@ public class StringUtil {
      * @return
      */
     public static List<String> splitByWholeSeparators(String str, String... splitStrs) {
-        if (StringUtils.isBlank(str)) {
-            return new ArrayList<>();
-        }
+        if (StringUtils.isBlank(str)) return new ArrayList<>();
+
         if (splitStrs == null || splitStrs.length == 0) {
             return new ArrayList<>(Arrays.asList(str));
         }
@@ -161,37 +240,17 @@ public class StringUtil {
         return StringUtils.replace(text, searchString, replacement);
     }
 
-    public static String join(CharSequence delimiter, Iterable<? extends CharSequence> elements) {
-        return elements == null ? null : String.join(delimiter, elements);
-    }
-
-    public static String toLowerCaseFirstOne(String s) {
-        if (s != null && s.length() != 0) {
-            return Character.isLowerCase(s.charAt(0)) ? s : Character.toLowerCase(s.charAt(0)) + s.substring(1);
-        } else {
-            return s;
-        }
-    }
-
-    public static String toUpperCaseFirstOne(String s) {
-        if (s != null && s.length() != 0) {
-            return Character.isUpperCase(s.charAt(0)) ? s : Character.toUpperCase(s.charAt(0)) + s.substring(1);
-        } else {
-            return s;
-        }
-    }
-
     /**
      * 左侧填充 eg.001
      *
      * @param src
-     * @param len
+     * @param len 填充后长度
      * @param ch  待填充值
      * @return
      */
     public static String padLeft(String src, int len, char ch) {
         int diff = len - src.length();
-        if (diff <= 0) {
+        if (diff < 1) {
             return src;
         }
 
@@ -207,13 +266,13 @@ public class StringUtil {
      * 左侧填充 eg.100
      *
      * @param src
-     * @param len
+     * @param len 填充后长度
      * @param ch  待填充值
      * @return
      */
     public static String padRight(String src, int len, char ch) {
         int diff = len - src.length();
-        if (diff <= 0) {
+        if (diff < 1) {
             return src;
         }
 
