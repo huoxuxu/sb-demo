@@ -1,0 +1,3 @@
+org.springframework.context.ApplicationListener=\
+com.hxx.sbConsole.safeInit.appListener.ApplicationListenerExample2,\
+com.hxx.sbConsole.safeInit.appListener.ApplicationListenerExample3

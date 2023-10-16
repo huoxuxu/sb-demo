@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.commons.jwt;
+package com.hxx.sbConsole.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
