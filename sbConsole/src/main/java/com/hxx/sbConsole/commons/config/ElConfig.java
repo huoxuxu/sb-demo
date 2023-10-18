@@ -17,7 +17,6 @@ import java.io.IOException;
  * @Description:
  * @Date: 2022-01-20 13:06:25
  **/
-@PropertySource("classpath:test.properties")
 @Configuration
 @ComponentScan("com.hxx")
 public class ElConfig {

@@ -17,7 +17,6 @@ import java.util.Map;
  * @Date: 2022-01-20 16:34:05
  **/
 @Data
-@PropertySource(value = "classpath:person.properties")//指向对应的配置文件
 @Component
 @ConfigurationProperties(prefix = "person1")// 如果prefix的值，在application.yml中，则会报错
 public class PropertySourceConfig {

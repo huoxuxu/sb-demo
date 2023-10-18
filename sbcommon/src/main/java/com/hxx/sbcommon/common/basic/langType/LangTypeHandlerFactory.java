@@ -54,6 +54,31 @@ public class LangTypeHandlerFactory {
     }
 
     /**
+     * 将obj转为指定类型
+     *
+     * @param obj
+     * @param tarCls 待转换为的类型
+     * @return
+     */
+    public static Object convert(Object obj, Class<?> tarCls) {
+        if (obj == null) return null;
+
+        // 获取对应的处理方法
+        LangTypeHandler<?> handler = LangTypeHandlerFactory.getTypeHandler(tarCls);
+        if (handler == null) {
+            // 是否枚举
+            if (tarCls.isEnum()) {
+                Class<?> enumTypeHandler = LangTypeHandlerFactory.getDefaultEnumTypeHandler();
+                handler = LangTypeHandlerFactory.getInstance(enumTypeHandler, tarCls);
+            } else {
+                throw new IllegalArgumentException("未找到对应的类型处理器！" + tarCls.getName());
+            }
+        }
+
+        return handler.change(obj);
+    }
+
+    /**
      * 获取类型对应的处理器，未找到返回null
      *
      * @param cls
@@ -129,33 +154,6 @@ public class LangTypeHandlerFactory {
         } catch (Exception var4) {
             throw new TypeException("Unable to find a usable constructor for " + typeHandlerClass, var4);
         }
-    }
-
-    /**
-     * 将obj转为指定类型
-     *
-     * @param obj
-     * @param tarCls 待转换为的类型
-     * @return
-     */
-    public static Object convert(Object obj, Class<?> tarCls) {
-        if (obj == null) {
-            return null;
-        }
-
-        // 获取对应的处理方法
-        LangTypeHandler<?> handler = LangTypeHandlerFactory.getTypeHandler(tarCls);
-        if (handler == null) {
-            // 是否枚举
-            if (tarCls.isEnum()) {
-                Class<?> enumTypeHandler = LangTypeHandlerFactory.getDefaultEnumTypeHandler();
-                handler = LangTypeHandlerFactory.getInstance(enumTypeHandler, tarCls);
-            } else {
-                throw new IllegalArgumentException("未找到对应的类型处理器！" + tarCls.getName());
-            }
-        }
-
-        return handler.change(obj);
     }
 
 }

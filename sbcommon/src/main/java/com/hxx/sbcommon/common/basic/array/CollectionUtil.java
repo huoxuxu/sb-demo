@@ -161,6 +161,39 @@ public class CollectionUtil {
     }
 
     /**
+     * 集合投影指定字段
+     *
+     * @param ls
+     * @param fieldGetter
+     * @param <T>
+     * @param <TField>
+     * @return
+     */
+    public static <T, TField> List<TField> getFieldList(List<T> ls, Function<T, TField> fieldGetter, Predicate<TField> filterPred) {
+        return Optional.ofNullable(ls).orElse(new ArrayList<>())
+                .stream()
+                .map(fieldGetter)
+                .filter(filterPred)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 集合投影指定字段
+     *
+     * @param ls
+     * @param fieldGetter
+     * @param <T>
+     * @param <TField>
+     * @return
+     */
+    public static <T, TField> List<TField> getFieldList(List<T> ls, Function<T, TField> fieldGetter) {
+        return Optional.ofNullable(ls).orElse(new ArrayList<>())
+                .stream()
+                .map(fieldGetter)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * 获取字段值Set集合
      *
      * @param ls
@@ -174,6 +207,22 @@ public class CollectionUtil {
                 .stream()
                 .map(getFieldFunc)
                 .filter(filterPred)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * 获取字段值Set集合
+     *
+     * @param ls
+     * @param getFieldFunc
+     * @param <T>
+     * @param <TField>
+     * @return
+     */
+    public static <T, TField> Set<TField> getFieldSet(List<T> ls, Function<T, TField> getFieldFunc) {
+        return Optional.ofNullable(ls).orElse(new ArrayList<>())
+                .stream()
+                .map(getFieldFunc)
                 .collect(Collectors.toSet());
     }
 
@@ -192,24 +241,6 @@ public class CollectionUtil {
                 .map(getFieldFunc)
                 .filter(filterPred)
                 .collect(Collectors.toCollection(TreeSet::new));
-    }
-
-
-    /**
-     * 集合投影指定字段,并过滤null值
-     *
-     * @param ls
-     * @param fieldGetter
-     * @param <T>
-     * @param <TField>
-     * @return
-     */
-    public static <T, TField> List<TField> getFieldList(List<T> ls, Function<T, TField> fieldGetter, Predicate<TField> filterPred) {
-        return Optional.ofNullable(ls).orElse(new ArrayList<>())
-                .stream()
-                .map(fieldGetter)
-                .filter(filterPred)
-                .collect(Collectors.toList());
     }
 
     /**
