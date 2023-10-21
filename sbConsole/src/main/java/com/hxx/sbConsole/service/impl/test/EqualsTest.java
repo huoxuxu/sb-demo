@@ -22,6 +22,7 @@ public class EqualsTest {
         Integer b1 = Integer.valueOf("1024089");
         System.out.println(a == b);// true
         System.out.println(b1 == b);// false
+        System.out.println(b1.equals(b));// true
         System.out.println(Objects.equals(a, b)); // true
         System.out.println(Objects.equals(b1, b)); // true
     }

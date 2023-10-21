@@ -1,6 +1,7 @@
 package javat.basic;
 
 import com.hxx.sbConsole.SbConsoleApplication;
+import com.hxx.sbcommon.common.basic.OftenUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,19 @@ import java.util.Objects;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SbConsoleApplication.class)
 public class EqualsTest {
+
+    @Test
+    public void testObjectsEqual() {
+        Long a = 123L;
+        // 会隐式类型转换
+        System.out.println("a == 123 " + (a == 123));// true
+        // 类型不一致时直接返回false
+        System.out.println("a.equals(123) " + (a.equals(123)));// false
+        // 先比较引用，如果不等再比较类型，不一致时直接返回false
+        System.out.println("Objects.equals(a, 123) " + (Objects.equals(a, 123))); // false
+        System.out.println("OftenUtil.NumberUtil.eq(a,123) " + OftenUtil.NumberUtil.basicEquals(a, 123));
+    }
+
     @Test
     public void testDecimalEqual() {
         Long lll = null;
@@ -34,7 +48,6 @@ public class EqualsTest {
         System.out.println("==============test==============");
         int int1 = 12;
         int int2 = 12;
-
 
         Integer integer1 = new Integer(12);
         Integer integer2 = new Integer(12);
