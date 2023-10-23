@@ -96,7 +96,7 @@ public class HttpApiClient {
             // 核心业务
             switch (httpRequestType) {
                 case GET:
-                    respJson = ApacheHttpClientSimpleUseful.sendGet(url, null, null);
+                    respJson = ApacheHttpClientSimpleUseful.sendGet(url, headerMap, null);
                     break;
                 case POST_JSON:
                     respJson = ApacheHttpClientSimpleUseful.sendPostJson(url, headerMap, formBody);
@@ -113,15 +113,15 @@ public class HttpApiClient {
                     throw new IllegalArgumentException("请求类型无效！");
             }
             if (sw.isRunning()) sw.stop();
-            if (respJson.length() < 500)
-                log.info(apiName + "，http耗时：{} 出参：{}", sw.getTotalTimeMillis(), respJson);
-            else
-                log.info(apiName + "，http耗时：{}", sw.getTotalTimeMillis());
 
-            log.debug(apiName + "，出参：{}", respJson);
             if (StringUtils.isBlank(respJson))
                 throw new IllegalStateException(apiName + "，接口未响应数据");
-
+            if (respJson.length() < 500)
+                log.info(apiName + "，http耗时：{} 出参：{}", sw.getTotalTimeMillis(), respJson);
+            else {
+                log.debug(apiName + "，出参：{}", respJson);
+                log.info(apiName + "，http耗时：{}", sw.getTotalTimeMillis());
+            }
             return respJson;
         } catch (java.net.UnknownHostException
                  | org.apache.http.conn.ConnectTimeoutException
