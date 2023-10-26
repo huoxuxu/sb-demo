@@ -2,6 +2,7 @@ package javat.basic.datetime;
 
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.basic.datetime.LocalDateTimeUtil;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,6 +43,19 @@ public class DateTest {
 //        days++;
 
         System.out.println(days);
+    }
+
+    @Test
+    public void diffSecodn() {
+        LocalDateTime start = LocalDateTimeUtil.parse("2022-06-29 00:00:00");
+        LocalDateTime end = LocalDateTimeUtil.parse("2022-06-29 01:00:00");
+
+        Date startDate = LocalDateTimeUtil.toDate(start);
+        Date endDate = LocalDateTimeUtil.toDate(end);
+        long diffSecond = (endDate.getTime() - startDate.getTime()) / 1000;
+
+        assert diffSecond == 3600;
+        System.out.println("diffSecond:" + diffSecond);
     }
 
     /**
