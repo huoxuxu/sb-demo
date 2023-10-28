@@ -121,4 +121,34 @@ public class DateUtil {
         return interval;
     }
 
+    /**
+     * 向后滚动time毫秒的时间
+     *
+     * @param date
+     * @param time 毫秒
+     * @return
+     */
+    public static Date rollDate(Date date, long time) {
+        long bofore = date.getTime();
+        return new Date(bofore + time);
+    }
+
+    /**
+     * 校验开始结束时间
+     *
+     * @param begin
+     * @param end
+     * @param rollMs
+     */
+    public static void checkBeginDate(Date begin, Date end, long rollMs) {
+        if (begin == null || end == null)
+            throw new IllegalArgumentException("开始时间结束时间不能为空");
+
+        if (begin.after(end))
+            throw new IllegalArgumentException("开始时间不能大于结束时间");
+
+        if (rollDate(begin, rollMs).before(end))
+            throw new IllegalArgumentException("请求失败,只能查询30天以内数据");
+    }
+
 }
