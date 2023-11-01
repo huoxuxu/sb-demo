@@ -1,8 +1,11 @@
 package com.hxx.sbcommon.common.basic.datetime;
 
+import com.hxx.sbcommon.common.basic.OftenUtil;
+
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
@@ -128,9 +131,8 @@ public class DateUtil {
      * @param time 毫秒
      * @return
      */
-    public static Date rollDate(Date date, long time) {
-        long bofore = date.getTime();
-        return new Date(bofore + time);
+    public static Date rollAfterDate(Date date, long time) {
+        return new Date(date.getTime() + time);
     }
 
     /**
@@ -138,17 +140,25 @@ public class DateUtil {
      *
      * @param begin
      * @param end
-     * @param rollMs
+     * @param maxDay 不能超过的天数
      */
-    public static void checkBeginDate(Date begin, Date end, long rollMs) {
-        if (begin == null || end == null)
+    public static void checkDate(Date begin, Date end, int maxDay) {
+        if (begin == null || end == null) {
             throw new IllegalArgumentException("开始时间结束时间不能为空");
+        }
 
-        if (begin.after(end))
+        if (begin.after(end)) {
             throw new IllegalArgumentException("开始时间不能大于结束时间");
+        }
 
-        if (rollDate(begin, rollMs).before(end))
-            throw new IllegalArgumentException("请求失败,只能查询30天以内数据");
+        LocalDateTime beginDt = OftenUtil.DateTimeUtil.parse(begin);
+        LocalDateTime endDt = OftenUtil.DateTimeUtil.parse(end);
+        if (endDt.getHour() == 0 && endDt.getMinute() == 0 && endDt.getSecond() == 0) {
+            endDt = endDt.plusDays(1).minusSeconds(1);
+        }
+        if (!OftenUtil.DateTimeUtil.check(beginDt, endDt, maxDay)) {
+            throw new IllegalArgumentException("只能查询" + maxDay + "天以内数据");
+        }
     }
 
 }
