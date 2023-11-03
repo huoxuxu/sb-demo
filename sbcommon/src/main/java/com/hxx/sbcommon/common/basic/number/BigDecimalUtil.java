@@ -1,6 +1,7 @@
 package com.hxx.sbcommon.common.basic.number;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * @Author: huoxuxu
@@ -79,6 +80,24 @@ public class BigDecimalUtil {
 
         // 4舍，5入，其他未测
         return numerator.divide(denominator, scale, BigDecimal.ROUND_HALF_UP);
+    }
+
+    /**
+     * 两个数相乘，保留指定位数
+     *
+     * @param val
+     * @param bval
+     * @param scale
+     * @return
+     */
+    public static BigDecimal multiply(BigDecimal val, BigDecimal bval, int scale) {
+        if (null == val || null == bval) {
+            return null;
+        }
+        if (val.compareTo(BigDecimal.ZERO) == 0 || bval.compareTo(BigDecimal.ZERO) == 0) {
+            return BigDecimal.valueOf(0);
+        }
+        return val.multiply(bval).setScale(scale, RoundingMode.HALF_UP);
     }
 
     /**
