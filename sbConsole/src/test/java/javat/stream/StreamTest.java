@@ -97,6 +97,29 @@ public class StreamTest {
         }
     }
 
+    @Test
+    public void test_statistic() {
+        List<Integer> ints = Arrays.asList(1, 1, 2, 2, 3);
+
+        //统计流中元素个数
+        ints.stream().count();
+        ints.stream().collect(Collectors.counting());
+        //获取流中最小值
+        ints.stream().min(Integer::compareTo);
+        ints.stream().collect(Collectors.minBy(Integer::compareTo));
+        //获取流中最大值
+        ints.stream().max(Integer::compareTo);
+        ints.stream().collect(Collectors.maxBy(Integer::compareTo));
+        //求和
+        ints.stream().mapToInt(Integer::intValue).sum();
+        ints.stream().collect(Collectors.summingInt(Integer::intValue));
+        ints.stream().reduce(0, Integer::sum);
+        //平均值
+        ints.stream().collect(Collectors.averagingInt(Integer::intValue));
+        //通过summarizingInt同时求总和、平均值、最大值、最小值
+        ints.stream().collect(Collectors.summarizingInt(Integer::intValue));
+    }
+
     // 集合转数组
     @Test
     public void toArray() {
