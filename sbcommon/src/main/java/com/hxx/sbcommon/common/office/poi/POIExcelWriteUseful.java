@@ -2,11 +2,12 @@ package com.hxx.sbcommon.common.office.poi;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.ICell;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -81,9 +82,26 @@ public class POIExcelWriteUseful implements AutoCloseable {
         return this.workbook.getSheet(sheetName);
     }
 
-    // 写入
+    // =========================写入=========================
 
-    // 创建工作簿
+    /**
+     * 创建空Excel文件
+     *
+     * @param excel     待新建的Excel文件,存在覆盖,不存在新增
+     * @param sheetName 工作簿名
+     */
+    public static void createEmptyExcel(File excel, String sheetName) throws IOException {
+        try (POIExcelWriteUseful writeUseful = new POIExcelWriteUseful(excel, sheetName)) {
+            // 保存到Excel文件中
+            writeUseful.saveToFile();
+        }
+    }
+
+    /**
+     * 创建工作簿
+     *
+     * @param sheetName
+     */
     public Sheet createSheet(String sheetName) {
         return this.workbook.createSheet(sheetName);
     }
@@ -156,6 +174,48 @@ public class POIExcelWriteUseful implements AutoCloseable {
             // 写入Excel
             writeExcelRow(vals, null);
         }
+    }
+
+    /**
+     * 设置日期格式--使用Excel内嵌的格式
+     *
+     * @param cell
+     * @param val
+     * @param fmt  m/d/yy h:mm
+     */
+    public void writeCellVal(HSSFCell cell, Date val, String fmt) {
+        cell.setCellValue(val);
+        HSSFCellStyle style = ((HSSFWorkbook) workbook).createCellStyle();
+        style.setDataFormat(HSSFDataFormat.getBuiltinFormat(fmt));
+        cell.setCellStyle(style);
+    }
+
+    /**
+     * 设置保留2位小数--使用Excel内嵌的格式
+     *
+     * @param cell
+     * @param val
+     * @param fmt  0.00
+     */
+    public void writeCellVal(HSSFCell cell, Double val, String fmt) {
+        cell.setCellValue(val);
+        HSSFCellStyle style = ((HSSFWorkbook) workbook).createCellStyle();
+        style.setDataFormat(HSSFDataFormat.getBuiltinFormat(fmt));
+        cell.setCellStyle(style);
+    }
+
+    /**
+     * 设置货币格式--使用自定义的格式
+     *
+     * @param cell
+     * @param val
+     * @param fmt  货币格式:￥#,##0 百分比:0.00% 中文大写:[DbNum2][$-804]0 科学计数法:0.00E+00
+     */
+    public void writeCellMoneyVal(HSSFCell cell, Double val, String fmt) {
+        cell.setCellValue(val);
+        HSSFCellStyle style = ((HSSFWorkbook) workbook).createCellStyle();
+        style.setDataFormat(workbook.createDataFormat().getFormat(fmt));
+        cell.setCellStyle(style);
     }
 
     public void setCellStyle(Cell cell, int cellWeight) {

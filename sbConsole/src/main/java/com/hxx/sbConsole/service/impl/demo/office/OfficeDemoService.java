@@ -24,10 +24,13 @@ import java.util.*;
 public class OfficeDemoService {
     public static void main(String[] args) {
         try {
-            // 写入Excel
-            case0();
-            // 读取Excel
-            case1();
+            // 创建空excel
+            case2();
+
+//            // 写入Excel
+//            case0();
+//            // 读取Excel
+//            case1();
 
 
         } catch (Exception e) {
@@ -36,6 +39,7 @@ public class OfficeDemoService {
         System.out.println("ok!");
     }
 
+    // 写入文件
     static void case0() throws Exception {
         String fileName = "d:/tmp/poi-write-demo.xlsx";
         File excel = new File(fileName);
@@ -64,6 +68,7 @@ public class OfficeDemoService {
         System.out.println("ok");
     }
 
+    // 解析文件
     static void case1() throws Exception {
         String fileName = "d:/tmp/poi-write-demo.xlsx";
         File excel = new File(fileName);
@@ -72,6 +77,34 @@ public class OfficeDemoService {
             POIExcelUseful.parseExcelRows(0, 0, 9, row -> {
                 System.out.println(String.join(" ", row.getItemArray()));
             });
+        }
+    }
+
+    // 创建空文件
+    static void case2() throws IOException {
+        {
+            String fileName = "d:/tmp/poi-write-demo-new.xls";
+            File excel = new File(fileName);
+            if (excel.exists()) {
+                excel.delete();
+            }
+
+            try (POIExcelWriteUseful writeUseful = new POIExcelWriteUseful(excel, "data")) {
+                // 保存到Excel文件中
+                writeUseful.saveToFile();
+            }
+        }
+        {
+            String fileName = "d:/tmp/poi-write-demo-new.xlsx";
+            File excel = new File(fileName);
+            if (excel.exists()) {
+                excel.delete();
+            }
+
+            try (POIExcelWriteUseful writeUseful = new POIExcelWriteUseful(excel, "data")) {
+                // 保存到Excel文件中
+                writeUseful.saveToFile();
+            }
         }
     }
 

@@ -1,0 +1,520 @@
+
+    public static void demo1() throws IOException {
+        //文件路径
+        String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+        //创建Excel文件(Workbook)
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+        HSSFRow row = sheet.createRow(0);
+        // 设置日期格式--使用Excel内嵌的格式
+        HSSFCell cell = row.createCell(0);
+        cell.setCellValue(new Date());
+        HSSFCellStyle style = workbook.createCellStyle();
+        style.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy h:mm"));
+        cell.setCellStyle(style);
+        //设置保留2位小数--使用Excel内嵌的格式
+        cell = row.createCell(1);
+        cell.setCellValue(12.3456789);
+        style = workbook.createCellStyle();
+        style.setDataFormat(HSSFDataFormat.getBuiltinFormat("0.00"));
+        cell.setCellStyle(style);
+        //设置货币格式--使用自定义的格式
+        cell = row.createCell(2);
+        cell.setCellValue(12345.6789);
+        style = workbook.createCellStyle();
+        style.setDataFormat(workbook.createDataFormat().getFormat("￥#,##0"));
+        cell.setCellStyle(style);
+        //设置百分比格式--使用自定义的格式
+        cell = row.createCell(3);
+        cell.setCellValue(0.123456789);
+        style = workbook.createCellStyle();
+        style.setDataFormat(workbook.createDataFormat().getFormat("0.00%"));
+        cell.setCellStyle(style);
+        //设置中文大写格式--使用自定义的格式
+        cell = row.createCell(4);
+        cell.setCellValue(12345);
+        style = workbook.createCellStyle();
+        style.setDataFormat(workbook.createDataFormat().getFormat("[DbNum2][$-804]0"));
+        cell.setCellStyle(style);
+        //设置科学计数法格式--使用自定义的格式
+        cell = row.createCell(5);
+        cell.setCellValue(12345);
+        style = workbook.createCellStyle();
+        style.setDataFormat(workbook.createDataFormat().getFormat("0.00E+00"));
+        cell.setCellStyle(style);
+
+        try (FileOutputStream out = new FileOutputStream(filePath)) {
+            //保存Excel文件
+            workbook.write(out);
+        }
+        System.out.println("OK!");
+    }
+
+    // 合并单元格demo
+    public static void demo2() throws IOException {
+        //文件路径
+        String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+        //创建Excel文件(Workbook)
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+        HSSFRow row=sheet.createRow(0);
+        //合并列
+        HSSFCell cell=row.createCell(0);
+        cell.setCellValue("合并列");
+        CellRangeAddress region=new CellRangeAddress(0, 0, 0, 5);
+        sheet.addMergedRegion(region);
+        //合并行
+        cell=row.createCell(6);
+        cell.setCellValue("合并行");
+        region=new CellRangeAddress(0, 5, 7, 7);
+        sheet.addMergedRegion(region);
+
+        try(FileOutputStream out = new FileOutputStream(filePath)) {
+            //保存Excel文件
+            workbook.write(out);
+        }
+
+        System.out.println("OK!");
+    }
+
+    // 单元格对齐
+    public static void demo3() throws IOException {
+        //文件路径
+        String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+        //创建Excel文件(Workbook)
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+        HSSFRow row=sheet.createRow(0);
+        HSSFCell cell=row.createCell(0);
+        cell.setCellValue("单元格对齐");
+        HSSFCellStyle style=workbook.createCellStyle();
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);//水平居中
+        style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);//垂直居中
+        style.setWrapText(true);//自动换行
+        style.setIndention((short)5);//缩进
+        style.setRotation((short)0);//文本旋转，这里的取值是从-90到90，而不是0-180度。
+        cell.setCellStyle(style);
+        FileOutputStream out = new FileOutputStream(filePath);
+        //保存Excel文件
+        workbook.write(out);
+
+        out.close();//关闭文件流
+        System.out.println("OK!");
+    }
+
+    // 边框
+    public static void demo4() throws IOException {
+        //文件路径
+        String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+        //创建Excel文件(Workbook)
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+        HSSFRow row=sheet.createRow(0);
+        HSSFCell cell=row.createCell(1);
+        cell.setCellValue("设置边框");
+        HSSFCellStyle style=workbook.createCellStyle();
+        style.setBorderTop(HSSFCellStyle.BORDER_DOTTED);//上边框
+        style.setBorderBottom(HSSFCellStyle.BORDER_THICK);//下边框
+        style.setBorderLeft(HSSFCellStyle.BORDER_DOUBLE);//左边框
+        style.setBorderRight(HSSFCellStyle.BORDER_SLANTED_DASH_DOT);//右边框
+        style.setTopBorderColor(HSSFColor.RED.index);//上边框颜色
+        style.setBottomBorderColor(HSSFColor.BLUE.index);//下边框颜色
+        style.setLeftBorderColor(HSSFColor.GREEN.index);//左边框颜色
+        style.setRightBorderColor(HSSFColor.PINK.index);//右边框颜色
+        cell.setCellStyle(style);
+        FileOutputStream out = new FileOutputStream(filePath);
+        //保存Excel文件
+        workbook.write(out);
+
+        out.close();//关闭文件流
+        System.out.println("OK!");
+    }
+
+    // 字体相关
+        public static void demo5() throws IOException {
+            //文件路径
+            String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+            //创建Excel文件(Workbook)
+            HSSFWorkbook workbook = new HSSFWorkbook();
+
+            HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+            HSSFRow row=sheet.createRow(0);
+
+            HSSFCell cell = row.createCell(1);
+            cell.setCellValue("设置字体");
+            HSSFCellStyle style = workbook.createCellStyle();
+            HSSFFont font = workbook.createFont();
+            font.setFontName("华文行楷");//设置字体名称
+            font.setFontHeightInPoints((short)28);//设置字号
+            font.setColor(HSSFColor.RED.index);//设置字体颜色
+            font.setUnderline(FontFormatting.U_SINGLE);//设置下划线
+            font.setTypeOffset(FontFormatting.SS_SUPER);//设置上标下标
+            font.setStrikeout(true);//设置删除线
+            style.setFont(font);
+            cell.setCellStyle(style);
+
+            FileOutputStream out = new FileOutputStream(filePath);
+            //保存Excel文件
+            workbook.write(out);
+
+            out.close();//关闭文件流
+            System.out.println("OK!");
+        }
+
+        // 图案
+        public static void demo6(String[] args) throws IOException {
+                //文件路径
+                String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+                //创建Excel文件(Workbook)
+                HSSFWorkbook workbook = new HSSFWorkbook();
+
+                HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+                HSSFRow row=sheet.createRow(0);
+
+                HSSFCell cell = row.createCell(1);
+                HSSFCellStyle style = workbook.createCellStyle();
+                style.setFillForegroundColor(HSSFColor.GREEN.index);//设置图案颜色
+                style.setFillBackgroundColor(HSSFColor.RED.index);//设置图案背景色
+                style.setFillPattern(HSSFCellStyle.SQUARES);//设置图案样式
+                cell.setCellStyle(style);
+
+                FileOutputStream out = new FileOutputStream(filePath);
+                //保存Excel文件
+                workbook.write(out);
+
+                out.close();//关闭文件流
+                System.out.println("OK!");
+            }
+
+// 宽度和高度
+public static void main(String[] args) throws IOException {
+        //文件路径
+        String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+        //创建Excel文件(Workbook)
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+        HSSFRow row = sheet.createRow(1);
+        HSSFCell cell = row.createCell(1);
+        cell.setCellValue("123456789012345678901234567890");
+        sheet.setColumnWidth(1, 31 * 256);//设置第一列的宽度是31个字符宽度
+        row.setHeightInPoints(50);//设置行的高度是50个点
+        FileOutputStream out = new FileOutputStream(filePath);
+        //保存Excel文件
+        workbook.write(out);
+
+        out.close();//关闭文件流
+        System.out.println("OK!");
+    }
+
+    // 冻结列
+    // 使用的 createFreezePane() 方法的参数分别是：冻结列数、冻结行数（即滚动区域顶部的可见行数）、右边区域的左侧列数、下方区域的顶部行数。这里将从第4行、第3列开始冻结，并分别向右15列、向下25行。
+    public static void main(String[] args) throws IOException {
+            //文件路径
+            String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+            HSSFWorkbook workbook = new HSSFWorkbook();// 创建Excel文件(Workbook)
+            HSSFSheet sheet= workbook.createSheet("Test0");// 创建工作表(Sheet)
+            sheet.createFreezePane(2, 3, 15, 25);//冻结行列
+            FileOutputStream out = new FileOutputStream(filePath);
+            //保存Excel文件
+            workbook.write(out);
+
+            out.close();//关闭文件流
+            System.out.println("OK!");
+        }
+
+// excel 公式
+// 第一个单元格（A1）设置了公式“2+34”，用于计算结果。第二个单元格（B1）设置了值为10，作为第三个单元格（C1）使用公式“A1B1”进行乘法运算的一个操作数。
+// 需要注意的是，在设置公式时，需要按照Microsoft Excel的语法规则来编写公式，且单元格引用需要按照[A,B]的格式表示
+public static void main(String[] args) throws IOException {
+        //文件路径
+        String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+        //创建Excel文件(Workbook)
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+        HSSFRow row = sheet.createRow(0);
+        HSSFCell cell = row.createCell(0);
+        cell.setCellFormula("2+3*4");//设置公式
+        cell = row.createCell(1);
+        cell.setCellValue(10);
+        cell = row.createCell(2);
+        cell.setCellFormula("A1*B1");//设置公式
+
+        FileOutputStream out = new FileOutputStream(filePath);
+        //保存Excel文件
+        workbook.write(out);
+
+        out.close();//关闭文件流
+        System.out.println("OK!");
+    }
+
+// sum行数
+public static void main(String[] args) throws IOException {
+        //文件路径
+        String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+        //创建Excel文件(Workbook)
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+        HSSFRow row = sheet.createRow(0);
+        row.createCell(0).setCellValue(1);
+        row.createCell(1).setCellValue(2);
+        row.createCell(2).setCellValue(3);
+        row.createCell(3).setCellValue(4);
+        row.createCell(4).setCellValue(5);
+        row = sheet.createRow(1);
+        row.createCell(0).setCellFormula("sum(A1,C1)");//等价于"A1+C1"
+        row.createCell(1).setCellFormula("sum(B1:D1)");//等价于"B1+C1+D1"
+
+        FileOutputStream out = new FileOutputStream(filePath);
+        //保存Excel文件
+        workbook.write(out);
+
+        out.close();//关闭文件流
+        System.out.println("OK!");
+    }
+
+    // 日期函数
+    public static void main(String[] args) throws IOException {
+            //文件路径
+            String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+            //创建Excel文件(Workbook)
+            HSSFWorkbook workbook = new HSSFWorkbook();
+
+            HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+            HSSFCellStyle style=workbook.createCellStyle();
+            style.setDataFormat(workbook.createDataFormat().getFormat("yyyy-mm-dd"));
+            HSSFRow row = sheet.createRow(0);
+            Calendar date=Calendar.getInstance();//日历对象
+            HSSFCell cell=row.createCell(0);
+            date.set(2011,2, 7);
+            cell.setCellValue(date.getTime());
+            cell.setCellStyle(style);//第一个单元格开始时间设置完成
+            cell=row.createCell(1);
+            date.set(2014,4, 25);
+            cell.setCellValue(date.getTime());
+            cell.setCellStyle(style);//第一个单元格结束时间设置完成
+            cell=row.createCell(3);
+            cell.setCellFormula("CONCATENATE(DATEDIF(A1,B1,\"y\"),\"年\")");
+            cell=row.createCell(4);
+            cell.setCellFormula("CONCATENATE(DATEDIF(A1,B1,\"m\"),\"月\")");
+            cell=row.createCell(5);
+            cell.setCellFormula("CONCATENATE(DATEDIF(A1,B1,\"d\"),\"日\")");
+
+
+            FileOutputStream out = new FileOutputStream(filePath);
+            //保存Excel文件
+            workbook.write(out);
+
+            out.close();//关闭文件流
+            System.out.println("OK!");
+        }
+
+        // 字符串函数
+        public static void main(String[] args) throws IOException {
+                //文件路径
+                String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+                //创建Excel文件(Workbook)
+                HSSFWorkbook workbook = new HSSFWorkbook();
+
+                HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+                HSSFRow row = sheet.createRow(0);
+                row.createCell(0).setCellValue("abcdefg");
+                row.createCell(1).setCellValue("aa bb cc dd ee fF GG");
+                row.createCell(3).setCellFormula("UPPER(A1)");
+                row.createCell(4).setCellFormula("PROPER(B1)");
+
+
+                FileOutputStream out = new FileOutputStream(filePath);
+                //保存Excel文件
+                workbook.write(out);
+
+                out.close();//关闭文件流
+                System.out.println("OK!");
+            }
+
+// 获取返回值
+public static void main(String[] args) throws IOException {
+        //文件路径
+        String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+        //创建Excel文件(Workbook)
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+        HSSFRow row = sheet.createRow(0);
+        row.createCell(0).setCellValue(7);//A1
+        row.createCell(1).setCellValue(8);//B1
+        HSSFCell cell=row.createCell(2);
+        cell.setCellFormula("A1*B1+14");
+        HSSFFormulaEvaluator e = new HSSFFormulaEvaluator(workbook);
+        cell = e.evaluateInCell(cell);//若Excel文件不是POI创建的，则不必调用此方法
+        System.out.println("公式计算结果："+cell.getNumericCellValue());
+
+
+        FileOutputStream out = new FileOutputStream(filePath);
+        //保存Excel文件
+        workbook.write(out);
+
+        out.close();//关闭文件流
+        System.out.println("OK!");
+    }
+
+    // 图片
+    public static void main(String[] args) throws IOException {
+            //文件路径
+            String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+            //创建Excel文件(Workbook)
+            HSSFWorkbook workbook = new HSSFWorkbook();
+
+            HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+            FileInputStream stream = new FileInputStream("C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\11.jpg");
+            byte[] bytes = new byte[(int) stream.getChannel().size()];
+            stream.read(bytes);//读取图片到二进制数组
+            int pictureIdx = workbook.addPicture(bytes, HSSFWorkbook.PICTURE_TYPE_JPEG);
+            HSSFPatriarch patriarch = sheet.createDrawingPatriarch();
+            HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 0, 0, (short) 0, 0, (short) 5, 5);
+            HSSFPicture pict = patriarch.createPicture(anchor, pictureIdx);
+            pict.resize();//自动调节图片大小,图片位置信息可能丢失
+            FileOutputStream out = new FileOutputStream(filePath);
+            //保存Excel文件
+            workbook.write(out);
+
+            out.close();//关闭文件流
+            System.out.println("OK!");
+        }
+
+    // 图形
+    // 演示了如何使用Apache POI库在Excel工作簿中插入一条线条
+    public static void main(String[] args) throws IOException {
+            //文件路径
+            String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+            //创建Excel文件(Workbook)
+            HSSFWorkbook workbook = new HSSFWorkbook();
+
+            HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+            HSSFPatriarch patriarch=sheet.createDrawingPatriarch();
+            HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 0, 0,(short)1, 0,(short)4, 4);
+            HSSFSimpleShape line = patriarch.createSimpleShape(anchor);
+            line.setShapeType(HSSFSimpleShape.OBJECT_TYPE_LINE);//设置图形类型
+            line.setLineStyle(HSSFShape.LINESTYLE_SOLID);//设置图形样式
+            line.setLineWidth(6350);//在POI中线的宽度12700表示1pt,所以这里是0.5pt粗的线条。
+
+
+            FileOutputStream out = new FileOutputStream(filePath);
+            //保存Excel文件
+            workbook.write(out);
+
+            out.close();//关闭文件流
+            System.out.println("OK!");
+        }
+
+// 矩形
+public static void main(String[] args) throws IOException {
+        //文件路径
+        String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+        //创建Excel文件(Workbook)
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+        HSSFPatriarch patriarch=sheet.createDrawingPatriarch();
+        HSSFClientAnchor anchor = new HSSFClientAnchor(255,122,255, 122, (short)1, 0,(short)4, 3);
+        HSSFSimpleShape rec = patriarch.createSimpleShape(anchor);
+        rec.setShapeType(HSSFSimpleShape.OBJECT_TYPE_RECTANGLE);
+        rec.setLineStyle(HSSFShape.LINESTYLE_DASHGEL);//设置边框样式
+        rec.setFillColor(255, 0, 0);//设置填充色
+        rec.setLineWidth(25400);//设置边框宽度
+        rec.setLineStyleColor(0, 0, 255);//设置边框颜色
+
+        FileOutputStream out = new FileOutputStream(filePath);
+        //保存Excel文件
+        workbook.write(out);
+
+        out.close();//关闭文件流
+        System.out.println("OK!");
+    }
+
+    // 圆形
+    public static void main(String[] args) throws IOException {
+            //文件路径
+            String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+            //创建Excel文件(Workbook)
+            HSSFWorkbook workbook = new HSSFWorkbook();
+
+
+            HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+            HSSFPatriarch patriarch=sheet.createDrawingPatriarch();
+            HSSFClientAnchor anchor = new HSSFClientAnchor(255,122,255, 122, (short)1, 0,(short)4, 3);
+            HSSFSimpleShape rec = patriarch.createSimpleShape(anchor);
+            rec.setShapeType(HSSFSimpleShape.OBJECT_TYPE_OVAL);//设置图片类型
+            rec.setLineStyle(HSSFShape.LINESTYLE_DASHGEL);//设置边框样式
+            rec.setFillColor(255, 0, 0);//设置填充色
+            rec.setLineWidth(25400);//设置边框宽度
+            rec.setLineStyleColor(0, 0, 255);//设置边框颜色
+
+            FileOutputStream out = new FileOutputStream(filePath);
+            //保存Excel文件
+            workbook.write(out);
+
+            out.close();//关闭文件流
+            System.out.println("OK!");
+        }
+
+        // 网格
+        public static void main(String[] args) throws IOException {
+                //文件路径
+                String filePath = "C:\\Users\\masiyi\\IdeaProjects\\demo\\src\\main\\resources\\test.xls";
+                //创建Excel文件(Workbook)
+                HSSFWorkbook workbook = new HSSFWorkbook();
+
+                HSSFSheet sheet = workbook.createSheet("Test");// 创建工作表(Sheet)
+                HSSFRow row = sheet.createRow(2);
+                row.createCell(1);
+                row.setHeightInPoints(240);
+                sheet.setColumnWidth(2, 9000);
+                int linesCount = 20;
+                HSSFPatriarch patriarch = sheet.createDrawingPatriarch();
+        //因为HSSFClientAnchor中dx只能在0-1023之间,dy只能在0-255之间，这里采用比例的方式
+                double xRatio = 1023.0 / (linesCount * 10);
+                double yRatio = 255.0 / (linesCount * 10);
+        // 画竖线
+                int x1 = 0;
+                int y1 = 0;
+                int x2 = 0;
+                int y2 = 200;
+                for (int i = 0; i < linesCount; i++) {
+                    HSSFClientAnchor a2 = new HSSFClientAnchor();
+                    a2.setAnchor((short) 2, 2, (int) (x1 * xRatio),
+                            (int) (y1 * yRatio), (short) 2, 2, (int) (x2 * xRatio),
+                            (int) (y2 * yRatio));
+                    HSSFSimpleShape shape2 = patriarch.createSimpleShape(a2);
+                    shape2.setShapeType(HSSFSimpleShape.OBJECT_TYPE_LINE);
+                    x1 += 10;
+                    x2 += 10;
+                }
+        // 画横线
+                x1 = 0;
+                y1 = 0;
+                x2 = 200;
+                y2 = 0;
+                for (int i = 0; i < linesCount; i++) {
+                    HSSFClientAnchor a2 = new HSSFClientAnchor();
+                    a2.setAnchor((short) 2, 2, (int) (x1 * xRatio),
+                            (int) (y1 * yRatio), (short) 2, 2, (int) (x2 * xRatio),
+                            (int) (y2 * yRatio));
+                    HSSFSimpleShape shape2 = patriarch.createSimpleShape(a2);
+                    shape2.setShapeType(HSSFSimpleShape.OBJECT_TYPE_LINE);
+                    y1 += 10;
+                    y2 += 10;
+                }
+                FileOutputStream out = new FileOutputStream(filePath);
+                //保存Excel文件
+                workbook.write(out);
+
+                out.close();//关闭文件流
+                System.out.println("OK!");
+            }
