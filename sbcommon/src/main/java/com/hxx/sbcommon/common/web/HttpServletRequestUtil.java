@@ -9,8 +9,10 @@ import org.springframework.web.multipart.support.StandardMultipartHttpServletReq
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -95,22 +97,26 @@ public class HttpServletRequestUtil {
 
     /***
      * 获取调用接口请求参数
+     * 支持GET请求的QueryString传参和POST的FORM-URLENCODED传参
      *
      * @param request
      * @return
      */
-    public static Map<String, Object> getParams(HttpServletRequest request) {
+    public static Map<String, Object> getRequestParams(HttpServletRequest request) {
         Map<String, Object> params = new HashMap<>();
-        params.put("_ip", getRemoteAddress(request));
-        params.put("_charset", StandardCharsets.UTF_8);
-        Set<Map.Entry<String, Object>> keSet = new HashMap<String, Object>(request.getParameterMap()).entrySet();
-        for (Iterator<Map.Entry<String, Object>> itr = keSet.iterator(); itr.hasNext(); ) {
-            Map.Entry<String, Object> e = itr.next();
-            if ((e.getValue() instanceof String[])) {
-                params.put(e.getKey(), ((String[]) e.getValue())[0]);
-            } else if ((e.getValue() instanceof String)) {
-                params.put(e.getKey(), e.getValue().toString());
+//        params.put("_ip", getRemoteAddress(request));
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+            String[] value = entry.getValue();
+            Object val = null;
+            if (value != null) {
+                if (value.length == 1) {
+                    val = value[0];
+                } else {
+                    val = value;
+                }
             }
+            params.put(entry.getKey(), val);
         }
         return params;
     }
