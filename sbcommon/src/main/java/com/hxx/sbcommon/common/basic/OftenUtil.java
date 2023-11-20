@@ -30,30 +30,6 @@ import java.util.stream.Collectors;
  * @Date: 2022-09-06 10:49:59
  **/
 public class OftenUtil {
-    /**
-     * 字段为null时设置默认值
-     * 适合常见类型和集合
-     * 如果为字符串，则去除空格
-     *
-     * @param source       模型
-     * @param getFieldFunc 字段
-     * @param defaultVal   字段为null时的默认值
-     * @param <T>
-     * @param <U>
-     * @return
-     */
-    public static <T, U> U getNullToDefault(T source, Function<T, U> getFieldFunc, U defaultVal) {
-        U fieldVal = getFieldFunc.apply(source);
-        if (fieldVal == null) {
-            return defaultVal;
-        }
-
-        if (defaultVal instanceof String) {
-            return (U) ((String) fieldVal).trim();
-        }
-
-        return fieldVal;
-    }
 
     /**
      * 评估条件，为true，抛出 IllegalArgumentException
@@ -240,6 +216,84 @@ public class OftenUtil {
         java.util.Random r = new java.util.Random();
         int randomVal = r.nextInt(seed);
         return ls.get(randomVal);
+    }
+
+    // 基础字段处理
+    public static class BasicUtil {
+        /**
+         * source或source字段为null时设置默认值
+         *
+         * @param source       模型
+         * @param getFieldFunc 字段
+         * @param defaultVal   字段为null时的默认值
+         * @param <T>
+         * @param <F>
+         * @return
+         */
+        public static <T, F> F procFieldNull(T source, Function<T, F> getFieldFunc, F defaultVal) {
+            if (source == null) {
+                return defaultVal;
+            }
+            F fieldVal = getFieldFunc.apply(source);
+            if (fieldVal == null) {
+                return defaultVal;
+            }
+
+            return fieldVal;
+        }
+
+        /**
+         * 处理字符串，为空时返回默认值，其他时去空格
+         *
+         * @param str
+         * @param defaultVal
+         * @return
+         */
+        public static String trim(String str, String defaultVal) {
+            if (StringUtils.isBlank(str)) {
+                return defaultVal;
+            }
+            return str.trim();
+        }
+
+        /**
+         * 处理字段的值，如果为null则不处理，直接返回否则，按func处理后返回
+         *
+         * @param t
+         * @param procFieldFunc
+         * @param <T>
+         * @return
+         */
+        public static <T> T procNull(T t, Function<T, T> procFieldFunc, T defaultVal) {
+            if (t == null) {
+                return defaultVal;
+            }
+
+            T apply = procFieldFunc.apply(t);
+            if (apply == null) {
+                return defaultVal;
+            }
+            return apply;
+        }
+
+        /**
+         * 简单缓存简化方法
+         *
+         * @param cache
+         * @param key
+         * @param getCacheValFunc
+         * @param <TKey>
+         * @param <TVal>
+         * @return
+         */
+        public static <TKey, TVal> TVal getCacheVal(Map<TKey, TVal> cache, TKey key, Function<TKey, TVal> getCacheValFunc) {
+            TVal val = cache.getOrDefault(key, null);
+            if (val == null) {
+                val = getCacheValFunc.apply(key);
+                cache.put(key, val);
+            }
+            return val;
+        }
     }
 
     // 数字
@@ -784,70 +838,6 @@ public class OftenUtil {
          */
         public static <T> T firstOrDefault(List<T> ls, T defaultVal) {
             return CollectionUtils.isEmpty(ls) ? defaultVal : ls.get(0);
-        }
-    }
-
-    // 基础字段处理
-    public static class BasicUtil {
-        /**
-         * 处理字段null，为null时返回默认值，
-         *
-         * @param t
-         * @param defaultVal
-         * @param <T>
-         * @return
-         */
-        public static <T> T procFieldNull(T t, T defaultVal) {
-            return t == null ? defaultVal : t;
-        }
-
-        /**
-         * 处理字段的值，如果为null则不处理，直接返回否则，按func处理后返回
-         *
-         * @param t
-         * @param func
-         * @param <T>
-         * @return
-         */
-        public static <T> T procFieldNull(T t, Function<T, T> func) {
-            if (t == null) {
-                return t;
-            }
-
-            return func.apply(t);
-        }
-
-        /**
-         * 处理字符串，为空时返回默认值，其他时去空格
-         *
-         * @param str
-         * @param defaultVal
-         * @return
-         */
-        public static String procFieldEmpty(String str, String defaultVal) {
-            if (StringUtils.isBlank(str)) {
-                return defaultVal;
-            }
-            return str.trim();
-        }
-
-        /**
-         * 简单缓存简化方法
-         *
-         * @param cache
-         * @param key
-         * @param getCacheValFunc
-         * @param <TKey>
-         * @param <TVal>
-         * @return
-         */
-        public static <TKey, TVal> TVal getCacheVal(Map<TKey, TVal> cache, TKey key, Function<TKey, TVal> getCacheValFunc) {
-            TVal val = cache.getOrDefault(key, null);
-            if (val == null) {
-                val = getCacheValFunc.apply(key);
-                cache.put(key, val);
-            }
-            return val;
         }
     }
 
