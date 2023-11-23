@@ -19,6 +19,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 内置线程池驱动的Job调度器
+ * 支持系统改时间自动恢复
+ *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2023-05-30 13:58:35
@@ -28,6 +31,8 @@ import java.util.concurrent.TimeUnit;
 public class IntervalJobDispatcher implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
     private static final ThreadPoolExecutor threadPool;
+    // 内置数据
+    private static Map<String, Object> RUNNING_DATA = new HashMap<>();
 
     static {
         // 创建一个线程池对象
@@ -72,6 +77,15 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
     }
 
     /**
+     * 获取线程池运行信息
+     *
+     * @return
+     */
+    public static Map<String, Object> getRunningData() {
+        return RUNNING_DATA;
+    }
+
+    /**
      * 调度核心方法，由外部驱动
      * 驱动器一般为定时器
      */
@@ -79,7 +93,9 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
         log.debug("调度start...");
         Map<String, BaseIntervalJob> beans = applicationContext.getBeansOfType(BaseIntervalJob.class);
         log.debug("找到Job个数：{}", beans == null ? 0 : beans.size());
-        if (beans == null) return;
+        if (beans == null || beans.isEmpty()) {
+            return;
+        }
 
         // 找handlers
         Map<String, BaseIntervalJobExecutorHandler> handlerMap = applicationContext.getBeansOfType(BaseIntervalJobExecutorHandler.class);
@@ -88,6 +104,7 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
             handlers.addAll(handlerMap.values());
         }
         log.debug("找到Handler个数：{}", handlers.size());
+        RUNNING_DATA.put("latestRunning", "{now:" + LocalDateTime.now() + ", jobSize:" + beans.size() + ", handlerSize:" + handlers.size() + "}");
 
         // loop
         for (Map.Entry<String, BaseIntervalJob> entry : beans.entrySet()) {
@@ -151,6 +168,14 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
             if (preRunTime != null) {
                 LocalDateTime next = preRunTime.plusSeconds(task.getIntervalSecond());
                 if (next.isAfter(LocalDateTime.now())) {
+                    // 判断下次执行的有效性，可能本机时间改变，导致永远不执行
+                    next = preRunTime.minusSeconds(3 * task.getIntervalSecond());
+                    if (next.isAfter(LocalDateTime.now())) {
+                        // 说明上次保存的时间有问题，清空
+                        runMap.remove(task.getJobCode());
+                        log.warn("InternalIntervalJobHandler，上次保存时间错误，已重置! jobCode={}", task.getJobCode());
+                        return true;
+                    }
                     // 不可执行
                     log.debug("SKIP-TIME：{}", task);
                     return false;
