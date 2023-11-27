@@ -72,6 +72,45 @@ public class OftenUtil {
         }
     }
 
+    /**
+     * 基本类型相等性比较
+     * 常用基本类型：整型（byte、short、int、long）、浮点型（float、double）、布尔（boolean）、字符（char）
+     *
+     * @param obj
+     * @param obj2
+     * @return
+     */
+    public static boolean equals(Object obj, Object obj2) {
+        // Objects.equals(a, b);
+        // return (a == b) || (a != null && a.equals(b));
+        if (obj == obj2) {
+            return true;
+        }
+        if (obj == null || obj2 == null) {
+            return false;
+        }
+        Object objVal = castVal(obj);
+        Object obj2Val = castVal(obj2);
+        return objVal.equals(obj2Val);
+    }
+
+    // log
+
+    /**
+     * 每10分钟时写日志
+     *
+     * @param log
+     * @param logAct
+     */
+    public static void everyTenMinuteLog(org.slf4j.Logger log, Consumer<org.slf4j.Logger> logAct) {
+        LocalDateTime now = LocalDateTime.now();
+        int minute = now.getMinute();
+        int second = now.getSecond();
+        if (minute % 10 == 0 && second > 50) {
+            logAct.accept(log);
+        }
+    }
+
     // 校验
 
     /**
@@ -216,6 +255,38 @@ public class OftenUtil {
         java.util.Random r = new java.util.Random();
         int randomVal = r.nextInt(seed);
         return ls.get(randomVal);
+    }
+
+
+    static Object castVal(Object obj) {
+        if (obj instanceof Byte) {
+            return ((Byte) obj).longValue();
+        }
+        if (obj instanceof Short) {
+            return ((Short) obj).longValue();
+        }
+        if (obj instanceof Integer) {
+            return ((Integer) obj).longValue();
+        }
+//        if (obj instanceof Long) {
+//            return obj;
+//        }
+
+        if (obj instanceof Float) {
+            return ((Float) obj).doubleValue();
+        }
+//        if (obj instanceof Double) {
+//            return obj;
+//        }
+//
+//        if (obj instanceof Boolean) {
+//            return obj;
+//        }
+//
+//        if (obj instanceof Character) {
+//            return obj;
+//        }
+        return obj;
     }
 
     // 基础字段处理
