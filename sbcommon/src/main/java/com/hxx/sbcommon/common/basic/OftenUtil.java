@@ -89,9 +89,43 @@ public class OftenUtil {
         if (obj == null || obj2 == null) {
             return false;
         }
-        Object objVal = castVal(obj);
-        Object obj2Val = castVal(obj2);
-        return objVal.equals(obj2Val);
+        // 如果两个类型一致，则直接比较
+        {
+            if (obj instanceof Byte && obj2 instanceof Byte) {
+                return obj.equals(obj2);
+            }
+            if (obj instanceof Short && obj2 instanceof Short) {
+                return obj.equals(obj2);
+            }
+            if (obj instanceof Integer && obj2 instanceof Integer) {
+                return obj.equals(obj2);
+            }
+            if (obj instanceof Long && obj2 instanceof Long) {
+                return obj.equals(obj2);
+            }
+
+            if (obj instanceof Float && obj2 instanceof Float) {
+                return obj.equals(obj2);
+            }
+            if (obj instanceof Double && obj2 instanceof Double) {
+                return obj.equals(obj2);
+            }
+
+            if (obj instanceof Boolean && obj2 instanceof Boolean) {
+                return obj.equals(obj2);
+            }
+
+            if (obj instanceof Character && obj2 instanceof Character) {
+                return obj.equals(obj2);
+            }
+        }
+
+        // 类型不一致时，直接转为兼容类型后比较
+        {
+            Object objVal = castVal(obj);
+            Object obj2Val = castVal(obj2);
+            return objVal.equals(obj2Val);
+        }
     }
 
     // log

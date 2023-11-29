@@ -62,4 +62,15 @@ public class PathUtil {
         String tmpPath = System.getProperty("java.io.tmpdir");
         return tmpPath;
     }
+
+    /**
+     * 校验路径是否存在，不存在，则创建目录
+     *
+     * @param dir
+     * @return
+     */
+    public static boolean checkAndMkDirs(String dir) {
+        File myPath = new File(dir);
+        return myPath.exists() || myPath.mkdirs();
+    }
 }

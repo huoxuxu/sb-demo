@@ -6,7 +6,6 @@ package com.hxx.sbConsole.service.impl.http;
  * @Date: 2023-05-07 16:01:50
  **/
 
-import com.hxx.sbcommon.common.io.FileUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
