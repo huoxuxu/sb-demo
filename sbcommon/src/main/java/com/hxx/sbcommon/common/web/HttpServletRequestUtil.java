@@ -140,4 +140,26 @@ public class HttpServletRequestUtil {
         }
         return ip;
     }
+
+    /**
+     * 判断是否属于ajax请求
+     *
+     * @param request
+     * @return
+     */
+    public static boolean isRequestAjax(HttpServletRequest request) {
+        String ajaxHeader = request.getHeader("X-Requested-With");
+        return "XMLHttpRequest".equals(ajaxHeader);
+    }
+
+    /**
+     * Accept: application/json
+     *
+     * @param request
+     * @return
+     */
+    public static boolean isJsonRequest(HttpServletRequest request) {
+        return request.getHeader("Accept") != null
+                && request.getHeader("Accept").contains("application/json");
+    }
 }
