@@ -12,18 +12,14 @@ import org.springframework.context.annotation.PropertySource;
  * @Date: 2022-11-23 16:00:23
  **/
 @Configuration
-@PropertySource("classpath:application.yml")
+@PropertySource("classpath:app.yml")
 public class ReadSingleConfig {
-    @Value("${spring.profiles.active}")
-    private String active;
-
-    @Value("${cust.apple}")
+    @Value("${cust.apple:}")
     private String apple;
-    @Value("${cust.orange}")
+    @Value("${cust.orange:}")
     private String orange;
 
     public void show() {
-        System.out.println("active --- > " + active);
         System.out.println("apple --- > " + apple);
         System.out.println("orange --- > " + orange);
     }

@@ -10,16 +10,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  **/
 @ConfigurationProperties(prefix = "cust")
 public class UseConfigProperties {
-    @Value("${spring.profiles.active}")
-    private String active;
-
     @Value("${apple}")
     private String apple;
     @Value("${orange}")
     private String orange;
 
     public void show() {
-        System.out.println("active --- > " + active);
         System.out.println("apple --- > " + apple);
         System.out.println("orange --- > " + orange);
     }
