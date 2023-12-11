@@ -118,6 +118,10 @@ public class OftenUtil {
             if (obj instanceof Character && obj2 instanceof Character) {
                 return obj.equals(obj2);
             }
+
+            if (obj.getClass() == obj2.getClass()) {
+                return obj.equals(obj2);
+            }
         }
 
         // 类型不一致时，直接转为兼容类型后比较
@@ -184,20 +188,19 @@ public class OftenUtil {
     // 通用操作
 
     /**
-     * 查询实体中字段的值，支持实体为null
+     * 通用处理数据，为null时使用默认值
      *
-     * @param t
-     * @param func
+     * @param source
+     * @param mapperFunc
+     * @param defaultVal
      * @param <T>
-     * @param <R>
+     * @param <F>
      * @return
      */
-    public static <T, R> R getFieldVal(T t, Function<T, R> func) {
-        if (t == null) return null;
-        return Arrays.asList(t).stream()
-                .map(func)
-                .findFirst()
-                .orElse(null);
+    public static <T, F> F proc(T source, Function<T, F> mapperFunc, F defaultVal) {
+        return Optional.ofNullable(source)
+                .map(mapperFunc)
+                .orElse(defaultVal);
     }
 
     // UUID
@@ -325,80 +328,7 @@ public class OftenUtil {
 
     // 基础字段处理
     public static class BasicUtil {
-        /**
-         * source或source字段为null时设置默认值
-         *
-         * @param source       模型
-         * @param getFieldFunc 字段
-         * @param defaultVal   字段为null时的默认值
-         * @param <T>
-         * @param <F>
-         * @return
-         */
-        public static <T, F> F procFieldNull(T source, Function<T, F> getFieldFunc, F defaultVal) {
-            if (source == null) {
-                return defaultVal;
-            }
-            F fieldVal = getFieldFunc.apply(source);
-            if (fieldVal == null) {
-                return defaultVal;
-            }
 
-            return fieldVal;
-        }
-
-        /**
-         * 处理字符串，为空时返回默认值，其他时去空格
-         *
-         * @param str
-         * @param defaultVal
-         * @return
-         */
-        public static String trim(String str, String defaultVal) {
-            if (StringUtils.isBlank(str)) {
-                return defaultVal;
-            }
-            return str.trim();
-        }
-
-        /**
-         * 处理字段的值，如果为null则不处理，直接返回否则，按func处理后返回
-         *
-         * @param t
-         * @param procFieldFunc
-         * @param <T>
-         * @return
-         */
-        public static <T> T procNull(T t, Function<T, T> procFieldFunc, T defaultVal) {
-            if (t == null) {
-                return defaultVal;
-            }
-
-            T apply = procFieldFunc.apply(t);
-            if (apply == null) {
-                return defaultVal;
-            }
-            return apply;
-        }
-
-        /**
-         * 简单缓存简化方法
-         *
-         * @param cache
-         * @param key
-         * @param getCacheValFunc
-         * @param <TKey>
-         * @param <TVal>
-         * @return
-         */
-        public static <TKey, TVal> TVal getCacheVal(Map<TKey, TVal> cache, TKey key, Function<TKey, TVal> getCacheValFunc) {
-            TVal val = cache.getOrDefault(key, null);
-            if (val == null) {
-                val = getCacheValFunc.apply(key);
-                cache.put(key, val);
-            }
-            return val;
-        }
     }
 
     // 数字
@@ -829,7 +759,6 @@ public class OftenUtil {
     // 集合
     public static class CollectionUtil {
 
-
         /**
          * 有且只有一个
          *
@@ -943,6 +872,25 @@ public class OftenUtil {
          */
         public static <T> T firstOrDefault(List<T> ls, T defaultVal) {
             return CollectionUtils.isEmpty(ls) ? defaultVal : ls.get(0);
+        }
+
+        /**
+         * 简单缓存简化方法
+         *
+         * @param cache
+         * @param key
+         * @param getCacheValFunc
+         * @param <TKey>
+         * @param <TVal>
+         * @return
+         */
+        public static <TKey, TVal> TVal getCacheVal(Map<TKey, TVal> cache, TKey key, Function<TKey, TVal> getCacheValFunc) {
+            TVal val = cache.getOrDefault(key, null);
+            if (val == null) {
+                val = getCacheValFunc.apply(key);
+                cache.put(key, val);
+            }
+            return val;
         }
     }
 
