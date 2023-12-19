@@ -295,8 +295,13 @@ public class CollectionUtil {
      * @return
      */
     public static <T, V> List<V> getMapValByKeys(Map<T, V> map, Collection<T> keys) {
-        if (map == null || map.size() == 0 || CollectionUtils.isEmpty(keys)) return new ArrayList<>();
-        return keys.stream().filter(d -> !map.containsKey(d)).map(d -> map.get(d)).collect(Collectors.toList());
+        if (map == null || map.size() == 0 || CollectionUtils.isEmpty(keys)) {
+            return new ArrayList<>();
+        }
+        return keys.stream()
+                .filter(map::containsKey)
+                .map(map::get)
+                .collect(Collectors.toList());
     }
 
 }
