@@ -32,6 +32,17 @@ import java.util.stream.Collectors;
 public class OftenUtil {
 
     /**
+     * 评估条件，为true 抛出不通过异常
+     *
+     * @param condition
+     */
+    public static void assertCond(boolean condition) {
+        if (condition) {
+            throw new IllegalArgumentException("评估条件不通过");
+        }
+    }
+
+    /**
      * 评估条件，为true，抛出 IllegalArgumentException
      *
      * @param condition 条件

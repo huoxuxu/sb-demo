@@ -107,22 +107,22 @@ public class CollectionUtil {
      * 支持多字段连接为字符串排序
      *
      * @param ls
-     * @param getFieldFunc 排序字段
+     * @param getOrderFieldFunc 排序字段
      * @param <T>
      * @param <TField>
      * @return
      */
-    public static <T, TField extends Comparable<TField>> List<T> sortList(List<T> ls, Function<T, TField> getFieldFunc, boolean asc) {
+    public static <T, TField extends Comparable<TField>> List<T> sortList(List<T> ls, Function<T, TField> getOrderFieldFunc, boolean asc) {
         if (CollectionUtils.isEmpty(ls)) return new ArrayList<>();
 
         List<T> nullData = ls.stream()
-                .filter(d -> getFieldFunc.apply(d) == null)
+                .filter(d -> getOrderFieldFunc.apply(d) == null)
                 .collect(Collectors.toList());
         Comparator<T> comparing;
-        if (asc) comparing = Comparator.comparing(getFieldFunc);
-        else comparing = Comparator.comparing(getFieldFunc, Comparator.reverseOrder());
+        if (asc) comparing = Comparator.comparing(getOrderFieldFunc);
+        else comparing = Comparator.comparing(getOrderFieldFunc, Comparator.reverseOrder());
         List<T> notNullData = ls.stream()
-                .filter(d -> getFieldFunc.apply(d) != null)
+                .filter(d -> getOrderFieldFunc.apply(d) != null)
                 .sorted(comparing)
                 .collect(Collectors.toList());
         notNullData.addAll(nullData);
@@ -133,27 +133,27 @@ public class CollectionUtil {
      * 按中文拼音排序
      *
      * @param ls
-     * @param getFieldFunc
+     * @param getOrderFieldFunc
      * @param asc
      * @param <T>
      * @param <TField>
      * @return
      */
-    public static <T, TField extends Comparable<TField>> List<T> sortListUseCollator(List<T> ls, Function<T, TField> getFieldFunc, boolean asc) {
+    public static <T, TField extends Comparable<TField>> List<T> sortListUseCollator(List<T> ls, Function<T, TField> getOrderFieldFunc, boolean asc) {
         if (CollectionUtils.isEmpty(ls)) return new ArrayList<>();
 
         List<T> nullData = ls.stream()
-                .filter(d -> getFieldFunc.apply(d) == null)
+                .filter(d -> getOrderFieldFunc.apply(d) == null)
                 .collect(Collectors.toList());
         Comparator<T> collatorComparator = (T o1, T o2) -> {
             Collator instance = Collator.getInstance(Locale.CHINA);
             if (asc)
-                return instance.compare(getFieldFunc.apply(o1), getFieldFunc.apply(o2));
+                return instance.compare(getOrderFieldFunc.apply(o1), getOrderFieldFunc.apply(o2));
             else
-                return instance.compare(getFieldFunc.apply(o2), getFieldFunc.apply(o1));
+                return instance.compare(getOrderFieldFunc.apply(o2), getOrderFieldFunc.apply(o1));
         };
         List<T> notNullData = ls.stream()
-                .filter(d -> getFieldFunc.apply(d) != null)
+                .filter(d -> getOrderFieldFunc.apply(d) != null)
                 .sorted(collatorComparator)
                 .collect(Collectors.toList());
         notNullData.addAll(nullData);
