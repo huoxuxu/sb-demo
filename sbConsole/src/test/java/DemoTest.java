@@ -1,5 +1,3 @@
-package javat.demo;
-
 import com.hxx.sbConsole.SbConsoleApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;

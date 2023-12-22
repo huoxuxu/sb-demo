@@ -5,6 +5,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.Collator;
 import java.util.*;
 import java.util.function.Consumer;
@@ -230,17 +232,95 @@ public class CollectionUtil {
      * 获取字段值SortedSet集合
      *
      * @param ls
-     * @param getFieldFunc
+     * @param fieldGetter
      * @param <T>
      * @param <TField>
      * @return
      */
-    public static <T, TField> SortedSet<TField> getFieldSortedSet(List<T> ls, Function<T, TField> getFieldFunc, Predicate<TField> filterPred) {
+    public static <T, TField> SortedSet<TField> getFieldSortedSet(List<T> ls, Function<T, TField> fieldGetter, Predicate<TField> filterPred) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
-                .map(getFieldFunc)
+                .map(fieldGetter)
                 .filter(filterPred)
                 .collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    /**
+     * 获取最小的项
+     *
+     * @param ls
+     * @param fieldGetter
+     * @param <T>
+     * @param <TField>
+     * @return
+     */
+    public static <T, TField extends Comparable<TField>> T getMin(Collection<T> ls, Function<T, TField> fieldGetter) {
+        return Optional.ofNullable(ls).orElse(new ArrayList<>())
+                .stream()
+                .min(Comparator.comparing(fieldGetter))
+                .orElse(null);
+    }
+
+    public static <T, TField extends Comparable<TField>> T getMax(Collection<T> ls, Function<T, TField> fieldGetter) {
+        return Optional.ofNullable(ls).orElse(new ArrayList<>())
+                .stream()
+                .max(Comparator.comparing(fieldGetter))
+                .orElse(null);
+    }
+
+    /**
+     * 获取最小的项
+     *
+     * @param ls
+     * @param fieldGetter
+     * @param <T>
+     * @param <TField>
+     * @return
+     */
+    public static <T, TField extends Comparable<TField>> TField getMinField(Collection<T> ls, Function<T, TField> fieldGetter, TField defaultVal) {
+        T t = Optional.ofNullable(ls).orElse(new ArrayList<>())
+                .stream()
+                .min(Comparator.comparing(fieldGetter))
+                .orElse(null);
+        return t == null ? defaultVal : fieldGetter.apply(t);
+    }
+
+    public static <T, TField extends Comparable<TField>> TField getMaxField(Collection<T> ls, Function<T, TField> fieldGetter, TField defaultVal) {
+        T t = Optional.ofNullable(ls).orElse(new ArrayList<>())
+                .stream()
+                .max(Comparator.comparing(fieldGetter))
+                .orElse(null);
+        return t == null ? defaultVal : fieldGetter.apply(t);
+    }
+
+    /**
+     * 求和
+     *
+     * @param ls
+     * @param fieldGetter
+     * @param <T>
+     * @return
+     */
+    public static <T> BigDecimal getSumBigDecimal(Collection<T> ls, Function<T, BigDecimal> fieldGetter) {
+        return Optional.ofNullable(ls).orElse(new ArrayList<>())
+                .stream()
+                .map(fieldGetter)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    /**
+     * 求平均
+     *
+     * @param ls
+     * @param fieldGetter
+     * @param scale
+     * @param <T>
+     * @return
+     */
+    public static <T> BigDecimal getAvgBigDecimal(Collection<T> ls, Function<T, BigDecimal> fieldGetter, int scale) {
+        int cou = ls == null ? 0 : ls.size();
+        BigDecimal sum = getSumBigDecimal(ls, fieldGetter);
+        return sum.divide(BigDecimal.valueOf(cou), scale, RoundingMode.HALF_UP);
     }
 
     /**
@@ -283,6 +363,25 @@ public class CollectionUtil {
             map.put(entry.getKey(), groupByValFunc.apply(entry.getValue()));
         }
         return map;
+    }
+
+    /**
+     * 交集
+     * Apache的CollectionUtil 提供集合相减能力
+     *
+     * @param src
+     * @param tar
+     * @param <T>
+     * @return
+     */
+    public static <T> Set<T> intersect(Collection<T> src, Set<T> tar) {
+        if (CollectionUtils.isEmpty(src) || CollectionUtils.isEmpty(tar)) {
+            return new HashSet<>();
+        }
+        return Optional.ofNullable(src).orElse(new ArrayList<>())
+                .stream()
+                .filter(d -> tar.contains(d))
+                .collect(Collectors.toSet());
     }
 
     /**
