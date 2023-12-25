@@ -10,27 +10,41 @@ import lombok.Data;
  **/
 @Data
 public class Result<T> {
-    private int code;
+    /**
+     * 请求成功状态
+     */
+    private boolean state;
+    /**
+     * 状态码
+     */
+    private String statusCode;
+    /**
+     * 附加消息
+     */
     private String message;
+
+    /**
+     * 数据
+     */
     private T data;
 
     /**
-     * @param code
+     * @param statusCode
      * @param msg
      * @param data
      */
-    public Result(Integer code, String msg, T data) {
-        this.code = code;
+    public Result(String statusCode, String msg, T data) {
+        this.statusCode = statusCode;
         this.message = msg;
         this.data = data;
     }
 
     public static <T> Result<T> success(T data) {
-        return new Result<>(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getName(), data);
+        return new Result<>(ResultEnum.SUCCESS + "", ResultEnum.SUCCESS.getName(), data);
     }
 
     public static <T> Result<T> success(String message, T data) {
-        return new Result<>(ResultEnum.SUCCESS.getCode(), message, data);
+        return new Result<>(ResultEnum.SUCCESS + "", message, data);
     }
 
     /**
@@ -70,7 +84,7 @@ public class Result<T> {
      * @return
      */
     public static Result<?> failed(ResultEnum errorResult, String message) {
-        return new Result<>(errorResult.getCode(), message, null);
+        return new Result<>(errorResult + "", message, null);
     }
 
 }

@@ -50,11 +50,11 @@ public class ReflectDemoService {
         }
         {
             // =================泛型字段===================================
-            Result<String> result = new Result<>(1, "xx", "m12");
+            Result<String> result = new Result<>("", "xx", "m12");
             Map<String, Object> objMap1 = BeanInfoUtil.toMap(result);
             System.out.println("objMap：" + JsonUtil.toJSON(objMap1));
 
-            result = new Result<>(0, "", "");
+            result = new Result<>("", "", "");
             BeanInfoUtil.copyToBean(result, objMap1);
             System.out.println(result);
         }
@@ -72,7 +72,7 @@ public class ReflectDemoService {
         }
         {
             // =================泛型字段===================================
-            Result<String> result = new Result<>(1, "xx", "m12");
+            Result<String> result = new Result<>("", "xx", "m12");
             ReflectUseful reflectUseful = new ReflectUseful(result.getClass());
 
             List<String> props = reflectUseful.getProps();

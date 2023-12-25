@@ -385,6 +385,18 @@ public class CollectionUtil {
     }
 
     /**
+     * 集合相减
+     *
+     * @param
+     * @param tar
+     * @param <T>
+     * @return
+     */
+    public static <T> Collection<T> subtract(Collection<T> src, Collection<T> tar) {
+        return org.apache.commons.collections4.CollectionUtils.subtract(src, tar);
+    }
+
+    /**
      * 获取map中keys对应的val值集合
      *
      * @param map
