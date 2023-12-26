@@ -16,6 +16,7 @@ import java.util.Date;
 public class Person {
     private long id;
     private String name;
+    private String sex;
     private int age;
     private BigDecimal score;
     private boolean alive;

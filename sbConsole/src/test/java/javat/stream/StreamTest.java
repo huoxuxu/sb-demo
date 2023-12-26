@@ -1,10 +1,16 @@
 package javat.stream;
 
 import com.hxx.sbConsole.SbConsoleApplication;
+import com.hxx.sbcommon.common.basic.OftenUtil;
+import com.hxx.sbcommon.common.basic.array.CollectionUtil;
+import com.hxx.sbcommon.common.basic.array.ComparatorUtil;
+import com.hxx.sbcommon.common.basic.text.StringUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.common.basic.datetime.LocalDateTimeUtil;
-import javat.models.Person;
+import com.hxx.sbcommon.model.KVPair;
+import models.Person;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArraySorter;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,9 +21,10 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.math.BigDecimal;
 
-import javat.models.Employee;
+import models.Employee;
 
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -133,72 +140,127 @@ public class StreamTest {
                 .forEach(System.out::println);
     }
 
+    private static final DecimalFormat df = new DecimalFormat("0.00");//保留两位小数点
+
+    @Test
+    public void minAndMax() {
+        List<Person> people = listPerson();
+        System.out.println(JsonUtil.toJSON(people));
+
+        {
+            people.get(0).setScore(null);
+            Person min = CollectionUtil.getMin(people, d -> d.getScore());
+            System.out.println(min);
+            Person max = CollectionUtil.getMax(people, d -> d.getScore());
+            System.out.println(max);
+        }
+        System.out.println("// BigDecimal");
+        {
+            BigDecimal min = CollectionUtil.getMinField(people, d -> d.getScore(), BigDecimal.ZERO);
+            System.out.println(min);
+
+            BigDecimal max = CollectionUtil.getMaxField(people, d -> d.getScore(), BigDecimal.ZERO);
+            System.out.println(max);
+
+            people = Arrays.asList(new Person());
+            BigDecimal sum = CollectionUtil.getSumBigDecimal(people, d -> d.getScore());
+            System.out.println(sum);
+
+            BigDecimal avg = CollectionUtil.getAvgBigDecimal(people, d -> d.getScore(), 2);
+            System.out.println(avg);
+        }
+        {
+            List<Integer> list = Arrays.asList(5, 2, 3, 1, 4);
+            System.out.println("数组元素最大值：" + list.stream().max(Integer::compareTo).get());
+            System.out.println("数组元素最小值：" + list.stream().min(Integer::compareTo).get());
+            System.out.println("数组中大于3的元素个数：" + list.stream().filter(x -> x > 3).count());
+        }
+
+        // BigDecimal
+        {
+            BigDecimal add1 = people.stream()
+                    .map(Person::getScore)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            System.out.println("身高 总和：" + df.format(add1));
+
+            Person maxModel = people.stream()
+                    .max(Comparator.comparing(Person::getScore))
+                    .orElse(null);
+            System.out.println("身高 最大：" + df.format(maxModel.getScore()));
+
+            Person minModel = people.stream()
+                    .min(Comparator.comparing(Person::getScore))
+                    .orElse(null);
+            System.out.println("身高 最小：" + df.format(minModel.getScore()));
+        }
+    }
+
     @Test
     public void Sorted() {
+        // 中文排序
+        {
+            String str = "中吉天津云仓,东丽军粮城,兴安盟乌兰浩特";
+            List<String> ls = StringUtil.splitByWholeSeparators(str, ",");
+            List<String> sls = CollectionUtil.sortList(ls, d -> d, true);
+            System.out.println(JsonUtil.toJSON(sls));
+            List<String> sls1 = CollectionUtil.sortListUseCollator(ls, d -> d, true);
+            System.out.println(JsonUtil.toJSON(sls1));
+            List<String> sls2 = CollectionUtil.sortListUseCollator(ls, d -> d, false);
+            System.out.println(JsonUtil.toJSON(sls2));
+        }
+
         List<Person> people = listPerson();
         {
             // 按成绩倒序+id正序
             System.out.println("按成绩倒序+id正序");
-            Comparator<Person> comp1 = Comparator.comparing(Person::getScore)
-                    .reversed()
-                    .thenComparing(Person::getId);
-            List<Person> data = people.stream()
-                    .sorted(comp1)
-                    .collect(Collectors.toList());
-            data.forEach(d -> {
-                System.out.println(d.getName() + "");
-            });
+            List<KVPair<Function<Person, Comparable>, Boolean>> comls = new ArrayList<>();
+            comls.add(new KVPair<>(Person::getScore, false));
+            comls.add(new KVPair<>(Person::getId, true));
+
+            people.sort(ComparatorUtil.get(comls));
+            System.out.println("people: " + JsonUtil.toJSON(people));
+            System.out.println("");
         }
         {
-            // 按成绩倒序+id正序 ls.sort()
-            System.out.println("按成绩倒序+id正序 ls.sort()");
-            Comparator<Person> comp1 = Comparator.comparing(Person::getScore)
-                    .reversed()
-                    .thenComparing(Person::getId);
-            people.sort(comp1);
-            people.forEach(d -> {
-                System.out.println(d.getName() + "");
-            });
+            // Date 排序
+            System.out.println("按Date类型正序");
+
+            people.sort(Comparator.comparing(Person::getBirthday));
+            System.out.println("people: " + JsonUtil.toJSON(people));
+            System.out.println("");
         }
 
         List<Employee> persons = listPersons();
 
-        Comparator<Employee> comparator = (o1, o2) -> {
-            int flag = o1.getBirthday()
-                    .compareTo(o2.getBirthday());
-            return flag;
-        };
-
-        // 正序
-        persons.stream()
-                .sorted(comparator)
-                .forEach(d -> System.out.println(d.getBirthday()));
-
-        System.out.println("===============================");
-
-        // 逆序
-        persons.stream()
-                .sorted(comparator.reversed())
-                .forEach(d -> System.out.println(d.getBirthday()));
-
         // 先按xx排序，后按xx排序
-        persons.stream()
-                .sorted(Comparator.comparing(Employee::getSalary)
-                        .thenComparing(Employee::getAge))
-                .map(Employee::getName)
-                .collect(Collectors.toList());
-
+        {
+            persons.stream()
+                    .sorted(Comparator.comparing(Employee::getSalary)
+                            .thenComparing(Employee::getAge))
+                    .map(Employee::getName)
+                    .collect(Collectors.toList());
+        }
         // 先按工资再按年龄自定义排序（降序）
-        persons.stream()
-                .sorted((p1, p2) -> {
-                    if (p1.getSalary() == p2.getSalary()) {
-                        return p2.getAge() - p1.getAge();
-                    } else {
-                        return p2.getSalary() - p1.getSalary();
-                    }
-                })
-                .map(Employee::getName)
-                .collect(Collectors.toList());
+        {
+            persons.stream()
+                    .sorted((p1, p2) -> {
+                        if (p1.getSalary() == p2.getSalary()) {
+                            return p2.getAge() - p1.getAge();
+                        } else {
+                            return p2.getSalary() - p1.getSalary();
+                        }
+                    })
+                    .map(Employee::getName)
+                    .collect(Collectors.toList());
+        }
+        {
+            List<KVPair<Function<Employee, Comparable>, Boolean>> comls = new ArrayList<>();
+            comls.add(new KVPair<>(Employee::getName, true));
+            comls.add(new KVPair<>(Employee::getAge, true));
+
+            persons.sort(ComparatorUtil.get(comls));
+            System.out.println("persons: " + persons);
+        }
 
         System.out.println("ok");
     }
@@ -351,6 +413,13 @@ public class StreamTest {
                             .mapToObj(name::charAt))
                     .forEach(System.out::println);
         }
+        List<Person> person = listPerson();
+        {
+            double average = person.stream()
+                    .mapToDouble(Person::getAge)
+                    .average()
+                    .orElse(0.0);
+        }
     }
 
     @Test
@@ -425,6 +494,18 @@ public class StreamTest {
 
     @Test
     public void CollectsMap() {
+        List<Person> people = listPerson();
+        {
+            // 注意：如果key有相同的数据，报错：java.lang.IllegalStateException: Duplicate key Person(id=2, name=
+            try {
+                Map<Integer, Person> map = people
+                        .stream()
+                        .collect(Collectors.toMap(Person::getAge, d -> d));
+                System.out.println(JsonUtil.toJSON(map));
+            } catch (Exception ex) {
+                System.out.println(ex + "");
+            }
+        }
         {
             Map<Long, String> idToNameMap = listPersons()
                     .stream()
@@ -458,6 +539,20 @@ public class StreamTest {
 
     @Test
     public void Group() {
+        List<Person> people = listPerson();
+        {
+            Map<String, Map<Integer, List<Person>>> group = people.stream()
+                    .collect(Collectors.groupingBy(Person::getSex, Collectors.groupingBy(Person::getAge)));
+            System.out.println("将学生按照性别、年龄分组：");
+            group.forEach((k, v) -> {
+                System.out.println(k + "：");
+                v.forEach((k1, v1) -> {
+                    System.out.print("      " + k1 + ":");
+                    v1.forEach(r -> System.out.print(r.getName() + ","));
+                    System.out.println();
+                });
+            });
+        }
         {
             // 单字段分组
             Map<Employee.Gender, List<Employee>> map = listPersons()
@@ -559,6 +654,19 @@ public class StreamTest {
     @Test
     public void Partitioning() {
         {
+            // 将学生按照考试成绩80分以上分区
+            List<Person> people = listPerson();
+            Map<Boolean, List<Person>> partitionByScore = people.stream()
+                    .collect(Collectors.partitioningBy(x -> x.getScore().compareTo(BigDecimal.valueOf(80L)) > 0));
+            System.out.println("将学生按照考试成绩80分以上分区：");
+            partitionByScore.forEach((k, v) -> {
+                System.out.print(k ? "80分以上：" : "80分以下：");
+                v.forEach(r -> System.out.print(r.getName() + ","));
+                System.out.println();
+            });
+            System.out.println();
+        }
+        {
             Map<Boolean, List<Employee>> partionedByMaleGender =
                     listPersons()//  w  w  w. ja v  a 2 s  . c  o m
                             .stream()
@@ -653,6 +761,53 @@ public class StreamTest {
 
     @Test
     public void Reduce() {
+        /*
+         * Optional<T> reduce(BinaryOperator<T> accumulator)
+         * T reduce(T identity, BinaryOperator<T> accumulator)
+         * <U> U reduce(U identity, BiFunction<U,? super T,U> accumulator, BinaryOperator<U> combiner)
+         * */
+        {
+            // 数组中每个元素加 1 后求总和
+            List<Integer> list = Arrays.asList(5, 2, 3, 1, 4);
+            int listSum = list.stream()
+                    .map(x -> x + 1)
+                    .reduce(0, (sum, b) -> sum + b);
+            System.out.println("数组中每个元素加 1 后总和：" + listSum);
+        }
+        // 求个数
+        {
+            long personCount = listPerson().stream()
+                    .reduce(0L, (partialCount, person) -> partialCount + 1L, Long::sum);
+            System.out.println(personCount);
+        }
+        {
+            // 找出最长的单词!
+            Stream<String> stream = Stream.of("I", "love", "you", "too");
+            Optional<String> longest = stream.reduce((s1, s2) -> s1.length() >= s2.length() ? s1 : s2);
+            //Optional<String> longest = stream.max((s1, s2) -> s1.length()-s2.length());
+            System.out.println(longest.get());
+        }
+        {
+            // 求单词长度之和
+            Stream<String> stream = Stream.of("I", "love", "you", "too");
+            Integer lengthSum = stream.reduce(0,// 初始值　// (1)
+                    (sum, str) -> sum + str.length(), // 累加器 // (2)
+                    (a, b) -> a + b);// 部分和拼接器，并行执行时才会用到 // (3)
+            // int lengthSum = stream.mapToInt(str -> str.length()).sum();
+            System.out.println(lengthSum);
+        }
+
+        {
+            List<Integer> list = Arrays.asList(5, 2, 3, 1, 4);
+            Optional<Integer> sum = list.stream().reduce((x, y) -> x + y);
+            System.out.println("数组元素之和：" + sum.get());
+
+            Optional<Integer> product = list.stream().reduce((x, y) -> x * y);
+            System.out.println("数组元素乘积：" + product.get());
+
+            Optional<Integer> max = list.stream().reduce((x, y) -> x > y ? x : y);
+            System.out.println("数组元素最大值：" + max.get());
+        }
         {
             List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
             int sum = numbers.stream()

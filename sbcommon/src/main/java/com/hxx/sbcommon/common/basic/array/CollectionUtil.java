@@ -257,6 +257,7 @@ public class CollectionUtil {
     public static <T, TField extends Comparable<TField>> T getMin(Collection<T> ls, Function<T, TField> fieldGetter) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
+                .filter(d -> fieldGetter.apply(d) != null)
                 .min(Comparator.comparing(fieldGetter))
                 .orElse(null);
     }
@@ -264,6 +265,7 @@ public class CollectionUtil {
     public static <T, TField extends Comparable<TField>> T getMax(Collection<T> ls, Function<T, TField> fieldGetter) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
+                .filter(d -> fieldGetter.apply(d) != null)
                 .max(Comparator.comparing(fieldGetter))
                 .orElse(null);
     }
@@ -280,6 +282,7 @@ public class CollectionUtil {
     public static <T, TField extends Comparable<TField>> TField getMinField(Collection<T> ls, Function<T, TField> fieldGetter, TField defaultVal) {
         T t = Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
+                .filter(d -> fieldGetter.apply(d) != null)
                 .min(Comparator.comparing(fieldGetter))
                 .orElse(null);
         return t == null ? defaultVal : fieldGetter.apply(t);
@@ -288,6 +291,7 @@ public class CollectionUtil {
     public static <T, TField extends Comparable<TField>> TField getMaxField(Collection<T> ls, Function<T, TField> fieldGetter, TField defaultVal) {
         T t = Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
+                .filter(d -> fieldGetter.apply(d) != null)
                 .max(Comparator.comparing(fieldGetter))
                 .orElse(null);
         return t == null ? defaultVal : fieldGetter.apply(t);
@@ -304,6 +308,7 @@ public class CollectionUtil {
     public static <T> BigDecimal getSumBigDecimal(Collection<T> ls, Function<T, BigDecimal> fieldGetter) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
+                .filter(d -> fieldGetter.apply(d) != null)
                 .map(fieldGetter)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
@@ -320,6 +325,9 @@ public class CollectionUtil {
     public static <T> BigDecimal getAvgBigDecimal(Collection<T> ls, Function<T, BigDecimal> fieldGetter, int scale) {
         int cou = ls == null ? 0 : ls.size();
         BigDecimal sum = getSumBigDecimal(ls, fieldGetter);
+        if (sum == null || cou == 0) {
+            return BigDecimal.ZERO;
+        }
         return sum.divide(BigDecimal.valueOf(cou), scale, RoundingMode.HALF_UP);
     }
 
