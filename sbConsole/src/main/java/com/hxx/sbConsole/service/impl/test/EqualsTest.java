@@ -1,5 +1,7 @@
 package com.hxx.sbConsole.service.impl.test;
 
+import com.hxx.sbcommon.common.basic.OftenUtil;
+
 import java.util.Objects;
 
 /**
@@ -25,5 +27,30 @@ public class EqualsTest {
         System.out.println(b1.equals(b));// true
         System.out.println(Objects.equals(a, b)); // true
         System.out.println(Objects.equals(b1, b)); // true
+
+        System.out.println("==============================");
+        {
+            Object obj = 1;
+            Object obj2 = (byte) 1;
+            System.out.println(Objects.equals(obj, obj2)); // false
+        }
+        {
+            Object obj = 126;
+            Object obj2 = (byte) 126;
+            System.out.println(Objects.equals(obj, obj2)); // false
+        }
+        System.out.println("==============================");
+        {
+            Object obj = 1;
+            Object obj2 = (byte) 1;
+            System.out.println(OftenUtil.equals(obj, obj2));
+        }
+        {
+            Object obj = 126;
+            Object obj2 = (byte) 126;
+            System.out.println(OftenUtil.equals(obj, obj2));
+        }
     }
+
+
 }

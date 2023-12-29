@@ -2,34 +2,38 @@ package com.hxx.sbConsole.service.impl.demo;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.hxx.sbConsole.commons.jwt.JWTUtil;
+import com.hxx.sbConsole.jwt.JWTUtil;
+import com.hxx.sbConsole.model.Person;
 import com.hxx.sbConsole.model.User;
 import com.hxx.sbcommon.common.basic.OftenUtil;
-import com.hxx.sbcommon.common.basic.text.RegexUtil;
+import com.hxx.sbcommon.common.basic.array.CollectionUtil;
 import com.hxx.sbcommon.common.basic.text.StringUtil;
 import com.hxx.sbcommon.common.hardware.NetUtil;
+import com.hxx.sbcommon.common.io.fileOrDir.PathUtil;
 import com.hxx.sbcommon.common.json.JsonUtil;
 import com.hxx.sbcommon.common.other.pageSeparate.GeneralPageable;
 import com.hxx.sbcommon.common.other.pageSeparate.PageSeparate;
 import com.hxx.sbcommon.common.other.pageSeparate.Pageable;
 import com.hxx.sbcommon.common.reflect.MethodSignature;
+import com.hxx.sbcommon.model.Result;
+import lombok.var;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
+import org.springframework.util.StopWatch;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.net.InetAddress;
-import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -37,10 +41,75 @@ import java.util.stream.Collectors;
  * @Description:
  * @Date: 2022-01-20 10:17:53
  **/
+@var
 @Service
 public class DemoService {
     public static void main(String[] args) {
         try {
+            {
+
+            }
+            {
+                Collection<String> src = Arrays.asList("1", "2", "3");
+                Collection<String> tar = Arrays.asList("1", "2", "4");
+                Collection<String> result = CollectionUtil.subtract(src, tar);
+                System.out.println(result);// 3
+            }
+            {
+                Result<Person> result = Result.success(null);
+                Long personId = Optional.ofNullable(result)
+                        .map(d -> d.isState() ? d.getData() : null)
+                        .map(d -> d.getId())
+                        .orElse(-999L);
+                System.out.println(personId);
+            }
+            {
+                String str = null;
+
+                String oe = Optional.ofNullable(str)
+                        .map(d -> d.trim())
+                        .map(d -> d.toLowerCase())
+                        .orElse("我是默认值");
+                System.out.println(oe);
+
+                OftenUtil.proc(str, d -> d.toLowerCase(), "1111");
+                String s = OftenUtil.proc(str, d -> d.trim(), "1111");
+                System.out.println(s);
+            }
+            {
+                var path = "d:/tmp/11";
+                boolean flag = PathUtil.checkAndMkDirs(path);
+                System.out.println(flag);
+            }
+            {
+                Long a = 999L;
+                Object b = 999;
+                System.out.println(OftenUtil.equals(a, b));
+
+                String s1 = StringUtils.substring("1234567890", 0, 100);
+                System.out.println(s1);
+            }
+            {
+                LocalDateTime modifiedOn = LocalDateTime.now().minusDays(3);
+                System.out.println(modifiedOn);
+            }
+            {
+                StopWatch sw = new StopWatch();
+                sw.start();
+                Thread.sleep(800);
+                if (sw.isRunning()) sw.stop();
+                if (sw.isRunning()) sw.stop();
+                System.out.println("cost:" + sw.getTotalTimeMillis());
+            }
+            {
+                Function<String, String> toUpperCase = str -> str.toUpperCase();
+                Function<String, String> multiplyByTwo = num -> num + "_" + num;
+
+                Function<String, String> doubleEachChar = toUpperCase.andThen(multiplyByTwo);
+                String result = "hello world";
+                String apply = doubleEachChar.apply(result);
+                System.out.println(apply);
+            }
             {
                 float num = new BigDecimal("45.6789614").floatValue();
                 String str = OftenUtil.NumberUtil.fmt2Str(num);
@@ -105,10 +174,9 @@ public class DemoService {
         System.out.println("System==================================================");
         {
             String item = null;
-            String s = OftenUtil.BasicUtil.procFieldNull(item, "");
-            s = OftenUtil.BasicUtil.procFieldNull(item, String::trim);
+            String s = OftenUtil.proc(item, String::trim, "");
             item = " 98 ";
-            s = OftenUtil.BasicUtil.procFieldNull(item, String::trim);
+            s = OftenUtil.proc(item, String::trim, "");
 
             System.out.println(s);
 
@@ -173,27 +241,27 @@ public class DemoService {
         {
             {
                 String str = "12a3456q09874560";
-                String str1 = OftenUtil.StringUtil.getEndNumber(str);
+                String str1 = StringUtil.getEndNumber(str);
                 System.out.println(str1);
             }
             {
                 {
-                    String cut = OftenUtil.StringUtil.cut("1", 1);
+                    String cut = StringUtil.cut("1", 1);
                     System.out.println(cut);
                 }
                 {
-                    String cut = OftenUtil.StringUtil.cut("ab", 1);
+                    String cut = StringUtil.cut("ab", 1);
                     System.out.println(cut);
                 }
                 {
-                    String cut = OftenUtil.StringUtil.cut("abc", 2);
+                    String cut = StringUtil.cut("abc", 2);
                     System.out.println(cut);
                 }
                 {
-                    String cut = OftenUtil.StringUtil.cut("12", 3);
+                    String cut = StringUtil.cut("12", 3);
                     System.out.println(cut);
                 }
-                String hxy = OftenUtil.StringUtil.lowerFirstChar("HXY");
+                String hxy = StringUtil.lowerFirstChar("HXY");
                 System.out.println(hxy);
             }
             {
@@ -212,10 +280,11 @@ public class DemoService {
                 List<String> ls = new ArrayList<>();
                 ls.add("0");
                 ls.add(null);
+                ls.add("");
                 ls.add("1");
-                Set<String> arr1 = OftenUtil.CollectionUtil.toFieldSet(ls, d -> d, false);
+                Set<String> arr1 = CollectionUtil.getFieldSet(ls, d -> d, d -> true);
                 System.out.println("arr1:" + JsonUtil.toJSON(arr1));
-                Set<String> arr2 = OftenUtil.CollectionUtil.toFieldSet(ls, d -> d, true);
+                Set<String> arr2 = CollectionUtil.getFieldSet(ls, d -> d, d -> d != null);
                 System.out.println("arr2:" + JsonUtil.toJSON(arr2));
             }
         }
@@ -362,9 +431,17 @@ public class DemoService {
             System.out.println("==================================================");
             // 获取硬件信息，慢！！！
             {
+                InetAddress ipv4 = NetUtil.getIPV4();
+                System.out.println(ipv4);
+                String localMac = NetUtil.getLocalMac();
+                System.out.println(localMac);
+
+                Map<String, String> allLocalMacs = NetUtil.getAllLocalMacs();
+                System.out.println(JsonUtil.toJSON(allLocalMacs));
+
                 List<InetAddress> ls = NetUtil.getIPV4InetAddress();
                 System.out.println(ls);
-                List<InetAddress> ls1 = NetUtil.getIPV4InetAddress("Intel");
+                List<InetAddress> ls1 = NetUtil.getIPV4InetAddress(Arrays.asList("Intel"));
                 System.out.println(ls1);
                 String localIP = NetUtil.getLocalIP();
                 System.out.println(localIP);

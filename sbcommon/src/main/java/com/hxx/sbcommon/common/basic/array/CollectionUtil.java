@@ -41,6 +41,7 @@ public class CollectionUtil {
      * @return
      */
     public static <T> List<T> toList(T[] array) {
+        // 可简单使用: Arrays.asList(array)
         List<T> resultList = new ArrayList<>(array.length);
         Collections.addAll(resultList, array);
 
