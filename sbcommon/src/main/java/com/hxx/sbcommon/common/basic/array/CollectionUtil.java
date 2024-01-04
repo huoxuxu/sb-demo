@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.Collator;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -370,6 +371,30 @@ public class CollectionUtil {
         Map<TK, TV> map = new HashMap<>();
         for (Map.Entry<TK, List<T>> entry : groupByMap.entrySet()) {
             map.put(entry.getKey(), groupByValFunc.apply(entry.getValue()));
+        }
+        return map;
+    }
+
+    /**
+     * 简单的分组
+     *
+     * @param ls
+     * @param filter
+     * @param groupByFunc
+     * @param groupByValFunc
+     * @param <T>
+     * @param <TK>
+     * @param <TV>
+     * @return
+     */
+    public static <T, TK, TV> Map<TK, TV> getGroupByMap(List<T> ls, Predicate<? super T> filter,
+                                                        Function<? super T, ? extends TK> groupByFunc,
+                                                        BiFunction<TK, ? super List<T>, ? extends TV> groupByValFunc) {
+        Map<TK, List<T>> groupByMap = getGroupByMap(ls, filter, groupByFunc);
+        Map<TK, TV> map = new HashMap<>();
+        for (Map.Entry<TK, List<T>> entry : groupByMap.entrySet()) {
+            TK key = entry.getKey();
+            map.put(key, groupByValFunc.apply(key, entry.getValue()));
         }
         return map;
     }
