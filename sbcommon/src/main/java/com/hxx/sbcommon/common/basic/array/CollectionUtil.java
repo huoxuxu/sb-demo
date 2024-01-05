@@ -116,7 +116,7 @@ public class CollectionUtil {
      * @param <TField>
      * @return
      */
-    public static <T, TField extends Comparable<TField>> List<T> sortList(List<T> ls, Function<T, TField> getOrderFieldFunc, boolean asc) {
+    public static <T, TField extends Comparable<TField>> List<T> sortList(Collection<T> ls, Function<T, TField> getOrderFieldFunc, boolean asc) {
         if (CollectionUtils.isEmpty(ls)) return new ArrayList<>();
 
         List<T> nullData = ls.stream()
@@ -143,7 +143,7 @@ public class CollectionUtil {
      * @param <TField>
      * @return
      */
-    public static <T, TField extends Comparable<TField>> List<T> sortListUseCollator(List<T> ls, Function<T, TField> getOrderFieldFunc, boolean asc) {
+    public static <T, TField extends Comparable<TField>> List<T> sortListUseCollator(Collection<T> ls, Function<T, TField> getOrderFieldFunc, boolean asc) {
         if (CollectionUtils.isEmpty(ls)) return new ArrayList<>();
 
         List<T> nullData = ls.stream()
@@ -173,7 +173,7 @@ public class CollectionUtil {
      * @param <TField>
      * @return
      */
-    public static <T, TField> List<TField> getFieldList(List<T> ls, Function<T, TField> fieldGetter, Predicate<TField> filterPred) {
+    public static <T, TField> List<TField> getFieldList(Collection<T> ls, Function<T, TField> fieldGetter, Predicate<TField> filterPred) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
                 .map(fieldGetter)
@@ -190,7 +190,7 @@ public class CollectionUtil {
      * @param <TField>
      * @return
      */
-    public static <T, TField> List<TField> getFieldList(List<T> ls, Function<T, TField> fieldGetter) {
+    public static <T, TField> List<TField> getFieldList(Collection<T> ls, Function<T, TField> fieldGetter) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
                 .map(fieldGetter)
@@ -206,7 +206,7 @@ public class CollectionUtil {
      * @param <TField>
      * @return
      */
-    public static <T, TField> Set<TField> getFieldSet(List<T> ls, Function<T, TField> getFieldFunc, Predicate<TField> filterPred) {
+    public static <T, TField> Set<TField> getFieldSet(Collection<T> ls, Function<T, TField> getFieldFunc, Predicate<TField> filterPred) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
                 .map(getFieldFunc)
@@ -223,7 +223,7 @@ public class CollectionUtil {
      * @param <TField>
      * @return
      */
-    public static <T, TField> Set<TField> getFieldSet(List<T> ls, Function<T, TField> getFieldFunc) {
+    public static <T, TField> Set<TField> getFieldSet(Collection<T> ls, Function<T, TField> getFieldFunc) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
                 .map(getFieldFunc)
@@ -239,7 +239,7 @@ public class CollectionUtil {
      * @param <TField>
      * @return
      */
-    public static <T, TField> SortedSet<TField> getFieldSortedSet(List<T> ls, Function<T, TField> fieldGetter, Predicate<TField> filterPred) {
+    public static <T, TField> SortedSet<TField> getFieldSortedSet(Collection<T> ls, Function<T, TField> fieldGetter, Predicate<TField> filterPred) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
                 .map(fieldGetter)
@@ -343,7 +343,7 @@ public class CollectionUtil {
      * @param <TK>
      * @return
      */
-    public static <T, TK> Map<TK, List<T>> getGroupByMap(List<T> ls, Predicate<? super T> filter, Function<? super T, ? extends TK> groupByFunc) {
+    public static <T, TK> Map<TK, List<T>> getGroupByMap(Collection<T> ls, Predicate<? super T> filter, Function<? super T, ? extends TK> groupByFunc) {
         if (filter == null) filter = (T t) -> true;
         return Optional.ofNullable(ls)
                 .orElse(new ArrayList<>())
@@ -364,7 +364,7 @@ public class CollectionUtil {
      * @param <TV>
      * @return
      */
-    public static <T, TK, TV> Map<TK, TV> getGroupByMap(List<T> ls, Predicate<? super T> filter,
+    public static <T, TK, TV> Map<TK, TV> getGroupByMap(Collection<T> ls, Predicate<? super T> filter,
                                                         Function<? super T, ? extends TK> groupByFunc,
                                                         Function<? super List<T>, ? extends TV> groupByValFunc) {
         Map<TK, List<T>> groupByMap = getGroupByMap(ls, filter, groupByFunc);
@@ -387,7 +387,7 @@ public class CollectionUtil {
      * @param <TV>
      * @return
      */
-    public static <T, TK, TV> Map<TK, TV> getGroupByMap(List<T> ls, Predicate<? super T> filter,
+    public static <T, TK, TV> Map<TK, TV> getGroupByMap(Collection<T> ls, Predicate<? super T> filter,
                                                         Function<? super T, ? extends TK> groupByFunc,
                                                         BiFunction<TK, ? super List<T>, ? extends TV> groupByValFunc) {
         Map<TK, List<T>> groupByMap = getGroupByMap(ls, filter, groupByFunc);
