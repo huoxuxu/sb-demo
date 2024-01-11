@@ -1,6 +1,8 @@
 package com.hxx.sbcommon.common.json;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;
@@ -10,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -82,6 +85,19 @@ public class JsonUtil {
      */
     public static <T> T parse(String json, Class<T> clazz) {
         return JSON.parseObject(json, clazz);
+    }
+
+    /**
+     * 解析json为Map
+     *
+     * @param json
+     * @param <K>
+     * @param <V>
+     * @return
+     */
+    public static <K, V> HashMap<K, V> parseMap(String json) {
+        return JSONObject.parseObject(json, new TypeReference<HashMap<K, V>>() {
+        });
     }
 
 
