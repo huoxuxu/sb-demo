@@ -28,8 +28,7 @@ public class CodecUtil {
 
     public static String encode(String str, String charset) {
         try {
-            String target = URLEncoder.encode(str, charset);
-            return target;
+            return URLEncoder.encode(str, charset);
         } catch (UnsupportedEncodingException var4) {
             throw new IllegalArgumentException("CodecUtil.encode编码异常" + str, var4);
         }
@@ -41,8 +40,7 @@ public class CodecUtil {
 
     public static String decode(String str, String charset) {
         try {
-            String target = URLDecoder.decode(str, charset);
-            return target;
+            return URLDecoder.decode(str, charset);
         } catch (UnsupportedEncodingException var4) {
             throw new IllegalArgumentException("CodecUtil.decode解码异常" + str, var4);
         }
@@ -95,14 +93,12 @@ public class CodecUtil {
     public static void byteArrayToFile(byte[] bytes, String filePath) throws IOException {
         InputStream in = new ByteArrayInputStream(bytes);
         File destFile = new File(filePath);
-        if (!destFile.getParentFile()
-                .exists()) {
-            destFile.getParentFile()
-                    .mkdirs();
+        if (!destFile.getParentFile().exists()) {
+            destFile.getParentFile().mkdirs();
         }
 
         if (destFile.createNewFile()) {
-            Files.copy(in, Paths.get(filePath), new CopyOption[]{StandardCopyOption.ATOMIC_MOVE});
+            Files.copy(in, Paths.get(filePath), StandardCopyOption.ATOMIC_MOVE);
         } else {
             throw new IOException("CREATE FILE ERROR FILENAME" + destFile.getName());
         }

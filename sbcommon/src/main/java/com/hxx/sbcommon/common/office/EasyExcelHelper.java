@@ -92,7 +92,7 @@ public class EasyExcelHelper {
     /**
      * 解析示例
      */
-    public class DemoAnalysisEventListener extends AnalysisEventListener<Map<Integer, Object>> {
+    public static class DemoAnalysisEventListener extends AnalysisEventListener<Map<Integer, Object>> {
 
         private int startRowIndex = 1;
         private int startCellIndex = 0;

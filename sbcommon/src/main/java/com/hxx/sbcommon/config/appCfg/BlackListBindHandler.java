@@ -37,18 +37,15 @@ public class BlackListBindHandler extends AbstractBindHandler {
     @Override
     public <T> Bindable<T> onStart(ConfigurationPropertyName name, Bindable<T> target, BindContext context) {
         if (checkBlackList(name.toString())) {
-            logger.info("property name : {} hits black list. result {}", name.toString());
+            logger.info("property name : {} hits black list.", name);
             return null;
         }
         return super.onStart(name, target, context);
     }
 
     private boolean checkBlackList(String propertyName) {
-        boolean result = blacklist.stream()
-                .filter(exclude -> exclude.equals(propertyName))
-                .findAny()
-                .isPresent();
-        return result;
+        return blacklist.stream()
+                .anyMatch(exclude -> exclude.equals(propertyName));
     }
 
 }

@@ -130,7 +130,6 @@ public class HttpApiClient {
             long cost = sw.getTotalTimeMillis();
             log.error("访问外部接口网络超时：{} [耗时：{}] {}", url, cost, ExceptionUtils.getStackTrace(e));
             throw new IllegalStateException("访问外部接口网络超时！[耗时：" + cost + "ms]", e);
-        } finally {
         }
     }
 

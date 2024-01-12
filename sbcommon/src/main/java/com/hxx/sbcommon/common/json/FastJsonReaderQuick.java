@@ -34,12 +34,10 @@ public class FastJsonReaderQuick implements Closeable {
 
     @Override
     public void close() {
-        if (reader != null) {
-            try {
-                reader.close();
-            } catch (Exception ignore) {
+        try {
+            reader.close();
+        } catch (Exception ignore) {
 
-            }
         }
     }
 

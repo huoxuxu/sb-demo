@@ -62,6 +62,21 @@ public class CollectionUtil {
     }
 
     /**
+     * 移除集合中，满足指定条件的项
+     *
+     * @param list
+     * @param delPred
+     * @param <T>
+     */
+    public static <T> void remove(List<T> list, Predicate<T> delPred) {
+        for (int i = list.size() - 1; i > -1; i--) {
+            if (delPred.test(list.get(i))) {
+                list.remove(list.get(i));
+            }
+        }
+    }
+
+    /**
      * 分区消费
      *
      * @param ls
@@ -412,8 +427,7 @@ public class CollectionUtil {
         if (CollectionUtils.isEmpty(src) || CollectionUtils.isEmpty(tar)) {
             return new HashSet<>();
         }
-        return Optional.ofNullable(src).orElse(new ArrayList<>())
-                .stream()
+        return src.stream()
                 .filter(d -> tar.contains(d))
                 .collect(Collectors.toSet());
     }

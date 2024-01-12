@@ -23,15 +23,13 @@ public class DigestUtil {
 
     public static String encryptBASE64(byte[] md5) throws Exception {
         Base64.Encoder encoder = Base64.getEncoder();
-        String encode = encoder.encodeToString(md5);
-        return encode;
+        return encoder.encodeToString(md5);
     }
 
     public static String digest(String data, String sign, String charset) throws Exception {
         String t = encryptBASE64(encryptMD5((data + sign).getBytes(charset)));
         if ("\n".equals(System.getProperty("line.separator"))) {
-            String t2 = t.replaceAll("\\n", "\r\n");
-            return t2;
+            return t.replaceAll("\\n", "\r\n");
         } else {
             return t;
         }

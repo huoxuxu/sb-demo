@@ -20,7 +20,9 @@ public class BCD8421Util {
             // 低四位
             temp.append(bytes[i] & 0x0f);
         }
-        return temp.toString().substring(0, 1).equalsIgnoreCase("0") ? temp.toString().substring(1) : temp.toString();
+        return temp.substring(0, 1).equalsIgnoreCase("0")
+                ? temp.substring(1)
+                : temp.toString();
     }
 
     /**

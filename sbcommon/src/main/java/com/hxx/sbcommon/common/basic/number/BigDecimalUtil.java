@@ -15,8 +15,7 @@ public class BigDecimalUtil {
      * @return
      */
     public static BigDecimal ROUND_DOWN(BigDecimal b, int scale) {
-        BigDecimal val = b.setScale(scale, BigDecimal.ROUND_DOWN);
-        return val;
+        return b.setScale(scale, BigDecimal.ROUND_DOWN);
     }
 
     /**
@@ -27,8 +26,7 @@ public class BigDecimalUtil {
      * @return
      */
     public static BigDecimal ROUND_HALF_UP(BigDecimal b, int scale) {
-        BigDecimal val = b.setScale(scale, BigDecimal.ROUND_HALF_UP);
-        return val;
+        return b.setScale(scale, BigDecimal.ROUND_HALF_UP);
     }
 
     /**
@@ -44,7 +42,7 @@ public class BigDecimalUtil {
             return BigDecimal.ZERO;
         }
         BigDecimal bd = b.multiply(BigDecimal.valueOf(100));
-        return bd.setScale(scale, BigDecimal.ROUND_HALF_UP);
+        return bd.setScale(scale, RoundingMode.HALF_UP);
     }
 
     /**

@@ -38,18 +38,20 @@ public class HttpClientProxyUtil {
         credsProvider.setCredentials(
                 new AuthScope(proxyHost, proxyPort),
                 new UsernamePasswordCredentials(username, password));
-        CloseableHttpClient client = HttpClients.custom()
+        CloseableHttpResponse closeableHttpResponse;
+        try (CloseableHttpClient client = HttpClients.custom()
                 .setDefaultCredentialsProvider(credsProvider)
-                .build();
-        HttpHost proxy = new HttpHost(proxyHost, proxyPort);
+                .build()) {
+            HttpHost proxy = new HttpHost(proxyHost, proxyPort);
 
-        HttpPost httpPost = new HttpPost(url);
-        RequestConfig config = RequestConfig.custom()
-                .setProxy(proxy)
-                .build();
-        httpPost.setConfig(config);
+            HttpPost httpPost = new HttpPost(url);
+            RequestConfig config = RequestConfig.custom()
+                    .setProxy(proxy)
+                    .build();
+            httpPost.setConfig(config);
 
-        CloseableHttpResponse closeableHttpResponse = client.execute(httpPost);
+            closeableHttpResponse = client.execute(httpPost);
+        }
         return EntityUtils.toString(closeableHttpResponse.getEntity());
     }
 

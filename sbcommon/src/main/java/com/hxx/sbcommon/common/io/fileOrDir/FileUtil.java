@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -66,7 +67,7 @@ public class FileUtil {
         int size = (int) file.length();
         byte[] data = new byte[size];
 
-        try (InputStream is = new FileInputStream(file)) {
+        try (InputStream is = Files.newInputStream(file.toPath())) {
             int offset = 0;
             while (offset < size) {
                 int ret = is.read(data, offset, size - offset);
@@ -88,8 +89,8 @@ public class FileUtil {
      * @return
      * @throws FileNotFoundException
      */
-    public static InputStream getFileStream(File file) throws FileNotFoundException {
-        return new FileInputStream(file);
+    public static InputStream getFileStream(File file) throws IOException {
+        return Files.newInputStream(file.toPath());
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.hxx.sbcommon.common.intervalJob;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -9,10 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -32,7 +30,7 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
     private static final ThreadPoolExecutor threadPool;
     // 内置数据
-    private static Map<String, Object> RUNNING_DATA = new HashMap<>();
+    private static final Map<String, Object> RUNNING_DATA = new HashMap<>();
 
     static {
         // 创建一个线程池对象
@@ -92,8 +90,8 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
     public static void process() {
         log.debug("调度start...");
         Map<String, BaseIntervalJob> beans = applicationContext.getBeansOfType(BaseIntervalJob.class);
-        log.debug("找到Job个数：{}", beans == null ? 0 : beans.size());
-        if (beans == null || beans.isEmpty()) {
+        log.debug("找到Job个数：{}", Optional.ofNullable(beans).map(d -> d.size()).orElse(0));
+        if (MapUtils.isEmpty(beans)) {
             return;
         }
 
@@ -145,7 +143,7 @@ public class IntervalJobDispatcher implements ApplicationContextAware {
     @Slf4j
     static class InternalIntervalJobHandler implements BaseIntervalJobExecutorHandler {
         // job运行map，key=job val=job上次运行完成时间
-        private static Map<String, LocalDateTime> runMap = new HashMap<>();
+        private static final Map<String, LocalDateTime> runMap = new HashMap<>();
         // 如果超过n 秒，则警告
         private static final int WARN_RUN_SECOND = 5 * 60;
 

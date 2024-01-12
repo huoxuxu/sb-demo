@@ -1,6 +1,7 @@
 package com.hxx.sbConsole.service.impl.demo.io;
 
 import com.hxx.sbcommon.common.basic.OftenUtil;
+import com.hxx.sbcommon.common.io.cfg.ResourcesUtil;
 import com.hxx.sbcommon.common.io.fileOrDir.FileUtil;
 import com.hxx.sbcommon.common.io.fileOrDir.PathUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +21,14 @@ import java.util.List;
 public class DemoIOServiceImpl {
     public static void main(String[] args) {
         try {
+            {
+                {
+                    String path="demo/1.txt";
+//                    path="classpath:";
+                    String str1 = ResourcesUtil.readString(path);
+                    System.out.println(str1);
+                }
+            }
             PathUtil_Demo();
             case1();
             demo();

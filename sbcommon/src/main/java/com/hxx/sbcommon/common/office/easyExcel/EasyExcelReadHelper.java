@@ -9,6 +9,8 @@ import com.alibaba.excel.read.metadata.ReadSheet;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,12 +25,12 @@ import java.util.stream.Collectors;
 public class EasyExcelReadHelper implements AutoCloseable {
 
     private InputStream excelInputStream;
-    private ExcelReader excelReader;
+    private final ExcelReader excelReader;
 
-    private AnalysisEventListenerImpl<Object> listener = new AnalysisEventListenerImpl<>();
+    private final AnalysisEventListenerImpl<Object> listener = new AnalysisEventListenerImpl<>();
 
-    public EasyExcelReadHelper(String excelPath) throws FileNotFoundException {
-        this.excelInputStream = new FileInputStream(excelPath);
+    public EasyExcelReadHelper(String excelPath) throws IOException {
+        this.excelInputStream = Files.newInputStream(Paths.get(excelPath));
         this.excelReader = EasyExcel.read(this.excelInputStream, listener).build();
     }
 
@@ -45,7 +47,7 @@ public class EasyExcelReadHelper implements AutoCloseable {
      * @return
      * @throws Exception
      */
-    public <T> List<T> readSheet(int sheetIndex, Class voCls) throws Exception {
+    public <T> List<T> readSheet(int sheetIndex, Class voCls) {
         // 清理读取器中的数据
         listener.getData().clear();
 
@@ -71,7 +73,7 @@ public class EasyExcelReadHelper implements AutoCloseable {
 
     public static class AnalysisEventListenerImpl<T> extends AnalysisEventListener<T> {
 
-        private List<T> data = new ArrayList<>();
+        private final List<T> data = new ArrayList<>();
 
         public List<T> getData() {
             return data;
