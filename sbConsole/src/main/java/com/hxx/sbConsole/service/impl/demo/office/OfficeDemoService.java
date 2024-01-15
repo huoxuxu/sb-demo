@@ -2,16 +2,14 @@ package com.hxx.sbConsole.service.impl.demo.office;
 
 import com.hxx.sbConsole.module.easyExcel.EasyExcelDemo2;
 import com.hxx.sbConsole.service.impl.CommonDataService;
-import com.hxx.sbcommon.common.io.cfg.ResourcesUtil;
 import com.hxx.sbcommon.common.io.fileOrDir.FileUtil;
-import com.hxx.sbcommon.common.office.poi.POIExcelUseful;
+import com.hxx.sbcommon.common.office.poi.POIExcelReadUseful;
 import com.hxx.sbcommon.common.office.poi.POIExcelWriteUseful;
 import com.hxx.sbcommon.common.reflect.BeanInfoUtil;
 import com.hxx.sbcommon.common.reflect.ReflectUseful;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -73,7 +71,7 @@ public class OfficeDemoService {
         String fileName = "d:/tmp/poi-write-demo.xlsx";
         File excel = new File(fileName);
         InputStream iptStream = FileUtil.getFileStream(excel);
-        try (POIExcelUseful POIExcelUseful = new POIExcelUseful(fileName, iptStream)) {
+        try (POIExcelReadUseful POIExcelUseful = new POIExcelReadUseful(fileName, iptStream)) {
             POIExcelUseful.parseExcelRows(0, 0, 9, row -> {
                 System.out.println(String.join(" ", row.getItemArray()));
             });

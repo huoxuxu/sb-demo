@@ -20,7 +20,7 @@ public abstract class BaseIntervalJob implements Runnable {
     protected String jobCode;
 
     // 间隔，秒
-    private long intervalSecond;
+    private final long intervalSecond;
 
     // Task是否运行
     private volatile boolean running;

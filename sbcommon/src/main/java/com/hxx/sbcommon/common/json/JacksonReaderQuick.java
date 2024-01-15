@@ -84,8 +84,7 @@ public class JacksonReaderQuick {
 
                                         fieldName = parser.getCurrentName();
                                         jsonToken = parser.nextToken();
-                                        Object v = null;
-                                        v = parser.getText();
+                                        Object v = parser.getText();
                                         switch (jsonToken) {
                                             case START_OBJECT:
                                             case END_OBJECT:

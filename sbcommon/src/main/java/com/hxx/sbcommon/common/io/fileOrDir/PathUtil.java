@@ -59,8 +59,7 @@ public class PathUtil {
      * @return
      */
     public static String getTmpPath() {
-        String tmpPath = System.getProperty("java.io.tmpdir");
-        return tmpPath;
+        return System.getProperty("java.io.tmpdir");
     }
 
     /**

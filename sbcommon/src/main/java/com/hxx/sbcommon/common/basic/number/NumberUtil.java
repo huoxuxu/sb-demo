@@ -27,10 +27,10 @@ public class NumberUtil {
 
         // 去除小数点后无意义零
         if (val == val.intValue()) {
-            return val.intValue() + "";
+            return String.valueOf(val.intValue());
         }
 
-        return val + "";
+        return String.valueOf(val);
     }
 
     /**

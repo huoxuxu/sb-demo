@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Slf4j
 public class JsonUtil {
-    private static SerializeConfig config;
+    private static final SerializeConfig config;
 
     static {
         config = new SerializeConfig();
@@ -31,7 +31,8 @@ public class JsonUtil {
         config.put(Timestamp.class, df);
     }
 
-    private static final SerializerFeature[] FEATURES = {SerializerFeature.WriteMapNullValue,// 输出空置字段
+    private static final SerializerFeature[] FEATURES = {
+            SerializerFeature.WriteMapNullValue,// 输出空置字段
             SerializerFeature.WriteNullListAsEmpty,// list字段如果为null，输出为[]，而不是null
             SerializerFeature.WriteNullNumberAsZero,// 数值字段如果为null，输出为0，而不是null
             SerializerFeature.WriteNullBooleanAsFalse,// Boolean字段如果为null，输出为false，而不是null

@@ -22,24 +22,24 @@ public class StringTypeHandler implements LangTypeHandler<String> {
 
         // 整型
         if (val instanceof Byte) {
-            return String.valueOf((Byte) val);
+            return String.valueOf(val);
         }
         if (val instanceof Short) {
-            return String.valueOf((Short) val);
+            return String.valueOf(val);
         }
         if (val instanceof Integer) {
-            return String.valueOf((Integer) val);
+            return String.valueOf(val);
         }
         if (val instanceof Long) {
-            return String.valueOf((Long) val);
+            return String.valueOf(val);
         }
 
         // 浮点型
         if (val instanceof Float) {
-            return String.valueOf((Float) val);
+            return String.valueOf(val);
         }
         if (val instanceof Double) {
-            return String.valueOf((Double) val);
+            return String.valueOf(val);
         }
         if (val instanceof BigDecimal) {
             return ((BigDecimal) val).stripTrailingZeros()
@@ -56,7 +56,7 @@ public class StringTypeHandler implements LangTypeHandler<String> {
             return (String) val;
         }
 
-        return val + "";
+        return String.valueOf(val);
 //        throw new IllegalArgumentException("转换类型失败，提供值：" + val);
     }
 }

@@ -5,7 +5,7 @@ import com.alibaba.excel.metadata.Head;
 import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteTableHolder;
-import com.hxx.sbcommon.common.office.poi.POIExcelUseful;
+import com.hxx.sbcommon.common.office.poi.POIExcelReadUseful;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -147,7 +147,7 @@ public class MergeCellHandler implements CellWriteHandler {
 
     private String getCellVal(Cell cell) {
         try {
-            String cellValue = POIExcelUseful.getCellValue(cell);
+            String cellValue = POIExcelReadUseful.getCellValue(cell);
             return cellValue;
         } catch (Exception ex) {
             return null;

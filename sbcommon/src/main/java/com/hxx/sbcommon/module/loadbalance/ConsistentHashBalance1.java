@@ -20,9 +20,9 @@ public class ConsistentHashBalance1 {
         return consistentHashSelector.select(clientIP);
     }
 
-    private class ConsistentHashSelector {
-        private Integer identityHashCode;
-        private TreeMap<Integer, MyServer> serverNodes = new TreeMap<>();
+    private static class ConsistentHashSelector {
+        private final Integer identityHashCode;
+        private TreeMap<Integer, MyServer> serverNodes;
 
         // 构建哈希环
         public ConsistentHashSelector(Integer identityHashCode, List<MyServer> serverList) {
@@ -66,7 +66,7 @@ public class ConsistentHashBalance1 {
     private void initialConsistentHashSelector(List<MyServer> serverList) {
 
         // 计算提供者列表哈希值
-        Integer newIdentityHashCode = System.identityHashCode(serverList);
+        int newIdentityHashCode = System.identityHashCode(serverList);
 
         // 提供者列表哈希值没有变化则无需重新构建哈希环
         if (null != consistentHashSelector && (null != consistentHashSelector.getIdentityHashCode() && newIdentityHashCode == consistentHashSelector.getIdentityHashCode())) {

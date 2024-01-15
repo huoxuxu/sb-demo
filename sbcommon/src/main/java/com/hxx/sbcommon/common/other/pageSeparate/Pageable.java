@@ -1,5 +1,7 @@
 package com.hxx.sbcommon.common.other.pageSeparate;
 
+import lombok.Data;
+
 /**
  * 分页
  *
@@ -7,7 +9,7 @@ package com.hxx.sbcommon.common.other.pageSeparate;
  * @Description:
  * @Date: 2023-04-15 11:28:54
  **/
-@lombok.Data
+@Data
 public class Pageable {
 
     private int skip;

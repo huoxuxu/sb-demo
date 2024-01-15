@@ -238,7 +238,7 @@ public class ApacheHttpClientSimpleUseful {
         public static CloseableHttpClient createHttpClient(int poolMaxTotal, int poolDefaultMaxPerRoute, int maxIdleSecond,
                                                            int connectionRequestTimeout, int connectTimeout, int socketTimeout,
                                                            String proxyHost, int proxyPort) {
-            RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.<ConnectionSocketFactory>create();
+            RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.create();
             ConnectionSocketFactory plainSF = new PlainConnectionSocketFactory();
             registryBuilder.register("http", plainSF);
             // 指定信任密钥存储对象和连接套接字工厂
@@ -280,7 +280,8 @@ public class ApacheHttpClientSimpleUseful {
                 HttpHost proxy = new HttpHost(proxyHost, proxyPort, "http");
                 routePlanner = new DefaultProxyRoutePlanner(proxy);
             }
-            CloseableHttpClient httpClient = HttpClientBuilder.create()
+
+            return HttpClientBuilder.create()
                     // 代理
                     .setRoutePlanner(routePlanner)
                     // 连接池
@@ -290,8 +291,6 @@ public class ApacheHttpClientSimpleUseful {
                     .evictExpiredConnections()
                     .evictIdleConnections(maxIdleSecond, TimeUnit.SECONDS)
                     .build();
-
-            return httpClient;
         }
 
         /**
@@ -374,7 +373,7 @@ public class ApacheHttpClientSimpleUseful {
          * @param autoCloseResponse 是否自动关闭响应
          * @throws IOException
          */
-        public HttpApiResp(String url, CloseableHttpResponse response, boolean autoCloseResponse) throws IOException {
+        public HttpApiResp(String url, CloseableHttpResponse response, boolean autoCloseResponse) {
             this.url = url;
             this.response = response;
             this.autoCloseResponse = autoCloseResponse;

@@ -20,7 +20,7 @@ import java.util.Date;
  **/
 @Slf4j
 public class DateTypeHandler implements LangTypeHandler<Date> {
-    private SimpleDateFormat dateTimeFormatter;
+    private final SimpleDateFormat dateTimeFormatter;
 
     /**
      * 默认 yyyy-MM-dd HH:mm:ss

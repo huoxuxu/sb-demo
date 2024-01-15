@@ -240,10 +240,7 @@ public class RSAUtil {
         if (map == null) {
             return null;
         }
-        Map<String, Object> result = new TreeMap<>((Comparator<String>) (o1, o2) -> {
-            return o1.compareTo(o2);
-        });
-        result.putAll(map);
+        Map<String, Object> result = new TreeMap<>(map);
         return result;
     }
 

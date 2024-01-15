@@ -24,8 +24,6 @@ public class PropertiesUtil {
             prop.load(fis);
             return prop.getProperty(propKey);
 
-        } catch (Exception e) {
-            throw e;
         }
     }
 

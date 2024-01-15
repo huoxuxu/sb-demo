@@ -34,14 +34,13 @@ public class PackageScanUtil {
     public static <T> List<Class<T>> getAllClassByInterface(Class<T> clazz) {
         List<Class<T>> list = new ArrayList<>();
         try {
-            List<Class> allClass = getAllClass(clazz.getPackage().getName());
+            List<Class<?>> allClass = getAllClass(clazz.getPackage().getName());
             // 循环判断路径下的所有类是否实现了指定的接口 并且排除接口类自己
-
             for (int i = 0; i < allClass.size(); i++) {
                 if (clazz.isAssignableFrom(allClass.get(i))) {
                     if (!clazz.equals(allClass.get(i))) {
                         // 自身并不加进去
-                        list.add(allClass.get(i));
+                        list.add((Class<T>) allClass.get(i));
                     }
                 }
             }
@@ -52,54 +51,23 @@ public class PackageScanUtil {
     }
 
     /**
-     * 根据类接口查到所有的class
-     *
-     * @param clazz 接口文件
-     * @return class
-     */
-    public static List<Class> getAllClassByAnnotation(Class clazz) {
-        try {
-            List<Class> allClass = getAllClass(clazz.getPackage().getName());
-            return allClass.stream().filter((a) -> {
-                return a.isAnnotationPresent(clazz);
-            }).collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * 根据类接口查到所有的class(指定包名)
-     *
-     * @param clazz 接口文件
-     * @return class
-     */
-    public static List<Class> getAllClassByAnnotation(Class clazz, String packageName) {
-        try {
-            List<Class> allClass = getAllClass(packageName);
-            return allClass.stream().filter((a) -> {
-                return a.isAnnotationPresent(clazz);
-            }).collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
      * 从一个指定路径下查找所有的类
      *
      * @param packagename
      */
-    private static List<Class> getAllClass(String packagename) {
+    private static List<Class<?>> getAllClass(String packagename) {
         List<String> classNameList = getClassPathsByPackage(packagename);
-        List<Class> list = classNameList.stream().map((b) -> {
-            try {
-                return Class.forName(b);
-            } catch (Throwable e) {
-                return null;
-            }
-        }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
-        return list;
+        return classNameList.stream()
+                .map((b) -> {
+                    try {
+                        return Class.forName(b);
+                    } catch (Throwable e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     /**

@@ -508,7 +508,7 @@ public class OftenUtil {
 
             // 去除小数点后全是零的情况
             if (val == val.intValue()) {
-                return val.intValue() + "";
+                return String.valueOf(val.intValue());
             }
 
             return fmt2Str(new BigDecimal(val));
@@ -916,9 +916,8 @@ public class OftenUtil {
          * @return
          */
         public static int nextRandomVal(int origin, int bound) {
-            int randomVal = ThreadLocalRandom.current()
+            return ThreadLocalRandom.current()
                     .nextInt(origin, bound);
-            return randomVal;
         }
 
         /**
@@ -929,9 +928,8 @@ public class OftenUtil {
          * @return
          */
         public static int nextRandomVal(int bound) {
-            int randomVal = ThreadLocalRandom.current()
+            return ThreadLocalRandom.current()
                     .nextInt(0, bound);
-            return randomVal;
         }
     }
 

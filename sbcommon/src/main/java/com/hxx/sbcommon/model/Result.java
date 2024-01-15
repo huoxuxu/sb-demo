@@ -40,11 +40,11 @@ public class Result<T> {
     }
 
     public static <T> Result<T> success(T data) {
-        return new Result<>(ResultEnum.SUCCESS + "", ResultEnum.SUCCESS.getName(), data);
+        return new Result<>(String.valueOf(ResultEnum.SUCCESS), ResultEnum.SUCCESS.getName(), data);
     }
 
     public static <T> Result<T> success(String message, T data) {
-        return new Result<>(ResultEnum.SUCCESS + "", message, data);
+        return new Result<>(String.valueOf(ResultEnum.SUCCESS), message, data);
     }
 
     /**
@@ -84,7 +84,7 @@ public class Result<T> {
      * @return
      */
     public static Result<?> failed(ResultEnum errorResult, String message) {
-        return new Result<>(errorResult + "", message, null);
+        return new Result<>(String.valueOf(errorResult), message, null);
     }
 
 }

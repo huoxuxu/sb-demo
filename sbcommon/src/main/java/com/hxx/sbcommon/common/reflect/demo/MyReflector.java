@@ -52,12 +52,10 @@ public class MyReflector {
 
         this.addFields(clazz);
 
-        this.readablePropertyNames = (String[]) this.getMethods.keySet()
-                .toArray(new String[this.getMethods.keySet()
-                        .size()]);
-        this.writeablePropertyNames = (String[]) this.setMethods.keySet()
-                .toArray(new String[this.setMethods.keySet()
-                        .size()]);
+        this.readablePropertyNames = this.getMethods.keySet()
+                .toArray(new String[this.getMethods.keySet().size()]);
+        this.writeablePropertyNames = this.setMethods.keySet()
+                .toArray(new String[this.setMethods.keySet().size()]);
     }
 
 
@@ -65,7 +63,7 @@ public class MyReflector {
         Map<String, List<Method>> getterMap = new HashMap<>();
         Method[] methods = this.getClassMethods(cls);
         for (Method method : methods) {
-            if (method.getParameterTypes().length <= 0) {
+            if (method.getParameterTypes().length == 0) {
                 String name = method.getName();
                 if ((name.startsWith("get") && name.length() > 3) || (name.startsWith("is") && name.length() > 2)) {
                     name = PropertyNamer.methodToProperty(name);
@@ -78,7 +76,7 @@ public class MyReflector {
     }
 
     private void resolveGetterConflicts(Map<String, List<Method>> getterMap) {
-        getterMap.forEach((propName,getters)->{
+        getterMap.forEach((propName, getters) -> {
             Method winner = null;
             for (Method getter : getters) {
                 if (winner == null) {
@@ -157,7 +155,7 @@ public class MyReflector {
                 }
             }
 
-            if (match == null) {
+            if (match == null && exception != null) {
                 throw exception;
             }
 

@@ -25,8 +25,7 @@ public class ProcessUtil {
      * @throws IOException
      */
     public static Process exec(String cmdTxt) throws IOException {
-        Process process = CurrentRuntime.exec(cmdTxt);
-        return process;
+        return CurrentRuntime.exec(cmdTxt);
     }
 
     /**
@@ -38,8 +37,7 @@ public class ProcessUtil {
      */
     public static int runCmdTxt(String cmdTxt) throws IOException {
         Process process = exec(cmdTxt);
-        int exitValue = process.exitValue();
-        return exitValue;
+        return process.exitValue();
     }
 
 }

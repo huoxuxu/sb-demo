@@ -34,7 +34,7 @@ public enum ResultEnum {
 
     private final String name;
 
-    private static Map<Integer, ResultEnum> codeLookup = new HashMap<>();
+    private static final Map<Integer, ResultEnum> codeLookup = new HashMap<>();
 
     static {
         for (ResultEnum val : values()) {

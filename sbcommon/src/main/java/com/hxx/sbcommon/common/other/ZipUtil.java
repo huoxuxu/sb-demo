@@ -23,10 +23,7 @@ public class ZipUtil {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             try (GZIPOutputStream os = new GZIPOutputStream(bos)) {
                 os.write(str.getBytes());
-                os.close();
-                bos.close();
-                byte[] bs = bos.toByteArray();
-                return new String(bs, "iso-8859-1");
+                return bos.toString("iso-8859-1");
             }
         }
     }
@@ -49,7 +46,7 @@ public class ZipUtil {
                         bos.write(buf, 0, len);
                     }
 
-                    return new String(bos.toByteArray());
+                    return bos.toString();
                 }
             }
         }

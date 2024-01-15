@@ -3,9 +3,8 @@ package com.hxx.sbcommon.common.basic.text;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author: huoxuxu
@@ -103,15 +102,13 @@ public class StringUtil {
     public static String[] splitFirst(String str, String splitStr) {
         int i = str.indexOf(splitStr);
         if (i == -1) {
-            String[] arr = {str, ""};
-            return arr;
+            return new String[]{str, ""};
         } else {
             String v = "";
             if (str.length() > i + 1) {
                 v = str.substring(i + 1);
             }
-            String[] arr = {str.substring(0, i), v};
-            return arr;
+            return new String[]{str.substring(0, i), v};
         }
     }
 
@@ -193,7 +190,7 @@ public class StringUtil {
         if (StringUtils.isBlank(str)) return new ArrayList<>();
 
         if (splitStrs == null || splitStrs.length == 0) {
-            return new ArrayList<>(Arrays.asList(str));
+            return new ArrayList<>(Collections.singletonList(str));
         }
 
         List<String> ls = new ArrayList<>();
@@ -206,8 +203,7 @@ public class StringUtil {
                     }
                 }
             } else {
-                List<String> result = splits(ls, splitStr);
-                ls = result;
+                ls = splits(ls, splitStr);
             }
         }
         return ls;

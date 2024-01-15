@@ -21,16 +21,28 @@ public class ResourcesUtil {
      * 读取resources下的文件
      * 如：tmp/parkInfo.json
      *
-     * @param fileName
+     * @param fileName tmp/parkInfo.json 注意，不要带classpath
      * @return
      * @throws IOException
      */
     public static String readString(String fileName) throws IOException {
-        InputStream in = ResourcesUtil.class.getResourceAsStream("/" + fileName);
-        if (in == null) return null;
+        if (fileName.startsWith("classpath:")) {
+            if (fileName.length() > 10) {
+                fileName = fileName.substring(10);
+            } else {
+                throw new IOException("输入文件格式错误！" + fileName);
+            }
+        } else if (!fileName.startsWith("/")) {
+            fileName = "/" + fileName;
+        }
+        try (InputStream in = ResourcesUtil.class.getResourceAsStream(fileName)) {
+            if (in == null) {
+                return null;
+            }
+            try (InputStreamReader isr = new InputStreamReader(in)) {
+                return ReaderUtil.readTxt(isr, 16 * 1024);
+            }
 
-        try (InputStreamReader isr = new InputStreamReader(in)) {
-            return ReaderUtil.readTxt(isr, 16 * 1024);
         }
     }
 

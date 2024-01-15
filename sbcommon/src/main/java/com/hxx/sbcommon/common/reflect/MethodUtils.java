@@ -213,9 +213,7 @@ public class MethodUtils {
         for (Class<?> classToSearch : declaredClasses) {
             Method[] methods = publicOnly ? classToSearch.getMethods() : classToSearch.getDeclaredMethods();
             // Add the declared methods or public methods
-            for (Method method : methods) {
-                allMethods.add(method);
-            }
+            allMethods.addAll(Arrays.asList(methods));
         }
 
         return Collections.unmodifiableList(Streams.filterAll(allMethods, methodsToFilter));
@@ -379,15 +377,14 @@ public class MethodUtils {
      * @return if not found, return <code>null</code>
      * @since 2.7.6
      */
-    static Method findMethod(Class type, String methodName, Class<?>... parameterTypes) {
-        Method method = null;
+    static Method findMethod(Class<?> type, String methodName, Class<?>... parameterTypes) {
         try {
             if (type != null && StringUtils.isNotEmpty(methodName)) {
-                method = type.getDeclaredMethod(methodName, parameterTypes);
+                return type.getDeclaredMethod(methodName, parameterTypes);
             }
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException ignore) {
         }
-        return method;
+        return null;
     }
 
     /**
@@ -404,7 +401,7 @@ public class MethodUtils {
         Class type = object.getClass();
         Class[] parameterTypes = resolveTypes(methodParameters);
         Method method = findMethod(type, methodName, parameterTypes);
-        T value = null;
+        T value;
 
         if (method == null) {
             throw new IllegalStateException(

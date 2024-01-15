@@ -10,7 +10,7 @@ import java.util.List;
  * @Date: 2023-12-25 15:43:09
  **/
 public class EventListenerManager {
-    private static List<EventListener> eventListenerList = Lists.newArrayList();
+    private static final List<EventListener> eventListenerList = Lists.newArrayList();
 
 
     /**

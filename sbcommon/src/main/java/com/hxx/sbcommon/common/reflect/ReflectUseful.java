@@ -9,9 +9,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 
-/**
- * // 允许调用私有方法
- * constructor.setAccessible(true);
+/*
+  // 允许调用私有方法
+  constructor.setAccessible(true);
  */
 
 /**
@@ -158,7 +158,7 @@ public class ReflectUseful {
             boolean isGetter = checkGetterMethod(methodName, method);
             if (isGetter) {
                 // 反推field的名字
-                String fieldName = "";
+                String fieldName;
                 if (method.getReturnType() == boolean.class) {
                     fieldName = StringUtil.lowerFirstChar(methodName.substring(2));
                 } else {
@@ -242,10 +242,10 @@ public class ReflectUseful {
 
     // 校验Setter方法
     private static boolean checkSetterMethod(String methodName, Method method) {
-        /**
-         * boolean enabled = demoCls.isEnabled();
-         * demoCls.setEnabled(true);
-         * */
+        /*
+          boolean enabled = demoCls.isEnabled();
+          demoCls.setEnabled(true);
+          */
         if ("set".equals(methodName)) return false;
 
         int modifiers = method.getModifiers();
