@@ -209,9 +209,7 @@ public class OftenUtil {
      * @return
      */
     public static <T, F> F proc(T source, Function<T, F> mapperFunc, F defaultVal) {
-        return Optional.ofNullable(source)
-                .map(mapperFunc)
-                .orElse(defaultVal);
+        return Optional.ofNullable(source).map(mapperFunc).orElse(defaultVal);
     }
 
     // UUID
