@@ -722,11 +722,24 @@ public class OftenUtil {
          * @param begin
          * @param end
          * @param maxDay
-         * @return
+         * @return true 未超过最大天数， false 超过最大天数
          */
         public static boolean check(LocalDateTime begin, LocalDateTime end, int maxDay) {
             Duration dur = Duration.between(begin, end);
             return dur.getSeconds() < maxDay * 24 * 60 * 60L;
+        }
+
+        /**
+         * 验证时间段是否超过指定最大间隔
+         *
+         * @param begin
+         * @param end
+         * @param maxDuration
+         * @return true 未超过最大天数， false 超过最大天数
+         */
+        public static boolean check(LocalDateTime begin, LocalDateTime end, Duration maxDuration) {
+            Duration dur = Duration.between(begin, end);
+            return dur.getSeconds() < maxDuration.getSeconds();
         }
 
         // 日期计算
@@ -734,25 +747,36 @@ public class OftenUtil {
         /**
          * 获取开始结束时间间隔小时数
          *
-         * @param startTime
-         * @param endTime
+         * @param begin
+         * @param end
          * @return
          */
-        public static long getIntervalHour(LocalDateTime startTime, LocalDateTime endTime) {
-            return ChronoUnit.HOURS.between(startTime, endTime);
+        public static long getIntervalHour(LocalDateTime begin, LocalDateTime end) {
+            return ChronoUnit.HOURS.between(begin, end);
+        }
+
+        /**
+         * 获取开始结束时间间隔
+         *
+         * @param begin
+         * @param end
+         * @return
+         */
+        public static Duration calcDuration(LocalDateTime begin, LocalDateTime end) {
+            return Duration.between(begin, end);
         }
 
         /**
          * 获取两个时间间隔的天数，必须是精确到秒级的时间段
          * 使用时>=start && <=end
          *
-         * @param start 开始时间
+         * @param begin 开始时间
          * @param end   结束时间 必须带上23：59：59
          * @return
          */
-        public static Long getIntervalDays(Date start, Date end) {
+        public static Long getIntervalDays(Date begin, Date end) {
             // 这样得到的差值是微秒级别
-            long diff = end.getTime() + 1000 - start.getTime();
+            long diff = end.getTime() + 1000 - begin.getTime();
 
             int dayMs = 1000 * 60 * 60 * 24;
             // 间隔天数

@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.config.appCfg;
+package com.hxx.sbcommon.config.appconfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

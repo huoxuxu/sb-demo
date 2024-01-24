@@ -24,6 +24,8 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 /**
+ * POI驱动
+ *
  * @Author: huoxuxu
  * @Description:
  * @Date: 2023-05-25 10:47:40
@@ -111,40 +113,17 @@ public class POIExcelWriteUseful implements AutoCloseable {
     }
 
     /**
-     * 合并单元格
-     *
-     * @param cellRangeAddress
+     * 创建冻结首行
      */
-    public void mergeCell(CellRangeAddress cellRangeAddress) {
-        // 合并单元格：参数1：行号 参数2：起始列号 参数3：行号 参数4：终止列号
-        // new CellRangeAddress(0, 0, 0, 4)
-        sheet.addMergedRegion(cellRangeAddress);
+    public void createFreezeFirstRow() {
+        sheet.createFreezePane(0, 1, 0, 1);
     }
 
     /**
-     * 合并单元格
-     *
-     * @param blockInfo
+     * 创建冻结首列
      */
-    public void mergeCell(CellBlockInfo blockInfo) {
-        CellRangeAddress cellRangeAddress = new CellRangeAddress(blockInfo.getStartRowIndex(), blockInfo.getEndRowIndex(), blockInfo.getStartCellIndex(), blockInfo.getEndCellIndex());
-        // 合并
-        sheet.addMergedRegion(cellRangeAddress);
-    }
-
-    /**
-     * 合并单元格
-     *
-     * @param blockInfos
-     */
-    public void mergeCell(List<CellBlockInfo> blockInfos) {
-        if (CollectionUtils.isEmpty(blockInfos)) {
-            return;
-        }
-
-        for (CellBlockInfo item : blockInfos) {
-            mergeCell(item);
-        }
+    public void createFreezeFirstCell() {
+        sheet.createFreezePane(1, 0, 1, 0);
     }
 
     /**
@@ -190,6 +169,7 @@ public class POIExcelWriteUseful implements AutoCloseable {
      * @param titles
      */
     public void writeTitle(List<String> titles) {
+        createFreezeFirstRow();
         List<Object> ls = titles.stream().map(d -> (Object) d).collect(Collectors.toList());
         writeExcelRow(ls, (cellInd, cell) -> {
             String item = titles.get(cellInd);
@@ -349,37 +329,4 @@ public class POIExcelWriteUseful implements AutoCloseable {
         sheet.setColumnWidth(address.getColumn(), cellWeight);
     }
 
-    /**
-     * 合并单元格信息
-     */
-    @lombok.Data
-    public static class CellBlockInfo {
-        // 块起始行
-        private int startRowIndex;
-        // 块结束行
-        private int endRowIndex;
-        // 块起始列
-        private int startCellIndex;
-        // 块结束列
-        private int endCellIndex;
-        // 数据
-        private Object cellVal;
-
-        public CellBlockInfo() {
-        }
-
-        public CellBlockInfo(int startRowIndex, int endRowIndex, int startCellIndex, int endCellIndex) {
-            this(startRowIndex, endRowIndex, startCellIndex, endCellIndex, null);
-        }
-
-        public CellBlockInfo(int startRowIndex, int endRowIndex, int startCellIndex, int endCellIndex, Object cellVal) {
-            this.startRowIndex = startRowIndex;
-            this.endRowIndex = endRowIndex;
-            this.startCellIndex = startCellIndex;
-            this.endCellIndex = endCellIndex;
-
-            this.cellVal = cellVal;
-        }
-
-    }
 }

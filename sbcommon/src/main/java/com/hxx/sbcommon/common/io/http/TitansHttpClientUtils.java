@@ -1,10 +1,9 @@
 package com.hxx.sbcommon.common.io.http;
 
-import com.hxx.sbcommon.apacheHttpClient.HttpInterceptor;
-import com.hxx.sbcommon.apacheHttpClient.HttpReqAndRsp;
-import com.hxx.sbcommon.apacheHttpClient.SoaHttpException;
-import com.hxx.sbcommon.config.appCfg.HttpConfigPropertiesProvider;
-import lombok.extern.slf4j.Slf4j;
+import com.hxx.sbcommon.common.io.http.apachehttpclient.HttpInterceptor;
+import com.hxx.sbcommon.common.io.http.apachehttpclient.HttpReqAndRsp;
+import com.hxx.sbcommon.common.io.http.apachehttpclient.SoaHttpException;
+import com.hxx.sbcommon.config.appconfig.HttpConfigPropertiesProvider;
 import org.apache.http.*;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;

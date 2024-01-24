@@ -1,8 +1,8 @@
 package com.hxx.sbConsole.safeInit.httpClient;
 
-import com.hxx.sbcommon.config.appCfg.HttpConfigProperties;
-import com.hxx.sbcommon.config.appCfg.HttpConfigPropertiesProvider;
-import com.hxx.sbcommon.config.appCfg.PropertyBinder;
+import com.hxx.sbcommon.config.appconfig.HttpConfigProperties;
+import com.hxx.sbcommon.config.appconfig.HttpConfigPropertiesProvider;
+import com.hxx.sbcommon.config.appconfig.PropertyBinder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.context.properties.bind.BindResult;

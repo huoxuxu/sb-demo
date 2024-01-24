@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.apacheHttpClient;
+package com.hxx.sbcommon.common.io.http.apachehttpclient;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;

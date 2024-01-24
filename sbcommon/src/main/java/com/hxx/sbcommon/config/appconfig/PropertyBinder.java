@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.config.appCfg;
+package com.hxx.sbcommon.config.appconfig;
 
 
 import org.springframework.boot.context.properties.bind.BindHandler;
