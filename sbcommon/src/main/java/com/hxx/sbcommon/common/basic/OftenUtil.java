@@ -586,8 +586,14 @@ public class OftenUtil {
 
     // 日期
     public static class DateTimeUtil {
+        // yyyy-MM-dd'T'HH:mm:ss.SSS
+        private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         // yyyy-MM-dd HH:mm:ss
         private final static DateTimeFormatter DateTime_Default_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        // yyyy-MM-dd HH:mm:ss.SSS
+        private final static DateTimeFormatter DateTime_HASMS_Default_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+        // yyyy-MM-dd HH:mm:ss.SSSSSS
+        private final static DateTimeFormatter DateTime_HASNANO_Default_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
         // yyyy-MM-dd
         private final static DateTimeFormatter DateTime_Date_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -648,17 +654,79 @@ public class OftenUtil {
         }
 
         /**
-         * 解析为LDT，支持字符串格式：yyyy-MM-dd HH:mm:ss
+         * 解析为LocalDateTime
+         * 支持字符串格式：
+         * yyyy-MM-dd HH:mm:ss
+         * yyyy-MM-dd HH:mm:ss.SSS
+         * yyyy-MM-dd HH:mm:ss.SSSSSS
+         * yyyy-MM-dd'T'HH:mm:ss
+         * yyyy-MM-dd'T'HH:mm:ss.SSSSSS[.SSSSSS]Z
+         * yyyy-MM-dd'T'HH:mm:ssZ
+         * yyyy-MM-dd'T'HH:mm:ss+00:00
          *
          * @param text
          * @param defaultVal
          * @return
          */
         public static LocalDateTime parseDateTime(String text, LocalDateTime defaultVal) {
-            if (StringUtils.isBlank(text)) return defaultVal;
+            if (StringUtils.isBlank(text)) {
+                return defaultVal;
+            }
 
             try {
-                return LocalDateTime.parse(text, DateTime_Default_Formatter);
+                // 处理/为-
+                int italicInd = text.indexOf('/');
+                if (italicInd != -1) {
+                    text = text.replace('/', '-');
+                }
+                // 如果包含时间
+                if (text.length() > 10) {
+                    if (text.charAt(10) == 'T') {
+                        if (text.endsWith("Z")) {
+                            // Instant.parse(X)
+                            // yyyy-MM-dd'T'HH:mm:ss.SSSSSS[.SSSSSS]Z
+                            // 或者没有纳秒部分 yyyy-MM-dd'T'HH:mm:ssZ
+                            Instant instant = Instant.parse(text);
+                            return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                        }
+                        // 2024-01-25T12:34:56+08:00
+                        else {
+                            int plusInd = text.indexOf('+');
+                            if (plusInd != -1) {
+                                int mInd = text.lastIndexOf(":");
+                                // 冒号在加号后
+                                if (mInd != -1 && plusInd + 3 == mInd) {
+                                    OffsetDateTime odt = OffsetDateTime.parse(text);
+                                    // 转换为 UTC 时间
+                                    Instant instant = odt.toInstant();
+                                    return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                                }
+                            }
+                            // 不带T 不带Z 不带+ 不带+后的:
+                            return LocalDateTime.parse(text, DEFAULT_FORMATTER);
+                        }
+                    }
+                    // 不带T
+                    else {
+                        int pointInd = text.indexOf('.');
+                        if (pointInd != -1) {
+                            String nano = text.substring(pointInd);
+                            // .123
+                            int nanoLen = nano.length();
+                            if (nanoLen == 4) {
+                                return LocalDateTime.parse(text, DateTime_HASMS_Default_Formatter);
+                            } else if (nanoLen == 7) {
+                                return LocalDateTime.parse(text, DateTime_HASNANO_Default_Formatter);
+                            }
+                        }
+                        // 不带.
+                        else {
+                            return LocalDateTime.parse(text, DateTime_Default_Formatter);
+                        }
+                    }
+                }
+
+                return LocalDateTime.parse(text, DEFAULT_FORMATTER);
             } catch (Exception ignore) {
                 return defaultVal;
             }
