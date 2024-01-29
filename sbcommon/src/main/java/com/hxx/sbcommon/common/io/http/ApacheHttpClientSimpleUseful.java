@@ -81,6 +81,8 @@ public class ApacheHttpClientSimpleUseful {
 
     private static final CloseableHttpClient HTTP_CLIENT;
 
+    private ApacheHttpClientSimpleUseful() {
+    }
 
     /**
      * 发起 GET 请求
