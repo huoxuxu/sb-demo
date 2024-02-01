@@ -1,6 +1,6 @@
 package com.hxx.sbservice.service.jedis;
 
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import redis.clients.jedis.Jedis;

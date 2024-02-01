@@ -2,7 +2,7 @@ package com.hxx.mbtest.service.impl.db.trans;
 
 import com.hxx.mbtest.entity.T1;
 import com.hxx.mbtest.mapper.T1Mapper;
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

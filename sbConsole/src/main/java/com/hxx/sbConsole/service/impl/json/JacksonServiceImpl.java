@@ -1,6 +1,6 @@
 package com.hxx.sbConsole.service.impl.json;
 
-import com.hxx.sbcommon.common.json.JacksonReaderQuick;
+import com.hxx.sbcommon.common.io.json.JacksonReaderQuick;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

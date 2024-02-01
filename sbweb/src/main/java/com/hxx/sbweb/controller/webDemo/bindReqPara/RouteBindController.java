@@ -1,19 +1,10 @@
 package com.hxx.sbweb.controller.webDemo.bindReqPara;
 
-import com.hxx.sbcommon.common.json.JsonUtil;
-import com.hxx.sbcommon.model.Result;
+import com.hxx.sbcommon.common.io.json.JsonUtil;
 import com.hxx.sbweb.controller.base.BaseRestController;
-import com.hxx.sbweb.domain.Book;
-import com.hxx.sbweb.domain.User;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 

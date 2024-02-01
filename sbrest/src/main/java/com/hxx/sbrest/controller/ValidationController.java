@@ -1,6 +1,6 @@
 package com.hxx.sbrest.controller;
 
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.JsonUtil;
 import com.hxx.sbrest.model.vo.UserVo;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

@@ -1,6 +1,6 @@
 package com.hxx.tkMybatisTest.controller;
 
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.JsonUtil;
 import com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1;
 import com.hxx.tkMybatisTest.dal.mysql.testDB.entity.T1Example;
 import com.hxx.tkMybatisTest.service.T1Service;

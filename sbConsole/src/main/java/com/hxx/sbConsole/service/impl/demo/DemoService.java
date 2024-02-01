@@ -10,7 +10,7 @@ import com.hxx.sbcommon.common.basic.array.CollectionUtil;
 import com.hxx.sbcommon.common.basic.text.StringUtil;
 import com.hxx.sbcommon.common.hardware.NetUtil;
 import com.hxx.sbcommon.common.io.fileOrDir.PathUtil;
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.JsonUtil;
 import com.hxx.sbcommon.common.other.pageSeparate.GeneralPageable;
 import com.hxx.sbcommon.common.other.pageSeparate.PageSeparate;
 import com.hxx.sbcommon.common.other.pageSeparate.Pageable;
@@ -29,10 +29,10 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -48,6 +48,29 @@ public class DemoService {
         try {
             {
 
+            }
+            {
+                int dv = 0B10110011;
+                byte[] data = Integer.toBinaryString(dv).getBytes(StandardCharsets.ISO_8859_1);
+//                long ccittCrc = CRC.calculateCRC(CRC.Parameters.CCITT, data);
+//                System.out.printf("CRC is 0x%04X\n", ccittCrc); // prints "CRC is 0x29B1"
+            }
+            {
+                String str1 = "2/1/3";
+                str1 = str1.replace('/', '-');
+                System.out.println(str1);
+            }
+            {
+                User user = new User();
+                List<Integer> ls = Optional.ofNullable(user).map(d -> d.getLs()).orElse(new ArrayList<>());
+                System.out.println(ls);
+            }
+            {
+                List<String> list = new ArrayList<>(Arrays.asList("1", "2", "3", "jay"));
+                list.remove("2");
+
+                CollectionUtil.remove(list, d -> "jay".equals(d));
+                System.out.println(list);
             }
             {
                 Collection<String> src = Arrays.asList("1", "2", "3");

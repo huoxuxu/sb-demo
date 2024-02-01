@@ -1,6 +1,7 @@
 package javat.basic.datetime;
 
 import com.hxx.sbConsole.SbConsoleApplication;
+import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.basic.datetime.LocalDateTimeUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,6 +62,65 @@ LocalDateTime 转换成 Date：Thu Jul 22 14:44:00 CST 2021
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SbConsoleApplication.class)
 public class LocalDateTimeTest {
+
+    @Test
+    public void case0() {
+        {
+            String text = "2024/01/25 12:34:56";
+            LocalDateTime localDateTime = OftenUtil.DateTimeUtil.parseDateTime(text, LocalDateTime.MIN);
+            System.out.println(text + "   " + OftenUtil.DateTimeUtil.fmt2Str(localDateTime));
+        }
+        {
+            String text = "2024-01-25 12:34:56";
+            LocalDateTime localDateTime = OftenUtil.DateTimeUtil.parseDateTime(text, LocalDateTime.MIN);
+            System.out.println(text + "   " + OftenUtil.DateTimeUtil.fmt2Str(localDateTime));
+        }
+        {
+            String text = "2024-01-25T12:34:56";
+            LocalDateTime localDateTime = OftenUtil.DateTimeUtil.parseDateTime(text, LocalDateTime.MIN);
+            System.out.println(text + "   " + OftenUtil.DateTimeUtil.fmt2Str(localDateTime));
+        }
+        {
+            String text = "2024-01-25 12:34:56.123";
+            LocalDateTime localDateTime = OftenUtil.DateTimeUtil.parseDateTime(text, LocalDateTime.MIN);
+            System.out.println(text + "   " + OftenUtil.DateTimeUtil.fmt2Str(localDateTime));
+        }
+        {
+            String text = "2024-01-25T12:34:56.123";
+            LocalDateTime localDateTime = OftenUtil.DateTimeUtil.parseDateTime(text, LocalDateTime.MIN);
+            System.out.println(text + "   " + OftenUtil.DateTimeUtil.fmt2Str(localDateTime));
+        }
+        {
+            String text = "2024-01-25T12:34:56Z";
+            LocalDateTime localDateTime = OftenUtil.DateTimeUtil.parseDateTime(text, LocalDateTime.MIN);
+            System.out.println(text + "   " + OftenUtil.DateTimeUtil.fmt2Str(localDateTime));
+        }
+        {
+            String text = "2024-01-25T12:34:56.123Z";
+            LocalDateTime localDateTime = OftenUtil.DateTimeUtil.parseDateTime(text, LocalDateTime.MIN);
+            System.out.println(text + "   " + OftenUtil.DateTimeUtil.fmt2Str(localDateTime));
+        }
+        {
+            String text = "2024-01-25T12:34:56+00:00";
+            LocalDateTime localDateTime = OftenUtil.DateTimeUtil.parseDateTime(text, LocalDateTime.MIN);
+            System.out.println(text + "   " + OftenUtil.DateTimeUtil.fmt2Str(localDateTime));
+        }
+        {
+            String text = "2024-01-25T12:34:56.123+00:00";
+            LocalDateTime localDateTime = OftenUtil.DateTimeUtil.parseDateTime(text, LocalDateTime.MIN);
+            System.out.println(text + "   " + OftenUtil.DateTimeUtil.fmt2Str(localDateTime));
+        }
+        {
+            String text = "2024-01-25T12:34:56.123+08:00";
+            LocalDateTime localDateTime = OftenUtil.DateTimeUtil.parseDateTime(text, LocalDateTime.MIN);
+            System.out.println(text + "   " + OftenUtil.DateTimeUtil.fmt2Str(localDateTime));
+        }
+        {
+            String text = "2023-05-30T01:02:03.456Z";
+            LocalDateTime localDateTime = OftenUtil.DateTimeUtil.parseDateTime(text, LocalDateTime.MIN);
+            System.out.println(text + "   " + OftenUtil.DateTimeUtil.fmt2Str(localDateTime));
+        }
+    }
 
     @Test
     public void test() {
@@ -141,7 +201,6 @@ public class LocalDateTimeTest {
 
 
     }
-
 
     @Test
     public void Run() {

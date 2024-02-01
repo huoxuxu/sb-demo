@@ -1,6 +1,6 @@
 package com.hxx.sbrest.common.global;
 
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.JsonUtil;
 import com.hxx.sbcommon.model.Result;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

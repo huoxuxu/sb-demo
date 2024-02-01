@@ -1,23 +1,12 @@
 package com.hxx.sbConsole.service.impl.demo.basic;
 
 import com.hxx.sbConsole.model.DemoCls;
-import com.hxx.sbConsole.model.TypeRelatedBO;
-import com.hxx.sbConsole.model.enums.LinePatternEnum;
-import com.hxx.sbConsole.model.inherit.Dog;
-import com.hxx.sbConsole.model.inherit.HaBaDog;
 import com.hxx.sbConsole.model.validate.UserModel;
-import com.hxx.sbcommon.common.basic.langType.LangTypeHandlerFactory;
 import com.hxx.sbcommon.common.basic.validate.ValidateUtil;
-import com.hxx.sbcommon.common.io.fileOrDir.PathUtil;
-import com.hxx.sbcommon.common.json.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.BeanUtils;
 
-import java.sql.SQLOutput;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @Author: huoxuxu

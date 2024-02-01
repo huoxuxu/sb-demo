@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.json;
+package com.hxx.sbcommon.common.io.json;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

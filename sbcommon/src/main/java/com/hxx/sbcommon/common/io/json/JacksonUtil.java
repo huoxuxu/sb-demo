@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.json;
+package com.hxx.sbcommon.common.io.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;

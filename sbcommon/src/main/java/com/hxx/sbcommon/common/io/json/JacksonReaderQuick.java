@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.json;
+package com.hxx.sbcommon.common.io.json;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;

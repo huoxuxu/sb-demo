@@ -3,7 +3,7 @@ package com.hxx.mbmtest.service.impl;
 import com.hxx.mbmtest.entity.T1;
 import com.hxx.mbmtest.mapper.master.T1Mapper;
 import com.hxx.mbmtest.service.T1Service;
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.JsonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
