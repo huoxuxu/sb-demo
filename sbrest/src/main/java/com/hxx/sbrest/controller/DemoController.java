@@ -1,6 +1,6 @@
 package com.hxx.sbrest.controller;
 
-import com.hxx.sbcommon.common.io.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import com.hxx.sbrest.model.T1Model;
 import com.hxx.sbrest.service.BasicTestService;
 import lombok.extern.slf4j.Slf4j;

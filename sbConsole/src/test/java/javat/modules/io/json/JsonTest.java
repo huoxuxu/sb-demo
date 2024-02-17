@@ -3,7 +3,7 @@ package javat.modules.io.json;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hxx.sbConsole.SbConsoleApplication;
-import com.hxx.sbcommon.common.io.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import lombok.var;
 import models.*;
 import models.generics.GenericsChildVO;

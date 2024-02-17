@@ -3,7 +3,7 @@ package com.hxx.sbConsole.other.reflect;
 import com.hxx.sbConsole.model.User;
 import com.hxx.sbConsole.model.inherit.Dog;
 import com.hxx.sbConsole.model.inherit.HaBaDog;
-import com.hxx.sbcommon.common.io.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import com.hxx.sbcommon.common.office.EasyExcelHelper;
 import com.hxx.sbcommon.common.reflect.BeanInfoUtil;
 import com.hxx.sbcommon.common.reflect.ReflectUseful;

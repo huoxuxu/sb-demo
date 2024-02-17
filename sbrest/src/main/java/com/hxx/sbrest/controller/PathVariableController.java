@@ -1,6 +1,6 @@
 package com.hxx.sbrest.controller;
 
-import com.hxx.sbcommon.common.io.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -3,7 +3,7 @@ package javat.simpleTools;
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.basic.array.CollectionUtil;
-import com.hxx.sbcommon.common.io.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

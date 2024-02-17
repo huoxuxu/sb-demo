@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hxx.sbConsole.model.HttpTestDemoModel;
 import com.hxx.sbcommon.common.io.http.ApacheHttpClientUseful;
 import com.hxx.sbcommon.common.io.http.client.HttpApiClient;
-import com.hxx.sbcommon.common.io.json.FastJsonReaderQuick;
-import com.hxx.sbcommon.common.io.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.FastJsonReaderQuick;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.File;

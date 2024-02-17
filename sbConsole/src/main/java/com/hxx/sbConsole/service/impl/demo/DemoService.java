@@ -10,7 +10,7 @@ import com.hxx.sbcommon.common.basic.array.CollectionUtil;
 import com.hxx.sbcommon.common.basic.text.StringUtil;
 import com.hxx.sbcommon.common.hardware.NetUtil;
 import com.hxx.sbcommon.common.io.fileOrDir.PathUtil;
-import com.hxx.sbcommon.common.io.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import com.hxx.sbcommon.common.other.pageSeparate.GeneralPageable;
 import com.hxx.sbcommon.common.other.pageSeparate.PageSeparate;
 import com.hxx.sbcommon.common.other.pageSeparate.Pageable;

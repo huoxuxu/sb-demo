@@ -1,6 +1,6 @@
 package com.hxx.sbweb.controller.webDemo.bindReqPara;
 
-import com.hxx.sbcommon.common.io.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import com.hxx.sbweb.controller.base.BaseRestController;
 import com.hxx.sbweb.domain.User;
 import lombok.extern.slf4j.Slf4j;

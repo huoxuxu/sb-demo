@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.io.json;
+package com.hxx.sbcommon.common.io.json.fastjson;
 
 import com.alibaba.fastjson.JSONReader;
 import lombok.extern.slf4j.Slf4j;

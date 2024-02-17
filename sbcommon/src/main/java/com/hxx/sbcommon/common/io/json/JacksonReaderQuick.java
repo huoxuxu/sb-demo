@@ -24,12 +24,12 @@ public class JacksonReaderQuick {
     /**
      * 文件转Reader
      *
-     * @param filePath
+     * @param file
      * @return
      * @throws FileNotFoundException
      */
-    public static FileReader getFileReader(String filePath) throws FileNotFoundException {
-        return new FileReader(filePath);
+    public static FileReader getFileReader(File file) throws FileNotFoundException {
+        return new FileReader(file);
     }
 
     /**
@@ -60,7 +60,9 @@ public class JacksonReaderQuick {
         int total = 0;
         JsonFactory jasonFactory = new JsonFactory();
         // {"data":[{"id":0}]}
-        try (JsonParser parser = jasonFactory.createParser(getFileReader(jsonFilePath))) {
+        File jsonFile = new File(jsonFilePath);
+        FileReader jsonFileReader = getFileReader(jsonFile);
+        try (JsonParser parser = jasonFactory.createParser(jsonFileReader)) {
             while (!parser.isClosed()) {
                 JsonToken jsonToken = parser.nextToken();
 

@@ -1,7 +1,7 @@
 package com.hxx.sbcommon.common.io.http.client;
 
 import com.hxx.sbcommon.common.io.http.ApacheHttpClientSimpleUseful;
-import com.hxx.sbcommon.common.io.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

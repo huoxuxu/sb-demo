@@ -4,7 +4,7 @@ import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.io.cfg.ResourcesUtil;
 import com.hxx.sbcommon.common.io.fileOrDir.FileUtil;
 import com.hxx.sbcommon.common.io.fileOrDir.PathUtil;
-import com.hxx.sbcommon.common.io.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 

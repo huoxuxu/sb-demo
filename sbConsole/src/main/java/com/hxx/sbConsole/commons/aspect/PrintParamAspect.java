@@ -1,7 +1,7 @@
 package com.hxx.sbConsole.commons.aspect;
 
 import com.hxx.sbcommon.common.basic.OftenUtil;
-import com.hxx.sbcommon.common.io.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;

@@ -2,7 +2,7 @@ package com.hxx.sbConsole.service.impl;
 
 import com.hxx.sbConsole.module.easyExcel.EasyExcelDemo2;
 import com.hxx.sbcommon.common.io.cfg.ResourcesUtil;
-import com.hxx.sbcommon.common.io.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 
 import java.io.IOException;
 import java.util.List;

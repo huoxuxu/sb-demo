@@ -1,6 +1,6 @@
 package com.hxx.sbweb.controller.webDemo.bindReqPara;
 
-import com.hxx.sbcommon.common.io.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import com.hxx.sbcommon.common.web.HttpServletRequestUtil;
 import com.hxx.sbcommon.model.HttpMultipartFormDataInfo;
 import com.hxx.sbweb.controller.base.BaseRestController;
