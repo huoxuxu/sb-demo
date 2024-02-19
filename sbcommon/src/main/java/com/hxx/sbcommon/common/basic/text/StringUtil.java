@@ -14,6 +14,17 @@ import java.util.List;
 public class StringUtil {
 
     /**
+     * 替换字符串中的占位符{}
+     *
+     * @param input 带{}占位符的字符串
+     * @param args  替换{}的变量
+     * @return
+     */
+    public static String format(String input, Object... args) {
+        return BraceParser.parse(input, args);
+    }
+
+    /**
      * 取字符串的前n位,
      * 超过字符串总长度不会报错
      *

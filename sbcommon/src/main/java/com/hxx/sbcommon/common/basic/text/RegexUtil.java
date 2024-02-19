@@ -36,9 +36,20 @@ public class RegexUtil {
         return m.matches();
     }
 
+    /**
+     * 判断指定的正则表达式是否存在
+     *
+     * @param input
+     * @param regex
+     * @return
+     */
+    public static Boolean isMatch(String input, String regex) {
+        return input.matches(regex);
+    }
+
     public static List<String> regexMatchGroups(String input, String regex) {
         Matcher m = Pattern.compile(regex).matcher(input);
-        int groupCount = m.groupCount();
+//        int groupCount = m.groupCount();
 
         List<String> ls = new ArrayList<>();
         while (m.find()) {
@@ -48,4 +59,23 @@ public class RegexUtil {
         }
         return ls;
     }
+
+    /**
+     * 获取匹配到的集合
+     *
+     * @param regex
+     * @param str
+     * @return
+     */
+    public static List<String> GetMatch(String regex, String str) {
+        // 现在创建 matcher 对象
+        Matcher m = Pattern.compile(regex).matcher(str);
+
+        List<String> ls = new ArrayList<>();
+        while (m.find()) {
+            ls.add(m.group());
+        }
+        return ls;
+    }
+
 }

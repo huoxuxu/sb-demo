@@ -1,5 +1,6 @@
 package com.hxx.sbcommon.common.encoder;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class Base64Util {
@@ -25,7 +26,7 @@ public class Base64Util {
      * @throws Exception
      */
     public static String encode(String txt) throws Exception {
-        byte[] textByte = txt.getBytes("UTF-8");
+        byte[] textByte = txt.getBytes(StandardCharsets.UTF_8);
         return encoder.encodeToString(textByte);
     }
 
@@ -49,7 +50,7 @@ public class Base64Util {
      */
     public static String decode(String txt) throws Exception {
         byte[] arr = decoder.decode(txt);
-        return new String(arr, "UTF-8");
+        return new String(arr, StandardCharsets.UTF_8);
     }
 
 }

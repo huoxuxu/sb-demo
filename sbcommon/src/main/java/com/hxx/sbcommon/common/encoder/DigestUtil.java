@@ -1,5 +1,8 @@
 package com.hxx.sbcommon.common.encoder;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.Base64;
 
@@ -62,4 +65,39 @@ public class DigestUtil {
         String t = encryptBASE64(encryptMD5((data + sign).getBytes(charset)));
         return t.trim();
     }
+
+    // 用这个方法
+    // data+key作为这里的str
+    public static String md5WithBase64(String str, String charset) {
+        return base64(md5ToBytes(str, charset));
+    }
+
+    public static String base64(byte[] bytes) {
+        return org.apache.commons.codec.binary.Base64.encodeBase64String(bytes);
+    }
+
+    public static String decodeBase64(String content, Charset charset) {
+        return new String(org.apache.commons.codec.binary.Base64.decodeBase64(content), charset);
+    }
+
+    public static String decodeBase64(String content) {
+        return new String(org.apache.commons.codec.binary.Base64.decodeBase64(content));
+    }
+
+    public static byte[] md5ToBytes(String str) {
+        return md5ToBytes(str, "UTF-8");
+    }
+
+    public static byte[] md5ToBytes(String str, String charset) {
+        return DigestUtils.md5(str.getBytes(Charset.forName(charset)));
+    }
+
+    public static String md5ToStr(String str) {
+        return DigestUtils.md5Hex(str);
+    }
+
+    public static String md5ToStr(String str, Charset charset) {
+        return DigestUtils.md5Hex(str.getBytes(charset));
+    }
+
 }
