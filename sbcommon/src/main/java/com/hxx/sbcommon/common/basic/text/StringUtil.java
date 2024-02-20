@@ -2,6 +2,7 @@ package com.hxx.sbcommon.common.basic.text;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +15,8 @@ import java.util.List;
 public class StringUtil {
 
     /**
-     * 替换字符串中的占位符{}
+     * 替换字符串中的占位符{},
+     * 转义：{{和}}
      *
      * @param input 带{}占位符的字符串
      * @param args  替换{}的变量
@@ -22,6 +24,18 @@ public class StringUtil {
      */
     public static String format(String input, Object... args) {
         return BraceParser.parse(input, args);
+    }
+
+    /**
+     * 替换字符串中的占位符{0} {1},
+     * 转义：{{和}}
+     *
+     * @param input 带{0}占位符的字符串
+     * @param args  按{digital}占位符中digital指向的索引位提供值
+     * @return
+     */
+    public static String messageFormat(String input, Object... args) {
+        return MessageFormat.format(input, args);
     }
 
     /**

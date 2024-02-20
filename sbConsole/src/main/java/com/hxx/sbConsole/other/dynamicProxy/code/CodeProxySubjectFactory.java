@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.dynamicProxy.code;
+package com.hxx.sbConsole.other.dynamicProxy.code;
 
 import com.hxx.sbConsole.service.ICodeProxySubject;
 import com.hxx.sbConsole.service.impl.CodeProxySubjectImpl;

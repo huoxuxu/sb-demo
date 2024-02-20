@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.dynamicProxy.jdk;
+package com.hxx.sbConsole.other.dynamicProxy.jdk;
 
 import com.hxx.sbConsole.service.Hello;
 import com.hxx.sbcommon.common.reflect.ReflectUtil;

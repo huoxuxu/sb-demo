@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.dynamicProxy.cglib;
+package com.hxx.sbConsole.other.dynamicProxy.cglib;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;

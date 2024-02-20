@@ -1,7 +1,7 @@
-package com.hxx.sbConsole.dynamicProxy;
+package com.hxx.sbConsole.other.dynamicProxy;
 
-import com.hxx.sbConsole.dynamicProxy.cglib.CglibProxyFactory;
-import com.hxx.sbConsole.dynamicProxy.cglib.LogInterceptor;
+import com.hxx.sbConsole.other.dynamicProxy.cglib.CglibProxyFactory;
+import com.hxx.sbConsole.other.dynamicProxy.cglib.LogInterceptor;
 import com.hxx.sbConsole.service.impl.biz.HelloImpl;
 import net.sf.cglib.proxy.Enhancer;
 
