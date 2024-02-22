@@ -1,10 +1,12 @@
 package com.hxx.sbcommon.common.io.fileOrDir;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -93,6 +95,10 @@ public class FileUtil {
         return Files.newInputStream(file.toPath());
     }
 
+    public static BufferedReader getBufferedReader(String filePath, Charset charset) throws IOException {
+        return java.nio.file.Files.newBufferedReader(Paths.get(filePath), charset);
+    }
+
     /**
      * 消费文件流Reader
      *
@@ -134,6 +140,18 @@ public class FileUtil {
                 }
             }
         });
+    }
+
+    public static void readLines(File file, String charsetName, Consumer<String> rowAct) throws IOException {
+        LineIterator lineIterator = FileUtils.lineIterator(file, charsetName);
+        try {
+            while (lineIterator.hasNext()) {
+                String line = lineIterator.nextLine();
+                rowAct.accept(line);
+            }
+        } finally {
+            LineIterator.closeQuietly(lineIterator);
+        }
     }
 
     /**
