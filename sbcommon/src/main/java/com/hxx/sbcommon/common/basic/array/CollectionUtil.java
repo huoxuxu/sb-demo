@@ -221,11 +221,11 @@ public class CollectionUtil {
      * @param <TField>
      * @return
      */
-    public static <T, TField> Set<TField> getFieldSet(Collection<T> ls, Function<T, TField> getFieldFunc, Predicate<TField> filterPred) {
+    public static <T, TField> Set<TField> getFieldSet(Collection<T> ls, Predicate<T> filterPred, Function<T, TField> getFieldFunc) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
-                .map(getFieldFunc)
                 .filter(filterPred)
+                .map(getFieldFunc)
                 .collect(Collectors.toSet());
     }
 

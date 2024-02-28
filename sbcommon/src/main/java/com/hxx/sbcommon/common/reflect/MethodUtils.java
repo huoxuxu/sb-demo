@@ -210,8 +210,8 @@ public class MethodUtils {
         // All methods
         List<Method> allMethods = new LinkedList<>();
 
-        for (Class<?> classToSearch : declaredClasses) {
-            Method[] methods = publicOnly ? classToSearch.getMethods() : classToSearch.getDeclaredMethods();
+        for (Class<?> clsItem : declaredClasses) {
+            Method[] methods = publicOnly ? clsItem.getMethods() : clsItem.getDeclaredMethods();
             // Add the declared methods or public methods
             allMethods.addAll(Arrays.asList(methods));
         }
@@ -507,6 +507,30 @@ public class MethodUtils {
         } catch (Exception e) {
             return -1;
         }
+    }
+
+    /**
+     * 获取方法签名
+     * @param method
+     * @return
+     */
+    public static String getSignature(Method method) {
+        StringBuilder sb = new StringBuilder();
+        Class<?> returnType = method.getReturnType();
+        if (returnType != null) {
+            sb.append(returnType.getName()).append('#');
+        }
+        sb.append(method.getName());
+        Class<?>[] parameters = method.getParameterTypes();
+        for (int i = 0; i < parameters.length; i++) {
+            if (i == 0) {
+                sb.append(':');
+            } else {
+                sb.append(',');
+            }
+            sb.append(parameters[i].getName());
+        }
+        return sb.toString();
     }
 
     public interface Streams {

@@ -8,9 +8,10 @@ import lombok.Data;
  * @Description:
  * @Date: 2022-06-14 9:34:16
  **/
-public class HaBaDog extends Dog {
+public class HaBaDog extends Dog implements IDog {
 
     private boolean haba = true;
+
 
     public HaBaDog() {
         score = 1;
@@ -21,7 +22,6 @@ public class HaBaDog extends Dog {
     }
 
     // get&set==================
-
     public boolean isHaba() {
         return haba;
     }
@@ -29,4 +29,5 @@ public class HaBaDog extends Dog {
     public void setHaba(boolean haba) {
         this.haba = haba;
     }
+
 }
