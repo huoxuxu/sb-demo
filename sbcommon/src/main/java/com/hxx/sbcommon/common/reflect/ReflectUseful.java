@@ -23,6 +23,7 @@ import java.util.*;
  **/
 @Slf4j
 public class ReflectUseful {
+
     // 当前类
     private Class currentCls;
 
@@ -94,145 +95,6 @@ public class ReflectUseful {
         return map;
     }
 
-    /**
-     * 拷贝bean
-     *
-     * @param target 拷贝目标
-     * @param srcMap 源
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     */
-    public static void copyMapTo(Object target, Map<String, Object> srcMap)
-            throws InvocationTargetException, IllegalAccessException {
-        if (target == null || srcMap == null || srcMap.isEmpty()) {
-            return;
-        }
-        ReflectUseful reflectUseful = new ReflectUseful(target.getClass());
-        List<PropInfo> propInfos = reflectUseful.getPropInfos();
-        copyMapTo(target, propInfos, srcMap);
-    }
-
-
-    /**
-     * 将数据拷贝到模型集合
-     *
-     * @param cls
-     * @param srcMaps
-     * @param <T>
-     * @return
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     */
-    public static <T> List<T> copyMapTos(Class<T> cls, List<Map<String, Object>> srcMaps)
-            throws InvocationTargetException, IllegalAccessException, InstantiationException {
-        List<T> ls = new ArrayList<>();
-        if (CollectionUtils.isEmpty(srcMaps)) {
-            return ls;
-        }
-        ReflectUseful reflectUseful = new ReflectUseful(cls);
-        List<PropInfo> propInfos = reflectUseful.getPropInfos();
-        for (Map<String, Object> srcMap : srcMaps) {
-            T target = cls.newInstance();
-            copyMapTo(target, propInfos, srcMap);
-            ls.add(target);
-        }
-        return ls;
-    }
-
-    /**
-     * 拷贝bean
-     *
-     * @param target
-     * @param source
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
-     */
-    public static void copyTo(Object target, Object source) throws IllegalAccessException, InvocationTargetException {
-        if (target == null || source == null) {
-            return;
-        }
-        Map<String, Object> map = beanToMap(source);
-        copyMapTo(target, map);
-    }
-
-    /**
-     * bean转map
-     *
-     * @param target
-     * @return
-     * @throws IllegalAccessException
-     */
-    public static Map<String, Object> beanToMap(Object target) throws IllegalAccessException {
-        Map<String, Object> map = new HashMap<>();
-        if (target == null) {
-            return map;
-        }
-
-        ReflectUseful reflectUseful = new ReflectUseful(target.getClass());
-        List<PropInfo> propInfos = reflectUseful.getPropInfos();
-        return beanToMap(target, propInfos);
-    }
-
-    /**
-     * bean转Map集合
-     *
-     * @param targets
-     * @param <T>
-     * @return
-     * @throws IllegalAccessException
-     */
-    public static <T> List<Map<String, Object>> beanToMaps(Class<T> cls, List<T> targets) throws IllegalAccessException {
-        List<Map<String, Object>> ls = new ArrayList<>();
-        if (CollectionUtils.isEmpty(targets)) {
-            return ls;
-        }
-
-        ReflectUseful reflectUseful = new ReflectUseful(cls);
-        List<PropInfo> propInfos = reflectUseful.getPropInfos();
-        for (T t : targets) {
-            ls.add(beanToMap(t, propInfos));
-        }
-        return ls;
-    }
-
-
-    /**
-     * @param target          目标对象
-     * @param targetPropInfos 目标对象属性信息集合
-     * @return
-     * @throws IllegalAccessException
-     */
-    private static <T> Map<String, Object> beanToMap(T target, List<PropInfo> targetPropInfos) throws IllegalAccessException {
-        Map<String, Object> map = new HashMap<>();
-        for (PropInfo propInfo : targetPropInfos) {
-            Field field = propInfo.getField();
-            field.setAccessible(true);
-            map.put(propInfo.getName(), field.get(target));
-        }
-        return map;
-    }
-
-    /**
-     * @param target          目标对象
-     * @param targetPropInfos 目标对象属性信息集合
-     * @param srcMap          数据源
-     * @param <T>
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     */
-    private static <T> void copyMapTo(T target, List<PropInfo> targetPropInfos, Map<String, Object> srcMap) throws InvocationTargetException, IllegalAccessException {
-        for (PropInfo propInfo : targetPropInfos) {
-            String name = propInfo.getName();
-            if (!srcMap.containsKey(name)) {
-                continue;
-            }
-            Object val = srcMap.get(name);
-            if (val != null) {
-                propInfo.setMethod.invoke(target, val);
-            }
-        }
-    }
 
     private static List<Field> getFields(Class<?> clazz) {
         List<Field> ls = new ArrayList<>();
@@ -277,7 +139,7 @@ public class ReflectUseful {
                     continue;
                 }
                 // add
-                propInfos.add(new PropInfo(name, field, getMethod, setMethod));
+                propInfos.add(new PropInfo(this.currentCls, name, field, getMethod, setMethod));
             }
         }
         return propInfos;
@@ -443,6 +305,10 @@ public class ReflectUseful {
     @Data
     public static class PropInfo {
         /**
+         * 所属类
+         */
+        private Class<?> curClass;
+        /**
          * 属性名
          */
         private String name;
@@ -456,7 +322,8 @@ public class ReflectUseful {
         public PropInfo() {
         }
 
-        public PropInfo(String name, Field field, Method getMethod, Method setMethod) {
+        public PropInfo(Class<?> curClass, String name, Field field, Method getMethod, Method setMethod) {
+            this.curClass = curClass;
             this.name = name;
             this.field = field;
             this.getMethod = getMethod;
