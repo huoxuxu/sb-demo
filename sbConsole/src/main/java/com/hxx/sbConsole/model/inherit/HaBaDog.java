@@ -10,6 +10,8 @@ import lombok.Data;
  **/
 public class HaBaDog extends Dog implements IDog {
 
+    private Boolean female = true;
+
     private boolean haba = true;
 
 
@@ -30,4 +32,11 @@ public class HaBaDog extends Dog implements IDog {
         this.haba = haba;
     }
 
+    public Boolean getFemale() {
+        return female;
+    }
+
+    public void setFemale(Boolean female) {
+        this.female = female;
+    }
 }

@@ -4,10 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author: huoxuxu
@@ -37,18 +34,20 @@ public class BeanCopyUtil {
     /**
      * 拷贝bean
      *
-     * @param target 拷贝目标
-     * @param srcMap 源
+     * @param target   拷贝目标
+     * @param srcMap   源
+     * @param skipNull 跳过null值
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    public static <TTarget> void copyMapTo(TTarget target, Map<String, Object> srcMap)
+    public static <TTarget> void copyMapTo(TTarget target, Map<String, Object> srcMap,
+                                           boolean skipNull)
             throws InvocationTargetException, IllegalAccessException {
         if (target == null || srcMap == null || srcMap.isEmpty()) {
             return;
         }
         List<ReflectUseful.PropInfo> propInfos = getPropInfos(target.getClass());
-        copyMapTo(target, propInfos, srcMap);
+        copyMapTo(target, propInfos, srcMap, skipNull);
     }
 
 
@@ -57,13 +56,15 @@ public class BeanCopyUtil {
      *
      * @param cls
      * @param srcMaps
+     * @param skipNull 跳过null值
      * @param <T>
      * @return
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    public static <T> List<T> copyMapTos(Class<T> cls, List<Map<String, Object>> srcMaps)
+    public static <T> List<T> copyMapTos(Class<T> cls, List<Map<String, Object>> srcMaps,
+                                         boolean skipNull)
             throws InvocationTargetException, IllegalAccessException, InstantiationException {
         List<T> ls = new ArrayList<>();
         if (CollectionUtils.isEmpty(srcMaps)) {
@@ -72,7 +73,7 @@ public class BeanCopyUtil {
         List<ReflectUseful.PropInfo> propInfos = getPropInfos(cls);
         for (Map<String, Object> srcMap : srcMaps) {
             T target = cls.newInstance();
-            copyMapTo(target, propInfos, srcMap);
+            copyMapTo(target, propInfos, srcMap, skipNull);
             ls.add(target);
         }
         return ls;
@@ -83,15 +84,17 @@ public class BeanCopyUtil {
      *
      * @param target
      * @param source
+     * @param skipNull 跳过null值
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      */
-    public static <TTarget, TSrc> void copyTo(TTarget target, TSrc source) throws IllegalAccessException, InvocationTargetException {
+    public static <TTarget, TSrc> void copyTo(TTarget target, TSrc source, boolean skipNull)
+            throws IllegalAccessException, InvocationTargetException {
         if (target == null || source == null) {
             return;
         }
         Map<String, Object> map = beanToMap(source);
-        copyMapTo(target, map);
+        copyMapTo(target, map, skipNull);
     }
 
     /**
@@ -163,7 +166,8 @@ public class BeanCopyUtil {
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    private static <T> void copyMapTo(T target, List<ReflectUseful.PropInfo> targetPropInfos, Map<String, Object> srcMap)
+    private static <T> void copyMapTo(T target, List<ReflectUseful.PropInfo> targetPropInfos, Map<String, Object> srcMap,
+                                      boolean skipNull)
             throws InvocationTargetException, IllegalAccessException {
         for (ReflectUseful.PropInfo propInfo : targetPropInfos) {
             String name = propInfo.getName();
@@ -171,13 +175,21 @@ public class BeanCopyUtil {
                 continue;
             }
             Object val = srcMap.get(name);
-            if (val != null) {
+            if (!skipNull || val != null) {
                 Method setMethod = propInfo.getSetMethod();
                 if (setMethod != null) {
+                    if (val == null) {
+                        boolean isPrimitive = Optional.ofNullable(setMethod.getParameterTypes())
+                                .map(d -> d.length == 1 ? d[0] : null)
+                                .map(Class::isPrimitive)
+                                .orElse(false);
+                        if (isPrimitive) {
+                            continue;
+                        }
+                    }
                     setMethod.invoke(target, val);
                 }
             }
         }
     }
-
 }
