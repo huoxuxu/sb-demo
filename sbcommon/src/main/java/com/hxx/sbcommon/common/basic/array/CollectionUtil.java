@@ -381,29 +381,6 @@ public class CollectionUtil {
      */
     public static <T, TK, TV> Map<TK, TV> getGroupByMap(Collection<T> ls, Predicate<? super T> filter,
                                                         Function<? super T, ? extends TK> groupByFunc,
-                                                        Function<? super List<T>, ? extends TV> groupByValFunc) {
-        Map<TK, List<T>> groupByMap = getGroupByMap(ls, filter, groupByFunc);
-        Map<TK, TV> map = new HashMap<>();
-        for (Map.Entry<TK, List<T>> entry : groupByMap.entrySet()) {
-            map.put(entry.getKey(), groupByValFunc.apply(entry.getValue()));
-        }
-        return map;
-    }
-
-    /**
-     * 简单的分组
-     *
-     * @param ls
-     * @param filter
-     * @param groupByFunc
-     * @param groupByValFunc
-     * @param <T>
-     * @param <TK>
-     * @param <TV>
-     * @return
-     */
-    public static <T, TK, TV> Map<TK, TV> getGroupByMap(Collection<T> ls, Predicate<? super T> filter,
-                                                        Function<? super T, ? extends TK> groupByFunc,
                                                         BiFunction<TK, ? super List<T>, ? extends TV> groupByValFunc) {
         Map<TK, List<T>> groupByMap = getGroupByMap(ls, filter, groupByFunc);
         Map<TK, TV> map = new HashMap<>();
