@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.encoder;
+package com.hxx.sbcommon.common.encrypt.encoder;
 
 import org.apache.commons.codec.digest.DigestUtils;
 

@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.thread.threadPool;
+package com.hxx.sbConsole.module.thread.threadPool;
 
 import lombok.extern.slf4j.Slf4j;
 

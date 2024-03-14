@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.thread.futureTask.demo;
+package com.hxx.sbConsole.module.thread.futureTask.demo;
 
 import lombok.extern.slf4j.Slf4j;
 

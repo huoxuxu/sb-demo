@@ -1,4 +1,4 @@
-package com.hxx.sbcommon.common.encoder;
+package com.hxx.sbcommon.common.encrypt.encoder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;

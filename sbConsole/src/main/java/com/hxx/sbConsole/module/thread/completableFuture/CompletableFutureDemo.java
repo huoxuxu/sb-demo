@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.thread.completableFuture;
+package com.hxx.sbConsole.module.thread.completableFuture;
 
 import lombok.extern.slf4j.Slf4j;
 

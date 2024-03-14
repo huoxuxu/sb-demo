@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.thread.threadLocal;
+package com.hxx.sbConsole.module.thread.threadlocal;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

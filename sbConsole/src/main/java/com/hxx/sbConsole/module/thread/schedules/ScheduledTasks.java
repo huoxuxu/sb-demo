@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.schedules;
+package com.hxx.sbConsole.module.thread.schedules;
 
 import com.hxx.sbcommon.common.intervalJob.IntervalJobDispatcher;
 import lombok.extern.slf4j.Slf4j;

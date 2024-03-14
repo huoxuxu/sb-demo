@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.thread;
+package com.hxx.sbConsole.module.thread;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
