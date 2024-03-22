@@ -1,6 +1,9 @@
 package com.hxx.sbcommon.common.office.poi.tools;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -55,6 +58,24 @@ public class POIExcelCellTools {
         }
 
         throw new IllegalStateException("不支持的数据类型！" + val.getClass());
+    }
+
+    /**
+     * 设置数字不以科学计数法表示
+     *
+     * @param workbook
+     * @param cell
+     */
+    public void setNumberCellStyle(Workbook workbook, Cell cell) {
+        // 创建一个DataFormat对象，用于获取数字格式
+        DataFormat dataFormat = workbook.createDataFormat();
+
+        // 获取“常规”格式，这通常是不带科学计数法的格式
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setDataFormat(dataFormat.getFormat("#")); // "#" 表示常规格式
+
+        // 将数字格式应用到单元格
+        cell.setCellStyle(cellStyle);
     }
 
     private static Double getNumericVal(Object val) {

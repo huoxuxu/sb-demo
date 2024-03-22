@@ -11,6 +11,17 @@ import java.util.concurrent.TimeUnit;
  **/
 public class ScheduledUtil {
 
+
+    /**
+     * 创建定时调度服务
+     *
+     * @param threadName
+     * @return
+     */
+    public static ScheduledExecutorService create(String threadName) {
+        return Executors.newScheduledThreadPool(5, r -> new Thread(r, threadName));
+    }
+
     /**
      * 创建并运行定时任务
      *
@@ -19,10 +30,18 @@ public class ScheduledUtil {
      * @param runnable   任务
      * @return
      */
-    public static ScheduledExecutorService createAndRun(String threadName, int interval, Runnable runnable) {
-        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1, r -> new Thread(r, threadName));
+    public static void setRunMethod(String threadName, int interval, Runnable runnable) {
+        ScheduledExecutorService scheduledExecutorService = create(threadName);
         scheduledExecutorService.scheduleAtFixedRate(runnable, 0, interval, TimeUnit.MILLISECONDS);
-        return scheduledExecutorService;
+    }
+
+    /**
+     * @param scheduledExecutorService
+     * @param interval                 任务执行的间隔，毫秒
+     * @param runnable
+     */
+    public static void setRunMethod(ScheduledExecutorService scheduledExecutorService, int interval, Runnable runnable) {
+        scheduledExecutorService.scheduleAtFixedRate(runnable, 0, interval, TimeUnit.MILLISECONDS);
     }
 
     /**

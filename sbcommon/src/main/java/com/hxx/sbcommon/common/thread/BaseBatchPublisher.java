@@ -5,12 +5,13 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * 批量发送者
@@ -20,6 +21,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 @Slf4j
 public abstract class BaseBatchPublisher<T> {
+    private static final Executor customExecutor = ThreadPoolUtil.createCustomExecutor();
+
+    private ScheduledExecutorService scheduleExeecutor;
+
     // 发送阈值
     private final int thresholdValue;
 
@@ -39,36 +44,42 @@ public abstract class BaseBatchPublisher<T> {
         this.thresholdValue = thresholdValue;
         this.delayMs = delayMs;
         // 定时器
-        ScheduledUtil.createAndRun("BaseBatchPublisher", 5, this::intervalPollQueue);
+        this.scheduleExeecutor = ScheduledUtil.create("BaseBatchPublisher");
+        ScheduledUtil.setRunMethod(scheduleExeecutor, 5, this::intervalPollQueue);
+    }
+
+    public void shutdown() {
+        ScheduledUtil.shutdown(this.scheduleExeecutor);
     }
 
     // 入队
     public void add(T t) {
         queue.add(t);
         if (queue.size() > this.thresholdValue) {
-            pollQueue();
+            pollQueue(1);
         }
     }
 
     // 出队
-    public void dequeue(Collection<T> ls) {
+    public void dequeue(int source, Collection<T> ls) {
         preDequeueTime = LocalDateTime.now();
         if (!CollectionUtils.isEmpty(ls)) {
-            consumer(ls);
+            customExecutor.execute(() -> consumerAsync(source, ls));
         }
     }
 
     /**
      * 消费
      *
+     * @param source 1add 2time
      * @param ls
      */
-    public abstract void consumer(Collection<T> ls);
+    public abstract void consumerAsync(int source, Collection<T> ls);
 
     // 出队
-    private void pollQueue() {
+    private void pollQueue(int source) {
         List<T> ls = get();
-        dequeue(ls);
+        dequeue(source, ls);
     }
 
     // 定时出队
@@ -83,7 +94,7 @@ public abstract class BaseBatchPublisher<T> {
                 return;
             }
         }
-        pollQueue();
+        pollQueue(2);
     }
 
     // 获取待消费的数据
