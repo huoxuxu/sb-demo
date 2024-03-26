@@ -10,9 +10,7 @@ import com.hxx.sbcommon.common.reflect.BeanInfoUtil;
 import com.hxx.sbcommon.common.reflect.ReflectUseful;
 import com.hxx.sbcommon.model.Result;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.ibatis.reflection.Reflector;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -83,7 +81,7 @@ public class ReflectDemoService {
         Dog dog = new HaBaDog();
         Class<? extends Dog> aClass = dog.getClass();
 
-        Map<String, Method> methods = ReflectUseful.getMethodMap(aClass);
+        Map<String, Method> methods = ReflectUseful.getMethodAsMap(aClass);
 
         ReflectUseful reflectUseful = new ReflectUseful(aClass);
         List<ReflectUseful.PropInfo> propInfos = reflectUseful.getPropInfos();

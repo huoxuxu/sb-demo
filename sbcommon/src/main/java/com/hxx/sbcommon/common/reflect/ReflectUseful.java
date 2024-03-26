@@ -51,7 +51,7 @@ public class ReflectUseful {
         this.constructors = currentCls.getConstructors();
 
         // 方法
-        this.methods = getMethodMap(currentCls);
+        this.methods = getMethodAsMap(currentCls);
         if (!methods.isEmpty()) {
             initMethod(this.methods.values());
         }
@@ -78,7 +78,7 @@ public class ReflectUseful {
      * @param clazz
      * @return k：方法签名，v：方法
      */
-    public static Map<String, Method> getMethodMap(Class<?> clazz) {
+    public static Map<String, Method> getMethodAsMap(Class<?> clazz) {
         Map<String, Method> map = new HashMap<>();
         if (clazz == null || clazz == Object.class) {
             return map;
@@ -90,9 +90,31 @@ public class ReflectUseful {
             map.putIfAbsent(signature, method);
         }
 
-        Map<String, Method> methodMap = getMethodMap(clazz.getSuperclass());
+        Map<String, Method> methodMap = getMethodAsMap(clazz.getSuperclass());
         methodMap.forEach(map::putIfAbsent);
         return map;
+    }
+
+    public static void makeAccessible(Constructor<?> ctor) {
+        if ((!Modifier.isPublic(ctor.getModifiers()) ||
+                !Modifier.isPublic(ctor.getDeclaringClass().getModifiers())) && !ctor.isAccessible()) {
+            ctor.setAccessible(true);
+        }
+    }
+
+    public static void makeAccessible(Field field) {
+        if ((!Modifier.isPublic(field.getModifiers()) ||
+                !Modifier.isPublic(field.getDeclaringClass().getModifiers()) ||
+                Modifier.isFinal(field.getModifiers())) && !field.isAccessible()) {
+            field.setAccessible(true);
+        }
+    }
+
+    public static void makeAccessible(Method method) {
+        if ((!Modifier.isPublic(method.getModifiers()) ||
+                !Modifier.isPublic(method.getDeclaringClass().getModifiers())) && !method.isAccessible()) {
+            method.setAccessible(true);
+        }
     }
 
 

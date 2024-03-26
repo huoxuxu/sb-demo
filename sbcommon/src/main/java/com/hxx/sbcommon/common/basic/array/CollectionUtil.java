@@ -99,7 +99,7 @@ public class CollectionUtil {
      * @param ls
      * @return
      */
-    public static List<String> getItemList(Collection<String> ls) {
+    public static List<String> getItemAsList(Collection<String> ls) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
                 .filter(d -> !StringUtils.isBlank(d))
                 .map(d -> d.trim())
@@ -112,7 +112,7 @@ public class CollectionUtil {
      * @param ls
      * @return
      */
-    public static Set<String> getItemSet(Collection<String> ls) {
+    public static Set<String> getItemAsSet(Collection<String> ls) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
                 .filter(d -> !StringUtils.isBlank(d))
                 .map(d -> d.trim())

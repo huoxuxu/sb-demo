@@ -6,21 +6,17 @@ import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MessageFormatter;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.Collator;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * 开发常用工具类
@@ -202,14 +198,14 @@ public class OftenUtil {
      * 通用处理数据，为null时使用默认值
      *
      * @param source
-     * @param mapperFunc
+     * @param mapFunc
      * @param defaultVal
      * @param <T>
      * @param <F>
      * @return
      */
-    public static <T, F> F proc(T source, Function<T, F> mapperFunc, F defaultVal) {
-        return Optional.ofNullable(source).map(mapperFunc).orElse(defaultVal);
+    public static <T, F> F mapField(T source, Function<T, F> mapFunc, F defaultVal) {
+        return Optional.ofNullable(source).map(mapFunc).orElse(defaultVal);
     }
 
     // UUID
@@ -333,11 +329,6 @@ public class OftenUtil {
 //            return obj;
 //        }
         return obj;
-    }
-
-    // 基础字段处理
-    public static class BasicUtil {
-
     }
 
     // 数字

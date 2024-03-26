@@ -22,8 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
-import org.springframework.util.StopWatch;
+import org.springframework.util.*;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -95,8 +94,8 @@ public class DemoService {
                         .orElse("我是默认值");
                 System.out.println(oe);
 
-                OftenUtil.proc(str, d -> d.toLowerCase(), "1111");
-                String s = OftenUtil.proc(str, d -> d.trim(), "1111");
+                OftenUtil.mapField(str, d -> d.toLowerCase(), "1111");
+                String s = OftenUtil.mapField(str, d -> d.trim(), "1111");
                 System.out.println(s);
             }
             {
@@ -197,9 +196,9 @@ public class DemoService {
         System.out.println("System==================================================");
         {
             String item = null;
-            String s = OftenUtil.proc(item, String::trim, "");
+            String s = OftenUtil.mapField(item, String::trim, "");
             item = " 98 ";
-            s = OftenUtil.proc(item, String::trim, "");
+            s = OftenUtil.mapField(item, String::trim, "");
 
             System.out.println(s);
 
