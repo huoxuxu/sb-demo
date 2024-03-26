@@ -68,6 +68,10 @@
         from t1 limit #{min},#{max}
     </select>
 
+    <select id="selectAllAsMap" resultType="map">
+        select * from t1
+    </select>
+
     <select id="selectByExample" parameterType="java.util.Map"
             resultType="com.hxx.mbtest.entity.T1">
         select *
@@ -115,8 +119,8 @@
     <!-- 创建用户 -->
     <insert id="addUser" parameterType="com.hxx.mbtest.entity.T1">
         insert into t1
-            (code, name, score, enabled, birthday, createTime)
-        values (#{code}, #{name}, #{score}, #{enabled}, #{birthday}, #{createTime})
+            (code, name, score, enabled, birthday, gmt_create)
+        values (#{code}, #{name}, #{score}, #{enabled}, #{birthday}, #{gmtCreate})
     </insert>
 
     <insert id="addUserDynamic" parameterType="com.hxx.mbtest.entity.T1">
@@ -128,7 +132,7 @@
         </if>
         enabled,
         birthday,
-        createTime)
+        gmt_create)
         values (#{code},
         #{name},
         <if test='score != null and score >= 0'>
@@ -136,15 +140,15 @@
         </if>
         #{enabled},
         #{birthday},
-        #{createTime})
+        #{gmtCreate})
     </insert>
 
     <!--批量新增-->
     <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id">
-        insert into t1 (code, name, score,enabled,birthday,createTime)
+        insert into t1 (code, name, score,enabled,birthday,gmt_create)
         values
         <foreach collection="list" item="item" separator=",">
-            (#{item.code}, #{item.name}, #{item.score}, #{item.enabled}, #{item.birthday}, #{item.createTime})
+            (#{item.code}, #{item.name}, #{item.score}, #{item.enabled}, #{item.birthday}, #{gmtCreate})
         </foreach>
     </insert>
 
@@ -155,7 +159,7 @@
         <if test='score != null and score >= 0'>
             score = #{score},
         </if>
-        createTime = #{createTime}
+        gmt_create = #{gmtCreate}
         where id = #{id}
     </update>
     <!--    批量更新-->

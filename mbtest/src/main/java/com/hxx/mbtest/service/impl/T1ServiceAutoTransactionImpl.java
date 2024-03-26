@@ -37,7 +37,7 @@ public class T1ServiceAutoTransactionImpl {
             t1.setEnabled(false);
             LocalDateTime now = LocalDateTime.now();
             t1.setBirthday(now.minusYears(1));
-            t1.setCreateTime(now.minusYears(2));
+            t1.setGmtCreate(now.minusYears(2));
         }
 
         int ret = t1Mapper.addUser(t1);

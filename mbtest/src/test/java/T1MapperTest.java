@@ -53,7 +53,7 @@ public class T1MapperTest {
 
             LocalDateTime now = LocalDateTime.now();
             t.setBirthday(now.minusYears(1));
-            t.setCreateTime(now);
+            t.setGmtCreate(now);
 
             tls.add(t);
         }
@@ -66,7 +66,7 @@ public class T1MapperTest {
 
             LocalDateTime now = LocalDateTime.now();
             t.setBirthday(now.minusYears(1));
-            t.setCreateTime(now);
+            t.setGmtCreate(now);
 
             tls.add(t);
         }

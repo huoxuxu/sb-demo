@@ -1,5 +1,5 @@
 import com.hxx.mbtest.MbtestApplication;
-import com.hxx.mbtest.service.T1Service;
+import com.hxx.mbtest.service.impl.T1SelectServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +13,18 @@ import org.springframework.test.context.junit4.SpringRunner;
  **/
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MbtestApplication.class)
-public class T1ServiceTest {
+public class T1SelectServiceTest {
 
+    @Autowired
+    private T1SelectServiceImpl t1SelectService;
 
     @Test
     public void Run() {
-        System.out.println("==============t1Service.Run==============");
+        System.out.println("==============t1SelectService.Run==============");
 
-//        t1Service.Run();
+        t1SelectService.run();
 
     }
-
 
 
 }

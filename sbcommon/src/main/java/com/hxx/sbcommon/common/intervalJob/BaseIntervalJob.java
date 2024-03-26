@@ -17,6 +17,7 @@ import java.util.*;
  **/
 @Slf4j
 public abstract class BaseIntervalJob implements Runnable {
+
     protected String jobCode;
 
     // 间隔，秒
@@ -28,7 +29,8 @@ public abstract class BaseIntervalJob implements Runnable {
     // 任务是否已提交到线程池
     private volatile boolean submitted;
 
-    private LocalDateTime startRunTime = LocalDateTime.MIN;
+    // job运行的开始时间，如果没在运行则此值无效
+    private LocalDateTime runStartTime = LocalDateTime.MIN;
 
     private List<BaseIntervalJobExecutorHandler> handlers = new ArrayList<>();
 
@@ -70,8 +72,8 @@ public abstract class BaseIntervalJob implements Runnable {
      *
      * @return
      */
-    public LocalDateTime getStartRunTime() {
-        return this.startRunTime;
+    public LocalDateTime getRunStartTime() {
+        return this.runStartTime;
     }
 
     /**
@@ -107,11 +109,11 @@ public abstract class BaseIntervalJob implements Runnable {
      * @return
      */
     public long getRunningSecond() {
-        if (this.startRunTime.isEqual(LocalDateTime.MIN)) {
+        if (this.runStartTime.isEqual(LocalDateTime.MIN)) {
             return 0;
         }
 
-        Duration dur = Duration.between(this.startRunTime, LocalDateTime.now());
+        Duration dur = Duration.between(this.runStartTime, LocalDateTime.now());
         return dur.getSeconds();
     }
 
@@ -120,7 +122,7 @@ public abstract class BaseIntervalJob implements Runnable {
         String durSecondsStr = "";
         long runningSecond = this.getRunningSecond();
         if (runningSecond > 0) {
-            durSecondsStr = "开始运行：" + this.startRunTime + "已耗时：" + runningSecond + "s";
+            durSecondsStr = "开始运行：" + this.runStartTime + "已耗时：" + runningSecond + "s";
         }
 
         return "[" + this.jobCode + "] " + durSecondsStr + " " + (this.running ? "RUNNING" : "") + " " + (this.submitted ? "SUBMITTED" : "");
@@ -135,7 +137,7 @@ public abstract class BaseIntervalJob implements Runnable {
         IntervalJobContext context = new IntervalJobContext(this);
         try {
             running = true;
-            startRunTime = LocalDateTime.now();
+            runStartTime = LocalDateTime.now();
             for (BaseIntervalJobExecutorHandler handler : this.handlers) {
                 handler.onBeforeRun(context);
             }
@@ -158,7 +160,7 @@ public abstract class BaseIntervalJob implements Runnable {
             }
         } finally {
             running = false;
-            startRunTime = LocalDateTime.MIN;
+            runStartTime = LocalDateTime.MIN;
             submitted = false;
             try {
                 for (BaseIntervalJobExecutorHandler handler : this.handlers) {

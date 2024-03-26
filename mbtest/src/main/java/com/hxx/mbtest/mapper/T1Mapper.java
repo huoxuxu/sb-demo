@@ -31,6 +31,8 @@ public interface T1Mapper {
     //Map 映射
     List<T1> selectUserByMap(Map map);
 
+    List<Map<String,Object>>selectAllAsMap();
+
     // 通用查询
     List<T1> selectByExample(T1Example example);
 
