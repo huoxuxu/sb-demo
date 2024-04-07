@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.service.impl.test;
+package com.hxx.sbConsole.service.impl.demo.basic;
 
 import com.hxx.sbcommon.common.basic.OftenUtil;
 

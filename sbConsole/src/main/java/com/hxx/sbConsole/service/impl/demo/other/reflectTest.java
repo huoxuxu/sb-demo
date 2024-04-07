@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.service.impl.test;
+package com.hxx.sbConsole.service.impl.demo.other;
 
 import com.hxx.sbConsole.model.Employee;
 
