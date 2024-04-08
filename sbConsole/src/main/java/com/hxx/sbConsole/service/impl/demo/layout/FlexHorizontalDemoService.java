@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.service.impl.demo;
+package com.hxx.sbConsole.service.impl.demo.layout;
 
 import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import lombok.Data;
