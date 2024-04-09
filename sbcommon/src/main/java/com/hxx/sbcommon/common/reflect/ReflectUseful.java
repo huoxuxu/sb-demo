@@ -1,17 +1,17 @@
 package com.hxx.sbcommon.common.reflect;
 
-import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.basic.text.StringUtil;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 
-/**
- * // 允许调用私有方法
- * constructor.setAccessible(true);
+/*
+  // 允许调用私有方法
+  constructor.setAccessible(true);
+  field.setAccessible(true);
  */
 
 /**
@@ -23,113 +23,151 @@ import java.util.*;
  **/
 @Slf4j
 public class ReflectUseful {
+
     // 当前类
     private Class currentCls;
 
     // 所有字段
     private List<Field> fields;
     // 所有方法
-    private List<Method> methods;
+    private Map<String, Method> methods;
     // 构造函数
     private Constructor[] constructors;
     // 公开的实例方法
     private List<Method> publicInstanceMethods = new ArrayList<>();
     private List<Method> publicStaticMethods = new ArrayList<>();
 
-    // 属性对应的字段
-    private List<Field> propFields = new ArrayList<>();
-    // 属性对应字段包含的特性集合
-    private Map<String, Annotation[]> fieldAnnotationMap = new HashMap<>();
+    // 包含Getter的方法
+    private Map<String, Method> fieldGetterMap = new HashMap<>();
+    // 包含Setter的方法
+    private Map<String, Method> fieldSetterMap = new HashMap<>();
+    // 类的属性集合
+    private List<PropInfo> propInfos = new ArrayList<>();
 
-    // 包含Getter的字段
-    private Set<String> fieldHasGetter = new HashSet<>();
-    // 包含Setter的字段
-    private Set<String> fieldHasSetter = new HashSet<>();
-
-    // 属性集合
-    private List<String> props = new ArrayList<>();
 
     public ReflectUseful(Class<?> currentCls) {
         this.currentCls = currentCls;
 
+        this.constructors = currentCls.getConstructors();
+
+        // 方法
+        this.methods = getMethodAsMap(currentCls);
+        if (!methods.isEmpty()) {
+            initMethod(this.methods.values());
+        }
+
         // 获取类的所有属性
         this.fields = getFields(currentCls);
-        if (CollectionUtils.isEmpty(fields)) return;
-
-        this.methods = getMethods(currentCls);
-        if (CollectionUtils.isEmpty(methods)) return;
-
-        this.constructors = currentCls.getConstructors();
-        initMethod(this.methods);
-        initField(this.fields);
+        if (!CollectionUtils.isEmpty(fields)) {
+            this.propInfos = initField(this.fields);
+        }
     }
 
     /**
-     * 获取属性集合
+     * 获取类属性
      *
      * @return
      */
-    public List<String> getProps() {
-        return props;
+    public List<PropInfo> getPropInfos() {
+        return propInfos;
     }
 
-    // 初始化
-    public static List<Field> getFields(Class<?> clazz) {
+    /**
+     * 查询类中方法，包含基类方法
+     *
+     * @param clazz
+     * @return k：方法签名，v：方法
+     */
+    public static Map<String, Method> getMethodAsMap(Class<?> clazz) {
+        Map<String, Method> map = new HashMap<>();
+        if (clazz == null || clazz == Object.class) {
+            return map;
+        }
+
+        Method[] fieldArr = clazz.getDeclaredMethods();
+        for (Method method : fieldArr) {
+            String signature = MethodUtils.getSignature(method);
+            map.putIfAbsent(signature, method);
+        }
+
+        Map<String, Method> methodMap = getMethodAsMap(clazz.getSuperclass());
+        methodMap.forEach(map::putIfAbsent);
+        return map;
+    }
+
+    public static void makeAccessible(Constructor<?> ctor) {
+        if ((!Modifier.isPublic(ctor.getModifiers()) ||
+                !Modifier.isPublic(ctor.getDeclaringClass().getModifiers())) && !ctor.isAccessible()) {
+            ctor.setAccessible(true);
+        }
+    }
+
+    public static void makeAccessible(Field field) {
+        if ((!Modifier.isPublic(field.getModifiers()) ||
+                !Modifier.isPublic(field.getDeclaringClass().getModifiers()) ||
+                Modifier.isFinal(field.getModifiers())) && !field.isAccessible()) {
+            field.setAccessible(true);
+        }
+    }
+
+    public static void makeAccessible(Method method) {
+        if ((!Modifier.isPublic(method.getModifiers()) ||
+                !Modifier.isPublic(method.getDeclaringClass().getModifiers())) && !method.isAccessible()) {
+            method.setAccessible(true);
+        }
+    }
+
+
+    private static List<Field> getFields(Class<?> clazz) {
         List<Field> ls = new ArrayList<>();
-        if (clazz == null || clazz == Object.class) return ls;
+        if (clazz == null || clazz == Object.class) {
+            return ls;
+        }
 
         Field[] fieldArr = clazz.getDeclaredFields();
         ls.addAll(Arrays.asList(fieldArr));
 
         List<Field> fs = getFields(clazz.getSuperclass());
-        if (!CollectionUtils.isEmpty(fs)) {
-            for (Field field : fs) {
-                String name = field.getName();
-                boolean flag = ls.stream().anyMatch(d -> name.equals(d.getName()));
-                if (flag) continue;
+        for (Field field : fs) {
+            boolean flag = ls.stream().anyMatch(d -> field.getName().equals(d.getName()) && field.getType() == d.getType());
+            if (!flag) {
                 ls.add(field);
             }
         }
         return ls;
     }
 
-    public static List<Method> getMethods(Class<?> clazz) {
-        List<Method> ls = new ArrayList<>();
-        if (clazz == null || clazz == Object.class) return ls;
-
-        Method[] fieldArr = clazz.getDeclaredMethods();
-        ls.addAll(Arrays.asList(fieldArr));
-
-        List<Method> fs = getMethods(clazz.getSuperclass());
-        if (!CollectionUtils.isEmpty(fs)) {
-            for (Method item : fs) {
-                String name = item.getName();
-                boolean flag = ls.stream().anyMatch(d -> name.equals(d.getName()));
-                if (flag) continue;
-
-                ls.add(item);
-            }
+    // 要先初始化 initMethod 方法
+    private List<PropInfo> initField(List<Field> fields) {
+        List<PropInfo> propInfos = new ArrayList<>();
+        if (CollectionUtils.isEmpty(fields)) {
+            return propInfos;
         }
-        return ls;
-    }
-
-    private void initField(List<Field> fields) {
-        if (CollectionUtils.isEmpty(fields)) return;
 
         for (Field field : fields) {
             String name = field.getName();
-
-            if (fieldHasGetter.contains(name) && fieldHasSetter.contains(name)) {
-                this.propFields.add(field);
-                this.props.add(name);
-                // 查询注解
-                Annotation[] annotations = field.getAnnotations();
-                fieldAnnotationMap.put(name, annotations);
+            Method getMethod = fieldGetterMap.getOrDefault(name, null);
+            Method setMethod = fieldSetterMap.getOrDefault(name, null);
+            if (getMethod != null && setMethod != null) {
+                Class<?> fieldType = field.getType();
+                // get返回类型必须和字段类型一致
+                Class<?> returnType = getMethod.getReturnType();
+                if (fieldType != returnType) {
+                    continue;
+                }
+                // set唯一入参类型和字段类型一致
+                Class<?> parameterType = setMethod.getParameterTypes()[0];
+                if (fieldType != parameterType) {
+                    continue;
+                }
+                // add
+                propInfos.add(new PropInfo(this.currentCls, name, field, getMethod, setMethod));
             }
         }
+        return propInfos;
     }
 
-    private void initMethod(List<Method> methods) {
+    private void initMethod(Collection<Method> methods) {
         for (Method method : methods) {
             String methodName = method.getName();
 
@@ -150,7 +188,9 @@ public class ReflectUseful {
                 continue;
             }
 
-            if (Modifier.isFinal(modifiers)) continue;
+            if (Modifier.isFinal(modifiers)) {
+                continue;
+            }
 
             publicInstanceMethods.add(method);
 
@@ -158,14 +198,20 @@ public class ReflectUseful {
             boolean isGetter = checkGetterMethod(methodName, method);
             if (isGetter) {
                 // 反推field的名字
-                String fieldName = "";
+                String fieldName;
                 if (method.getReturnType() == boolean.class) {
-                    fieldName = StringUtil.lowerFirstChar(methodName.substring(2));
+                    if (methodName.startsWith("is")) {
+                        fieldName = StringUtil.lowerFirstChar(methodName.substring(2));
+                    }
+                    // 按get开头处理
+                    else {
+                        fieldName = StringUtil.lowerFirstChar(methodName.substring(3));
+                    }
                 } else {
                     fieldName = StringUtil.lowerFirstChar(methodName.substring(3));
                 }
                 if (isValidPropertyName(fieldName)) {
-                    fieldHasGetter.add(fieldName);
+                    fieldGetterMap.put(fieldName, method);
                 }
             }
 
@@ -175,7 +221,7 @@ public class ReflectUseful {
                 // 反推field的名字
                 String fieldName = StringUtil.lowerFirstChar(methodName.substring(3));
                 if (isValidPropertyName(fieldName)) {
-                    fieldHasSetter.add(fieldName);
+                    fieldSetterMap.put(fieldName, method);
                 }
             }
         }
@@ -242,10 +288,10 @@ public class ReflectUseful {
 
     // 校验Setter方法
     private static boolean checkSetterMethod(String methodName, Method method) {
-        /**
-         * boolean enabled = demoCls.isEnabled();
-         * demoCls.setEnabled(true);
-         * */
+        /*
+          boolean enabled = demoCls.isEnabled();
+          demoCls.setEnabled(true);
+          */
         if ("set".equals(methodName)) return false;
 
         int modifiers = method.getModifiers();
@@ -276,5 +322,35 @@ public class ReflectUseful {
         }
 
         return true;
+    }
+
+    @Data
+    public static class PropInfo {
+        /**
+         * 所属类
+         */
+        private Class<?> curClass;
+        /**
+         * 属性名
+         */
+        private String name;
+        /**
+         * 字段
+         */
+        private Field field;
+        private Method getMethod;
+        private Method setMethod;
+
+        public PropInfo() {
+        }
+
+        public PropInfo(Class<?> curClass, String name, Field field, Method getMethod, Method setMethod) {
+            this.curClass = curClass;
+            this.name = name;
+            this.field = field;
+            this.getMethod = getMethod;
+            this.setMethod = setMethod;
+        }
+
     }
 }

@@ -2,7 +2,7 @@ package com.hxx.mbtest.service.impl.db.trans;
 
 import com.hxx.mbtest.entity.T1;
 import com.hxx.mbtest.mapper.T1Mapper;
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class T1TransServiceImpl {
                 t1.setEnabled(false);
                 LocalDateTime now = LocalDateTime.now();
                 t1.setBirthday(now.minusYears(1));
-                t1.setCreateTime(now.minusYears(2));
+                t1.setGmtCreate(now.minusYears(2));
             }
             int ret = t1Mapper.addUser(t1);
             System.out.println("ccc:" + ret);
@@ -73,7 +73,7 @@ public class T1TransServiceImpl {
             {
                 t1.setName("橙子1");
                 LocalDateTime now = LocalDateTime.now();
-                t1.setCreateTime(now);
+                t1.setGmtCreate(now);
             }
             int ret = t1Mapper.updateUser(t1);
 

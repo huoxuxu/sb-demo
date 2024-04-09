@@ -54,13 +54,13 @@ public class TypeParameterResolver {
             resolvedComponentType = resolveParameterizedType((ParameterizedType)componentType, srcType, declaringClass);
         }
 
-        return (Type)(resolvedComponentType instanceof Class
-                ? Array.newInstance((Class)resolvedComponentType, 0).getClass()
-                : new TypeParameterResolver.GenericArrayTypeImpl((Type)resolvedComponentType));
+        return resolvedComponentType instanceof Class
+                ? Array.newInstance((Class<?>)resolvedComponentType, 0).getClass()
+                : new GenericArrayTypeImpl((Type)resolvedComponentType);
     }
 
     private static ParameterizedType resolveParameterizedType(ParameterizedType parameterizedType, Type srcType, Class<?> declaringClass) {
-        Class<?> rawType = (Class)parameterizedType.getRawType();
+        Class<?> rawType = (Class<?>)parameterizedType.getRawType();
         Type[] typeArgs = parameterizedType.getActualTypeArguments();
         Type[] args = new Type[typeArgs.length];
 
@@ -76,7 +76,7 @@ public class TypeParameterResolver {
             }
         }
 
-        return new TypeParameterResolver.ParameterizedTypeImpl(rawType, (Type)null, args);
+        return new TypeParameterResolver.ParameterizedTypeImpl(rawType, null, args);
     }
 
     private static Type resolveWildcardType(WildcardType wildcardType, Type srcType, Class<?> declaringClass) {
@@ -104,8 +104,7 @@ public class TypeParameterResolver {
     }
 
     private static Type resolveTypeVar(TypeVariable<?> typeVar, Type srcType, Class<?> declaringClass) {
-        Type result = null;
-        Class<?> clazz = null;
+        Class<?> clazz;
         if (srcType instanceof Class) {
             clazz = (Class)srcType;
         } else {
@@ -119,19 +118,17 @@ public class TypeParameterResolver {
 
         if (clazz == declaringClass) {
             Type[] bounds = typeVar.getBounds();
-            return (Type)(bounds.length > 0 ? bounds[0] : Object.class);
+            return bounds.length > 0 ? bounds[0] : Object.class;
         } else {
             Type superclass = clazz.getGenericSuperclass();
-            result = scanSuperTypes(typeVar, srcType, declaringClass, clazz, superclass);
+            Type result = scanSuperTypes(typeVar, srcType, declaringClass, clazz, superclass);
             if (result != null) {
                 return result;
             } else {
                 Type[] superInterfaces = clazz.getGenericInterfaces();
-                Type[] var7 = superInterfaces;
                 int var8 = superInterfaces.length;
 
-                for(int var9 = 0; var9 < var8; ++var9) {
-                    Type superInterface = var7[var9];
+                for (Type superInterface : superInterfaces) {
                     result = scanSuperTypes(typeVar, srcType, declaringClass, clazz, superInterface);
                     if (result != null) {
                         return result;

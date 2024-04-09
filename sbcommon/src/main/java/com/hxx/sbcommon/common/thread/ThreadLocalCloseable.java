@@ -19,6 +19,11 @@ import java.util.Optional;
 public class ThreadLocalCloseable implements AutoCloseable {
     private static final ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<>();
 
+    @Override
+    public void close() {
+        remove();
+    }
+
     /**
      * 获取本地变量的值
      *
@@ -71,8 +76,4 @@ public class ThreadLocalCloseable implements AutoCloseable {
         threadLocal.remove();
     }
 
-    @Override
-    public void close() throws Exception {
-        remove();
-    }
 }

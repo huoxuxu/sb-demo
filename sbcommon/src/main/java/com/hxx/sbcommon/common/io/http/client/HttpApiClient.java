@@ -1,7 +1,7 @@
 package com.hxx.sbcommon.common.io.http.client;
 
 import com.hxx.sbcommon.common.io.http.ApacheHttpClientSimpleUseful;
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -130,7 +130,6 @@ public class HttpApiClient {
             long cost = sw.getTotalTimeMillis();
             log.error("访问外部接口网络超时：{} [耗时：{}] {}", url, cost, ExceptionUtils.getStackTrace(e));
             throw new IllegalStateException("访问外部接口网络超时！[耗时：" + cost + "ms]", e);
-        } finally {
         }
     }
 

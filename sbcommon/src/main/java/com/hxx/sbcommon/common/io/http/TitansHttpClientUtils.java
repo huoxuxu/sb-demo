@@ -1,10 +1,9 @@
 package com.hxx.sbcommon.common.io.http;
 
-import com.hxx.sbcommon.apacheHttpClient.HttpInterceptor;
-import com.hxx.sbcommon.apacheHttpClient.HttpReqAndRsp;
-import com.hxx.sbcommon.apacheHttpClient.SoaHttpException;
-import com.hxx.sbcommon.config.appCfg.HttpConfigPropertiesProvider;
-import lombok.extern.slf4j.Slf4j;
+import com.hxx.sbcommon.common.io.http.apachehttpclient.HttpInterceptor;
+import com.hxx.sbcommon.common.io.http.apachehttpclient.HttpReqAndRsp;
+import com.hxx.sbcommon.common.io.http.apachehttpclient.SoaHttpException;
+import com.hxx.sbcommon.config.appconfig.HttpConfigPropertiesProvider;
 import org.apache.http.*;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -184,7 +183,7 @@ public class TitansHttpClientUtils {
         if (header != null) {
             initHeader(request, header);
         }
-        String body = null;
+        String body;
         HttpResponse response = null;
         HttpEntity entity = null;
         try {
@@ -201,7 +200,9 @@ public class TitansHttpClientUtils {
             if (response.getStatusLine().getStatusCode() >= 200 && response.getStatusLine().getStatusCode() < 300) {
                 //按指定编码转换结果实体为String类型
                 body = EntityUtils.toString(entity, getCharSet(header));
-            } else if (getThrow404Exception() == false /*&& response.getStatusLine().getStatusCode() == 404 */) {//兼容之前的逻辑,之前默认都是不抛异常，直接反序列化；
+            }
+            //兼容之前的逻辑,之前默认都是不抛异常，直接反序列化；
+            else if (!getThrow404Exception() /*&& response.getStatusLine().getStatusCode() == 404 */) {
                 //按指定编码转换结果实体为String类型
                 body = EntityUtils.toString(entity, getCharSet(header));
             } else {
@@ -259,7 +260,7 @@ public class TitansHttpClientUtils {
         HttpGet httpGet = new HttpGet(url);
         httpGet.setConfig(requestConfig);
         httpGet.setHeader(CONTENT_TYPE, getContentType(CONTENT_VALUE_FORM, charSet));
-        logger.debug("sendHttpGet url:{},{}" + httpServiceNameTL.get(), url);
+        logger.debug("sendHttpGet url:{},{}", httpServiceNameTL.get(), url);
         return execute(httpGet, header);
     }
 
@@ -645,7 +646,7 @@ public class TitansHttpClientUtils {
             ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
             //buff用于存放循环读取的临时数据
             byte[] buff = new byte[1024];
-            int len = -1;
+            int len;
             try {
                 while ((len = inputStream.read(buff, 0, buff.length)) != -1) {
                     swapStream.write(buff, 0, len);

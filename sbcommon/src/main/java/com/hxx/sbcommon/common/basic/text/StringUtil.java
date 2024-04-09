@@ -2,10 +2,10 @@ package com.hxx.sbcommon.common.basic.text;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author: huoxuxu
@@ -13,6 +13,30 @@ import java.util.stream.Collectors;
  * @Date: 2021-05-10 16:58:08
  **/
 public class StringUtil {
+
+    /**
+     * 替换字符串中的占位符{},
+     * 转义：{{和}}
+     *
+     * @param input 带{}占位符的字符串
+     * @param args  替换{}的变量
+     * @return
+     */
+    public static String format(String input, Object... args) {
+        return BraceParser.parse(input, args);
+    }
+
+    /**
+     * 替换字符串中的占位符{0} {1},
+     * 转义：{{和}}
+     *
+     * @param input 带{0}占位符的字符串
+     * @param args  按{digital}占位符中digital指向的索引位提供值
+     * @return
+     */
+    public static String messageFormat(String input, Object... args) {
+        return MessageFormat.format(input, args);
+    }
 
     /**
      * 取字符串的前n位,
@@ -103,15 +127,13 @@ public class StringUtil {
     public static String[] splitFirst(String str, String splitStr) {
         int i = str.indexOf(splitStr);
         if (i == -1) {
-            String[] arr = {str, ""};
-            return arr;
+            return new String[]{str, ""};
         } else {
             String v = "";
             if (str.length() > i + 1) {
                 v = str.substring(i + 1);
             }
-            String[] arr = {str.substring(0, i), v};
-            return arr;
+            return new String[]{str.substring(0, i), v};
         }
     }
 
@@ -193,7 +215,7 @@ public class StringUtil {
         if (StringUtils.isBlank(str)) return new ArrayList<>();
 
         if (splitStrs == null || splitStrs.length == 0) {
-            return new ArrayList<>(Arrays.asList(str));
+            return new ArrayList<>(Collections.singletonList(str));
         }
 
         List<String> ls = new ArrayList<>();
@@ -206,8 +228,7 @@ public class StringUtil {
                     }
                 }
             } else {
-                List<String> result = splits(ls, splitStr);
-                ls = result;
+                ls = splits(ls, splitStr);
             }
         }
         return ls;

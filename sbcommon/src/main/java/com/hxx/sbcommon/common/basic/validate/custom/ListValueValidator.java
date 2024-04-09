@@ -19,7 +19,7 @@ import java.util.Set;
  * @Date: 2023-03-23 12:32:08
  **/
 public class ListValueValidator implements ConstraintValidator<ListValueAttr, Integer> {// 此处的Integer是验证字段的类型
-    private Set<Integer> set = new HashSet<>();
+    private final Set<Integer> set = new HashSet<>();
 
     @Override
     public void initialize(ListValueAttr constraintAnnotation) {

@@ -29,9 +29,7 @@ public class ItemContainsValidator implements ConstraintValidator<ItemContainsAt
 //        ConstraintValidator.super.initialize(constraintAnnotation);
         String[] values = constraintAnnotation.values();
 
-        for (String value : values) {
-            set.add(value);
-        }
+        set.addAll(Arrays.asList(values));
         not = constraintAnnotation.not();
     }
 

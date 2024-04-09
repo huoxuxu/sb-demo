@@ -1,7 +1,7 @@
 package com.hxx.sbcommon.common.encrypt;
 
 import com.alibaba.fastjson.JSON;
-import com.hxx.sbcommon.common.encoder.Base64Util;
+import com.hxx.sbcommon.common.encrypt.encoder.Base64Util;
 import com.hxx.sbcommon.common.other.HexUtil;
 import org.apache.commons.lang3.ObjectUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -240,10 +240,7 @@ public class RSAUtil {
         if (map == null) {
             return null;
         }
-        Map<String, Object> result = new TreeMap<>((Comparator<String>) (o1, o2) -> {
-            return o1.compareTo(o2);
-        });
-        result.putAll(map);
+        Map<String, Object> result = new TreeMap<>(map);
         return result;
     }
 

@@ -8,11 +8,13 @@ import com.thoughtworks.xstream.mapper.ClassAliasingMapper;
 import com.thoughtworks.xstream.security.NoTypePermission;
 import com.thoughtworks.xstream.security.NullPermission;
 import com.thoughtworks.xstream.security.PrimitiveTypePermission;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +37,7 @@ public class XmlUtil {
             XStream xstream = new XStream(new DomDriver());
             xstream.ignoreUnknownElements();
             xstream.processAnnotations(clazz);
-            XStreamItem itemAnnotation = (XStreamItem)clazz.getAnnotation(XStreamItem.class);
+            XStreamItem itemAnnotation = (XStreamItem) clazz.getAnnotation(XStreamItem.class);
             if (itemAnnotation != null) {
                 ClassAliasingMapper mapper = new ClassAliasingMapper(xstream.getMapper());
                 mapper.addClassAlias(itemAnnotation.item(), String.class);
@@ -52,7 +54,7 @@ public class XmlUtil {
             xstreams.put(clazz.toString(), xstream);
         }
 
-        return (XStream)xstreams.get(clazz.toString());
+        return xstreams.get(clazz.toString());
     }
 
     public static String toXml(Object obj) {
@@ -63,19 +65,15 @@ public class XmlUtil {
     public static <T> T toBean(String xmlStr, Class<T> cls) {
         XStream xstream = getXStream(cls);
         Object obj = xstream.fromXML(xmlStr);
-        return (T)obj;
+        return (T) obj;
     }
 
     public static <T> T toBeanNotThrowException(String xmlStr, Class<T> cls) {
-        XStream xstream = getXStream(cls);
-        Object obj = null;
-
         try {
-            obj = xstream.fromXML(xmlStr);
-        } catch (Exception var5) {
+            return (T) getXStream(cls).fromXML(xmlStr);
+        } catch (Exception ignore) {
         }
-
-        return (T)obj;
+        return null;
     }
 
     public static <T> T toBean(String xmlStr, Class<T> cls, String... additionalPermissionStrs) {
@@ -92,11 +90,10 @@ public class XmlUtil {
         XStream xstream = getXStream(cls);
         Set<String> newPermissionStrs = new HashSet();
         String[] permissions = additionalPermissionStrs;
-        int var6 = additionalPermissionStrs.length;
 
-        for(int var7 = 0; var7 < var6; ++var7) {
-            String permissionStr = permissions[var7];
-            if (((Set)allowedTypes.get(xstream)).add(permissionStr)) {
+        for (int i = 0; i < additionalPermissionStrs.length; i++) {
+            String permissionStr = permissions[i];
+            if (allowedTypes.get(xstream).add(permissionStr)) {
                 logger.info("Add Customer Permission for class[{}] of [{}]!", cls.getName(), permissionStr);
                 newPermissionStrs.add(permissionStr);
             }

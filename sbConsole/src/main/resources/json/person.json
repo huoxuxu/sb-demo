@@ -1,6 +1,7 @@
 [
-  {"age":18,"alive":true,"createTime":"2022-06-01T11:25:46","id":1,"name":"张三","score":90.5},
-  {"age":72,"alive":false,"createTime":"2022-06-05T11:25:46","id":2,"name":"李四","score":95.3},
-  {"age":20,"alive":true,"createTime":"2022-06-01T11:25:46","id":3,"name":"王二","score":88.5},
-  {"age":28,"alive":true,"createTime":"2022-06-01T11:25:46","id":4,"name":"麻子","score":90.5}
+  {"age":18,"alive":true,"createTime":"2022-06-01T11:25:46","id":1,"name":"张三","sex":"男","score":90.5,"birthday": "2022-06-01 11:25:46"},
+  {"age":58,"alive":false,"createTime":"2022-06-05T11:25:46","id":2,"name":"李四","sex":"女","score":95.3,"birthday": "2022-06-05 11:25:46"},
+  {"age":20,"alive":true,"createTime":"2022-06-02T11:25:46","id":3,"name":"王二","sex":"男","score":88.5,"birthday": "2022-06-02 11:25:46"},
+  {"age":28,"alive":true,"createTime":"2022-06-01T11:25:46","id":4,"name":"麻子","sex":"男","score":90.6,"birthday": "2022-06-01 11:25:46"},
+  {"age":58,"alive":true,"createTime":"2022-06-01T11:25:46","id":5,"name":"周一","sex":"女","score":59.5,"birthday": "2022-06-01 11:25:46"}
 ]

@@ -1,6 +1,7 @@
 package com.hxx.sbcommon.common.encrypt;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +18,7 @@ public class RsaUtils {
     /**
      * RSA公钥加密
      *
-     * @param str       加密字符串
+     * @param str 加密字符串
      * @return 密文
      * @throws Exception 加密过程中的异常信息
      */
@@ -31,10 +32,9 @@ public class RsaUtils {
             //RSA加密
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.ENCRYPT_MODE, pubKey);
-            String outStr = Base64.encodeBase64String(cipher.doFinal(str.getBytes(StandardCharsets.UTF_8)));
-            return outStr;
+            return Base64.encodeBase64String(cipher.doFinal(str.getBytes(StandardCharsets.UTF_8)));
         } catch (Exception e) {
-            logger.error("RSA加密错误;{}", e);
+            logger.error("RSA加密错误 {}", ExceptionUtils.getStackTrace(e));
             return "";
         }
     }

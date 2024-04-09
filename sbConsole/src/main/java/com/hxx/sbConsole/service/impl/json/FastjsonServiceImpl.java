@@ -2,8 +2,8 @@ package com.hxx.sbConsole.service.impl.json;
 
 import com.alibaba.fastjson.JSONReader;
 import com.hxx.sbConsole.model.DemoCls;
-import com.hxx.sbcommon.common.json.FastJsonReaderQuick;
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.FastJsonReaderQuick;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;

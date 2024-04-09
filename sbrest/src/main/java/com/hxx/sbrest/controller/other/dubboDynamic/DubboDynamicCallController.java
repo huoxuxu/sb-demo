@@ -1,19 +1,14 @@
 package com.hxx.sbrest.controller.other.dubboDynamic;
 
-import com.hxx.sbcommon.common.json.JsonUtil;
-import com.hxx.sbrest.model.T1Model;
-import com.hxx.sbrest.service.BasicTestService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.rpc.RpcContext;
 import org.apache.dubbo.rpc.service.GenericService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;

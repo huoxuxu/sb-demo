@@ -1,5 +1,7 @@
 package com.hxx.sbcommon.common.other.pageSeparate;
 
+import lombok.Data;
+
 /**
  * 可传入页码和页大小的分页类
  *
@@ -7,7 +9,6 @@ package com.hxx.sbcommon.common.other.pageSeparate;
  * @Description:
  * @Date: 2023-04-15 12:32:13
  **/
-@lombok.Data
 public class GeneralPageable extends Pageable {
     /**
      * @param pageNum  页码，从1开始

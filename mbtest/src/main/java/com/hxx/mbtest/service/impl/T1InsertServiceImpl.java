@@ -21,6 +21,10 @@ public class T1InsertServiceImpl {
     @Autowired
     private T1Mapper t1Mapper;
 
+    public void run() {
+
+    }
+
     public void addUser() {
         log.info("开始执行：{}- {}", 1, new Date());
 
@@ -33,7 +37,7 @@ public class T1InsertServiceImpl {
             t1.setEnabled(false);
             LocalDateTime now = LocalDateTime.now();
             t1.setBirthday(now.minusYears(1));
-            t1.setCreateTime(now.minusYears(2));
+            t1.setGmtCreate(now.minusYears(2));
         }
         int ret = t1Mapper.addUser(t1);
         System.out.println("addUser：" + ret);
@@ -48,7 +52,7 @@ public class T1InsertServiceImpl {
             t1.setEnabled(true);
             LocalDateTime now = LocalDateTime.now();
             t1.setBirthday(now.minusYears(1));
-            t1.setCreateTime(now.minusYears(2));
+            t1.setGmtCreate(now.minusYears(2));
         }
         int ret = t1Mapper.addUserDynamic(t1);
         System.out.println("addUserDynamic：" + ret);

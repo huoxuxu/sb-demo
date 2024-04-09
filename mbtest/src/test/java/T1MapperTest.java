@@ -1,7 +1,7 @@
 import com.hxx.mbtest.MbtestApplication;
 import com.hxx.mbtest.entity.T1;
 import com.hxx.mbtest.mapper.T1Mapper;
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public class T1MapperTest {
 
             LocalDateTime now = LocalDateTime.now();
             t.setBirthday(now.minusYears(1));
-            t.setCreateTime(now);
+            t.setGmtCreate(now);
 
             tls.add(t);
         }
@@ -66,7 +66,7 @@ public class T1MapperTest {
 
             LocalDateTime now = LocalDateTime.now();
             t.setBirthday(now.minusYears(1));
-            t.setCreateTime(now);
+            t.setGmtCreate(now);
 
             tls.add(t);
         }

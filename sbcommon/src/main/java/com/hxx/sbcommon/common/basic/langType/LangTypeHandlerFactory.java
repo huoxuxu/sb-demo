@@ -85,8 +85,7 @@ public class LangTypeHandlerFactory {
      * @return
      */
     public static LangTypeHandler<?> getTypeHandler(Class<?> cls) {
-        LangTypeHandler<?> typeHandler = typeHandlerMap.getOrDefault(cls, null);
-        return typeHandler;
+        return typeHandlerMap.getOrDefault(cls, null);
     }
 
     /**

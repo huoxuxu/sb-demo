@@ -57,11 +57,11 @@ public class BeanInfoUtil {
      * 将map中key对应的属性名赋值给对应的对象
      *
      * @param bean
-     * @param map
+     * @param sourceMap 数据来源
      * @param <T>
      * @throws Exception
      */
-    public static <T> void copyToBean(T bean, Map<String, Object> map) throws Exception {
+    public static <T> void copyToBean(T bean, Map<String, Object> sourceMap) throws Exception {
         //获取类的属性描述器
         BeanInfo beaninfo = Introspector.getBeanInfo(bean.getClass(), Object.class);
         //获取类的属性集
@@ -69,13 +69,15 @@ public class BeanInfoUtil {
         for (PropertyDescriptor prop : props) {
             //得到属性的name
             String key = prop.getName();
-            Object val = map.getOrDefault(key, null);
-            if (val == null) continue;
+            Object val = sourceMap.getOrDefault(key, null);
+            if (val == null) {
+                continue;
+            }
 
             Method writeMethod = prop.getWriteMethod();
-            if (writeMethod == null) continue;
-
-            writeMethod.invoke(bean, val);
+            if (writeMethod != null) {
+                writeMethod.invoke(bean, val);
+            }
         }
     }
 

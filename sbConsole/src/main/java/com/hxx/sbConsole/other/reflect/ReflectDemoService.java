@@ -3,15 +3,19 @@ package com.hxx.sbConsole.other.reflect;
 import com.hxx.sbConsole.model.User;
 import com.hxx.sbConsole.model.inherit.Dog;
 import com.hxx.sbConsole.model.inherit.HaBaDog;
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import com.hxx.sbcommon.common.office.EasyExcelHelper;
+import com.hxx.sbcommon.common.reflect.BeanCopyUtil;
 import com.hxx.sbcommon.common.reflect.BeanInfoUtil;
 import com.hxx.sbcommon.common.reflect.ReflectUseful;
 import com.hxx.sbcommon.model.Result;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author: huoxuxu
@@ -22,13 +26,26 @@ public class ReflectDemoService {
     public static void main(String[] args) {
         try {
             // BeanInfoUtil
+            System.out.println("case0()\n");
             case0();
+
             // ReflectUseful
+            System.out.println("case1()\n");
             case1();
+
+            System.out.println("case2()\n");
             case2();
 
+            // 泛型
+            System.out.println("case3()\n");
+            case3();
+
+            // beanCopy
+            System.out.println("case4()\n");
+            case4();
+
         } catch (Exception ex) {
-            System.out.println(ex + "");
+            System.out.println(ExceptionUtils.getStackTrace(ex));
         }
         System.out.println("ok");
     }
@@ -50,34 +67,32 @@ public class ReflectDemoService {
         }
         {
             // =================泛型字段===================================
-            Result<String> result = new Result<>(1, "xx", "m12");
+            Result<String> result = new Result<>("", "xx", "m12");
             Map<String, Object> objMap1 = BeanInfoUtil.toMap(result);
             System.out.println("objMap：" + JsonUtil.toJSON(objMap1));
 
-            result = new Result<>(0, "", "");
+            result = new Result<>("", "", "");
             BeanInfoUtil.copyToBean(result, objMap1);
             System.out.println(result);
         }
     }
 
     static void case1() throws Exception {
-        {
-            Dog dog = new HaBaDog();
-            ReflectUseful reflectUseful = new ReflectUseful(dog.getClass());
-            List<String> props = reflectUseful.getProps();
-            System.out.println("props: " + JsonUtil.toJSON(props));
+        Dog dog = new HaBaDog();
+        Class<? extends Dog> aClass = dog.getClass();
 
-            Map<String, Object> map = BeanInfoUtil.toMap(dog);
-            System.out.println("props: " + JsonUtil.toJSON(map.keySet()));
-        }
-        {
-            // =================泛型字段===================================
-            Result<String> result = new Result<>(1, "xx", "m12");
-            ReflectUseful reflectUseful = new ReflectUseful(result.getClass());
+        Map<String, Method> methods = ReflectUseful.getMethodAsMap(aClass);
 
-            List<String> props = reflectUseful.getProps();
-            System.out.println("props: " + JsonUtil.toJSON(props));
-        }
+        ReflectUseful reflectUseful = new ReflectUseful(aClass);
+        List<ReflectUseful.PropInfo> propInfos = reflectUseful.getPropInfos();
+        List<String> props = propInfos.stream().map(d -> d.getName()).collect(Collectors.toList());
+        System.out.println("props: " + JsonUtil.toJSON(props));
+
+        // BeanInfoUtil
+        Map<String, Object> map = BeanInfoUtil.toMap(dog);
+        System.out.println("props: " + JsonUtil.toJSON(map.keySet()));
+
+        // ==
         System.out.println("ok");
     }
 
@@ -103,6 +118,50 @@ public class ReflectDemoService {
         BeanInfoUtil.copyToObj(user, dog);
         System.out.println("dog：" + JsonUtil.toJSON(dog));
 
+    }
+
+    static void case3() throws Exception {
+        // =================泛型字段===================================
+        Result<String> result = new Result<>("", "xx", "m12");
+        ReflectUseful reflectUseful = new ReflectUseful(result.getClass());
+
+        List<ReflectUseful.PropInfo> propInfos = reflectUseful.getPropInfos();
+        List<String> props = propInfos.stream().map(d -> d.getName()).collect(Collectors.toList());
+        System.out.println("props: " + JsonUtil.toJSON(props));
+    }
+
+    static void case4() throws Exception {
+        Dog dog = new HaBaDog();
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("name", "ddog");
+        map1.put("age", "100岁");
+        {
+            Class<? extends Dog> dogCls = dog.getClass();
+            dogCls.isPrimitive();
+        }
+
+        // beanToMap
+        {
+            Map<String, Object> map2 = BeanCopyUtil.beanToMap(dog);
+            System.out.println("dog-map: " + JsonUtil.toJSON(map2));
+        }
+
+        // copyTo
+        {
+            map1.put("female", null);
+            map1.put("haba", null);
+            BeanCopyUtil.copyMapTo(dog, map1, false);
+            System.out.println("dog: " + JsonUtil.toJSON(dog));
+        }
+
+        {
+            // 通过类加载器重新加载 MyClass (卸载不成功)
+            ClassLoader classLoader = dog.getClass().getClassLoader();
+            classLoader.loadClass("com.hxx.sbConsole.model.inherit.HaBaDog");
+
+            Map<String, Object> map2 = BeanCopyUtil.beanToMap(dog);
+            System.out.println("dog-map: " + JsonUtil.toJSON(map2));
+        }
     }
 
 }

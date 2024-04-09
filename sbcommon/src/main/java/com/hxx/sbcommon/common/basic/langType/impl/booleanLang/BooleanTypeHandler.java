@@ -45,7 +45,7 @@ public class BooleanTypeHandler implements LangTypeHandler<Boolean> {
             return ((Double) val) > 0;
         }
         if (val instanceof BigDecimal) {
-            return ((BigDecimal) val).compareTo(BigDecimal.ZERO) == 1;
+            return ((BigDecimal) val).compareTo(BigDecimal.ZERO) > 0;
         }
 
         // 布尔型

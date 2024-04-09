@@ -8,7 +8,10 @@ import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -22,8 +25,8 @@ public class EasyExcelWriteHelper implements AutoCloseable {
     private OutputStream excelOutputStream;
     private ExcelWriter excelWriter;
 
-    public EasyExcelWriteHelper(String excelPath) throws FileNotFoundException {
-        this.excelOutputStream = new FileOutputStream(excelPath);
+    public EasyExcelWriteHelper(String excelPath) throws IOException {
+        this.excelOutputStream = Files.newOutputStream(Paths.get(excelPath));
         this.excelWriter = EasyExcel.write(this.excelOutputStream).build();
     }
 
@@ -40,7 +43,7 @@ public class EasyExcelWriteHelper implements AutoCloseable {
      * @param voCls
      * @return
      */
-    public static WriteSheet createSheet(int sheetIndex, String sheetName, Class voCls) {
+    public static WriteSheet createSheet(int sheetIndex, String sheetName, Class<?> voCls) {
         // 表头样式
         WriteCellStyle headWriteCellStyle = new WriteCellStyle();
         // 单元格样式
@@ -48,11 +51,10 @@ public class EasyExcelWriteHelper implements AutoCloseable {
         // 初始化表格样式
         HorizontalCellStyleStrategy horizontalCellStyleStrategy = new HorizontalCellStyleStrategy(headWriteCellStyle, contentWriteCellStyle);
         // 开始写入工作簿
-        WriteSheet sheet = EasyExcel.writerSheet(sheetIndex, sheetName)
+        return EasyExcel.writerSheet(sheetIndex, sheetName)
                 .head(voCls)
                 .registerWriteHandler(horizontalCellStyleStrategy)
                 .build();
-        return sheet;
     }
 
     /**

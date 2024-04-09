@@ -1,9 +1,12 @@
 package com.hxx.sbcommon.common.io.fileOrDir;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -66,7 +69,7 @@ public class FileUtil {
         int size = (int) file.length();
         byte[] data = new byte[size];
 
-        try (InputStream is = new FileInputStream(file)) {
+        try (InputStream is = Files.newInputStream(file.toPath())) {
             int offset = 0;
             while (offset < size) {
                 int ret = is.read(data, offset, size - offset);
@@ -88,8 +91,12 @@ public class FileUtil {
      * @return
      * @throws FileNotFoundException
      */
-    public static InputStream getFileStream(File file) throws FileNotFoundException {
-        return new FileInputStream(file);
+    public static InputStream getFileStream(File file) throws IOException {
+        return Files.newInputStream(file.toPath());
+    }
+
+    public static BufferedReader getBufferedReader(String filePath, Charset charset) throws IOException {
+        return java.nio.file.Files.newBufferedReader(Paths.get(filePath), charset);
     }
 
     /**
@@ -133,6 +140,18 @@ public class FileUtil {
                 }
             }
         });
+    }
+
+    public static void readLines(File file, String charsetName, Consumer<String> rowAct) throws IOException {
+        LineIterator lineIterator = FileUtils.lineIterator(file, charsetName);
+        try {
+            while (lineIterator.hasNext()) {
+                String line = lineIterator.nextLine();
+                rowAct.accept(line);
+            }
+        } finally {
+            LineIterator.closeQuietly(lineIterator);
+        }
     }
 
     /**

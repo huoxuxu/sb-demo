@@ -1,32 +1,22 @@
 package com.hxx.sbweb.controller.webDemo.bindReqPara;
 
-import com.hxx.sbcommon.common.io.StreamUtil;
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import com.hxx.sbcommon.common.web.HttpServletRequestUtil;
 import com.hxx.sbcommon.model.HttpMultipartFormDataInfo;
 import com.hxx.sbweb.controller.base.BaseRestController;
 import com.hxx.sbweb.domain.Book;
 import com.hxx.sbweb.domain.User;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**

@@ -25,16 +25,12 @@ public abstract class PageSeparate {
 
         @Override
         public String getPageSql(String originSql) {
-            StringBuilder sqlBuilder = new StringBuilder();
-            sqlBuilder.append(originSql);
-            sqlBuilder.append(" LIMIT ?, ? ");// skip, take
-
-
-            return sqlBuilder.toString();
+            return originSql +
+                    " LIMIT ?, ? ";// skip, take
         }
     }
 
-    public class OracleDBPageSeparate extends PageSeparate {
+    public static class OracleDBPageSeparate extends PageSeparate {
 
         public OracleDBPageSeparate(Pageable pageable) {
             super(pageable);
@@ -77,7 +73,7 @@ public abstract class PageSeparate {
         }
     }
 
-    public class SQLServer2012PageSeparate extends PageSeparate {
+    public static class SQLServer2012PageSeparate extends PageSeparate {
 
         public SQLServer2012PageSeparate(Pageable pageable) {
             super(pageable);
@@ -98,15 +94,13 @@ public abstract class PageSeparate {
             SELECT * FROM table_name ORDER BY column_name
             OFFSET 10 ROWS FETCH NEXT 5 ROWS ONLY;
             */
-            StringBuilder sqlBuilder = new StringBuilder();
-            sqlBuilder.append(originSql);
-            sqlBuilder.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ");// skip, take
-            return sqlBuilder.toString();
+            return originSql +
+                    " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";// skip, take
         }
     }
 
-    public class SQLServer2008PageSeparate extends PageSeparate {
-        private String orderByStr;
+    public static class SQLServer2008PageSeparate extends PageSeparate {
+        private final String orderByStr;
 
         public SQLServer2008PageSeparate(String orderByStr, Pageable pageable) {
             super(pageable);
@@ -142,7 +136,9 @@ public abstract class PageSeparate {
             StringBuilder sqlBuilder = new StringBuilder();
             sqlBuilder.append("WITH TMP_PAGE_CTE AS ( ");
             sqlBuilder.append("SELECT *,");
-            sqlBuilder.append("ROW_NUMBER() OVER (ORDER BY " + this.orderByStr + ") AS TMP_PAGE_ROW_ID ");
+            sqlBuilder.append("ROW_NUMBER() OVER (ORDER BY ")
+                    .append(this.orderByStr)
+                    .append(") AS TMP_PAGE_ROW_ID ");
             sqlBuilder.append("FROM ( ");
             sqlBuilder.append(originSql);
             sqlBuilder.append(" ) TMP_PAGE ) SELECT * FROM TMP_PAGE_CTE ");

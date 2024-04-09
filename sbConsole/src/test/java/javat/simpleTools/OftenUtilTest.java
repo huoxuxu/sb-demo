@@ -1,19 +1,15 @@
 package javat.simpleTools;
 
 import com.hxx.sbConsole.SbConsoleApplication;
-import com.hxx.sbConsole.module.easyExcel.EasyExcelDemo2;
-import com.hxx.sbConsole.service.impl.CommonDataService;
 import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.basic.array.CollectionUtil;
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.List;
 
 /**

@@ -1,11 +1,10 @@
 package com.hxx.sbConsole.jwt;
 
-import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;

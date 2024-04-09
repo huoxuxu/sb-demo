@@ -8,15 +8,15 @@ package com.hxx.sbcommon.model;
  * @Date: 2023-01-11 16:49:06
  **/
 @lombok.Data
-public class KVPair<T> {
+public class KVPair<TKey, TVal> {
     /**
      * 键
      */
-    private String key;
+    private TKey key;
     /**
      * 值
      */
-    private T val;
+    private TVal val;
 
     /**
      * 空构造
@@ -30,7 +30,7 @@ public class KVPair<T> {
      * @param key
      * @param val
      */
-    public KVPair(String key, T val) {
+    public KVPair(TKey key, TVal val) {
         this.key = key;
         this.val = val;
     }

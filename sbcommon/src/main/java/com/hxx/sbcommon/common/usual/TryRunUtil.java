@@ -59,6 +59,20 @@ public class TryRunUtil {
     /**
      * 调用并忘记
      *
+     * @param act
+     * @param <T>
+     */
+    public static <T> void run(Consumer<T> act) {
+        try {
+            act.accept(null);
+        } catch (Exception e) {
+            log.error("出现异常：{}", ExceptionUtils.getStackTrace(e));
+        }
+    }
+
+    /**
+     * 调用并忘记
+     *
      * @param t
      * @param act
      * @param <T>

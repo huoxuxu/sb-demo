@@ -6,21 +6,17 @@ import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MessageFormatter;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.Collator;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * 开发常用工具类
@@ -30,6 +26,17 @@ import java.util.stream.Collectors;
  * @Date: 2022-09-06 10:49:59
  **/
 public class OftenUtil {
+
+    /**
+     * 评估条件，为true 抛出不通过异常
+     *
+     * @param condition
+     */
+    public static void assertCond(boolean condition) {
+        if (condition) {
+            throw new IllegalArgumentException("评估条件不通过");
+        }
+    }
 
     /**
      * 评估条件，为true，抛出 IllegalArgumentException
@@ -72,6 +79,83 @@ public class OftenUtil {
         }
     }
 
+    /**
+     * 基本类型相等性比较
+     * 常用基本类型：整型（byte、short、int、long）、浮点型（float、double）、布尔（boolean）、字符（char）
+     *
+     * @param obj
+     * @param obj2
+     * @return
+     */
+    public static boolean equals(Object obj, Object obj2) {
+        // Objects.equals(a, b);
+        // return (a == b) || (a != null && a.equals(b));
+        if (obj == obj2) {
+            return true;
+        }
+        if (obj == null || obj2 == null) {
+            return false;
+        }
+        // 如果两个类型一致，则直接比较
+        {
+            if (obj instanceof Byte && obj2 instanceof Byte) {
+                return obj.equals(obj2);
+            }
+            if (obj instanceof Short && obj2 instanceof Short) {
+                return obj.equals(obj2);
+            }
+            if (obj instanceof Integer && obj2 instanceof Integer) {
+                return obj.equals(obj2);
+            }
+            if (obj instanceof Long && obj2 instanceof Long) {
+                return obj.equals(obj2);
+            }
+
+            if (obj instanceof Float && obj2 instanceof Float) {
+                return obj.equals(obj2);
+            }
+            if (obj instanceof Double && obj2 instanceof Double) {
+                return obj.equals(obj2);
+            }
+
+            if (obj instanceof Boolean && obj2 instanceof Boolean) {
+                return obj.equals(obj2);
+            }
+
+            if (obj instanceof Character && obj2 instanceof Character) {
+                return obj.equals(obj2);
+            }
+
+            if (obj.getClass() == obj2.getClass()) {
+                return obj.equals(obj2);
+            }
+        }
+
+        // 类型不一致时，直接转为兼容类型后比较
+        {
+            Object objVal = castVal(obj);
+            Object obj2Val = castVal(obj2);
+            return objVal.equals(obj2Val);
+        }
+    }
+
+    // log
+
+    /**
+     * 每10分钟时写日志
+     *
+     * @param log
+     * @param logAct
+     */
+    public static void everyTenMinuteLog(org.slf4j.Logger log, Consumer<org.slf4j.Logger> logAct) {
+        LocalDateTime now = LocalDateTime.now();
+        int minute = now.getMinute();
+        int second = now.getSecond();
+        if (minute % 10 == 0 && second > 50) {
+            logAct.accept(log);
+        }
+    }
+
     // 校验
 
     /**
@@ -111,20 +195,17 @@ public class OftenUtil {
     // 通用操作
 
     /**
-     * 查询实体中字段的值，支持实体为null
+     * 通用处理数据，为null时使用默认值
      *
-     * @param t
-     * @param func
+     * @param source
+     * @param mapFunc
+     * @param defaultVal
      * @param <T>
-     * @param <R>
+     * @param <F>
      * @return
      */
-    public static <T, R> R getFieldVal(T t, Function<T, R> func) {
-        if (t == null) return null;
-        return Arrays.asList(t).stream()
-                .map(func)
-                .findFirst()
-                .orElse(null);
+    public static <T, F> F mapField(T source, Function<T, F> mapFunc, F defaultVal) {
+        return Optional.ofNullable(source).map(mapFunc).orElse(defaultVal);
     }
 
     // UUID
@@ -218,82 +299,36 @@ public class OftenUtil {
         return ls.get(randomVal);
     }
 
-    // 基础字段处理
-    public static class BasicUtil {
-        /**
-         * source或source字段为null时设置默认值
-         *
-         * @param source       模型
-         * @param getFieldFunc 字段
-         * @param defaultVal   字段为null时的默认值
-         * @param <T>
-         * @param <F>
-         * @return
-         */
-        public static <T, F> F procFieldNull(T source, Function<T, F> getFieldFunc, F defaultVal) {
-            if (source == null) {
-                return defaultVal;
-            }
-            F fieldVal = getFieldFunc.apply(source);
-            if (fieldVal == null) {
-                return defaultVal;
-            }
 
-            return fieldVal;
+    static Object castVal(Object obj) {
+        if (obj instanceof Byte) {
+            return ((Byte) obj).longValue();
         }
-
-        /**
-         * 处理字符串，为空时返回默认值，其他时去空格
-         *
-         * @param str
-         * @param defaultVal
-         * @return
-         */
-        public static String trim(String str, String defaultVal) {
-            if (StringUtils.isBlank(str)) {
-                return defaultVal;
-            }
-            return str.trim();
+        if (obj instanceof Short) {
+            return ((Short) obj).longValue();
         }
-
-        /**
-         * 处理字段的值，如果为null则不处理，直接返回否则，按func处理后返回
-         *
-         * @param t
-         * @param procFieldFunc
-         * @param <T>
-         * @return
-         */
-        public static <T> T procNull(T t, Function<T, T> procFieldFunc, T defaultVal) {
-            if (t == null) {
-                return defaultVal;
-            }
-
-            T apply = procFieldFunc.apply(t);
-            if (apply == null) {
-                return defaultVal;
-            }
-            return apply;
+        if (obj instanceof Integer) {
+            return ((Integer) obj).longValue();
         }
+//        if (obj instanceof Long) {
+//            return obj;
+//        }
 
-        /**
-         * 简单缓存简化方法
-         *
-         * @param cache
-         * @param key
-         * @param getCacheValFunc
-         * @param <TKey>
-         * @param <TVal>
-         * @return
-         */
-        public static <TKey, TVal> TVal getCacheVal(Map<TKey, TVal> cache, TKey key, Function<TKey, TVal> getCacheValFunc) {
-            TVal val = cache.getOrDefault(key, null);
-            if (val == null) {
-                val = getCacheValFunc.apply(key);
-                cache.put(key, val);
-            }
-            return val;
+        if (obj instanceof Float) {
+            return ((Float) obj).doubleValue();
         }
+//        if (obj instanceof Double) {
+//            return obj;
+//        }
+//
+//        if (obj instanceof Boolean) {
+//            return obj;
+//        }
+//
+//        if (obj instanceof Character) {
+//            return obj;
+//        }
+        return obj;
     }
 
     // 数字
@@ -462,7 +497,7 @@ public class OftenUtil {
 
             // 去除小数点后全是零的情况
             if (val == val.intValue()) {
-                return val.intValue() + "";
+                return String.valueOf(val.intValue());
             }
 
             return fmt2Str(new BigDecimal(val));
@@ -542,8 +577,14 @@ public class OftenUtil {
 
     // 日期
     public static class DateTimeUtil {
+        // yyyy-MM-dd'T'HH:mm:ss.SSS
+        private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         // yyyy-MM-dd HH:mm:ss
         private final static DateTimeFormatter DateTime_Default_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        // yyyy-MM-dd HH:mm:ss.SSS
+        private final static DateTimeFormatter DateTime_HASMS_Default_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+        // yyyy-MM-dd HH:mm:ss.SSSSSS
+        private final static DateTimeFormatter DateTime_HASNANO_Default_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
         // yyyy-MM-dd
         private final static DateTimeFormatter DateTime_Date_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -604,17 +645,79 @@ public class OftenUtil {
         }
 
         /**
-         * 解析为LDT，支持字符串格式：yyyy-MM-dd HH:mm:ss
+         * 解析为LocalDateTime
+         * 支持字符串格式：
+         * yyyy-MM-dd HH:mm:ss
+         * yyyy-MM-dd HH:mm:ss.SSS
+         * yyyy-MM-dd HH:mm:ss.SSSSSS
+         * yyyy-MM-dd'T'HH:mm:ss
+         * yyyy-MM-dd'T'HH:mm:ss.SSSSSS[.SSSSSS]Z
+         * yyyy-MM-dd'T'HH:mm:ssZ
+         * yyyy-MM-dd'T'HH:mm:ss+00:00
          *
          * @param text
          * @param defaultVal
          * @return
          */
         public static LocalDateTime parseDateTime(String text, LocalDateTime defaultVal) {
-            if (StringUtils.isBlank(text)) return defaultVal;
+            if (StringUtils.isBlank(text)) {
+                return defaultVal;
+            }
 
             try {
-                return LocalDateTime.parse(text, DateTime_Default_Formatter);
+                // 处理/为-
+                int italicInd = text.indexOf('/');
+                if (italicInd != -1) {
+                    text = text.replace('/', '-');
+                }
+                // 如果包含时间
+                if (text.length() > 10) {
+                    if (text.charAt(10) == 'T') {
+                        if (text.endsWith("Z")) {
+                            // Instant.parse(X)
+                            // yyyy-MM-dd'T'HH:mm:ss.SSSSSS[.SSSSSS]Z
+                            // 或者没有纳秒部分 yyyy-MM-dd'T'HH:mm:ssZ
+                            Instant instant = Instant.parse(text);
+                            return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                        }
+                        // 2024-01-25T12:34:56+08:00
+                        else {
+                            int plusInd = text.indexOf('+');
+                            if (plusInd != -1) {
+                                int mInd = text.lastIndexOf(":");
+                                // 冒号在加号后
+                                if (mInd != -1 && plusInd + 3 == mInd) {
+                                    OffsetDateTime odt = OffsetDateTime.parse(text);
+                                    // 转换为 UTC 时间
+                                    Instant instant = odt.toInstant();
+                                    return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                                }
+                            }
+                            // 不带T 不带Z 不带+ 不带+后的:
+                            return LocalDateTime.parse(text, DEFAULT_FORMATTER);
+                        }
+                    }
+                    // 不带T
+                    else {
+                        int pointInd = text.indexOf('.');
+                        if (pointInd != -1) {
+                            String nano = text.substring(pointInd);
+                            // .123
+                            int nanoLen = nano.length();
+                            if (nanoLen == 4) {
+                                return LocalDateTime.parse(text, DateTime_HASMS_Default_Formatter);
+                            } else if (nanoLen == 7) {
+                                return LocalDateTime.parse(text, DateTime_HASNANO_Default_Formatter);
+                            }
+                        }
+                        // 不带.
+                        else {
+                            return LocalDateTime.parse(text, DateTime_Default_Formatter);
+                        }
+                    }
+                }
+
+                return LocalDateTime.parse(text, DEFAULT_FORMATTER);
             } catch (Exception ignore) {
                 return defaultVal;
             }
@@ -678,11 +781,24 @@ public class OftenUtil {
          * @param begin
          * @param end
          * @param maxDay
-         * @return
+         * @return true 未超过最大天数， false 超过最大天数
          */
         public static boolean check(LocalDateTime begin, LocalDateTime end, int maxDay) {
             Duration dur = Duration.between(begin, end);
             return dur.getSeconds() < maxDay * 24 * 60 * 60L;
+        }
+
+        /**
+         * 验证时间段是否超过指定最大间隔
+         *
+         * @param begin
+         * @param end
+         * @param maxDuration
+         * @return true 未超过最大天数， false 超过最大天数
+         */
+        public static boolean check(LocalDateTime begin, LocalDateTime end, Duration maxDuration) {
+            Duration dur = Duration.between(begin, end);
+            return dur.getSeconds() < maxDuration.getSeconds();
         }
 
         // 日期计算
@@ -690,25 +806,36 @@ public class OftenUtil {
         /**
          * 获取开始结束时间间隔小时数
          *
-         * @param startTime
-         * @param endTime
+         * @param begin
+         * @param end
          * @return
          */
-        public static long getIntervalHour(LocalDateTime startTime, LocalDateTime endTime) {
-            return ChronoUnit.HOURS.between(startTime, endTime);
+        public static long getIntervalHour(LocalDateTime begin, LocalDateTime end) {
+            return ChronoUnit.HOURS.between(begin, end);
+        }
+
+        /**
+         * 获取开始结束时间间隔
+         *
+         * @param begin
+         * @param end
+         * @return
+         */
+        public static Duration calcDuration(LocalDateTime begin, LocalDateTime end) {
+            return Duration.between(begin, end);
         }
 
         /**
          * 获取两个时间间隔的天数，必须是精确到秒级的时间段
          * 使用时>=start && <=end
          *
-         * @param start 开始时间
+         * @param begin 开始时间
          * @param end   结束时间 必须带上23：59：59
          * @return
          */
-        public static Long getIntervalDays(Date start, Date end) {
+        public static Long getIntervalDays(Date begin, Date end) {
             // 这样得到的差值是微秒级别
-            long diff = end.getTime() + 1000 - start.getTime();
+            long diff = end.getTime() + 1000 - begin.getTime();
 
             int dayMs = 1000 * 60 * 60 * 24;
             // 间隔天数
@@ -723,7 +850,6 @@ public class OftenUtil {
 
     // 集合
     public static class CollectionUtil {
-
 
         /**
          * 有且只有一个
@@ -839,6 +965,25 @@ public class OftenUtil {
         public static <T> T firstOrDefault(List<T> ls, T defaultVal) {
             return CollectionUtils.isEmpty(ls) ? defaultVal : ls.get(0);
         }
+
+        /**
+         * 简单缓存简化方法
+         *
+         * @param cache
+         * @param key
+         * @param getCacheValFunc
+         * @param <TKey>
+         * @param <TVal>
+         * @return
+         */
+        public static <TKey, TVal> TVal getCacheVal(Map<TKey, TVal> cache, TKey key, Function<TKey, TVal> getCacheValFunc) {
+            TVal val = cache.getOrDefault(key, null);
+            if (val == null) {
+                val = getCacheValFunc.apply(key);
+                cache.put(key, val);
+            }
+            return val;
+        }
     }
 
     // 随机数
@@ -852,9 +997,8 @@ public class OftenUtil {
          * @return
          */
         public static int nextRandomVal(int origin, int bound) {
-            int randomVal = ThreadLocalRandom.current()
+            return ThreadLocalRandom.current()
                     .nextInt(origin, bound);
-            return randomVal;
         }
 
         /**
@@ -865,9 +1009,8 @@ public class OftenUtil {
          * @return
          */
         public static int nextRandomVal(int bound) {
-            int randomVal = ThreadLocalRandom.current()
+            return ThreadLocalRandom.current()
                     .nextInt(0, bound);
-            return randomVal;
         }
     }
 
