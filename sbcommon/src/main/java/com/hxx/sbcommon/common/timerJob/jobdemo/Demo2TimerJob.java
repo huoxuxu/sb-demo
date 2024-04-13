@@ -1,17 +1,18 @@
-package com.hxx.sbcommon.common.timerJob.job;
+package com.hxx.sbcommon.common.timerJob.jobdemo;
 
 import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
-import com.hxx.sbcommon.common.timerJob.BaseTimerJob;
+import com.hxx.sbcommon.common.timerJob.SimpleTimerJob;
 import com.hxx.sbcommon.common.timerJob.TimerJobContext;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
 
 @Slf4j
-public class Demo1TimerJob extends BaseTimerJob.SimpleTimerJob {
+public class Demo2TimerJob extends SimpleTimerJob {
+    private static final long serialVersionUID = -6589225548587374081L;
 
-    public Demo1TimerJob() {
-        super(Duration.ofSeconds(10));
+    public Demo2TimerJob() {
+        super(Duration.ofSeconds(20));
     }
 
     /**
@@ -23,4 +24,5 @@ public class Demo1TimerJob extends BaseTimerJob.SimpleTimerJob {
     public void execute(TimerJobContext context) {
         log.info("SimpleTimerJob[{}].execute: {}", this.duration, JsonUtil.toJSON(context));
     }
+
 }

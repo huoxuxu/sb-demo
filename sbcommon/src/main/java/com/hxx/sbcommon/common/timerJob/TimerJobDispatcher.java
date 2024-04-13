@@ -1,5 +1,6 @@
 package com.hxx.sbcommon.common.timerJob;
 
+import com.hxx.sbcommon.common.timerJob.handler.IJobRunHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -21,6 +22,8 @@ public class TimerJobDispatcher {
     private static final ConcurrentHashMap<String, TimerJobContext> preJobContexts = new ConcurrentHashMap<>();
     // 运行中的job
     private static final ConcurrentHashMap<String, TimerJobContext> runningJobs = new ConcurrentHashMap<>();
+
+    private final List<IJobRunHandler> jobRunHandlers = new ArrayList<>();
 
     static {
         // 创建一个线程池对象
@@ -83,16 +86,32 @@ public class TimerJobDispatcher {
                             return;
                         }
 
+                        for (IJobRunHandler jobRunHandler : this.jobRunHandlers) {
+                            boolean beforeResult = jobRunHandler.before(context);
+                            if (!beforeResult) {
+                                log.info("不满足before，不执行job：{}", jobName);
+                                return;
+                            }
+                        }
                         try {
                             // job执行
                             job.execute(context);
                             context.setSuccess();
+                            for (IJobRunHandler jobRunHandler : this.jobRunHandlers) {
+                                jobRunHandler.success(context);
+                            }
                         } catch (Exception ex) {
                             log.error("job执行失败：{}", ExceptionUtils.getStackTrace(ex));
                             context.setCompleted(false, ex);
+                            for (IJobRunHandler jobRunHandler : this.jobRunHandlers) {
+                                jobRunHandler.fail(context, ex);
+                            }
                         } finally {
                             // job执行信息
                             preJobContexts.put(jobName, context);
+                            for (IJobRunHandler jobRunHandler : this.jobRunHandlers) {
+                                jobRunHandler.completed(context);
+                            }
                         }
                     } catch (Exception ex) {
                         log.error("job调度失败：{}", ExceptionUtils.getStackTrace(ex));
@@ -106,6 +125,10 @@ public class TimerJobDispatcher {
         } catch (Throwable th) {
             log.error("调度失败：{}", ExceptionUtils.getStackTrace(th));
         }
+    }
+
+    public void addJobRunHandler(IJobRunHandler handler) {
+        this.jobRunHandlers.add(handler);
     }
 
     public String getTPInfo() {
