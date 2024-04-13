@@ -1,6 +1,5 @@
 package com.hxx.sbConsole.module.thread.schedules;
 
-import com.hxx.sbcommon.common.intervalJob.IntervalJobDispatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Configurable;

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONValidator;
 import com.hxx.sbConsole.SbConsoleApplication;
 import com.hxx.sbConsole.model.KV;
 import com.hxx.sbcommon.common.basic.text.StringUtil;
-import com.hxx.sbcommon.common.json.JsonUtil;
+import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import models.Order;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;

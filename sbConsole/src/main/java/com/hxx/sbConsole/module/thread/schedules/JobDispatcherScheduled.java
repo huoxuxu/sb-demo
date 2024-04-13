@@ -1,13 +1,17 @@
 package com.hxx.sbConsole.module.thread.schedules;
 
+import com.hxx.appcommon.module.timerJob.jobdemo.Demo3TimerJob;
 import com.hxx.sbcommon.common.basic.OftenUtil;
-import com.hxx.sbcommon.common.timerJob.BaseTimerJob;
-import com.hxx.sbcommon.common.timerJob.TimerJobDispatcher;
-import com.hxx.sbcommon.common.timerJob.jobdemo.Demo1TimerJob;
-import com.hxx.sbcommon.common.timerJob.jobdemo.Demo2TimerJob;
+import com.hxx.appcommon.module.timerJob.BaseTimerJob;
+import com.hxx.appcommon.module.timerJob.TimerJobDispatcher;
+import com.hxx.appcommon.module.timerJob.jobdemo.Demo1TimerJob;
+import com.hxx.appcommon.module.timerJob.jobdemo.Demo2TimerJob;
+import com.hxx.appcommon.module.timerJob.jobdemo.JobRunHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -22,10 +26,12 @@ import java.util.List;
  **/
 @Slf4j
 @Component
-public class JobDispatcherScheduled {
+public class JobDispatcherScheduled implements ApplicationRunner {
 
     @Autowired
     private TimerJobDispatcher timerJobDispatcher;
+    @Autowired
+    private JobRunHandler jobRunHandler;
 
 //    @Scheduled(cron = "0/5 * * * * ?")
 //    public void doDispatch() {
@@ -42,14 +48,23 @@ public class JobDispatcherScheduled {
 //        }
 //    }
 
-    @Bean("TimerJobDispatcher")
-    public TimerJobDispatcher timerJobDispatcher() {
-        List<BaseTimerJob> jobs = new ArrayList<>();
-        Demo1TimerJob job1 = new Demo1TimerJob();
-        jobs.add(job1);
-        Demo2TimerJob job2 = new Demo2TimerJob();
-        jobs.add(job2);
-        return new TimerJobDispatcher(jobs);
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        // 处理TimerJobDispatcher
+        {
+            List<BaseTimerJob> jobs = new ArrayList<>();
+            Demo1TimerJob job1 = new Demo1TimerJob();
+            jobs.add(job1);
+            Demo2TimerJob job2 = new Demo2TimerJob();
+            jobs.add(job2);
+            Demo3TimerJob job3 = new Demo3TimerJob();
+            jobs.add(job3);
+            // addJob
+            timerJobDispatcher.addJobs(jobs);
+            // addJobHandler
+            timerJobDispatcher.addJobRunHandler(jobRunHandler);
+        }
+
     }
 
     @Scheduled(cron = "0/1 * * * * ?")
