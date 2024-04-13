@@ -1,12 +1,10 @@
 package com.hxx.sbConsole.module.thread.schedules;
 
-import com.hxx.appcommon.module.timerJob.jobdemo.Demo3TimerJob;
+import com.hxx.appcommon.module.timerJob.jobdemo.*;
+import com.hxx.sbcommon.common.basic.ComplexUtil;
 import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.appcommon.module.timerJob.BaseTimerJob;
 import com.hxx.appcommon.module.timerJob.TimerJobDispatcher;
-import com.hxx.appcommon.module.timerJob.jobdemo.Demo1TimerJob;
-import com.hxx.appcommon.module.timerJob.jobdemo.Demo2TimerJob;
-import com.hxx.appcommon.module.timerJob.jobdemo.JobRunHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: huoxuxu
@@ -59,26 +60,29 @@ public class JobDispatcherScheduled implements ApplicationRunner {
             jobs.add(job2);
             Demo3TimerJob job3 = new Demo3TimerJob();
             jobs.add(job3);
+            Demo4TimerJob job4 = new Demo4TimerJob();
+            jobs.add(job4);
             // addJob
             timerJobDispatcher.addJobs(jobs);
             // addJobHandler
             timerJobDispatcher.addJobRunHandler(jobRunHandler);
         }
-
-    }
-
-    @Scheduled(cron = "0/1 * * * * ?")
-    public void doDispatch2() {
-        try {
-            // 开启调度
-            log.debug("==============[TimerJob]===============");
-            OftenUtil.everyTenMinuteLog(log, log -> {
-                String tpInfo = timerJobDispatcher.getTPInfo();
-                log.info("[TimerJob]-TP：{}", tpInfo);
-            });
-            timerJobDispatcher.process();
-        } catch (Exception ex) {
-            log.error("IntervalJobDispatcher出现异常：{}", ExceptionUtils.getStackTrace(ex));
+        {
+            ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+            // 设定任务在初始延迟0毫秒后开始，然后每300毫秒执行一次, 上个任务执行完成，才会执行下一次
+            scheduledExecutorService.scheduleWithFixedDelay(() -> {
+                try {
+                    // 开启调度
+                    ComplexUtil.everyTenMinuteRun(d -> {
+                        log.debug("==============[TimerJob]===============");
+                        String tpInfo = timerJobDispatcher.getTPInfo();
+                        log.info("[TimerJob]-TP：{}", tpInfo);
+                    });
+                    timerJobDispatcher.process();
+                } catch (Exception ex) {
+                    log.error("IntervalJobDispatcher出现异常：{}", ExceptionUtils.getStackTrace(ex));
+                }
+            }, 0, 300, TimeUnit.MILLISECONDS);
         }
     }
 
