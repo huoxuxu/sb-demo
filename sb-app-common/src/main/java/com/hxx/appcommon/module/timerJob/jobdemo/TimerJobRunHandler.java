@@ -1,15 +1,14 @@
 package com.hxx.appcommon.module.timerJob.jobdemo;
 
 import com.hxx.appcommon.module.timerJob.TimerJobContext;
-import com.hxx.appcommon.module.timerJob.handler.IJobRunHandler;
+import com.hxx.appcommon.module.timerJob.handler.ITimerJobRunHandler;
 import com.hxx.sbcommon.common.basic.ComplexUtil;
-import com.hxx.sbcommon.common.basic.OftenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class JobRunHandler implements IJobRunHandler {
+public class TimerJobRunHandler implements ITimerJobRunHandler {
 
     /**
      * job执行前

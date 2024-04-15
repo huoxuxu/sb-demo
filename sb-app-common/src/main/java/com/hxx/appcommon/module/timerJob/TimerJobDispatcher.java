@@ -1,8 +1,7 @@
 package com.hxx.appcommon.module.timerJob;
 
-import com.hxx.appcommon.module.timerJob.handler.IJobRunHandler;
+import com.hxx.appcommon.module.timerJob.handler.ITimerJobRunHandler;
 import com.hxx.sbcommon.common.basic.ComplexUtil;
-import com.hxx.sbcommon.common.basic.OftenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Component;
@@ -27,7 +26,7 @@ public class TimerJobDispatcher {
     // 运行中的job
     private static final ConcurrentHashMap<String, TimerJobContext> runningJobs = new ConcurrentHashMap<>();
 
-    private final List<IJobRunHandler> jobRunHandlers = new ArrayList<>();
+    private final List<ITimerJobRunHandler> jobRunHandlers = new ArrayList<>();
 
     static {
         // 创建一个线程池对象
@@ -91,7 +90,7 @@ public class TimerJobDispatcher {
                             return;
                         }
 
-                        for (IJobRunHandler jobRunHandler : this.jobRunHandlers) {
+                        for (ITimerJobRunHandler jobRunHandler : this.jobRunHandlers) {
                             boolean beforeResult = jobRunHandler.before(context);
                             if (!beforeResult) {
                                 return;
@@ -101,19 +100,19 @@ public class TimerJobDispatcher {
                             // job执行
                             job.execute(context);
                             context.setSuccess();
-                            for (IJobRunHandler jobRunHandler : this.jobRunHandlers) {
+                            for (ITimerJobRunHandler jobRunHandler : this.jobRunHandlers) {
                                 jobRunHandler.success(context);
                             }
                         } catch (Exception ex) {
                             log.error("job执行失败：{}", ExceptionUtils.getStackTrace(ex));
                             context.setCompleted(false, ex);
-                            for (IJobRunHandler jobRunHandler : this.jobRunHandlers) {
+                            for (ITimerJobRunHandler jobRunHandler : this.jobRunHandlers) {
                                 jobRunHandler.fail(context, ex);
                             }
                         } finally {
                             // job执行信息
                             preJobContexts.put(jobCode, context);
-                            for (IJobRunHandler jobRunHandler : this.jobRunHandlers) {
+                            for (ITimerJobRunHandler jobRunHandler : this.jobRunHandlers) {
                                 jobRunHandler.completed(context);
                             }
                         }
@@ -137,7 +136,7 @@ public class TimerJobDispatcher {
         }
     }
 
-    public void addJobRunHandler(IJobRunHandler handler) {
+    public void addJobRunHandler(ITimerJobRunHandler handler) {
         if (handler == null) {
             throw new IllegalArgumentException("handler不能为null");
         }

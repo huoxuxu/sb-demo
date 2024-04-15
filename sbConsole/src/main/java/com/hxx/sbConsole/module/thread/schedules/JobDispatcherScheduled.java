@@ -2,7 +2,6 @@ package com.hxx.sbConsole.module.thread.schedules;
 
 import com.hxx.appcommon.module.timerJob.jobdemo.*;
 import com.hxx.sbcommon.common.basic.ComplexUtil;
-import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.appcommon.module.timerJob.BaseTimerJob;
 import com.hxx.appcommon.module.timerJob.TimerJobDispatcher;
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +9,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -32,7 +29,7 @@ public class JobDispatcherScheduled implements ApplicationRunner {
     @Autowired
     private TimerJobDispatcher timerJobDispatcher;
     @Autowired
-    private JobRunHandler jobRunHandler;
+    private TimerJobRunHandler jobRunHandler;
 
 //    @Scheduled(cron = "0/5 * * * * ?")
 //    public void doDispatch() {

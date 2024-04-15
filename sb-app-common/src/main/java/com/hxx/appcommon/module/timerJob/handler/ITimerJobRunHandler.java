@@ -2,7 +2,7 @@ package com.hxx.appcommon.module.timerJob.handler;
 
 import com.hxx.appcommon.module.timerJob.TimerJobContext;
 
-public interface IJobRunHandler {
+public interface ITimerJobRunHandler {
 
     /**
      * job执行前
