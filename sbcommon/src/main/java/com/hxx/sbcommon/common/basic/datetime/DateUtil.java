@@ -1,9 +1,9 @@
 package com.hxx.sbcommon.common.basic.datetime;
 
 import com.hxx.sbcommon.common.basic.OftenUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -21,7 +21,7 @@ public class DateUtil {
      * @param date
      * @return
      */
-    public static String formatDate(Date date) {
+    public static String formatDateStr(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(date);
     }
@@ -32,7 +32,7 @@ public class DateUtil {
      * @param date
      * @return
      */
-    public static String formatDateTime(Date date) {
+    public static String formatDateTimeStr(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(date);
     }
@@ -42,35 +42,45 @@ public class DateUtil {
         return format1.parse(dateStr);
     }
 
+    /**
+     * 解析日期字符串
+     *
+     * @param dateTimeStr 格式：yyyy-MM-dd
+     * @param defaultVal
+     * @return
+     */
+    public static Date parseDate(String dateTimeStr, Date defaultVal) {
+        if (StringUtils.isBlank(dateTimeStr)) {
+            return defaultVal;
+        }
+        try {
+            return parseDate(dateTimeStr);
+        } catch (Exception ex) {
+            return defaultVal;
+        }
+    }
+
     public static Date parseDateTime(String dateTimeStr) throws ParseException {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return format1.parse(dateTimeStr);
     }
 
     /**
-     * 获取现在时间
+     * 解析日期字符串
      *
-     * @return返回长时间格式 yyyy-MM-dd HH:mm:ss
+     * @param dateTimeStr 格式：yyyy-MM-dd HH:mm:ss
+     * @param defaultVal
+     * @return
      */
-    public static Date getNowDate() {
-        Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateString = formatter.format(currentTime);
-        ParsePosition pos = new ParsePosition(8);
-        return formatter.parse(dateString, pos);
-    }
-
-    /**
-     * 获取现在日期
-     *
-     * @return返回短时间格式 yyyy-MM-dd
-     */
-    public static Date getNowDateShort() {
-        Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString = formatter.format(currentTime);
-        ParsePosition pos = new ParsePosition(8);
-        return formatter.parse(dateString, pos);
+    public static Date parseDateTime(String dateTimeStr, Date defaultVal) {
+        if (StringUtils.isBlank(dateTimeStr)) {
+            return defaultVal;
+        }
+        try {
+            return parseDateTime(dateTimeStr);
+        } catch (Exception ex) {
+            return defaultVal;
+        }
     }
 
     /**
