@@ -10,20 +10,24 @@
     <version>1.0-SNAPSHOT</version>
     <description>测试springboot</description>
     <modules>
+        <module>sbcommon</module>
+        <module>sb-spring-common</module>
+        <module>sb-app-common</module>
+
+        <module>sbConsole</module>
         <module>sbweb</module>
         <module>sbrest</module>
-        <module>sbcommon</module>
         <module>mbtest</module>
         <module>mbmtest</module>
         <module>sbservice</module>
         <module>tkMybatisTest</module>
         <module>nettydemo</module>
-        <module>sbConsole</module>
         <module>sbMyBatis</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
     </properties>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>

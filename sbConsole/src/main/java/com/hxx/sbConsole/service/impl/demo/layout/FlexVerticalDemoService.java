@@ -3,6 +3,7 @@ package com.hxx.sbConsole.service.impl.demo.layout;
 import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import lombok.Data;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import com.hxx.sbConsole.service.impl.demo.layout.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,50 +190,5 @@ public class FlexVerticalDemoService {
         }
     }
 
-    @Data
-    static class Control {
-        private Point location;
-        private Size size;
 
-        public Control() {
-        }
-
-        public Control(Point location, Size size) {
-            this.location = location;
-            this.size = size;
-        }
-
-        public Control(Size size) {
-            this.size = size;
-            this.location = new Point(0, 0);
-        }
-    }
-
-    @Data
-    static class Point {
-        private int x;
-        private int y;
-
-        public Point() {
-        }
-
-        public Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    @Data
-    static class Size {
-        private int width;
-        private int height;
-
-        public Size() {
-        }
-
-        public Size(int width, int height) {
-            this.width = width;
-            this.height = height;
-        }
-    }
 }

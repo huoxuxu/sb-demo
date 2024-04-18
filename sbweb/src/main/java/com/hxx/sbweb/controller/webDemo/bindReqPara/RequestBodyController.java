@@ -46,6 +46,17 @@ public class RequestBodyController extends BaseRestController {
     }
 
     /**
+     * 可接受 post-json
+     *
+     * @param u
+     * @return
+     */
+    @PostMapping("/jsonStr")
+    public String reqJsonStr(@RequestBody String u) {
+        return u;
+    }
+
+    /**
      * http://localhost:8082/reqbody/list
      * [1,22,33]
      *

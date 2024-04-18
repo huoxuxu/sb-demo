@@ -51,6 +51,11 @@
             <artifactId>sbcommon</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.hxx</groupId>
+            <artifactId>sb-app-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
         <!--redis分布式锁-->
         <dependency>

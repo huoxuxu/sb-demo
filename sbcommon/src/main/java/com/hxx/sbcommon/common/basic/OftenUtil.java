@@ -139,23 +139,6 @@ public class OftenUtil {
         }
     }
 
-    // log
-
-    /**
-     * 每10分钟时写日志
-     *
-     * @param log
-     * @param logAct
-     */
-    public static void everyTenMinuteLog(org.slf4j.Logger log, Consumer<org.slf4j.Logger> logAct) {
-        LocalDateTime now = LocalDateTime.now();
-        int minute = now.getMinute();
-        int second = now.getSecond();
-        if (minute % 10 == 0 && second > 50) {
-            logAct.accept(log);
-        }
-    }
-
     // 校验
 
     /**

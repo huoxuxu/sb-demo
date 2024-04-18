@@ -1,23 +1,21 @@
 package com.hxx.sbConsole.module.thread.schedules;
 
-import com.hxx.sbcommon.common.basic.OftenUtil;
-import com.hxx.sbcommon.common.intervalJob.IntervalJobDispatcher;
-import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
-import com.hxx.sbcommon.common.timerJob.BaseTimerJob;
-import com.hxx.sbcommon.common.timerJob.TimerJobDispatcher;
-import com.hxx.sbcommon.common.timerJob.job.Demo1TimerJob;
-import com.hxx.sbcommon.common.timerJob.job.Demo2TimerJob;
+import com.hxx.appcommon.module.timerJob.jobdemo.*;
+import com.hxx.sbcommon.common.basic.ComplexUtil;
+import com.hxx.appcommon.module.timerJob.BaseTimerJob;
+import com.hxx.appcommon.module.timerJob.TimerJobDispatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: huoxuxu
@@ -26,10 +24,12 @@ import java.util.Map;
  **/
 @Slf4j
 @Component
-public class JobDispatcherScheduled {
+public class JobDispatcherScheduled implements ApplicationRunner {
 
     @Autowired
     private TimerJobDispatcher timerJobDispatcher;
+    @Autowired
+    private TimerJobRunHandler jobRunHandler;
 
 //    @Scheduled(cron = "0/5 * * * * ?")
 //    public void doDispatch() {
@@ -46,28 +46,40 @@ public class JobDispatcherScheduled {
 //        }
 //    }
 
-    @Bean("TimerJobDispatcher")
-    public TimerJobDispatcher timerJobDispatcher() {
-        List<BaseTimerJob> jobs = new ArrayList<>();
-        Demo1TimerJob job1 = new Demo1TimerJob();
-        jobs.add(job1);
-        Demo2TimerJob job2 = new Demo2TimerJob();
-//        jobs.add(job2);
-        return new TimerJobDispatcher(jobs);
-    }
-
-    @Scheduled(cron = "0/1 * * * * ?")
-    public void doDispatch2() {
-        try {
-            // 开启调度
-            log.debug("==============[TimerJob]===============");
-            OftenUtil.everyTenMinuteLog(log, log -> {
-                String tpInfo = timerJobDispatcher.getTPInfo();
-                log.info("[TimerJob]-TP：{}", tpInfo);
-            });
-            timerJobDispatcher.process();
-        } catch (Exception ex) {
-            log.error("IntervalJobDispatcher出现异常：{}", ExceptionUtils.getStackTrace(ex));
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        // 处理TimerJobDispatcher
+        {
+            List<BaseTimerJob> jobs = new ArrayList<>();
+            Demo1TimerJob job1 = new Demo1TimerJob();
+            jobs.add(job1);
+            Demo2TimerJob job2 = new Demo2TimerJob();
+            jobs.add(job2);
+            Demo3TimerJob job3 = new Demo3TimerJob();
+            jobs.add(job3);
+            Demo4TimerJob job4 = new Demo4TimerJob();
+            jobs.add(job4);
+            // addJob
+            timerJobDispatcher.addJobs(jobs);
+            // addJobHandler
+            timerJobDispatcher.addJobRunHandler(jobRunHandler);
+        }
+        {
+            ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+            // 设定任务在初始延迟0毫秒后开始，然后每300毫秒执行一次, 上个任务执行完成，才会执行下一次
+            scheduledExecutorService.scheduleWithFixedDelay(() -> {
+                try {
+                    // 开启调度
+                    ComplexUtil.everyTenMinuteRun(d -> {
+                        log.debug("==============[TimerJob]===============");
+                        String tpInfo = timerJobDispatcher.getTPInfo();
+                        log.info("[TimerJob]-TP：{}", tpInfo);
+                    });
+                    timerJobDispatcher.process();
+                } catch (Exception ex) {
+                    log.error("IntervalJobDispatcher出现异常：{}", ExceptionUtils.getStackTrace(ex));
+                }
+            }, 0, 300, TimeUnit.MILLISECONDS);
         }
     }
 
