@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.springReadConfig;
+package com.hxx.sbConsole.springmodule.springReadConfig;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;

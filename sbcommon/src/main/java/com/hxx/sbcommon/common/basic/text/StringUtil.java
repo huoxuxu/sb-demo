@@ -3,9 +3,7 @@ package com.hxx.sbcommon.common.basic.text;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Author: huoxuxu
@@ -200,6 +198,17 @@ public class StringUtil {
 //            return sb.toString();
     }
 
+    /**
+     * 字符串分割，支持多分隔符
+     *
+     * @param str
+     * @param splitStrs
+     * @return
+     */
+    public static Set<String> splitAsSet(String str, String... splitStrs) {
+        List<String> ls = splitByWholeSeparators(str, splitStrs);
+        return new HashSet<>(ls);
+    }
 
     /**
      * 分割字符串，支持多分隔符

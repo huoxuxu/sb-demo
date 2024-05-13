@@ -1,7 +1,7 @@
 package com.hxx.sbConsole.safeInit;
 
-import com.hxx.sbConsole.springReadConfig.ReadSingleConfig;
-import com.hxx.sbConsole.springReadConfig.UseConfigProperties;
+import com.hxx.sbConsole.springmodule.springReadConfig.ReadSingleConfig;
+import com.hxx.sbConsole.springmodule.springReadConfig.UseConfigProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
