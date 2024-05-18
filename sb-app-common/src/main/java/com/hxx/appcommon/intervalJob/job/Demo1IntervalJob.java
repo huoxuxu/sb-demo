@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
  **/
 @Slf4j
 @Component
-public class DemoIntervalJob extends BaseIntervalJob {
+public class Demo1IntervalJob extends BaseIntervalJob {
 
-    public DemoIntervalJob() {
+    public Demo1IntervalJob() {
         super(1);
     }
 

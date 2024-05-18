@@ -96,6 +96,8 @@ public class MarginRowDemoService {
      * 上边距10px，左边距10px，右、下边距无效
      * margin-top: 10px;
      * margin-right: 10px;
+     * margin-left: auto;
+     * 或 margin: 10px 10px 0px auto;
      *
      * @param marginTop
      * @param marginRight

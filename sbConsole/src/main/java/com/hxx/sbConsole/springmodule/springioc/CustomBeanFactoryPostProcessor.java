@@ -1,4 +1,4 @@
-package com.hxx.sbConsole.springIoc;
+package com.hxx.sbConsole.springmodule.springioc;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
