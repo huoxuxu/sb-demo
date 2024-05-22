@@ -1,7 +1,7 @@
 package com.hxx.sbConsole.module.thread.schedules;
 
 import com.hxx.appcommon.module.timerJob.jobdemo.*;
-import com.hxx.sbcommon.common.basic.ComplexUtil;
+import com.hxx.sbcommon.common.basic.ComplexPowerUtil;
 import com.hxx.appcommon.module.timerJob.BaseTimerJob;
 import com.hxx.appcommon.module.timerJob.TimerJobDispatcher;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +70,7 @@ public class JobDispatcherScheduled implements ApplicationRunner {
             scheduledExecutorService.scheduleWithFixedDelay(() -> {
                 try {
                     // 开启调度
-                    ComplexUtil.everyTenMinuteRun(d -> {
+                    ComplexPowerUtil.everyTenMinuteRun(d -> {
                         log.debug("==============[TimerJob]===============");
                         String tpInfo = timerJobDispatcher.getTPInfo();
                         log.info("[TimerJob]-TP：{}", tpInfo);

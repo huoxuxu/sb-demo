@@ -2,7 +2,7 @@ package com.hxx.appcommon.module.timerJob.jobdemo;
 
 import com.hxx.appcommon.module.timerJob.TimerJobContext;
 import com.hxx.appcommon.module.timerJob.handler.ITimerJobRunHandler;
-import com.hxx.sbcommon.common.basic.ComplexUtil;
+import com.hxx.sbcommon.common.basic.ComplexPowerUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ public class TimerJobRunHandler implements ITimerJobRunHandler {
     public boolean before(TimerJobContext context) {
         String jobCode = context.getJobCode();
         if (jobCode.equals(Demo3TimerJob.class.getName())) {
-            ComplexUtil.everyTenMinuteRun(d -> {
+            ComplexPowerUtil.everyTenMinuteRun(d -> {
                 log.info("不满足before，不执行job：{}", jobCode);
             });
             return false;

@@ -1,11 +1,9 @@
 package com.hxx.sbcommon.common.basic;
 
-import org.slf4j.Logger;
-
 import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
-public class ComplexUtil {
+public class ComplexPowerUtil {
 
     /**
      * 每10整数分钟执行，

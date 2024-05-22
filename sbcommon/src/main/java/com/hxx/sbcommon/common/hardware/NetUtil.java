@@ -242,8 +242,8 @@ public class NetUtil {
                     while (addresses.hasMoreElements()) {
                         try {
                             InetAddress address = addresses.nextElement();
-                            if (address == null || address.isLoopbackAddress()) {
-                                break;
+                            if (address == null) {
+                                continue;
                             }
 
                             NetInfo netInfo = new NetInfo(network, address);

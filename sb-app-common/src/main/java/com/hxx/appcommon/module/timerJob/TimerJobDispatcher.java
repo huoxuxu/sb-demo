@@ -1,7 +1,7 @@
 package com.hxx.appcommon.module.timerJob;
 
 import com.hxx.appcommon.module.timerJob.handler.ITimerJobRunHandler;
-import com.hxx.sbcommon.common.basic.ComplexUtil;
+import com.hxx.sbcommon.common.basic.ComplexPowerUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Component;
@@ -67,7 +67,7 @@ public class TimerJobDispatcher {
                     // 如果一个job已经长时间运行，则提示
                     Duration dur = Duration.between(jobContext.getRunTime(), now);
                     if (dur.getSeconds() > WARN_RUN_SECOND) {
-                        ComplexUtil.everyTenMinuteRun(d -> log.warn("LONG-RUNNING：Job已长时间运行，请及时关注！{} 运行时长：{}s", jobCode, dur.getSeconds()));
+                        ComplexPowerUtil.everyTenMinuteRun(d -> log.warn("LONG-RUNNING：Job已长时间运行，请及时关注！{} 运行时长：{}s", jobCode, dur.getSeconds()));
                     }
                     // job 还在执行中，跳过
                     continue;
