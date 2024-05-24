@@ -304,9 +304,9 @@ public class DemoService {
                 ls.add(null);
                 ls.add("");
                 ls.add("1");
-                Set<String> arr1 = CollectionUtil.getFieldSet(ls, d -> true, d -> d);
+                Set<String> arr1 = CollectionUtil.reMapToSet(ls, d -> d, d -> true);
                 System.out.println("arr1:" + JsonUtil.toJSON(arr1));
-                Set<String> arr2 = CollectionUtil.getFieldSet(ls, d -> d != null, d -> d);
+                Set<String> arr2 = CollectionUtil.reMapToSet(ls, d -> d, d -> d != null);
                 System.out.println("arr2:" + JsonUtil.toJSON(arr2));
             }
         }

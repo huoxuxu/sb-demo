@@ -178,80 +178,53 @@ public class CollectionUtil {
     }
 
     /**
-     * 集合投影指定字段
+     * 集合重新投影
      *
      * @param ls
-     * @param fieldGetter
+     * @param mapper
+     * @param filterPred 投影后过滤条件
      * @param <T>
-     * @param <TField>
+     * @param <TResult>
      * @return
      */
-    public static <T, TField> List<TField> getFieldList(Collection<T> ls, Function<T, TField> fieldGetter, Predicate<TField> filterPred) {
+    public static <T, TResult> List<TResult> reMapToList(Collection<T> ls, Function<T, TResult> mapper, Predicate<TResult> filterPred) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
-                .map(fieldGetter)
-                .filter(filterPred)
+                .map(mapper)
+                .filter(filterPred == null ? d -> true : filterPred)
                 .collect(Collectors.toList());
     }
 
     /**
-     * 集合投影指定字段
+     * 集合重新投影
      *
      * @param ls
-     * @param fieldGetter
+     * @param mapper
+     * @param filterPred 投影后过滤条件
      * @param <T>
-     * @param <TField>
+     * @param <TResult>
      * @return
      */
-    public static <T, TField> List<TField> getFieldList(Collection<T> ls, Function<T, TField> fieldGetter) {
+    public static <T, TResult> Set<TResult> reMapToSet(Collection<T> ls, Function<T, TResult> mapper, Predicate<TResult> filterPred) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
-                .map(fieldGetter)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * 获取字段值Set集合
-     *
-     * @param ls
-     * @param getFieldFunc
-     * @param <T>
-     * @param <TField>
-     * @return
-     */
-    public static <T, TField> Set<TField> getFieldSet(Collection<T> ls, Predicate<T> filterPred, Function<T, TField> getFieldFunc) {
-        return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
-                .filter(filterPred)
-                .map(getFieldFunc)
+                .map(mapper)
+                .filter(filterPred == null ? d -> true : filterPred)
                 .collect(Collectors.toSet());
     }
 
     /**
-     * 获取字段值Set集合
+     * 集合重新投影
      *
      * @param ls
-     * @param getFieldFunc
+     * @param mapper
+     * @param filterPred
      * @param <T>
-     * @param <TField>
+     * @param <TResult>
      * @return
      */
-    public static <T, TField> Set<TField> getFieldSet(Collection<T> ls, Function<T, TField> getFieldFunc) {
+    public static <T, TResult> Set<TResult> reMapToSortedSet(Collection<T> ls, Function<T, TResult> mapper, Predicate<TResult> filterPred) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
-                .map(getFieldFunc)
-                .collect(Collectors.toSet());
-    }
-
-    /**
-     * 获取字段值SortedSet集合
-     *
-     * @param ls
-     * @param fieldGetter
-     * @param <T>
-     * @param <TField>
-     * @return
-     */
-    public static <T, TField> SortedSet<TField> getFieldSortedSet(Collection<T> ls, Function<T, TField> fieldGetter, Predicate<TField> filterPred) {
-        return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
-                .map(fieldGetter)
-                .filter(filterPred)
+                .map(mapper)
+                .filter(filterPred == null ? d -> true : filterPred)
                 .collect(Collectors.toCollection(TreeSet::new));
     }
 
