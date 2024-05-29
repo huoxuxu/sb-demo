@@ -72,11 +72,83 @@ public class DiAnHttpApiDemo {
 
     public static void main(String[] args) {
         try {
-            String method="scs.openlink.delivery.order.push";
-//            testPost(method);
+            String method = "scs.openlink.delivery.order.push";
+            testPost(method);
+            testPost2();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * 生产
+     *
+     * @return
+     * @throws IOException
+     * @throws Exception
+     * @throws UnsupportedEncodingException
+     */
+    public static void testPost(String method) throws IOException {
+        String url = "https://open.yyigou.com/rest";
+        url = "http://ddc-open.demo.yyigou.com/rest";
+        String path = "d:/tmp/scs.openlink.delivery.order.push.json";
+        File jsonFile = new File(path);
+        String json = FileUtil.readAllTxt(jsonFile, StandardCharsets.UTF_8);
+        json="{}";
+
+        String appKey = "9f82cb882f82d3a37fd0cc6135bc16c5356502ff56f4cbd7067518c2365b0d6d";
+        String appSecret = "d2556815d54032beb1c1ca0af52fbd93468eede39a074f91eee031112d79da59";
+        String token = "c01d726ee3e5649835b19c5e9d1810fd";
+
+        Map<String, String> params = new TreeMap<String, String>();
+        params.put(APPKEY, appKey);
+        params.put(APPSECRET, appSecret);
+        params.put(METHOD, method);// 接口地址
+        params.put(TIMESTAMP, getCurrentDate("yyyy-MM-dd HH:mm:ss"));
+        params.put(TOKEN, token);
+        params.put(VERSION, "1.0");
+
+        // 签名
+        String sign = encrypt(params, json, DEFAULT_CHARSET, appSecret);
+        params.put(SIGN, sign);
+        params.remove(APPSECRET);
+
+        // 拼接url请求参数
+        String queryString = buildQuery(params, DEFAULT_CHARSET);
+        System.out.println("queryString == " + queryString);
+        String fullUrl = buildRequestUrl(url, queryString);
+        String result = doPost(fullUrl, CONTENT_TYPE_JSON, json.getBytes(CHARSET_UTF8), CONNECT_TIMEOUT, READ_TIMEOUT, null);
+        System.out.println("result === " + result);
+    }
+
+    public static void testPost2() throws IOException {
+//        String path = "d:/tmp/scs.openlink.delivery.order.push.json";
+//        File jsonFile = new File(path);
+//        String json = FileUtil.readAllTxt(jsonFile, StandardCharsets.UTF_8);
+//        System.out.println("json: "+json);
+        String json="{\"params\":{\"supplierName\":\"内蒙古迪安拓丰\",\"supplierNo\":\"6019000559\",\"deliveryPhone\":\"0517-89562145\",\"outStorageNo\":\"ASD3132232343\",\"orderNo\":\"120000000003\",\"outStorageType\":1,\"detailList\":[{\"sortNo\":1,\"amount\":10,\"batch\":\"42421423\",\"invalidDate\":\"2021-10-20\",\"productNo\":\"301900000126\",\"productName\":\"17α-羟孕酮定量测定试剂盒(时间分辨免疫荧光法) 17α-hydoxy progesterone quantitative diagnostic kit(Time-resolved immunofluorometric assay)\",\"createDate\":\"2020-07-14\"}],\"remark\":\"易碎物品\",\"outStorageTime\":\"2019-03-30 10:36:20\",\"deliveryName\":\"麦兜\",\"logisticCode\":\"234423142314\",\"shipperCode\":\"shunfeng\"}}";
+
+        String appKey = "9f82cb882f82d3a37fd0cc6135bc16c5356502ff56f4cbd7067518c2365b0d6d";
+        String appSecret = "d2556815d54032beb1c1ca0af52fbd93468eede39a074f91eee031112d79da59";
+        String token = "c01d726ee3e5649835b19c5e9d1810fd";
+        Map<String, String> params = new TreeMap<String, String>();
+        params.put(APPKEY, appKey);
+        params.put(APPSECRET, appSecret);
+        params.put(METHOD, "scs.openlink.delivery.order.push");// 接口地址
+        params.put(TIMESTAMP, getCurrentDate("yyyy-MM-dd HH:mm:ss"));
+        params.put(TOKEN, token);
+        params.put(VERSION, "1.0");
+
+        // 签名
+        params.put(SIGN, encrypt(params, json, DEFAULT_CHARSET, appSecret));
+        params.remove(APPSECRET);
+
+        // 拼接url请求参数
+        String queryString = buildQuery(params, DEFAULT_CHARSET);
+        System.out.println("queryString == "+queryString);
+        String fullUrl = buildRequestUrl("http://ddc-open.demo.yyigou.com/rest", queryString);
+        String result = doPost(fullUrl, CONTENT_TYPE_JSON, json.getBytes(CHARSET_UTF8), CONNECT_TIMEOUT, READ_TIMEOUT, null);
+        System.out.println("result === " + result);
     }
 
     /**
