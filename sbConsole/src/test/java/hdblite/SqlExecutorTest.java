@@ -47,13 +47,42 @@ public class SqlExecutorTest {
 
     @Test
     public void case0() throws Exception {
-        String sql = "select * from book where name= ?";
-        List<Object> paras = new ArrayList<>();
-        paras.add("1?2");
-        try (DAL dal = MySQLDB.Connect(CONNSTR, MySQLUSER, MySQLPWD)) {
-            HDBHelper2 db = new HDBHelper2(dal.getConn());
-            DbTable dbTable = db.ExecuteDbTable(sql, paras);
-            System.out.println(JSON.toJSON(dbTable));
+        try {
+            {
+                String sql = "select * from book where name= '1?2\\'3\"4' and name= ?";
+                List<Object> paras = new ArrayList<>();
+                // 测试查询带特殊字符
+                paras.add("1?2'3\"4");
+                try (DAL dal = MySQLDB.Connect(CONNSTR, MySQLUSER, MySQLPWD)) {
+                    HDBHelper2 db = new HDBHelper2(dal.getConn());
+                    DbTable dbTable = db.ExecuteDbTable(sql, paras);
+                    System.out.println(JSON.toJSON(dbTable));
+                }
+            }
+            {
+                String sql = "select * from book where name= \"1?2'3\\\"4\" and name= ?";
+                List<Object> paras = new ArrayList<>();
+                // 测试查询带特殊字符
+                paras.add("1?2'3\"4");
+                try (DAL dal = MySQLDB.Connect(CONNSTR, MySQLUSER, MySQLPWD)) {
+                    HDBHelper2 db = new HDBHelper2(dal.getConn());
+                    DbTable dbTable = db.ExecuteDbTable(sql, paras);
+                    System.out.println(JSON.toJSON(dbTable));
+                }
+            }
+            {
+                String sql = "select * from book where name= \"1?2'3\"4\" and name= ?";
+                List<Object> paras = new ArrayList<>();
+                // 测试查询带特殊字符
+                paras.add("1?2'3\"4");
+                try (DAL dal = MySQLDB.Connect(CONNSTR, MySQLUSER, MySQLPWD)) {
+                    HDBHelper2 db = new HDBHelper2(dal.getConn());
+                    DbTable dbTable = db.ExecuteDbTable(sql, paras);
+                    System.out.println(JSON.toJSON(dbTable));
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println(ExceptionUtils.getStackTrace(ex));
         }
     }
 

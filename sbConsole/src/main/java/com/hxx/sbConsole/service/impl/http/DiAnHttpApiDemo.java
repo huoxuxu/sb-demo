@@ -1,603 +1,603 @@
-package com.hxx.sbConsole.service.impl.http;
-
-/**
- * @Author: huoxuxu
- * @Description:
- * @Date: 2023-05-07 16:01:50
- **/
-
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.zip.GZIPInputStream;
-
-public class DiAnHttpApiDemo {
-
-    private static final String DEFAULT_CHARSET = "UTF-8";
-    private static final String METHOD_POST = "POST";
-    private static final String METHOD_GET = "GET";
-
-    public static final String CONTENT_ENCODING_GZIP = "gzip";
-    public static final String SIGNMETHOD_VALUE = "md5";
-
-    public static final String APPKEY = "appKey";
-    public static final String APPSECRET = "appSecret";
-    public static final String TOKEN = "token";
-    public static final String CUSTOMERID = "customerId";
-    public static final String METHOD = "apiCode";
-    public static final String TIMESTAMP = "timestamp";
-    public static final String VERSION = "apiVersion";
-    public static final String SIGN = "sign";
-    public static final String SIGNMETHOD = "signMethod";
-
-    /**
-     * 系统参数value
-     **/
-    public static final String VERSION_VALUE = "1.0";
-
-    /**
-     * 内容类型
-     **/
-    public static final String CONTENT_TYPE_JSON = "text/json;charset=utf-8";
-
-    /**
-     * UTF-8字符集
-     **/
-    public static final String CHARSET_UTF8 = "UTF-8";
-
-    /**
-     * 默认连接超时时间为30秒
-     **/
-    public static final int CONNECT_TIMEOUT = 30000;
-
-    /**
-     * 默认响应超时时间为30秒
-     **/
-    public static final int READ_TIMEOUT = 30000;
-
-
-    public static void main(String[] args) {
-        try {
-            String method = "scs.openlink.delivery.order.push";
-            testPost(method);
-            testPost2();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    /**
-     * 生产
-     *
-     * @return
-     * @throws IOException
-     * @throws Exception
-     * @throws UnsupportedEncodingException
-     */
-    public static void testPost(String method) throws IOException {
-        String url = "https://open.yyigou.com/rest";
-        url = "http://ddc-open.demo.yyigou.com/rest";
-        String path = "d:/tmp/scs.openlink.delivery.order.push.json";
-        File jsonFile = new File(path);
-        String json = FileUtil.readAllTxt(jsonFile, StandardCharsets.UTF_8);
-        json="{}";
-
-        String appKey = "9f82cb882f82d3a37fd0cc6135bc16c5356502ff56f4cbd7067518c2365b0d6d";
-        String appSecret = "d2556815d54032beb1c1ca0af52fbd93468eede39a074f91eee031112d79da59";
-        String token = "c01d726ee3e5649835b19c5e9d1810fd";
-
-        Map<String, String> params = new TreeMap<String, String>();
-        params.put(APPKEY, appKey);
-        params.put(APPSECRET, appSecret);
-        params.put(METHOD, method);// 接口地址
-        params.put(TIMESTAMP, getCurrentDate("yyyy-MM-dd HH:mm:ss"));
-        params.put(TOKEN, token);
-        params.put(VERSION, "1.0");
-
-        // 签名
-        String sign = encrypt(params, json, DEFAULT_CHARSET, appSecret);
-        params.put(SIGN, sign);
-        params.remove(APPSECRET);
-
-        // 拼接url请求参数
-        String queryString = buildQuery(params, DEFAULT_CHARSET);
-        System.out.println("queryString == " + queryString);
-        String fullUrl = buildRequestUrl(url, queryString);
-        String result = doPost(fullUrl, CONTENT_TYPE_JSON, json.getBytes(CHARSET_UTF8), CONNECT_TIMEOUT, READ_TIMEOUT, null);
-        System.out.println("result === " + result);
-    }
-
-    public static void testPost2() throws IOException {
+//package com.hxx.sbConsole.service.impl.http;
+//
+///**
+// * @Author: huoxuxu
+// * @Description:
+// * @Date: 2023-05-07 16:01:50
+// **/
+//
+//import org.apache.commons.lang3.StringUtils;
+//
+//import java.io.*;
+//import java.net.HttpURLConnection;
+//import java.net.URL;
+//import java.net.URLDecoder;
+//import java.net.URLEncoder;
+//import java.nio.charset.StandardCharsets;
+//import java.security.MessageDigest;
+//import java.text.DateFormat;
+//import java.text.ParseException;
+//import java.text.SimpleDateFormat;
+//import java.util.Date;
+//import java.util.Map;
+//import java.util.Map.Entry;
+//import java.util.Set;
+//import java.util.TreeMap;
+//import java.util.zip.GZIPInputStream;
+//
+//public class DiAnHttpApiDemo {
+//
+//    private static final String DEFAULT_CHARSET = "UTF-8";
+//    private static final String METHOD_POST = "POST";
+//    private static final String METHOD_GET = "GET";
+//
+//    public static final String CONTENT_ENCODING_GZIP = "gzip";
+//    public static final String SIGNMETHOD_VALUE = "md5";
+//
+//    public static final String APPKEY = "appKey";
+//    public static final String APPSECRET = "appSecret";
+//    public static final String TOKEN = "token";
+//    public static final String CUSTOMERID = "customerId";
+//    public static final String METHOD = "apiCode";
+//    public static final String TIMESTAMP = "timestamp";
+//    public static final String VERSION = "apiVersion";
+//    public static final String SIGN = "sign";
+//    public static final String SIGNMETHOD = "signMethod";
+//
+//    /**
+//     * 系统参数value
+//     **/
+//    public static final String VERSION_VALUE = "1.0";
+//
+//    /**
+//     * 内容类型
+//     **/
+//    public static final String CONTENT_TYPE_JSON = "text/json;charset=utf-8";
+//
+//    /**
+//     * UTF-8字符集
+//     **/
+//    public static final String CHARSET_UTF8 = "UTF-8";
+//
+//    /**
+//     * 默认连接超时时间为30秒
+//     **/
+//    public static final int CONNECT_TIMEOUT = 30000;
+//
+//    /**
+//     * 默认响应超时时间为30秒
+//     **/
+//    public static final int READ_TIMEOUT = 30000;
+//
+//
+//    public static void main(String[] args) {
+//        try {
+//            String method = "scs.openlink.delivery.order.push";
+//            testPost(method);
+//            testPost2();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    }
+//
+//    /**
+//     * 生产
+//     *
+//     * @return
+//     * @throws IOException
+//     * @throws Exception
+//     * @throws UnsupportedEncodingException
+//     */
+//    public static void testPost(String method) throws IOException {
+//        String url = "https://open.yyigou.com/rest";
+//        url = "http://ddc-open.demo.yyigou.com/rest";
 //        String path = "d:/tmp/scs.openlink.delivery.order.push.json";
 //        File jsonFile = new File(path);
 //        String json = FileUtil.readAllTxt(jsonFile, StandardCharsets.UTF_8);
-//        System.out.println("json: "+json);
-        String json="{\"params\":{\"supplierName\":\"内蒙古迪安拓丰\",\"supplierNo\":\"6019000559\",\"deliveryPhone\":\"0517-89562145\",\"outStorageNo\":\"ASD3132232343\",\"orderNo\":\"120000000003\",\"outStorageType\":1,\"detailList\":[{\"sortNo\":1,\"amount\":10,\"batch\":\"42421423\",\"invalidDate\":\"2021-10-20\",\"productNo\":\"301900000126\",\"productName\":\"17α-羟孕酮定量测定试剂盒(时间分辨免疫荧光法) 17α-hydoxy progesterone quantitative diagnostic kit(Time-resolved immunofluorometric assay)\",\"createDate\":\"2020-07-14\"}],\"remark\":\"易碎物品\",\"outStorageTime\":\"2019-03-30 10:36:20\",\"deliveryName\":\"麦兜\",\"logisticCode\":\"234423142314\",\"shipperCode\":\"shunfeng\"}}";
-
-        String appKey = "9f82cb882f82d3a37fd0cc6135bc16c5356502ff56f4cbd7067518c2365b0d6d";
-        String appSecret = "d2556815d54032beb1c1ca0af52fbd93468eede39a074f91eee031112d79da59";
-        String token = "c01d726ee3e5649835b19c5e9d1810fd";
-        Map<String, String> params = new TreeMap<String, String>();
-        params.put(APPKEY, appKey);
-        params.put(APPSECRET, appSecret);
-        params.put(METHOD, "scs.openlink.delivery.order.push");// 接口地址
-        params.put(TIMESTAMP, getCurrentDate("yyyy-MM-dd HH:mm:ss"));
-        params.put(TOKEN, token);
-        params.put(VERSION, "1.0");
-
-        // 签名
-        params.put(SIGN, encrypt(params, json, DEFAULT_CHARSET, appSecret));
-        params.remove(APPSECRET);
-
-        // 拼接url请求参数
-        String queryString = buildQuery(params, DEFAULT_CHARSET);
-        System.out.println("queryString == "+queryString);
-        String fullUrl = buildRequestUrl("http://ddc-open.demo.yyigou.com/rest", queryString);
-        String result = doPost(fullUrl, CONTENT_TYPE_JSON, json.getBytes(CHARSET_UTF8), CONNECT_TIMEOUT, READ_TIMEOUT, null);
-        System.out.println("result === " + result);
-    }
-
-    /**
-     * 执行HTTP GET请求。
-     *
-     * @param url    请求地址
-     * @param params 请求参数
-     * @return 响应字符串
-     */
-    public static String doGet(String url, Map<String, String> params) throws IOException {
-        return doGet(url, params, DEFAULT_CHARSET);
-    }
-
-    /**
-     * 执行HTTP GET请求。
-     *
-     * @param url     请求地址
-     * @param params  请求参数
-     * @param charset 字符集，如UTF-8, GBK, GB2312
-     * @return 响应字符串
-     */
-    public static String doGet(String url, Map<String, String> params, String charset) throws IOException {
-        HttpURLConnection conn = null;
-        String rsp = null;
-
-        try {
-            String ctype = "application/x-www-form-urlencoded;charset=" + charset;
-            String query = buildQuery(params, charset);
-            conn = getConnection(buildGetUrl(url, query), METHOD_GET, ctype, null);
-            rsp = getResponseAsString(conn);
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
-
-        return rsp;
-    }
-
-    public static byte[] download(String absolutePath) throws Exception {
-        URL url = new URL(absolutePath);
-        HttpURLConnection conn = null;
-        try {
-            conn = (HttpURLConnection) url.openConnection();
-            InputStream in = conn.getInputStream();
-            byte[] res = new byte[in.available()];
-            in.read(res);
-            return res;
-        } finally {
-            conn.disconnect();
-        }
-    }
-
-    private static URL buildGetUrl(String url, String query) throws IOException {
-        if (StringUtils.isEmpty(query)) {
-            return new URL(url);
-        }
-
-        return new URL(buildRequestUrl(url, query));
-    }
-
-    public static String buildRequestUrl(String url, String... queries) {
-        if (queries == null || queries.length == 0) {
-            return url;
-        }
-
-        StringBuilder newUrl = new StringBuilder(url);
-        boolean hasQuery = url.contains("?");
-        boolean hasPrepend = url.endsWith("?") || url.endsWith("&");
-
-        for (String query : queries) {
-            if (!StringUtils.isEmpty(query)) {
-                if (!hasPrepend) {
-                    if (hasQuery) {
-                        newUrl.append("&");
-                    } else {
-                        newUrl.append("?");
-                        hasQuery = true;
-                    }
-                }
-                newUrl.append(query);
-                hasPrepend = false;
-            }
-        }
-        return newUrl.toString();
-    }
-
-    /**
-     * 执行HTTP POST请求。
-     *
-     * @param url    请求地址
-     * @param params 请求参数
-     * @return 响应字符串
-     */
-    public static String doPost(String url, Map<String, String> params, int connectTimeout, int readTimeout) throws IOException {
-        return doPost(url, params, DEFAULT_CHARSET, connectTimeout, readTimeout);
-    }
-
-    /**
-     * 执行HTTP POST请求。
-     *
-     * @param url     请求地址
-     * @param params  请求参数
-     * @param charset 字符集，如UTF-8, GBK, GB2312
-     * @return 响应字符串
-     */
-    public static String doPost(String url, Map<String, String> params, String charset, int connectTimeout, int readTimeout) throws IOException {
-        return doPost(url, params, charset, connectTimeout, readTimeout, null);
-    }
-
-    public static String doPost(String url, Map<String, String> params, String charset, int connectTimeout, int readTimeout, Map<String, String> headerMap) throws IOException {
-        String ctype = "application/x-www-form-urlencoded;charset=" + charset;
-		/*String query = buildQuery(params, charset);
-		byte[] content = {};
-		if (query != null) {
-			content = query.getBytes(charset);
-		}*/
-        return _doPost(url, ctype, null, connectTimeout, readTimeout, headerMap);
-    }
-
-    /**
-     * 执行HTTP POST请求。
-     *
-     * @param url       请求地址
-     * @param ctype     请求类型
-     * @param content   请求字节数组
-     * @param headerMap 请求头部参数
-     * @return 响应字符串
-     */
-    public static String doPost(String url, String ctype, byte[] content, int connectTimeout, int readTimeout, Map<String, String> headerMap) throws IOException {
-        return _doPost(url, ctype, content, connectTimeout, readTimeout, headerMap);
-    }
-
-    private static String _doPost(String url, String ctype, byte[] content, int connectTimeout, int readTimeout, Map<String, String> headerMap) throws IOException {
-        HttpURLConnection conn = null;
-        OutputStream out = null;
-        String rsp = null;
-        try {
-            conn = getConnection(new URL(url), METHOD_POST, ctype, headerMap);
-            conn.setConnectTimeout(connectTimeout);
-            conn.setReadTimeout(readTimeout);
-            out = conn.getOutputStream();
-            if (content != null) {
-                out.write(content);
-            }
-            rsp = getResponseAsString(conn);
-        } finally {
-            if (out != null) {
-                out.close();
-            }
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
-
-        return rsp;
-    }
-
-    protected static String getResponseAsString(HttpURLConnection conn) throws IOException {
-        String charset = getResponseCharset(conn.getContentType());
-        if (conn.getResponseCode() < 400) {
-            String contentEncoding = conn.getContentEncoding();
-            if (CONTENT_ENCODING_GZIP.equalsIgnoreCase(contentEncoding)) {
-                return getStreamAsString(new GZIPInputStream(conn.getInputStream()), charset);
-            } else {
-                return getStreamAsString(conn.getInputStream(), charset);
-            }
-        } else {// Client Error 4xx and Server Error 5xx
-            throw new IOException(conn.getResponseCode() + " " + conn.getResponseMessage());
-        }
-    }
-
-    public static String getStreamAsString(InputStream stream, String charset) throws IOException {
-        try {
-            Reader reader = new InputStreamReader(stream, charset);
-            StringBuilder response = new StringBuilder();
-
-            final char[] buff = new char[1024];
-            int read = 0;
-            while ((read = reader.read(buff)) > 0) {
-                response.append(buff, 0, read);
-            }
-
-            return response.toString();
-        } finally {
-            if (stream != null) {
-                stream.close();
-            }
-        }
-    }
-
-    public static String getResponseCharset(String ctype) {
-        String charset = DEFAULT_CHARSET;
-
-        if (!StringUtils.isEmpty(ctype)) {
-            String[] params = ctype.split(";");
-            for (String param : params) {
-                param = param.trim();
-                if (param.startsWith("charset")) {
-                    String[] pair = param.split("=", 2);
-                    if (pair.length == 2) {
-                        if (!StringUtils.isEmpty(pair[1])) {
-                            charset = pair[1].trim();
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-
-        return charset;
-    }
-
-    private static HttpURLConnection getConnection(URL url, String method, String ctype, Map<String, String> headerMap) throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod(method);
-        conn.setDoInput(true);
-        conn.setDoOutput(true);
-        conn.setRequestProperty("Host", url.getHost());
-        conn.setRequestProperty("Accept", "text/json,text/xml,text/html,application/json,text/plain");
-        conn.setRequestProperty("User-Agent", "open-api-java");
-        conn.setRequestProperty("Content-Type", ctype);
-        if (headerMap != null) {
-            for (Entry<String, String> entry : headerMap.entrySet()) {
-                conn.setRequestProperty(entry.getKey(), entry.getValue());
-            }
-        }
-        return conn;
-    }
-
-    public static String buildQuery(Map<String, String> params, String charset) {
-        if (params == null || params.isEmpty()) {
-            return null;
-        }
-
-        StringBuilder query = new StringBuilder();
-        Set<Entry<String, String>> entries = params.entrySet();
-        boolean hasParam = false;
-
-        for (Entry<String, String> entry : entries) {
-            String name = entry.getKey();
-            String value = entry.getValue();
-            // 忽略参数名或参数值为空的参数
-            if (areNotEmpty(name, value)) {
-                if (hasParam) {
-                    query.append("&");
-                } else {
-                    hasParam = true;
-                }
-
-                try {
-                    query.append(name)
-                            .append("=")
-                            .append(URLEncoder.encode(value, charset));
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return query.toString();
-    }
-
-    /**
-     * 使用默认的UTF-8字符集反编码请求参数值。
-     *
-     * @param value 参数值
-     * @return 反编码后的参数值
-     */
-    public static String decode(String value) {
-        return decode(value, DEFAULT_CHARSET);
-    }
-
-    /**
-     * 使用默认的UTF-8字符集编码请求参数值。
-     *
-     * @param value 参数值
-     * @return 编码后的参数值
-     */
-    public static String encode(String value) {
-        return encode(value, DEFAULT_CHARSET);
-    }
-
-    /**
-     * 使用指定的字符集反编码请求参数值。
-     *
-     * @param value   参数值
-     * @param charset 字符集
-     * @return 反编码后的参数值
-     */
-    public static String decode(String value, String charset) {
-        String result = null;
-        if (!StringUtils.isEmpty(value)) {
-            try {
-                result = URLDecoder.decode(value, charset);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * 使用指定的字符集编码请求参数值。
-     *
-     * @param value   参数值
-     * @param charset 字符集
-     * @return 编码后的参数值
-     */
-    public static String encode(String value, String charset) {
-        String result = null;
-        if (!StringUtils.isEmpty(value)) {
-            try {
-                result = URLEncoder.encode(value, charset);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * 检查指定的字符串列表是否不为空。
-     */
-    private static boolean areNotEmpty(String... values) {
-        boolean result = true;
-        if (values == null || values.length == 0) {
-            result = false;
-        } else {
-            for (String value : values) {
-                result &= !isEmpty(value);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * 检查指定的字符串是否为空。
-     * <ul>
-     * <li>SysUtils.isEmpty(null) = true</li>
-     * <li>SysUtils.isEmpty("") = true</li>
-     * <li>SysUtils.isEmpty("   ") = true</li>
-     * <li>SysUtils.isEmpty("abc") = false</li>
-     * </ul>
-     *
-     * @param value 待检查的字符串
-     * @return true/false
-     */
-    public static boolean isEmpty(String value) {
-        int strLen;
-        if (value == null || (strLen = value.length()) == 0) {
-            return true;
-        }
-        for (int i = 0; i < strLen; i++) {
-            if ((Character.isWhitespace(value.charAt(i)) == false)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Sign签名生成
-     *
-     * @param params
-     * @param json
-     * @param charset 编码方式
-     */
-    public static String encrypt(Map<String, String> params, String json, String charset, String appSecret) {
-        StringBuilder param = new StringBuilder();
-        param.append(appSecret);
-        for (Entry<String, String> entry : params.entrySet()) {
-            param.append(entry.getKey() + entry.getValue());
-        }
-        param.append(json);
-        param.append(appSecret);
-        String result = "";
-        try {
-            result = MD5(param.toString(), charset);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    /**
-     * MD5加密
-     *
-     * @param str     内容
-     * @param charset 编码方式
-     * @throws Exception
-     */
-    private static String MD5(String str, String charset) throws Exception {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(str.getBytes(charset));
-        byte[] result = md.digest();
-        StringBuffer sb = new StringBuffer(32);
-        for (int i = 0; i < result.length; i++) {
-            int val = result[i] & 0xff;
-            if (val <= 0xf) {
-                sb.append("0");
-            }
-            sb.append(Integer.toHexString(val));
-        }
-        return sb.toString()
-                .toUpperCase();
-    }
-
-    /**
-     * 校验时间格式
-     *
-     * @param str
-     * @return
-     */
-    public static boolean isValidDate(String str) {
-        boolean convertSuccess = true;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        if (str.trim()
-                .length() != format.toPattern()
-                .length()) {
-            return false;
-        }
-        try {
-            format.setLenient(false);
-            format.parse(str);
-        } catch (ParseException e) {
-            convertSuccess = false;
-        }
-        return convertSuccess;
-    }
-
-    /**
-     * 获取当前时间(时间格式为字符串)
-     *
-     * @param pattern 日期格式
-     * @return
-     */
-    public static String getCurrentDate(String pattern) {
-        DateFormat dateFormat = new SimpleDateFormat(pattern);
-        String str = "";
-        try {
-            str = dateFormat.format(new Date());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return str;
-    }
-
-
-}
+//        json="{}";
+//
+//        String appKey = "9f82cb882f82d3a37fd0cc6135bc16c5356502ff56f4cbd7067518c2365b0d6d";
+//        String appSecret = "d2556815d54032beb1c1ca0af52fbd93468eede39a074f91eee031112d79da59";
+//        String token = "c01d726ee3e5649835b19c5e9d1810fd";
+//
+//        Map<String, String> params = new TreeMap<String, String>();
+//        params.put(APPKEY, appKey);
+//        params.put(APPSECRET, appSecret);
+//        params.put(METHOD, method);// 接口地址
+//        params.put(TIMESTAMP, getCurrentDate("yyyy-MM-dd HH:mm:ss"));
+//        params.put(TOKEN, token);
+//        params.put(VERSION, "1.0");
+//
+//        // 签名
+//        String sign = encrypt(params, json, DEFAULT_CHARSET, appSecret);
+//        params.put(SIGN, sign);
+//        params.remove(APPSECRET);
+//
+//        // 拼接url请求参数
+//        String queryString = buildQuery(params, DEFAULT_CHARSET);
+//        System.out.println("queryString == " + queryString);
+//        String fullUrl = buildRequestUrl(url, queryString);
+//        String result = doPost(fullUrl, CONTENT_TYPE_JSON, json.getBytes(CHARSET_UTF8), CONNECT_TIMEOUT, READ_TIMEOUT, null);
+//        System.out.println("result === " + result);
+//    }
+//
+//    public static void testPost2() throws IOException {
+////        String path = "d:/tmp/scs.openlink.delivery.order.push.json";
+////        File jsonFile = new File(path);
+////        String json = FileUtil.readAllTxt(jsonFile, StandardCharsets.UTF_8);
+////        System.out.println("json: "+json);
+//        String json="{\"params\":{\"supplierName\":\"内蒙古迪安拓丰\",\"supplierNo\":\"6019000559\",\"deliveryPhone\":\"0517-89562145\",\"outStorageNo\":\"ASD3132232343\",\"orderNo\":\"120000000003\",\"outStorageType\":1,\"detailList\":[{\"sortNo\":1,\"amount\":10,\"batch\":\"42421423\",\"invalidDate\":\"2021-10-20\",\"productNo\":\"301900000126\",\"productName\":\"17α-羟孕酮定量测定试剂盒(时间分辨免疫荧光法) 17α-hydoxy progesterone quantitative diagnostic kit(Time-resolved immunofluorometric assay)\",\"createDate\":\"2020-07-14\"}],\"remark\":\"易碎物品\",\"outStorageTime\":\"2019-03-30 10:36:20\",\"deliveryName\":\"麦兜\",\"logisticCode\":\"234423142314\",\"shipperCode\":\"shunfeng\"}}";
+//
+//        String appKey = "9f82cb882f82d3a37fd0cc6135bc16c5356502ff56f4cbd7067518c2365b0d6d";
+//        String appSecret = "d2556815d54032beb1c1ca0af52fbd93468eede39a074f91eee031112d79da59";
+//        String token = "c01d726ee3e5649835b19c5e9d1810fd";
+//        Map<String, String> params = new TreeMap<String, String>();
+//        params.put(APPKEY, appKey);
+//        params.put(APPSECRET, appSecret);
+//        params.put(METHOD, "scs.openlink.delivery.order.push");// 接口地址
+//        params.put(TIMESTAMP, getCurrentDate("yyyy-MM-dd HH:mm:ss"));
+//        params.put(TOKEN, token);
+//        params.put(VERSION, "1.0");
+//
+//        // 签名
+//        params.put(SIGN, encrypt(params, json, DEFAULT_CHARSET, appSecret));
+//        params.remove(APPSECRET);
+//
+//        // 拼接url请求参数
+//        String queryString = buildQuery(params, DEFAULT_CHARSET);
+//        System.out.println("queryString == "+queryString);
+//        String fullUrl = buildRequestUrl("http://ddc-open.demo.yyigou.com/rest", queryString);
+//        String result = doPost(fullUrl, CONTENT_TYPE_JSON, json.getBytes(CHARSET_UTF8), CONNECT_TIMEOUT, READ_TIMEOUT, null);
+//        System.out.println("result === " + result);
+//    }
+//
+//    /**
+//     * 执行HTTP GET请求。
+//     *
+//     * @param url    请求地址
+//     * @param params 请求参数
+//     * @return 响应字符串
+//     */
+//    public static String doGet(String url, Map<String, String> params) throws IOException {
+//        return doGet(url, params, DEFAULT_CHARSET);
+//    }
+//
+//    /**
+//     * 执行HTTP GET请求。
+//     *
+//     * @param url     请求地址
+//     * @param params  请求参数
+//     * @param charset 字符集，如UTF-8, GBK, GB2312
+//     * @return 响应字符串
+//     */
+//    public static String doGet(String url, Map<String, String> params, String charset) throws IOException {
+//        HttpURLConnection conn = null;
+//        String rsp = null;
+//
+//        try {
+//            String ctype = "application/x-www-form-urlencoded;charset=" + charset;
+//            String query = buildQuery(params, charset);
+//            conn = getConnection(buildGetUrl(url, query), METHOD_GET, ctype, null);
+//            rsp = getResponseAsString(conn);
+//        } finally {
+//            if (conn != null) {
+//                conn.disconnect();
+//            }
+//        }
+//
+//        return rsp;
+//    }
+//
+//    public static byte[] download(String absolutePath) throws Exception {
+//        URL url = new URL(absolutePath);
+//        HttpURLConnection conn = null;
+//        try {
+//            conn = (HttpURLConnection) url.openConnection();
+//            InputStream in = conn.getInputStream();
+//            byte[] res = new byte[in.available()];
+//            in.read(res);
+//            return res;
+//        } finally {
+//            conn.disconnect();
+//        }
+//    }
+//
+//    private static URL buildGetUrl(String url, String query) throws IOException {
+//        if (StringUtils.isEmpty(query)) {
+//            return new URL(url);
+//        }
+//
+//        return new URL(buildRequestUrl(url, query));
+//    }
+//
+//    public static String buildRequestUrl(String url, String... queries) {
+//        if (queries == null || queries.length == 0) {
+//            return url;
+//        }
+//
+//        StringBuilder newUrl = new StringBuilder(url);
+//        boolean hasQuery = url.contains("?");
+//        boolean hasPrepend = url.endsWith("?") || url.endsWith("&");
+//
+//        for (String query : queries) {
+//            if (!StringUtils.isEmpty(query)) {
+//                if (!hasPrepend) {
+//                    if (hasQuery) {
+//                        newUrl.append("&");
+//                    } else {
+//                        newUrl.append("?");
+//                        hasQuery = true;
+//                    }
+//                }
+//                newUrl.append(query);
+//                hasPrepend = false;
+//            }
+//        }
+//        return newUrl.toString();
+//    }
+//
+//    /**
+//     * 执行HTTP POST请求。
+//     *
+//     * @param url    请求地址
+//     * @param params 请求参数
+//     * @return 响应字符串
+//     */
+//    public static String doPost(String url, Map<String, String> params, int connectTimeout, int readTimeout) throws IOException {
+//        return doPost(url, params, DEFAULT_CHARSET, connectTimeout, readTimeout);
+//    }
+//
+//    /**
+//     * 执行HTTP POST请求。
+//     *
+//     * @param url     请求地址
+//     * @param params  请求参数
+//     * @param charset 字符集，如UTF-8, GBK, GB2312
+//     * @return 响应字符串
+//     */
+//    public static String doPost(String url, Map<String, String> params, String charset, int connectTimeout, int readTimeout) throws IOException {
+//        return doPost(url, params, charset, connectTimeout, readTimeout, null);
+//    }
+//
+//    public static String doPost(String url, Map<String, String> params, String charset, int connectTimeout, int readTimeout, Map<String, String> headerMap) throws IOException {
+//        String ctype = "application/x-www-form-urlencoded;charset=" + charset;
+//		/*String query = buildQuery(params, charset);
+//		byte[] content = {};
+//		if (query != null) {
+//			content = query.getBytes(charset);
+//		}*/
+//        return _doPost(url, ctype, null, connectTimeout, readTimeout, headerMap);
+//    }
+//
+//    /**
+//     * 执行HTTP POST请求。
+//     *
+//     * @param url       请求地址
+//     * @param ctype     请求类型
+//     * @param content   请求字节数组
+//     * @param headerMap 请求头部参数
+//     * @return 响应字符串
+//     */
+//    public static String doPost(String url, String ctype, byte[] content, int connectTimeout, int readTimeout, Map<String, String> headerMap) throws IOException {
+//        return _doPost(url, ctype, content, connectTimeout, readTimeout, headerMap);
+//    }
+//
+//    private static String _doPost(String url, String ctype, byte[] content, int connectTimeout, int readTimeout, Map<String, String> headerMap) throws IOException {
+//        HttpURLConnection conn = null;
+//        OutputStream out = null;
+//        String rsp = null;
+//        try {
+//            conn = getConnection(new URL(url), METHOD_POST, ctype, headerMap);
+//            conn.setConnectTimeout(connectTimeout);
+//            conn.setReadTimeout(readTimeout);
+//            out = conn.getOutputStream();
+//            if (content != null) {
+//                out.write(content);
+//            }
+//            rsp = getResponseAsString(conn);
+//        } finally {
+//            if (out != null) {
+//                out.close();
+//            }
+//            if (conn != null) {
+//                conn.disconnect();
+//            }
+//        }
+//
+//        return rsp;
+//    }
+//
+//    protected static String getResponseAsString(HttpURLConnection conn) throws IOException {
+//        String charset = getResponseCharset(conn.getContentType());
+//        if (conn.getResponseCode() < 400) {
+//            String contentEncoding = conn.getContentEncoding();
+//            if (CONTENT_ENCODING_GZIP.equalsIgnoreCase(contentEncoding)) {
+//                return getStreamAsString(new GZIPInputStream(conn.getInputStream()), charset);
+//            } else {
+//                return getStreamAsString(conn.getInputStream(), charset);
+//            }
+//        } else {// Client Error 4xx and Server Error 5xx
+//            throw new IOException(conn.getResponseCode() + " " + conn.getResponseMessage());
+//        }
+//    }
+//
+//    public static String getStreamAsString(InputStream stream, String charset) throws IOException {
+//        try {
+//            Reader reader = new InputStreamReader(stream, charset);
+//            StringBuilder response = new StringBuilder();
+//
+//            final char[] buff = new char[1024];
+//            int read = 0;
+//            while ((read = reader.read(buff)) > 0) {
+//                response.append(buff, 0, read);
+//            }
+//
+//            return response.toString();
+//        } finally {
+//            if (stream != null) {
+//                stream.close();
+//            }
+//        }
+//    }
+//
+//    public static String getResponseCharset(String ctype) {
+//        String charset = DEFAULT_CHARSET;
+//
+//        if (!StringUtils.isEmpty(ctype)) {
+//            String[] params = ctype.split(";");
+//            for (String param : params) {
+//                param = param.trim();
+//                if (param.startsWith("charset")) {
+//                    String[] pair = param.split("=", 2);
+//                    if (pair.length == 2) {
+//                        if (!StringUtils.isEmpty(pair[1])) {
+//                            charset = pair[1].trim();
+//                        }
+//                    }
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return charset;
+//    }
+//
+//    private static HttpURLConnection getConnection(URL url, String method, String ctype, Map<String, String> headerMap) throws IOException {
+//        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//        conn.setRequestMethod(method);
+//        conn.setDoInput(true);
+//        conn.setDoOutput(true);
+//        conn.setRequestProperty("Host", url.getHost());
+//        conn.setRequestProperty("Accept", "text/json,text/xml,text/html,application/json,text/plain");
+//        conn.setRequestProperty("User-Agent", "open-api-java");
+//        conn.setRequestProperty("Content-Type", ctype);
+//        if (headerMap != null) {
+//            for (Entry<String, String> entry : headerMap.entrySet()) {
+//                conn.setRequestProperty(entry.getKey(), entry.getValue());
+//            }
+//        }
+//        return conn;
+//    }
+//
+//    public static String buildQuery(Map<String, String> params, String charset) {
+//        if (params == null || params.isEmpty()) {
+//            return null;
+//        }
+//
+//        StringBuilder query = new StringBuilder();
+//        Set<Entry<String, String>> entries = params.entrySet();
+//        boolean hasParam = false;
+//
+//        for (Entry<String, String> entry : entries) {
+//            String name = entry.getKey();
+//            String value = entry.getValue();
+//            // 忽略参数名或参数值为空的参数
+//            if (areNotEmpty(name, value)) {
+//                if (hasParam) {
+//                    query.append("&");
+//                } else {
+//                    hasParam = true;
+//                }
+//
+//                try {
+//                    query.append(name)
+//                            .append("=")
+//                            .append(URLEncoder.encode(value, charset));
+//                } catch (IOException e) {
+//                    // TODO Auto-generated catch block
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//
+//        return query.toString();
+//    }
+//
+//    /**
+//     * 使用默认的UTF-8字符集反编码请求参数值。
+//     *
+//     * @param value 参数值
+//     * @return 反编码后的参数值
+//     */
+//    public static String decode(String value) {
+//        return decode(value, DEFAULT_CHARSET);
+//    }
+//
+//    /**
+//     * 使用默认的UTF-8字符集编码请求参数值。
+//     *
+//     * @param value 参数值
+//     * @return 编码后的参数值
+//     */
+//    public static String encode(String value) {
+//        return encode(value, DEFAULT_CHARSET);
+//    }
+//
+//    /**
+//     * 使用指定的字符集反编码请求参数值。
+//     *
+//     * @param value   参数值
+//     * @param charset 字符集
+//     * @return 反编码后的参数值
+//     */
+//    public static String decode(String value, String charset) {
+//        String result = null;
+//        if (!StringUtils.isEmpty(value)) {
+//            try {
+//                result = URLDecoder.decode(value, charset);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        return result;
+//    }
+//
+//    /**
+//     * 使用指定的字符集编码请求参数值。
+//     *
+//     * @param value   参数值
+//     * @param charset 字符集
+//     * @return 编码后的参数值
+//     */
+//    public static String encode(String value, String charset) {
+//        String result = null;
+//        if (!StringUtils.isEmpty(value)) {
+//            try {
+//                result = URLEncoder.encode(value, charset);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        return result;
+//    }
+//
+//    /**
+//     * 检查指定的字符串列表是否不为空。
+//     */
+//    private static boolean areNotEmpty(String... values) {
+//        boolean result = true;
+//        if (values == null || values.length == 0) {
+//            result = false;
+//        } else {
+//            for (String value : values) {
+//                result &= !isEmpty(value);
+//            }
+//        }
+//        return result;
+//    }
+//
+//    /**
+//     * 检查指定的字符串是否为空。
+//     * <ul>
+//     * <li>SysUtils.isEmpty(null) = true</li>
+//     * <li>SysUtils.isEmpty("") = true</li>
+//     * <li>SysUtils.isEmpty("   ") = true</li>
+//     * <li>SysUtils.isEmpty("abc") = false</li>
+//     * </ul>
+//     *
+//     * @param value 待检查的字符串
+//     * @return true/false
+//     */
+//    public static boolean isEmpty(String value) {
+//        int strLen;
+//        if (value == null || (strLen = value.length()) == 0) {
+//            return true;
+//        }
+//        for (int i = 0; i < strLen; i++) {
+//            if ((Character.isWhitespace(value.charAt(i)) == false)) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+//
+//    /**
+//     * Sign签名生成
+//     *
+//     * @param params
+//     * @param json
+//     * @param charset 编码方式
+//     */
+//    public static String encrypt(Map<String, String> params, String json, String charset, String appSecret) {
+//        StringBuilder param = new StringBuilder();
+//        param.append(appSecret);
+//        for (Entry<String, String> entry : params.entrySet()) {
+//            param.append(entry.getKey() + entry.getValue());
+//        }
+//        param.append(json);
+//        param.append(appSecret);
+//        String result = "";
+//        try {
+//            result = MD5(param.toString(), charset);
+//        } catch (Exception e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//        return result;
+//    }
+//
+//    /**
+//     * MD5加密
+//     *
+//     * @param str     内容
+//     * @param charset 编码方式
+//     * @throws Exception
+//     */
+//    private static String MD5(String str, String charset) throws Exception {
+//        MessageDigest md = MessageDigest.getInstance("MD5");
+//        md.update(str.getBytes(charset));
+//        byte[] result = md.digest();
+//        StringBuffer sb = new StringBuffer(32);
+//        for (int i = 0; i < result.length; i++) {
+//            int val = result[i] & 0xff;
+//            if (val <= 0xf) {
+//                sb.append("0");
+//            }
+//            sb.append(Integer.toHexString(val));
+//        }
+//        return sb.toString()
+//                .toUpperCase();
+//    }
+//
+//    /**
+//     * 校验时间格式
+//     *
+//     * @param str
+//     * @return
+//     */
+//    public static boolean isValidDate(String str) {
+//        boolean convertSuccess = true;
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//        if (str.trim()
+//                .length() != format.toPattern()
+//                .length()) {
+//            return false;
+//        }
+//        try {
+//            format.setLenient(false);
+//            format.parse(str);
+//        } catch (ParseException e) {
+//            convertSuccess = false;
+//        }
+//        return convertSuccess;
+//    }
+//
+//    /**
+//     * 获取当前时间(时间格式为字符串)
+//     *
+//     * @param pattern 日期格式
+//     * @return
+//     */
+//    public static String getCurrentDate(String pattern) {
+//        DateFormat dateFormat = new SimpleDateFormat(pattern);
+//        String str = "";
+//        try {
+//            str = dateFormat.format(new Date());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return str;
+//    }
+//
+//
+//}
