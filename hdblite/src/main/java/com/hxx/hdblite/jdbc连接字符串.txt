@@ -1,0 +1,27 @@
+public static String GetDriveName(HXXDBType dbtype){
+        if (dbtype==HXXDBType.MySQL){
+            //com.mysql.jdbc.Driver
+            //jdbc:mysql://127.0.0.1:3306/hxxtestdb?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT
+            //jdbc:mysql://127.0.0.1:3306/hxxtestdb?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=Hongkong&zeroDateTimeBehavior=ROUND
+            return "com.mysql.cj.jdbc.Driver";
+        }
+        if (dbtype==HXXDBType.Oracle){
+            //jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+            return "oracle.jdbc.driver.OracleDriver";
+        }
+        if (dbtype==HXXDBType.SQLServer){
+            //jdbc:sqlserver://localhost:1433;databaseName=AdventureWorks
+            //jdbc:sqlserver://localhost:1433; DatabaseName=sample
+            return "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+        }
+        if (dbtype==HXXDBType.SQLite){
+            //jdbc:sqlite:sample.db
+            return "org.sqlite.JDBC";
+        }
+//        if (dbtype==HXXDBType.Hive){
+//            //jdbc:hive2://192.168.92.215:10000
+//            return "org.apache.hive.jdbc.HiveDriver";
+//        }
+
+        return "";
+    }

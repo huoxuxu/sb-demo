@@ -14,6 +14,8 @@
         <module>sb-spring-common</module>
         <module>sb-app-common</module>
 
+        <module>hdblite</module>
+
         <module>sbConsole</module>
         <module>sbweb</module>
         <module>sbrest</module>

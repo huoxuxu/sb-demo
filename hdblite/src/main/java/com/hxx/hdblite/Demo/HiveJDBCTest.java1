@@ -1,0 +1,83 @@
+package com.test;
+
+import com.alibaba.fastjson.JSON;
+import com.hxx.hdblite.tools.db.*;
+import com.hxx.hdblite.tools.enums.HXXDBType;
+import com.hxx.hdblite.tools.log.XTrace;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class HiveJDBCTest {
+    public static void main(String[] args) {
+        XTrace.UseConsole();
+
+        try {
+            String connStr="jdbc:hive2://10.10.4.96:10000/default";//数据小组测试
+            //connStr="jdbc:hive2://10.9.15.144:10000/ods";//大数据测试
+            DAL dal = new DAL(connStr,HXXDBType.Hive,"ztbi","ztbi",true);
+            Insert(dal);
+            //Update(dal);
+            //Delete(dal);
+
+//            Long aLong = hdbEntity.ExecuteScalar("select count(1) from default.kbb");
+//
+//            XTrace.WriteLine(aLong+"");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    static void FindAll(DAL dal) throws Exception {
+        HDBEntity hdbEntity = new HDBEntity(dal);
+
+        String sql = "select * from kbb";
+        //sql="show tables";
+
+        ArrayList<HashMap<String, Object>> show_tables = hdbEntity.ExecuteQuery(sql);
+
+        for(HashMap<String,Object>ret:show_tables){
+            String s = JSON.toJSONString(ret);
+            XTrace.WriteLine(s);
+        }
+    }
+
+    static void InsertAllField(DAL dal) throws Exception {
+        HDBEntity hdbEntity = new HDBEntity(dal);
+
+        String sql = "insert into  kbb (id,name) values (9988,'h123')";
+        Integer integer = hdbEntity.ExecuteNon(sql);
+        XTrace.WriteLine("ok!"+integer);
+    }
+
+    //只插入部分字段
+    //测试结果：ok
+    static void Insert(DAL dal) throws Exception {
+        HDBEntity hdbEntity = new HDBEntity(dal);
+
+        String sql = "insert into  kbb (id) values (999888)";
+        Integer integer = hdbEntity.ExecuteNon(sql);
+        XTrace.WriteLine("ok!"+integer);
+    }
+
+
+    //HiveSQLException: Error while compiling statement: FAILED: SemanticException [Error 10294]: Attempt to do update or delete using transaction manager that does not support these operations.
+    static void Update(DAL dal) throws Exception {
+        HDBEntity hdbEntity = new HDBEntity(dal);
+
+        String sql = "Update kbb Set name='xxx' where id=9988";
+        Integer integer = hdbEntity.ExecuteNon(sql);
+        XTrace.WriteLine("ok!"+integer);
+    }
+
+
+    //HiveSQLException: Error while compiling statement: FAILED: SemanticException [Error 10294]: Attempt to do update or delete using transaction manager that does not support these operations.
+    static void Delete(DAL dal) throws Exception {
+        HDBEntity hdbEntity = new HDBEntity(dal);
+
+        String sql = "delete from kbb where id=9988";
+        Integer integer = hdbEntity.ExecuteNon(sql);
+        XTrace.WriteLine("ok!"+integer);
+    }
+}

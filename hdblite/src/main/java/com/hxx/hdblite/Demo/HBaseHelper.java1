@@ -1,0 +1,249 @@
+package com.test;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.*;
+import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.util.Bytes;
+
+import java.io.IOException;
+
+/**
+ *
+ */
+public class HBaseHelper {
+    private static Configuration conf;
+    private static HBaseAdmin admin;
+
+    private String tableName;
+    private HTable table;
+    private byte[] cf1="address".getBytes();
+    private byte[] cf2="info".getBytes();
+
+    static {
+        conf = HBaseConfiguration.create();
+        conf.set("hbase.zookeeper.quorum", "10.10.4.96:2181");
+        conf.set("hbase.master", "10.10.4.94:60000");
+
+        try {
+            admin = new HBaseAdmin(conf);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public HBaseHelper(String tableName1) throws IOException {
+        this.tableName=tableName1;
+        this.table=new HTable(conf,this.tableName);
+    }
+
+    // list
+    public void listTable() throws Exception {
+        System.out.println("---------table------------------");
+        TableName[] ts = admin.listTableNames();
+        for (TableName tb : ts) {
+            System.out.println(tb.getName());
+        }
+    }
+
+    // list namespace
+    public void listNameSpace() throws Exception {
+        System.out.println("---------namespace------------------");
+        NamespaceDescriptor[] nss = admin.listNamespaceDescriptors();
+        for (NamespaceDescriptor ns : nss) {
+            System.out.println(ns.getName());
+        }
+    }
+
+    // 获取 beh 命名空间下的表
+    // list
+    public void listTableWithNamespace() throws Exception {
+        System.out.println("---------table on beh------------------");
+        TableName[] ts = admin.listTableNamesByNamespace("beh");
+        for (TableName tb : ts) {
+            System.out.println(tb.getName());
+        }
+    }
+
+    // 创建表 a1 列簇： cf1,cf2
+    public void createTable() throws Exception {
+        System.out.println("---------create table------------------");
+        TableName tname=TableName.valueOf(tableName);
+        HTableDescriptor t = new HTableDescriptor(tname);
+        t.addFamily(new HColumnDescriptor(cf1));
+        t.addFamily(new HColumnDescriptor(cf2));
+        admin.createTable(t);
+
+    }
+
+    // 创建预分区表a1 列簇： cf1,cf2 开始row 1 结束row 9 分10个分区
+    public void createTableWithSplit() throws Exception {
+        System.out.println("---------create table with 10 regin------------------");
+        TableName tname=TableName.valueOf(tableName);
+        HTableDescriptor t = new HTableDescriptor(tname);
+        t.addFamily(new HColumnDescriptor(cf1));
+        t.addFamily(new HColumnDescriptor(cf2));
+        admin.createTable(t, Bytes.toBytes(0), Bytes.toBytes(9), 10);
+
+    }
+
+    // put数据
+    public void putData() throws Exception {
+        System.out.println("---------put data to a1------------------");
+        //table = new HTable(conf, tableName);
+        Put p1 = new Put(Bytes.toBytes("r1"));//r1是rowkey
+        p1.add(cf1, Bytes.toBytes("c1"), Bytes.toBytes("v1"));
+        p1.add(cf2, Bytes.toBytes("c2"), Bytes.toBytes("v666"));
+        p1.add(cf1, Bytes.toBytes("c3"), Bytes.toBytes("v3"));
+        table.put(p1);
+
+        Put p2 = new Put(Bytes.toBytes("r3"));
+        p2.add(cf1, Bytes.toBytes("c1"), Bytes.toBytes("v4"));
+        p2.add(cf2, Bytes.toBytes("c2"), Bytes.toBytes("v5"));
+        p2.add(cf1, Bytes.toBytes("c3"), Bytes.toBytes("v6"));
+        table.put(p2);
+
+        table.close();
+    }
+
+    // 修改a1存储多版本
+//    public void editVersion() throws Exception {
+//        System.out.println("---------修改表存储多版本------------------");
+//        HColumnDescriptor cf = new HColumnDescriptor(cf2);
+//        cf.setMaxVersions(3);
+//        admin.modifyColumn(tableName, cf);
+//
+//    }
+
+    // get数据
+    public void getData() throws Exception {
+        System.out.println("---------get data from r1------------------");
+        table = new HTable(conf, tableName);
+        Get get = new Get(Bytes.toBytes("r1"));
+
+        printResult(table.get(get));
+        System.out.println("---------get r1 only cf2 family-----------------");
+        get.addFamily(cf2);
+        printResult(table.get(get));
+        System.out.println("----------get with max version----------------");
+        get.setMaxVersions();
+        printResult(table.get(get));
+
+        table.close();
+    }
+
+    // scan
+    public void scanData() throws Exception {
+        System.out.println("---------scan data from a1------------------");
+        table = new HTable(conf, tableName);
+        Scan scan = new Scan();
+        printResultScan(table.getScanner(scan));
+        System.out.println("---------scan data from a1 start with row key r2------------------");
+        scan.setStartRow(Bytes.toBytes("r2"));
+        printResultScan(table.getScanner(scan));
+        System.out.println("---------scan data from a1 start with row key r2 only get cf1 :c1 data-----------------");
+        scan.addColumn(cf1, Bytes.toBytes("c1"));
+        printResultScan(table.getScanner(scan));
+        table.close();
+    }
+
+    // scan
+//    /**
+//     * row过滤 过滤设置scan范围 设置setRowPrefixFilter 跟设置开始结束一样 使用rowFilter family
+//     * addFalimy（） FamilyFilter 列过滤 addColumn（） ColumnPrefixFilter
+//     * ColumnPaginationFilter 值过滤 valueFilter SingleColumnValueFiler
+//     * SingleColumnValueExcludeFilter
+//     *
+//     * @throws Exception
+//     */
+//    public void scanDataWithFilter() throws Exception {
+//        System.out.println("---------scan data with row filter from a1------------------");
+//        table = new HTable(conf, tableName);
+//        Scan scan = new Scan();
+//        Filter fiter = new RowFilter(CompareOp.EQUAL, new BinaryComparator(Bytes.toBytes("r1")));
+//
+//        scan.setFilter(fiter);
+//        printResultScan(table.getScanner(scan));
+//
+//        System.out.println("---------scan data with add family from a1------------------");
+//        // scan.addFamily(cf1);
+//        printResultScan(table.getScanner(scan));
+//        System.out.println("---------scan data with cf Filter filter from a1------------------");
+//        scan.setFilter(new FamilyFilter(CompareOp.EQUAL, new BinaryComparator(Bytes.toBytes("cf1"))));
+//        printResultScan(table.getScanner(scan));
+//
+//        System.out.println("---------scan data with column prefix filter from a1------------------");
+//        FilterList list = new FilterList(Operator.MUST_PASS_ALL);
+//        list.addFilter(new ColumnPrefixFilter(Bytes.toBytes("c")));
+//        scan.setFilter(list);
+//        printResultScan(table.getScanner(scan));
+//
+//        System.out.println("---------scan data with column pagination filter from a1------------------");
+//        // 对行进行分页，获取一行的几列，从哪开始
+//        list.addFilter(new ColumnPaginationFilter(2, 2));
+//        scan.setFilter(list);
+//        printResultScan(table.getScanner(scan));
+//        System.out.println("---------scan data with value  filter from a1------------------");
+//        list.addFilter(new ValueFilter(CompareOp.GREATER_OR_EQUAL, new BinaryComparator(Bytes.toBytes("v5"))));
+//        scan.setFilter(list);
+//        printResultScan(table.getScanner(scan));
+//        System.out.println("---------scan data with column  value  filter from a1------------------");
+//        list.addFilter(new SingleColumnValueFilter(cf1, Bytes.toBytes("c2"), CompareOp.GREATER, Bytes.toBytes("v5")));
+//        scan.setFilter(list);
+//        printResultScan(table.getScanner(scan));
+//        System.out.println("---------scan data with column  value include filter from a1------------------");
+//        list.addFilter(
+//                new SingleColumnValueExcludeFilter(cf1, Bytes.toBytes("c2"), CompareOp.GREATER, Bytes.toBytes("v5")));
+//        scan.setFilter(list);
+//        printResultScan(table.getScanner(scan));
+//        table.close();
+//    }
+
+    public void deleteData() throws Exception {
+        System.out.println("---------delete data from a1------------------");
+        //table = new HTable(conf, tableName);
+        Delete delete = new Delete(Bytes.toBytes("r1"));
+        table.delete(delete);
+        System.out.println("---------get  r1 from a1------------------");
+        Get get = new Get(Bytes.toBytes("r1"));
+        printResult(table.get(get));
+        table.close();
+    }
+
+    public void dropTable() throws Exception {
+        System.out.println("---------delete table a1------------------");
+        admin.disableTable(tableName);
+        admin.deleteTable(tableName);
+        admin.disableTable(Bytes.toBytes("a2"));
+        admin.deleteTable(Bytes.toBytes("a2"));
+        admin.close();
+    }
+
+    private void printResultScan(ResultScanner rs) throws Exception {
+        Result r = null;
+        while ((r = rs.next()) != null) {
+            printResult(r);
+        }
+        rs.close();
+    }
+
+    private void printResult(Result rs) {
+        if (!rs.isEmpty()) {
+//            for (KeyValue kv : rs.list()) {
+//                System.out.println(String.format("row:%s\t family:%s\t qualifier:%s\t value:%s\t timestamp:%s",
+//                        Bytes.toString(kv.getRow()), Bytes.toString(kv.getFamily()), Bytes.toString(kv.getQualifier()),
+//                        Bytes.toString(kv.getValue()), kv.getTimestamp()));
+//            }
+            for(Cell cell:rs.listCells()){
+                byte[] row = CellUtil.cloneRow(cell);
+                byte[] family = CellUtil.cloneFamily(cell);
+                byte[] qualifier = CellUtil.cloneQualifier(cell);
+                byte[] val = CellUtil.cloneValue(cell);
+                long timestamp = cell.getTimestamp();
+                System.out.println(String.format("row:%s\t family:%s\t qualifier:%s\t value:%s\t timestamp:%s",
+                        Bytes.toString(row),Bytes.toString(family),Bytes.toString(qualifier),Bytes.toString(val),timestamp));
+            }
+        }
+    }
+
+
+}

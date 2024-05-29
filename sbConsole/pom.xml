@@ -17,11 +17,27 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.hxx</groupId>
+            <artifactId>sbcommon</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hxx</groupId>
+            <artifactId>sb-app-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hxx</groupId>
+            <artifactId>hdblite</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
@@ -45,16 +61,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.hxx</groupId>
-            <artifactId>sbcommon</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.hxx</groupId>
-            <artifactId>sb-app-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <!--redis分布式锁-->

@@ -1,0 +1,236 @@
+package com.test;
+
+import com.hxx.hdblite.tools.log.XTrace;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hbase.*;
+import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.util.Bytes;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 注意host。
+ */
+public class HBaseTest {
+    public static Configuration configuration;
+    private static HBaseAdmin admin;
+
+//    static {
+//        configuration = HBaseConfiguration.create();
+//        configuration.set("hbase.zookeeper.quorum", "10.10.4.96:2181");
+//        configuration.set("hbase.master", "10.10.4.94:60000");
+//
+//        try {
+//            admin = new HBaseAdmin(configuration);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    public static void main(String[] args) throws Exception {
+        XTrace.UseConsole();
+
+        try {
+            HBaseHelper kb = new HBaseHelper("kb");
+            //kb.putData();
+
+            kb.getData();
+
+
+
+            System.out.println("ok！");
+//            XTrace.WriteLine(aLong+"");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("ok");
+        System.in.read();
+    }
+
+    public static HTableDescriptor[] getTables() throws IOException{
+        HTableDescriptor[] discriptor =admin.listTables();
+        return discriptor;
+    }
+
+    public void listTable() throws Exception {
+        System.out.println("---------table------------------");
+        TableName[] ts = admin.listTableNames();
+        for (TableName tb : ts) {
+            System.out.println(tb.getName());
+        }
+    }
+
+    // list namespace
+    public void listNameSpace() throws Exception {
+        System.out.println("---------namespace------------------");
+        NamespaceDescriptor[] nss = admin.listNamespaceDescriptors();
+        for (NamespaceDescriptor ns : nss) {
+            System.out.println(ns.getName());
+        }
+    }
+
+    // 获取 beh 命名空间下的表
+    // list
+    public void listTableWithNamespace(String tableName) throws Exception {
+        System.out.println("---------table on beh------------------");
+        TableName[] ts = admin.listTableNamesByNamespace(tableName);
+        for (TableName tb : ts) {
+            System.out.println(tb.getName());
+        }
+    }
+
+    public static void createTable(String tableName) throws IOException {
+        System.out.println("start create table ......");
+
+        if (admin.tableExists(tableName)) {// 如果存在要创建的表，那么先删除，再创建
+            admin.disableTable(tableName);
+            admin.deleteTable(tableName);
+
+            System.out.println(tableName + " is exist,detele....");
+        }
+
+        TableName table1 = TableName.valueOf(tableName);
+        HTableDescriptor tableDescriptor = new HTableDescriptor(table1);
+        tableDescriptor.addFamily(new HColumnDescriptor("id"));
+        tableDescriptor.addFamily(new HColumnDescriptor("name"));
+        tableDescriptor.addFamily(new HColumnDescriptor("createdate"));
+
+        admin.createTable(tableDescriptor);
+
+        System.out.println("end create table ......");
+    }
+
+    // 创建表 a1 列簇： id,name
+    public void createTable1(String tableName) throws Exception {
+        System.out.println("---------create table------------------");
+        HTableDescriptor t = new HTableDescriptor(tableName);
+        t.addFamily(new HColumnDescriptor("id"));
+        t.addFamily(new HColumnDescriptor("name"));
+        admin.createTable(t);
+
+    }
+
+    public static void insertData(String tableName) throws IOException {
+        System.out.println("start insert data ......");
+        HTable table = new HTable(configuration, tableName);
+        Put put = new Put("1".getBytes());// 一个PUT代表一行数据，再NEW一个PUT表示第二行数据,每行一个唯一的ROWKEY，此处rowkey为put构造方法中传入的值
+        put.add("id".getBytes(), null, "aaa".getBytes());// 本行数据的第一列
+        put.add("name".getBytes(), null, "bbb".getBytes());// 本行数据的第三列
+        put.add("createdate".getBytes(), null, "ccc".getBytes());// 本行数据的第三列
+
+        table.put(put);
+
+        System.out.println("end insert data ......");
+    }
+
+    // put数据
+    public void putData(String tableName) throws Exception {
+        System.out.println("---------put data to a1------------------");
+        byte[] cf1="id".getBytes();
+        byte[] cf2="name".getBytes();
+
+        HTable table = new HTable(configuration, tableName);
+        Put p1 = new Put(Bytes.toBytes("r1"));
+        p1.add(cf1, Bytes.toBytes("c1"), Bytes.toBytes("v1"));
+        p1.add(cf2, Bytes.toBytes("c2"), Bytes.toBytes("v666"));
+        p1.add(cf1, Bytes.toBytes("c3"), Bytes.toBytes("v3"));
+
+        Put p2 = new Put(Bytes.toBytes("r3"));
+        p2.add(cf1, Bytes.toBytes("c1"), Bytes.toBytes("v4"));
+        p2.add(cf2, Bytes.toBytes("c2"), Bytes.toBytes("v5"));
+        p2.add(cf1, Bytes.toBytes("c3"), Bytes.toBytes("v6"));
+
+        table.put(p1);
+        table.put(p2);
+        table.close();
+    }
+
+    public static void dropTable(String tableName) throws IOException {
+        admin.disableTable(tableName);
+        admin.deleteTable(tableName);
+    }
+
+    //目前还没有发现有效的API能够实现根据非rowkey的条件删除这个功能能，还有清空表全部数据的API操作
+    public static void deleteRow(String tablename, String rowkey) throws IOException {
+        HTable table = new HTable(configuration, tablename);
+        List list = new ArrayList();
+        Delete d1 = new Delete(rowkey.getBytes());
+        list.add(d1);
+
+        table.delete(list);
+        System.out.println("删除行成功!");
+    }
+
+    public static void QueryAll(String tableName) throws IOException {
+        System.out.println("start ......");
+        HTable table = new HTable(configuration, tableName);
+        ResultScanner rs = table.getScanner(new Scan());
+        for (Result r : rs) {
+            System.out.println("获得到rowkey:" + new String(r.getRow()));
+
+            for (KeyValue keyValue : r.raw()) {
+                System.out.println("列：" + new String(keyValue.getFamily())
+                        + "====值:" + new String(keyValue.getValue()));
+            }
+        }
+    }
+
+    // get数据
+    public void getData(String tableName) throws Exception {
+        System.out.println("---------get data from a1------------------");
+        HTable table = new HTable(configuration, tableName);
+        Get get = new Get(Bytes.toBytes("r1"));
+
+        byte[] cf2="name".getBytes();
+
+        printResult(table.get(get));
+        System.out.println("---------get r1 only cf2 family-----------------");
+        get.addFamily(cf2);
+        printResult(table.get(get));
+        System.out.println("----------get with max version----------------");
+        get.setMaxVersions();
+        printResult(table.get(get));
+
+        table.close();
+    }
+
+    // scan
+    public void scanData(String tableName) throws Exception {
+        System.out.println("---------scan data from a1------------------");
+        HTable table = new HTable(configuration, tableName);
+
+        byte[] cf1="id".getBytes();
+
+        Scan scan = new Scan();
+        printResultScan(table.getScanner(scan));
+        System.out.println("---------scan data from a1 start with row key r2------------------");
+        scan.setStartRow(Bytes.toBytes("r2"));
+        printResultScan(table.getScanner(scan));
+        System.out.println("---------scan data from a1 start with row key r2 only get cf1 :c1 data-----------------");
+        scan.addColumn(cf1, Bytes.toBytes("c1"));
+        printResultScan(table.getScanner(scan));
+        table.close();
+    }
+
+    private void printResultScan(ResultScanner rs) throws Exception {
+        Result r = null;
+        while ((r = rs.next()) != null) {
+            printResult(r);
+        }
+        rs.close();
+    }
+
+    private void printResult(Result rs) {
+        if (!rs.isEmpty()) {
+            for (KeyValue kv : rs.list()) {
+                System.out.println(String.format("row:%s\t family:%s\t qualifier:%s\t value:%s\t timestamp:%s",
+                        Bytes.toString(kv.getRow()), Bytes.toString(kv.getFamily()), Bytes.toString(kv.getQualifier()),
+                        Bytes.toString(kv.getValue()), kv.getTimestamp()));
+            }
+        }
+    }
+}
