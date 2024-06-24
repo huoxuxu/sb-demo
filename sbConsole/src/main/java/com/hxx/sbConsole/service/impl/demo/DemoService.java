@@ -21,10 +21,14 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.ibatis.session.SqlSessionManager;
+import org.apache.ibatis.session.defaults.DefaultSqlSession;
+import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.*;
 
 import java.io.File;
+import java.io.Reader;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.net.InetAddress;
@@ -46,7 +50,9 @@ public class DemoService {
     public static void main(String[] args) {
         try {
             {
-
+                SqlSessionManager sqlSessionManager = SqlSessionManager.newInstance((Reader) null);
+                DefaultSqlSession defaultSqlSession = new DefaultSqlSession(null, null);
+                DefaultSqlSessionFactory defaultSqlSessionFactory = new DefaultSqlSessionFactory(null);
             }
             {
                 int dv = 0B10110011;

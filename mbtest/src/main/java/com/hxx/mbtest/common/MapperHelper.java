@@ -28,10 +28,11 @@ public class MapperHelper {
      * @throws IOException
      */
     public static void demo() throws IOException {
-        String resource = "mybatis-config-sourceCode.xml";
+        String resource = "mybatis-config.xml";
 
         InputStream inputStream = Resources.getResourceAsStream(resource);
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder()
+                .build(inputStream);
         try (SqlSession session = sqlSessionFactory.openSession()) {
             BlogMapper mapper = session.getMapper(BlogMapper.class);
 //            // 常规方法
@@ -57,7 +58,6 @@ public class MapperHelper {
     static List<Class> TYPE_ARRAY = new ArrayList<>();
 
     /**
-     *
      * @param c
      * @param o
      * @throws Exception
@@ -106,13 +106,41 @@ public class MapperHelper {
 //                invokeFail.add("Error:" + method.getName() + " Error Info:" + e);
 //            }
 //    }
-}
+    }
 
-/**
- * blog
- */
-public interface BlogMapper {
-    int delBLog(int id);
-}
+    /**
+     * blog
+     */
+    public interface BlogMapper {
+        int delBLog(int id);
+    }
 
+    /*
+    mybatis-config.xml
+     <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <!-- 数据源配置 -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/mydatabase"/>
+                <property name="username" value="root"/>
+                <property name="password" value="password"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- Mapper 接口扫描 -->
+    <mappers>
+        <mapper class="org.mybatis.example.UserMapper"/>
+        <!-- 如果有多个 Mapper 接口，继续添加 -->
+    </mappers>
+</configuration>
+    */
 }

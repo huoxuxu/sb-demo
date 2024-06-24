@@ -25,6 +25,7 @@
         <module>tkMybatisTest</module>
         <module>nettydemo</module>
         <module>sbMyBatis</module>
+        <module>sb-web-common</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
