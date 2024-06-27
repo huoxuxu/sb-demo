@@ -142,24 +142,24 @@ public class ReflectDemoService {
 
         // beanToMap
         {
-            Map<String, Object> map2 = BeanCopyUtil.beanToMap(dog);
+            Map<String, Object> map2 = BeanCopyUtil.toMap(dog);
             System.out.println("dog-map: " + JsonUtil.toJSON(map2));
         }
 
-        // copyTo
-        {
-            map1.put("female", null);
-            map1.put("haba", null);
-            BeanCopyUtil.copyMapTo(dog, map1, false);
-            System.out.println("dog: " + JsonUtil.toJSON(dog));
-        }
+//        // copyTo
+//        {
+//            map1.put("female", null);
+//            map1.put("haba", null);
+//            BeanCopyUtil.copyMapTo(dog, map1, false);
+//            System.out.println("dog: " + JsonUtil.toJSON(dog));
+//        }
 
         {
             // 通过类加载器重新加载 MyClass (卸载不成功)
             ClassLoader classLoader = dog.getClass().getClassLoader();
             classLoader.loadClass("com.hxx.sbConsole.model.inherit.HaBaDog");
 
-            Map<String, Object> map2 = BeanCopyUtil.beanToMap(dog);
+            Map<String, Object> map2 = BeanCopyUtil.toMap(dog);
             System.out.println("dog-map: " + JsonUtil.toJSON(map2));
         }
     }

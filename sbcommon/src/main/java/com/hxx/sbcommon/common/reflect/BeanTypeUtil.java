@@ -3,7 +3,9 @@ package com.hxx.sbcommon.common.reflect;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class BeanTypeUtil {
 
@@ -43,6 +45,44 @@ public class BeanTypeUtil {
 
         // 非泛型类型或泛型不匹配时返回false
         return true; // 如果原始类型相同且非泛型或已确认泛型参数匹配，则返回true
+    }
+
+    // 获取字段的泛型层级
+    public static List<Type[]> getGenericTypeLevel(Field field1) {
+        return getGenericTypeLevel(field1.getGenericType());
+    }
+
+    /**
+     * 获取类型的泛型层级
+     * 示例：
+     * List:BeanDemo:List:String
+     * [["java.util.List"],["com.hxx.sbConsole.system.TypeDemo$BeanDemo"],["java.util.List"],["java.lang.String"]]
+     *
+     * @param type
+     * @return
+     */
+    public static List<Type[]> getGenericTypeLevel(Type type) {
+        List<Type[]> ls = new ArrayList<>();
+        if (!(type instanceof ParameterizedType)) {
+            ls.add(new Type[]{type});
+            return ls;
+        }
+        // List<BeanDemo<List<String>>>
+
+        ParameterizedType pType1 = (ParameterizedType) type;
+        // List
+        ls.add(new Type[]{pType1.getRawType()});
+
+        // 类型参数
+        Type[] actualTypeArgs = pType1.getActualTypeArguments();
+
+        // 判断类型参数是否泛型
+        for (Type actualTypeArg : actualTypeArgs) {
+            List<Type[]> genericTypeLevels = getGenericTypeLevel(actualTypeArg);
+            ls.addAll(genericTypeLevels);
+        }
+
+        return ls;
     }
 
 }
