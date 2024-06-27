@@ -18,7 +18,7 @@ import java.util.Set;
  */
 @Slf4j
 public class BeanValidateUtil {
-    private static Validator validator;
+    private static final Validator validator;
 
     static {
         // 获取校验器
