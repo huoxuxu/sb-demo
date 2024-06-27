@@ -105,6 +105,10 @@ public class BeanCopyUtil {
 
             try {
                 Object val = PropertyUtils.getProperty(src, fieldName);
+                if (skipNull && val == null) {
+                    return;
+                }
+
                 PropertyUtils.setProperty(target, fieldName, val);
             } catch (Exception e) {
                 throw new RuntimeException(e);
