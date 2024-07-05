@@ -146,13 +146,13 @@ public class ReflectDemoService {
             System.out.println("dog-map: " + JsonUtil.toJSON(map2));
         }
 
-//        // copyTo
-//        {
-//            map1.put("female", null);
-//            map1.put("haba", null);
-//            BeanCopyUtil.copyMapTo(dog, map1, false);
-//            System.out.println("dog: " + JsonUtil.toJSON(dog));
-//        }
+        // copyTo
+        {
+            map1.put("female", null);
+            map1.put("haba", null);
+            BeanCopyUtil.copyFromMap(dog, map1, false);
+            System.out.println("dog: " + JsonUtil.toJSON(dog));
+        }
 
         {
             // 通过类加载器重新加载 MyClass (卸载不成功)

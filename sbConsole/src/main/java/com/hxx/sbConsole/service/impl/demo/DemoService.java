@@ -24,6 +24,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.ibatis.session.SqlSessionManager;
 import org.apache.ibatis.session.defaults.DefaultSqlSession;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
+import org.springframework.core.ResolvableTypeProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.util.*;
 
@@ -49,6 +50,9 @@ import java.util.stream.Collectors;
 public class DemoService {
     public static void main(String[] args) {
         try {
+            {
+
+            }
             {
                 SqlSessionManager sqlSessionManager = SqlSessionManager.newInstance((Reader) null);
                 DefaultSqlSession defaultSqlSession = new DefaultSqlSession(null, null);
