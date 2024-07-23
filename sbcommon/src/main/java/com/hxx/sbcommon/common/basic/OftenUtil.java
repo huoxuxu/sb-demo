@@ -754,8 +754,7 @@ public class OftenUtil {
          * @return
          */
         public static Date toDate(LocalDateTime dt) {
-            return Date.from(dt.atZone(ZoneId.systemDefault())
-                    .toInstant());
+            return Date.from(dt.atZone(ZoneId.systemDefault()).toInstant());
         }
 
         /**

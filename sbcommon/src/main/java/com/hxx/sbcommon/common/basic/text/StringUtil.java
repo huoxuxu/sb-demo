@@ -45,13 +45,16 @@ public class StringUtil {
      * @return
      */
     public static String cut(String str, int count) {
-        if (StringUtils.isEmpty(str)) return str;
-        if (count == 0) return "";
+        if (StringUtils.isEmpty(str)) {
+            return str;
+        }
+        if (count == 0) {
+            return "";
+        }
 
-        int len = str.length();
-        if (count >= len) return str;
-
-        return str.substring(0, count);
+        return str.length() > count
+                ? str.substring(0, count)
+                : str;
     }
 
     /**
