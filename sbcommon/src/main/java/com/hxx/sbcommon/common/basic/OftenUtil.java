@@ -210,13 +210,13 @@ public class OftenUtil {
     /**
      * 字符串转HEX字符串
      *
-     * @param str      输入字符串
-     * @param splitStr HEX字符串的连接字符串
+     * @param str     输入字符串
+     * @param joinStr HEX字符串的连接字符串
      * @return
      * @throws UnsupportedEncodingException
      */
-    public static String toHexString(String str, String splitStr) throws UnsupportedEncodingException {
-        return toHexString(str, "UTF-8", splitStr);
+    public static String toHexString(String str, String joinStr) throws UnsupportedEncodingException {
+        return toHexString(str, "UTF-8", joinStr);
     }
 
     /**
@@ -224,24 +224,24 @@ public class OftenUtil {
      *
      * @param str         输入字符串
      * @param charsetName 字符集名称，GBK、UTF-8
-     * @param splitStr    HEX字符串的连接字符串
+     * @param joinStr     HEX字符串的连接字符串
      * @return
      * @throws UnsupportedEncodingException
      */
-    public static String toHexString(String str, String charsetName, String splitStr) throws UnsupportedEncodingException {
+    public static String toHexString(String str, String charsetName, String joinStr) throws UnsupportedEncodingException {
         byte[] arr = str.getBytes(charsetName);
-        return toHexString(arr, splitStr);
+        return toHexString(arr, joinStr);
     }
 
     /**
      * 字节数组转HEX字符串
      *
      * @param arr
-     * @param splitStr
+     * @param joinStr
      * @return
      */
-    public static String toHexString(byte[] arr, String splitStr) {
-        splitStr = splitStr == null ? "" : splitStr;
+    public static String toHexString(byte[] arr, String joinStr) {
+        joinStr = joinStr == null ? "" : joinStr;
 
         StringBuilder sb = new StringBuilder();
 
@@ -250,7 +250,7 @@ public class OftenUtil {
             String str1 = Integer.toHexString(b & 0xFF);
             sb.append(str1);
             if (i != arr.length - 1) {
-                sb.append(splitStr);
+                sb.append(joinStr);
             }
         }
 

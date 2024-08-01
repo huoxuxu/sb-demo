@@ -35,7 +35,9 @@ import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -51,7 +53,29 @@ public class DemoService {
     public static void main(String[] args) {
         try {
             {
+                LocalDateTime date = LocalDate.now().atStartOfDay().minusDays(7);
+                LocalDateTime end = date.plusDays(1);
+                System.out.println(Arrays.asList(date, end));
+            }
+            {
+                LocalDateTime begin = OftenUtil.DateTimeUtil.parseDateTime("2024-07-20 00:00:00");
+                LocalDateTime end = OftenUtil.DateTimeUtil.parseDateTime("2024-07-20 23:59:59");
+                LocalDateTime end1 = OftenUtil.DateTimeUtil.parseDateTime("2024-07-22 00:00:00");
+                LocalDateTime stat = begin;
+                while (end.isAfter(stat) || end.isEqual(stat)) {
+                    LocalDateTime date = stat.plusDays(1).minusSeconds(1);
+                    if (date.isAfter(end)) {
+                        date = end;
+                    }
 
+                    // bis
+                    // 输出 07-20 00:00~07-20 23:59:59
+                    // 输出 07-21 00:00~07-21 23:59:59
+                    System.out.println(stat + "---" + date);
+
+                    stat = date.plusSeconds(1);
+                }
+                System.out.println("ok");
             }
             {
                 SqlSessionManager sqlSessionManager = SqlSessionManager.newInstance((Reader) null);
