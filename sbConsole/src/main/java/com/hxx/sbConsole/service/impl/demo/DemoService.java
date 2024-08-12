@@ -53,6 +53,21 @@ public class DemoService {
     public static void main(String[] args) {
         try {
             {
+                // map put 方法会替换原key对应的值，
+                // putAll 也一样
+                Map<Integer,Integer> map=new HashMap<>();
+                map.put(1,100);
+                map.put(null,50);
+                map.put(1,10);
+
+                Map<Integer,Integer> map1=new HashMap<>();
+                map1.put(null,0);
+                map1.put(1,20);
+                map1.putAll(map);
+
+                System.out.println(map1);
+            }
+            {
                 LocalDateTime date = LocalDate.now().atStartOfDay().minusDays(7);
                 LocalDateTime end = date.plusDays(1);
                 System.out.println(Arrays.asList(date, end));

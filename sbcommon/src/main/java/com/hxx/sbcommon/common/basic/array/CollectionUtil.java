@@ -62,6 +62,38 @@ public class CollectionUtil {
     }
 
     /**
+     * 获取第一个元素
+     *
+     * @param ls
+     * @param <T>
+     * @return
+     */
+    public static <T> T getFirst(Collection<T> ls) {
+        if (CollectionUtils.isEmpty(ls)) {
+            return null;
+        }
+        return ls.stream().findFirst().orElse(null);
+    }
+
+    /**
+     * 获取最后一个元素
+     *
+     * @param ls
+     * @param <T>
+     * @return
+     */
+    public static <T> T getLast(Collection<T> ls) {
+        if (CollectionUtils.isEmpty(ls)) {
+            return null;
+        }
+        T t = null;
+        for (T item : ls) {
+            t = item;
+        }
+        return t;
+    }
+
+    /**
      * 移除集合中，满足指定条件的项
      *
      * @param list
@@ -129,7 +161,9 @@ public class CollectionUtil {
      * @param <TField>
      * @return
      */
-    public static <T, TField extends Comparable<TField>> List<T> sortList(Collection<T> ls, Function<T, TField> getOrderFieldFunc, boolean asc) {
+    public static <T, TField extends Comparable<TField>> List<T> sortList(Collection<T> ls,
+                                                                          Function<T, TField> getOrderFieldFunc,
+                                                                          boolean asc) {
         if (CollectionUtils.isEmpty(ls)) return new ArrayList<>();
 
         List<T> nullData = ls.stream()
@@ -156,7 +190,9 @@ public class CollectionUtil {
      * @param <TField>
      * @return
      */
-    public static <T, TField extends Comparable<TField>> List<T> sortListUseCollator(Collection<T> ls, Function<T, TField> getOrderFieldFunc, boolean asc) {
+    public static <T, TField extends Comparable<TField>> List<T> sortListUseCollator(Collection<T> ls,
+                                                                                     Function<T, TField> getOrderFieldFunc,
+                                                                                     boolean asc) {
         if (CollectionUtils.isEmpty(ls)) return new ArrayList<>();
 
         List<T> nullData = ls.stream()
@@ -187,7 +223,9 @@ public class CollectionUtil {
      * @param <TResult>
      * @return
      */
-    public static <T, TResult> List<TResult> reMapToList(Collection<T> ls, Function<T, TResult> mapper, Predicate<TResult> filterPred) {
+    public static <T, TResult> List<TResult> reMapToList(Collection<T> ls,
+                                                         Function<T, TResult> mapper,
+                                                         Predicate<TResult> filterPred) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
                 .map(mapper)
                 .filter(filterPred == null ? d -> true : filterPred)
@@ -204,7 +242,9 @@ public class CollectionUtil {
      * @param <TResult>
      * @return
      */
-    public static <T, TResult> Set<TResult> reMapToSet(Collection<T> ls, Function<T, TResult> mapper, Predicate<TResult> filterPred) {
+    public static <T, TResult> Set<TResult> reMapToSet(Collection<T> ls,
+                                                       Function<T, TResult> mapper,
+                                                       Predicate<TResult> filterPred) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
                 .map(mapper)
                 .filter(filterPred == null ? d -> true : filterPred)
@@ -221,7 +261,9 @@ public class CollectionUtil {
      * @param <TResult>
      * @return
      */
-    public static <T, TResult> Set<TResult> reMapToSortedSet(Collection<T> ls, Function<T, TResult> mapper, Predicate<TResult> filterPred) {
+    public static <T, TResult> Set<TResult> reMapToSortedSet(Collection<T> ls,
+                                                             Function<T, TResult> mapper,
+                                                             Predicate<TResult> filterPred) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
                 .map(mapper)
                 .filter(filterPred == null ? d -> true : filterPred)
@@ -237,14 +279,16 @@ public class CollectionUtil {
      * @param <TField>
      * @return
      */
-    public static <T, TField extends Comparable<TField>> T getMin(Collection<T> ls, Function<T, TField> fieldGetter) {
+    public static <T, TField extends Comparable<TField>> T getMin(Collection<T> ls,
+                                                                  Function<T, TField> fieldGetter) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
                 .filter(d -> fieldGetter.apply(d) != null)
                 .min(Comparator.comparing(fieldGetter))
                 .orElse(null);
     }
 
-    public static <T, TField extends Comparable<TField>> T getMax(Collection<T> ls, Function<T, TField> fieldGetter) {
+    public static <T, TField extends Comparable<TField>> T getMax(Collection<T> ls,
+                                                                  Function<T, TField> fieldGetter) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
                 .filter(d -> fieldGetter.apply(d) != null)
                 .max(Comparator.comparing(fieldGetter))
@@ -260,7 +304,9 @@ public class CollectionUtil {
      * @param <TField>
      * @return
      */
-    public static <T, TField extends Comparable<TField>> TField getMinField(Collection<T> ls, Function<T, TField> fieldGetter, TField defaultVal) {
+    public static <T, TField extends Comparable<TField>> TField getMinField(Collection<T> ls,
+                                                                            Function<T, TField> fieldGetter,
+                                                                            TField defaultVal) {
         T t = Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
                 .filter(d -> fieldGetter.apply(d) != null)
                 .min(Comparator.comparing(fieldGetter))
@@ -268,7 +314,9 @@ public class CollectionUtil {
         return t == null ? defaultVal : fieldGetter.apply(t);
     }
 
-    public static <T, TField extends Comparable<TField>> TField getMaxField(Collection<T> ls, Function<T, TField> fieldGetter, TField defaultVal) {
+    public static <T, TField extends Comparable<TField>> TField getMaxField(Collection<T> ls,
+                                                                            Function<T, TField> fieldGetter,
+                                                                            TField defaultVal) {
         T t = Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
                 .filter(d -> fieldGetter.apply(d) != null)
                 .max(Comparator.comparing(fieldGetter))
@@ -300,7 +348,9 @@ public class CollectionUtil {
      * @param <T>
      * @return
      */
-    public static <T> BigDecimal getAvgBigDecimal(Collection<T> ls, Function<T, BigDecimal> fieldGetter, int scale) {
+    public static <T> BigDecimal getAvgBigDecimal(Collection<T> ls,
+                                                  Function<T, BigDecimal> fieldGetter,
+                                                  int scale) {
         int cou = ls == null ? 0 : ls.size();
         BigDecimal sum = getSumBigDecimal(ls, fieldGetter);
         if (sum == null || cou == 0) {
@@ -319,7 +369,9 @@ public class CollectionUtil {
      * @param <TK>
      * @return
      */
-    public static <T, TK> Map<TK, List<T>> getGroupByMap(Collection<T> ls, Predicate<? super T> filter, Function<? super T, ? extends TK> groupByFunc) {
+    public static <T, TK> Map<TK, List<T>> getGroupByMap(Collection<T> ls,
+                                                         Predicate<? super T> filter,
+                                                         Function<? super T, ? extends TK> groupByFunc) {
         if (filter == null) filter = (T t) -> true;
         return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
                 .filter(filter)
@@ -338,7 +390,8 @@ public class CollectionUtil {
      * @param <TV>
      * @return
      */
-    public static <T, TK, TV> Map<TK, TV> getGroupByMap(Collection<T> ls, Predicate<? super T> filter,
+    public static <T, TK, TV> Map<TK, TV> getGroupByMap(Collection<T> ls,
+                                                        Predicate<? super T> filter,
                                                         Function<? super T, ? extends TK> groupByFunc,
                                                         BiFunction<TK, ? super List<T>, ? extends TV> groupByValFunc) {
         Map<TK, List<T>> groupByMap = getGroupByMap(ls, filter, groupByFunc);
