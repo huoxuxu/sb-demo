@@ -879,76 +879,6 @@ public class OftenUtil {
         }
 
         /**
-         * 有且不少于1个符合条件的元素
-         *
-         * @param ls
-         * @param predicate
-         * @param <T>
-         * @return
-         * @throws IllegalStateException
-         */
-        public static <T> T first(List<T> ls, Predicate<T> predicate) {
-            if (CollectionUtils.isEmpty(ls)) {
-                throw new IllegalStateException("集合不包含任何元素");
-            }
-
-            T ele = ls.stream()
-                    .filter(predicate)
-                    .findFirst()
-                    .orElse(null);
-            if (ele == null) {
-                throw new IllegalStateException("未在集合中找到符合条件的元素");
-            }
-            return ele;
-        }
-
-        /**
-         * 有且不少于1个
-         *
-         * @param ls
-         * @param <T>
-         * @return
-         */
-        public static <T> T first(List<T> ls) {
-            if (CollectionUtils.isEmpty(ls)) {
-                throw new IllegalStateException("集合不包含任何元素");
-            }
-            return ls.get(0);
-        }
-
-        /**
-         * 取第一个符合条件的元素，不存在取默认值
-         *
-         * @param ls
-         * @param predicate
-         * @param defaultVal
-         * @param <T>
-         * @return
-         * @throws Exception
-         */
-        public static <T> T firstOrDefault(List<T> ls, Predicate<T> predicate, T defaultVal) {
-            if (CollectionUtils.isEmpty(ls)) {
-                return defaultVal;
-            }
-            return ls.stream()
-                    .filter(predicate)
-                    .findFirst()
-                    .orElse(defaultVal);
-        }
-
-        /**
-         * 取第一个元素，不存在取默认值
-         *
-         * @param ls
-         * @param defaultVal
-         * @param <T>
-         * @return
-         */
-        public static <T> T firstOrDefault(List<T> ls, T defaultVal) {
-            return CollectionUtils.isEmpty(ls) ? defaultVal : ls.get(0);
-        }
-
-        /**
          * 简单缓存简化方法
          *
          * @param cache
@@ -958,7 +888,9 @@ public class OftenUtil {
          * @param <TVal>
          * @return
          */
-        public static <TKey, TVal> TVal getCacheVal(Map<TKey, TVal> cache, TKey key, Function<TKey, TVal> getCacheValFunc) {
+        public static <TKey, TVal> TVal getCacheVal(Map<TKey, TVal> cache,
+                                                    TKey key,
+                                                    Function<TKey, TVal> getCacheValFunc) {
             TVal val = cache.getOrDefault(key, null);
             if (val == null) {
                 val = getCacheValFunc.apply(key);

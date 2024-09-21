@@ -62,36 +62,93 @@ public class CollectionUtil {
     }
 
     /**
-     * 获取第一个元素
+     * 取第一个符合条件的元素，不存在取默认值
      *
      * @param ls
+     * @param predicate
+     * @param defaultVal
      * @param <T>
      * @return
+     * @throws Exception
      */
-    public static <T> T getFirst(Collection<T> ls) {
+    public static <T> T firstOrDefault(Collection<T> ls, Predicate<T> predicate, T defaultVal) {
         if (CollectionUtils.isEmpty(ls)) {
-            return null;
+            return defaultVal;
         }
-        return ls.stream().findFirst().orElse(null);
+
+        for (T item : ls) {
+            if (predicate.test(item)) {
+                return item;
+            }
+        }
+        return defaultVal;
     }
 
     /**
-     * 获取最后一个元素
+     * 取第一个元素，不存在取默认值
      *
      * @param ls
+     * @param defaultVal
      * @param <T>
      * @return
      */
-    public static <T> T getLast(Collection<T> ls) {
-        if (CollectionUtils.isEmpty(ls)) {
-            return null;
-        }
-        T t = null;
-        for (T item : ls) {
-            t = item;
-        }
-        return t;
+    public static <T> T firstOrDefault(List<T> ls, T defaultVal) {
+        return CollectionUtils.isEmpty(ls) ? defaultVal : ls.get(0);
     }
+
+    /**
+     * 取最后一个符合条件的元素，不存在取默认值
+     *
+     * @param ls
+     * @param predicate
+     * @param defaultVal
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    public static <T> T lastOrDefault(Collection<T> ls, Predicate<T> predicate, T defaultVal) {
+        if (CollectionUtils.isEmpty(ls)) {
+            return defaultVal;
+        }
+
+        T last = defaultVal;
+        for (T item : ls) {
+            if (predicate.test(item)) {
+                last = item;
+            }
+        }
+        return last;
+    }
+
+    /**
+     * 取集合最后一个元素
+     *
+     * @param ls
+     * @param defaultVal
+     * @param <T>
+     * @return
+     */
+    public static <T> T lastOrDefault(List<T> ls, T defaultVal) {
+        return CollectionUtils.isEmpty(ls) ? defaultVal : ls.get(ls.size() - 1);
+    }
+
+//    /**
+//     * 获取最后一个元素
+//     *
+//     * @param ls
+//     * @param <T>
+//     * @return
+//     */
+//    public static <T> T last(Collection<T> ls) {
+//        if (CollectionUtils.isEmpty(ls)) {
+//            return null;
+//        }
+//        T t = null;
+//        for (T item : ls) {
+//            t = item;
+//        }
+//        return t;
+//    }
 
     /**
      * 移除集合中，满足指定条件的项
@@ -101,11 +158,12 @@ public class CollectionUtil {
      * @param <T>
      */
     public static <T> void remove(List<T> list, Predicate<T> delPred) {
-        for (int i = list.size() - 1; i > -1; i--) {
-            if (delPred.test(list.get(i))) {
-                list.remove(list.get(i));
-            }
-        }
+        list.removeIf(delPred);
+//        for (int i = list.size() - 1; i > -1; i--) {
+//            if (delPred.test(list.get(i))) {
+//                list.remove(list.get(i));
+//            }
+//        }
     }
 
     /**
@@ -126,25 +184,12 @@ public class CollectionUtil {
     }
 
     /**
-     * 字符串集合 去空、去空格
-     *
-     * @param ls
-     * @return
-     */
-    public static List<String> getItemAsList(Collection<String> ls) {
-        return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
-                .filter(d -> !StringUtils.isBlank(d))
-                .map(d -> d.trim())
-                .collect(Collectors.toList());
-    }
-
-    /**
      * 字符串集合去空，去前后空格，去重
      *
      * @param ls
      * @return
      */
-    public static Set<String> getItemAsSet(Collection<String> ls) {
+    public static Set<String> trimItemAsSet(Collection<String> ls) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>()).stream()
                 .filter(d -> !StringUtils.isBlank(d))
                 .map(d -> d.trim())
@@ -314,6 +359,14 @@ public class CollectionUtil {
         return t == null ? defaultVal : fieldGetter.apply(t);
     }
 
+    /**
+     * @param ls
+     * @param fieldGetter
+     * @param defaultVal
+     * @param <T>
+     * @param <TField>
+     * @return
+     */
     public static <T, TField extends Comparable<TField>> TField getMaxField(Collection<T> ls,
                                                                             Function<T, TField> fieldGetter,
                                                                             TField defaultVal) {
