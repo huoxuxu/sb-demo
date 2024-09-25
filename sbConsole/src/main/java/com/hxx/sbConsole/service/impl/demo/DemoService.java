@@ -53,6 +53,21 @@ public class DemoService {
     public static void main(String[] args) {
         try {
             {
+                List<Integer> list = new ArrayList<>();
+                list.add(127); // 127 在常量池范围内，所以从常量池中获取
+                list.add(128); // 128 不在常量池范围内，所以创建新的Integer对象
+
+                boolean contains127 = list.contains(127); // 返回 true，因为列表中确实有一个值为 127 的 Integer 对象
+                boolean contains128 = list.contains(128); // 返回 true，因为列表中有一个值为 128 的 Integer 对象，尽管它不是从常量池中获取的
+
+                Integer fromPool = 127; // 从常量池中获取
+                Integer notFromPool = new Integer(128); // 显式创建新的 Integer 对象
+
+                boolean containsFromPool = list.contains(fromPool); // 返回 true，因为 fromPool 的值（127）在列表中
+                boolean containsNotFromPool = list.contains(notFromPool); // 返回 true，因为 contains 方法比较的是值，而不是对象引用
+                System.out.println();
+            }
+            {
                 // map put 方法会替换原key对应的值，
                 // putAll 也一样
                 Map<Integer,Integer> map=new HashMap<>();

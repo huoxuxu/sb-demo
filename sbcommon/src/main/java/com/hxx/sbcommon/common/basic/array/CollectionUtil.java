@@ -475,6 +475,59 @@ public class CollectionUtil {
     }
 
     /**
+     * 交集
+     *
+     * @param src
+     * @param tar
+     * @param <T>
+     * @return
+     */
+    public static <T> Collection<T> intersectAsList(Collection<T> src, Collection<T> tar) {
+        if (CollectionUtils.isEmpty(src) || CollectionUtils.isEmpty(tar)) {
+            return new HashSet<>();
+        }
+        return src.stream()
+                .filter(tar::contains)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * 判断集合中的每项之间是否有交集
+     * 无交集返回null，有交集时，立即返回交集
+     *
+     * @param ls
+     * @return
+     */
+    public static <T> Collection<T> hasIntersection(List<Collection<T>> ls) {
+        for (int i = 0; i < ls.size() - 1; i++) {
+            for (int j = i + 1; j < ls.size(); j++) {
+                Collection<T> result = intersectAsList(ls.get(i), ls.get(j));
+                if (!CollectionUtils.isEmpty(result)) {
+                    return result;
+                }
+            }
+        }
+        return null; // 没有发现交集，返回false
+    }
+
+    /**
+     * 判断集合中的每项之间是否有交集
+     *
+     * @param ls
+     * @return
+     */
+    public static boolean checkIntersection(List<Collection<Integer>> ls) {
+        for (int i = 0; i < ls.size() - 1; i++) {
+            for (int j = i + 1; j < ls.size(); j++) {
+                if (!Collections.disjoint(ls.get(i), ls.get(j))) {
+                    return true; // 发现有交集，返回true
+                }
+            }
+        }
+        return false; // 没有发现交集，返回false
+    }
+
+    /**
      * 集合相减
      *
      * @param
