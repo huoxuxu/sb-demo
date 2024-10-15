@@ -3,6 +3,9 @@ package com.hxx.sbcommon.common.reflect;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
+import org.springframework.util.ConcurrentReferenceHashMap;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -25,6 +28,99 @@ import static java.util.stream.StreamSupport.stream;
  * @Date: 2024-01-09 13:44:02
  **/
 public class MethodUtils {
+
+    private static final Method[] NO_METHODS = {};
+
+    /**
+     * Cache for {@link Class#getDeclaredMethods()} plus equivalent default methods
+     * from Java 8 based interfaces, allowing for fast iteration.
+     */
+    private static final Map<Class<?>, Method[]> declaredMethodsCache = new ConcurrentReferenceHashMap<>(256);
+
+    /**
+     * Attempt to find a {@link Method} on the supplied class with the supplied name
+     * and parameter types. Searches all superclasses up to {@code Object}.
+     * <p>Returns {@code null} if no {@link Method} can be found.
+     * @param clazz the class to introspect
+     * @param name the name of the method
+     * @param paramTypes the parameter types of the method
+     * (may be {@code null} to indicate any signature)
+     * @return the Method object, or {@code null} if none found
+     */
+    @Nullable
+    public static Method findMethodByName(Class<?> clazz, String name, @Nullable Class<?>... paramTypes) {
+        Assert.notNull(clazz, "Class must not be null");
+        Assert.notNull(name, "Method name must not be null");
+        Class<?> searchType = clazz;
+        while (searchType != null) {
+            Method[] methods = (searchType.isInterface() ? searchType.getMethods() : getDeclaredMethods(searchType));
+            for (Method method : methods) {
+                if (name.equals(method.getName()) &&
+                        (paramTypes == null || Arrays.equals(paramTypes, method.getParameterTypes()))) {
+                    return method;
+                }
+            }
+            searchType = searchType.getSuperclass();
+        }
+        return null;
+    }
+
+
+    /**
+     * This variant retrieves {@link Class#getDeclaredMethods()} from a local cache
+     * in order to avoid the JVM's SecurityManager check and defensive array copying.
+     * In addition, it also includes Java 8 default methods from locally implemented
+     * interfaces, since those are effectively to be treated just like declared methods.
+     * @param clazz the class to introspect
+     * @return the cached array of methods
+     * @throws IllegalStateException if introspection fails
+     * @see Class#getDeclaredMethods()
+     */
+    private static Method[] getDeclaredMethods(Class<?> clazz) {
+        Assert.notNull(clazz, "Class must not be null");
+        Method[] result = declaredMethodsCache.get(clazz);
+        if (result == null) {
+            try {
+                Method[] declaredMethods = clazz.getDeclaredMethods();
+                List<Method> defaultMethods = findConcreteMethodsOnInterfaces(clazz);
+                if (defaultMethods != null) {
+                    result = new Method[declaredMethods.length + defaultMethods.size()];
+                    System.arraycopy(declaredMethods, 0, result, 0, declaredMethods.length);
+                    int index = declaredMethods.length;
+                    for (Method defaultMethod : defaultMethods) {
+                        result[index] = defaultMethod;
+                        index++;
+                    }
+                }
+                else {
+                    result = declaredMethods;
+                }
+                declaredMethodsCache.put(clazz, (result.length == 0 ? NO_METHODS : result));
+            }
+            catch (Throwable ex) {
+                throw new IllegalStateException("Failed to introspect Class [" + clazz.getName() +
+                        "] from ClassLoader [" + clazz.getClassLoader() + "]", ex);
+            }
+        }
+        return result;
+    }
+
+    @Nullable
+    private static List<Method> findConcreteMethodsOnInterfaces(Class<?> clazz) {
+        List<Method> result = null;
+        for (Class<?> interfaceCls : clazz.getInterfaces()) {
+            for (Method interfaceClsMethod : interfaceCls.getMethods()) {
+                if (!Modifier.isAbstract(interfaceClsMethod.getModifiers())) {
+                    if (result == null) {
+                        result = new ArrayList<>();
+                    }
+                    result.add(interfaceClsMethod);
+                }
+            }
+        }
+        return result;
+    }
+
     public static final Set<Class<?>> SIMPLE_TYPES = ofSet(
             Void.class,
             Boolean.class,

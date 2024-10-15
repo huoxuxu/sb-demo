@@ -6,7 +6,7 @@ import com.hxx.sbConsole.model.inherit.HaBaDog;
 import com.hxx.sbcommon.common.io.json.fastjson.JsonUtil;
 import com.hxx.sbcommon.common.office.EasyExcelHelper;
 import com.hxx.sbcommon.common.reflect.BeanCopyUtil;
-import com.hxx.sbcommon.common.reflect.BeanInfoUtil;
+import com.hxx.sbcommon.common.reflect.BeanUtil;
 import com.hxx.sbcommon.common.reflect.ReflectUseful;
 import com.hxx.sbcommon.model.Result;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -57,22 +57,22 @@ public class ReflectDemoService {
             demoVO.setName("nm");
 
             // bean to map
-            Map<String, Object> map = BeanInfoUtil.toMap(demoVO);
+            Map<String, Object> map = BeanUtil.toMap(demoVO);
             System.out.println(map);
 
             // map to bean
             demoVO = new EasyExcelHelper.DemoEasyExcelVO();
-            BeanInfoUtil.copyToBean(demoVO, map);
+            BeanUtil.mapCopyTo(map, demoVO);
             System.out.println(demoVO);
         }
         {
             // =================泛型字段===================================
             Result<String> result = new Result<>("", "xx", "m12");
-            Map<String, Object> objMap1 = BeanInfoUtil.toMap(result);
+            Map<String, Object> objMap1 = BeanUtil.toMap(result);
             System.out.println("objMap：" + JsonUtil.toJSON(objMap1));
 
             result = new Result<>("", "", "");
-            BeanInfoUtil.copyToBean(result, objMap1);
+            BeanUtil.mapCopyTo(objMap1, result);
             System.out.println(result);
         }
     }
@@ -89,7 +89,7 @@ public class ReflectDemoService {
         System.out.println("props: " + JsonUtil.toJSON(props));
 
         // BeanInfoUtil
-        Map<String, Object> map = BeanInfoUtil.toMap(dog);
+        Map<String, Object> map = BeanUtil.toMap(dog);
         System.out.println("props: " + JsonUtil.toJSON(map.keySet()));
 
         // ==
@@ -104,18 +104,18 @@ public class ReflectDemoService {
             user.setName("里斯");
         }
 
-        Map<String, Object> map = BeanInfoUtil.toMap(user);
+        Map<String, Object> map = BeanUtil.toMap(user);
         System.out.println("user对象：" + JsonUtil.toJSON(user));
         System.out.println("userMap：" + JsonUtil.toJSON(map));
 
         User dest = new User();
-        BeanInfoUtil.copyTo(user, dest);
+        BeanUtil.copyTo(user, dest);
         System.out.println("dest对象：" + JsonUtil.toJSON(dest));
 
         System.out.println("==================================================");
 
         Dog dog = new HaBaDog();
-        BeanInfoUtil.copyToObj(user, dog);
+        BeanUtil.copyTo(user, dog);
         System.out.println("dog：" + JsonUtil.toJSON(dog));
 
     }

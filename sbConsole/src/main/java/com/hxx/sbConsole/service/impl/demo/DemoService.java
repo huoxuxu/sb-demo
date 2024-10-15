@@ -53,6 +53,18 @@ public class DemoService {
     public static void main(String[] args) {
         try {
             {
+                String sortServiceTableApiSwitch = "{\"sa\":1}";
+                try {
+                    Map map = JsonUtil.parse(sortServiceTableApiSwitch, Map.class);
+                    Object switchResult = map.getOrDefault("sa", 0);
+                    int switchRet = NumberUtils.toInt(switchResult + "", 0);
+                    System.out.println(111);
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
+
+            }
+            {
                 List<Integer> list = new ArrayList<>();
                 list.add(127); // 127 在常量池范围内，所以从常量池中获取
                 list.add(128); // 128 不在常量池范围内，所以创建新的Integer对象
@@ -70,14 +82,14 @@ public class DemoService {
             {
                 // map put 方法会替换原key对应的值，
                 // putAll 也一样
-                Map<Integer,Integer> map=new HashMap<>();
-                map.put(1,100);
-                map.put(null,50);
-                map.put(1,10);
+                Map<Integer, Integer> map = new HashMap<>();
+                map.put(1, 100);
+                map.put(null, 50);
+                map.put(1, 10);
 
-                Map<Integer,Integer> map1=new HashMap<>();
-                map1.put(null,0);
-                map1.put(1,20);
+                Map<Integer, Integer> map1 = new HashMap<>();
+                map1.put(null, 0);
+                map1.put(1, 20);
                 map1.putAll(map);
 
                 System.out.println(map1);
