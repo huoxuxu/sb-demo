@@ -5,7 +5,7 @@ import com.hxx.sbConsole.service.impl.CommonDataService;
 import com.hxx.sbcommon.common.io.fileOrDir.FileUtil;
 import com.hxx.sbcommon.common.office.poi.POIExcelReadUseful;
 import com.hxx.sbcommon.common.office.poi.POIExcelWriteUseful;
-import com.hxx.sbcommon.common.reflect.BeanInfoUtil;
+import com.hxx.sbcommon.common.reflect.BeanUtil;
 import com.hxx.sbcommon.common.reflect.ReflectUseful;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -55,7 +55,7 @@ public class OfficeDemoService {
         List<Map<String, Object>> rows = new ArrayList<>();
         List<EasyExcelDemo2.ParkInfo> data = CommonDataService.getData();
         for (EasyExcelDemo2.ParkInfo item : data) {
-            rows.add(BeanInfoUtil.toMap(item));
+            rows.add(BeanUtil.toMap(item));
         }
 
         try (POIExcelWriteUseful writeUseful = new POIExcelWriteUseful(excel, "data")) {
