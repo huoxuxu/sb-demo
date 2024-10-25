@@ -53,6 +53,13 @@ public class DemoService {
     public static void main(String[] args) {
         try {
             {
+                Set<Integer> sls = new HashSet<>(Arrays.asList(1, 2, 3));
+                byte b = 1;
+
+                System.out.println(sls.contains(b));
+
+            }
+            {
                 String sortServiceTableApiSwitch = "{\"sa\":1}";
                 try {
                     Map map = JsonUtil.parse(sortServiceTableApiSwitch, Map.class);
