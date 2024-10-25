@@ -98,6 +98,19 @@ public class CompletableFutureDemo {
 
     }
 
+    // 获取结果
+    private static void futureResult(){
+        /*
+            获取异步任务的结果
+            get方法
+             会抛出：InterruptedException和ExecutionException
+
+            join方法
+             获取异步计算的结果，不会抛出InterruptedException和ExecutionException异常，但会抛出其他异常
+        */
+
+    }
+
     // 处理异常情况
     private static void procException() throws Exception {
         CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
