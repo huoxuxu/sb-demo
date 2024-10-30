@@ -48,14 +48,16 @@ import java.util.concurrent.TimeUnit;
  * @date 2017/5/22.
  */
 public class TitansHttpClientUtil {
-    private TitansHttpClientUtil() {
-        throw new IllegalStateException("Utility class");
-    }
 
     private static final Logger logger = LoggerFactory.getLogger(TitansHttpClientUtil.class);
-    private static final CloseableHttpClient HTTP_CLIENT;
+
     public static final String CHAR_SET = "UTF-8";
     public static final String CHAR_SET_HEADER_KEY = "charset";
+    private static final String CONTENT_VALUE_FORM = "application/x-www-form-urlencoded";
+    private static final String CONTENT_VALUE_JSON = "application/json";
+    private static final String CONTENT_TYPE = "Content-type";
+
+    private static final CloseableHttpClient HTTP_CLIENT;
     public static final String HTTP_SERVICE_NAME_KEY = "httpServieName";
     private static ThreadLocal<String> httpServiceNameTL = new ThreadLocal<>();
 
@@ -70,6 +72,9 @@ public class TitansHttpClientUtil {
 
     private static PoolingHttpClientConnectionManager cm = null;
 
+    private TitansHttpClientUtil() {
+        throw new IllegalStateException("Utility class");
+    }
 
     private static String getCharSet(Map<String, String> header) {
         return Optional.ofNullable(header).map(o -> o.get(CHAR_SET_HEADER_KEY)).orElse(CHAR_SET);
@@ -209,6 +214,7 @@ public class TitansHttpClientUtil {
         HttpEntity entity = null;
         try {
             HttpReqAndRsp httpReqAndRsp = new HttpReqAndRsp(request, response);
+            // 请求执行前置过滤器处理
             beforeExecute(httpReqAndRsp);
             response = httpReqAndRsp.getHttpResponse();
             if (response == null) {
@@ -250,6 +256,7 @@ public class TitansHttpClientUtil {
             httpClientFilterChain = HttpClientFilterChain.build(filterList);
             TitansHttpClientUtil.httpClientFilterChainThreadLocal.set(httpClientFilterChain);
         }
+
         if (httpClientFilterChain != null) {
             httpClientFilterChain.reset();
             httpClientFilterChain.setAttachment(HTTP_SERVICE_NAME_KEY, httpServiceNameTL.get());
@@ -282,11 +289,6 @@ public class TitansHttpClientUtil {
         logger.debug("sendHttpGet url:{},{}" + httpServiceNameTL.get(), url);
         return execute(httpGet, header);
     }
-
-
-    private static final String CONTENT_VALUE_FORM = "application/x-www-form-urlencoded";
-    private static final String CONTENT_VALUE_JSON = "application/json";
-    private static final String CONTENT_TYPE = "Content-type";
 
     /**
      * 发送Http-Delete 请求， connectionRequestTimeout默认为1分钟
