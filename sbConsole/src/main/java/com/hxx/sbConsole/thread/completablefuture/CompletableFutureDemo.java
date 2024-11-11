@@ -1,12 +1,16 @@
 package com.hxx.sbConsole.thread.completablefuture;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 /*
@@ -38,7 +42,13 @@ join()
 
 
 */
+
+@Service
 public class CompletableFutureDemo {
+
+    @Autowired
+    @Qualifier("taskExecutor")
+    private Executor taskExecutor;
 
     public static void main(String[] args) {
         try {
@@ -50,7 +60,7 @@ public class CompletableFutureDemo {
     }
 
     // 用法示例
-    private static List<String> case0() {
+    private List<String> case0() {
         List<String> ls = new ArrayList<>();
         ls.add("1");
         ls.add("2");
@@ -63,7 +73,7 @@ public class CompletableFutureDemo {
                         // 处理异常，返回默认值或进行其他错误处理操作
                         return null;
                     }
-                }).exceptionally(ex -> null))
+                }, taskExecutor).exceptionally(ex -> null))
                 .collect(Collectors.toList());
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
                 .thenApply(v -> futures.stream()
