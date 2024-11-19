@@ -1,0 +1,354 @@
+package com.hxx.sbcommon.common;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+public class WASD {
+
+    public static void ast(boolean condition, String msg) {
+        if (condition) {
+            throw new RuntimeException(msg);
+        }
+    }
+
+    public static void ast(boolean condition, RuntimeException ex) {
+        if (condition) {
+            throw ex;
+        }
+    }
+
+    /**
+     * 值为null则返回默认值
+     *
+     * @param t
+     * @param defaultVal
+     * @param <T>
+     * @return
+     */
+    public static <T> T nullToDefault(T t, T defaultVal) {
+        return t == null ? defaultVal : t;
+    }
+
+
+    /**
+     * 两数相除保留指定精度
+     *
+     * @param numerator   分子
+     * @param denominator 分母
+     * @param scale       精度
+     * @return
+     */
+    public static BigDecimal divide(BigDecimal numerator, BigDecimal denominator, int scale) {
+        if (null == numerator || null == denominator
+                || numerator.compareTo(BigDecimal.ZERO) == 0
+                || denominator.compareTo(BigDecimal.ZERO) == 0) {
+            return BigDecimal.ZERO;
+        }
+
+        // 4舍，5入，其他未测
+        return numerator.divide(denominator, scale, RoundingMode.HALF_UP);
+    }
+
+    /**
+     * 转换为不以科学计数法的字符串，且去除小数点后无意义的零
+     *
+     * @param b
+     * @return
+     */
+    public static String format(BigDecimal b) {
+        // stripTrailingZeros 去除小数点后无意义的零
+        // toPlainString 返回不以指数表示的字符串形式
+        return b.stripTrailingZeros()
+                .toPlainString();
+    }
+
+    /**
+     * 字符串分割，支持多分隔符
+     *
+     * @param str
+     * @param splitStrs
+     * @return
+     */
+    public static Set<String> splitAsSet(String str, String... splitStrs) {
+        List<String> ls = splitByWholeSeparators(str, splitStrs);
+        return new HashSet<>(ls);
+    }
+
+    /**
+     * 字符串分割，支持多分隔符
+     * 原始字符串："1,2,3，4"
+     * 分隔符：",","，"
+     * 结果：1 2 3 4
+     *
+     * @param str
+     * @param splitStrs
+     * @return
+     */
+    public static List<String> splitByWholeSeparators(String str, String... splitStrs) {
+        if (org.apache.commons.lang3.StringUtils.isBlank(str)) {
+            return new ArrayList<>();
+        }
+        if (splitStrs == null || splitStrs.length == 0) {
+            return new ArrayList<>(Arrays.asList(str));
+        }
+
+        List<String> ls = new ArrayList<>();
+        for (String splitStr : splitStrs) {
+            if (ls.size() == 0) {
+                String[] arr = org.apache.commons.lang3.StringUtils.splitByWholeSeparator(str, splitStr);
+                for (String item : arr) {
+                    if (!org.apache.commons.lang3.StringUtils.isBlank(item)) {
+                        ls.add(item.trim());
+                    }
+                }
+            } else {
+                List<String> result = splits(ls, splitStr);
+                ls = result;
+            }
+        }
+        return ls;
+    }
+
+    /**
+     * 输入字符串集合，集合元素都按 分隔符 分割后去除空或空格后返回,
+     *
+     * @param strs
+     * @param splitStr
+     * @return
+     */
+    public static List<String> splits(List<String> strs, String splitStr) {
+        List<String> ls = new ArrayList<>();
+        for (String str : strs) {
+            if (org.apache.commons.lang3.StringUtils.isBlank(str)) {
+                continue;
+            }
+
+            String[] arr = org.apache.commons.lang3.StringUtils.splitByWholeSeparator(str, splitStr);
+            for (String item : arr) {
+                if (!StringUtils.isBlank(item)) {
+                    ls.add(item.trim());
+                }
+            }
+        }
+        return ls;
+    }
+
+    /**
+     * 过滤空且去空格
+     *
+     * @param ls
+     * @return
+     */
+    public static List<String> filterEmpty(Collection<String> ls) {
+        return Optional.ofNullable(ls).orElse(new ArrayList<>())
+                .stream()
+                .filter(d -> !StringUtils.isBlank(d))
+                .map(d -> d.trim())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 过滤空且去空格
+     *
+     * @param ls
+     * @return
+     */
+    public static Set<String> filterEmptyToSet(Collection<String> ls) {
+        return Optional.ofNullable(ls).orElse(new ArrayList<>())
+                .stream()
+                .filter(d -> !StringUtils.isBlank(d))
+                .map(d -> d.trim())
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * 重新映射
+     *
+     * @param ls
+     * @param fieldGetter
+     * @param filterFunc
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> List<R> mapField(Collection<T> ls, Function<T, R> fieldGetter, Predicate<R> filterFunc) {
+        return Optional.ofNullable(ls).orElse(new ArrayList<>())
+                .stream()
+                .map(fieldGetter)
+                .filter(filterFunc)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 重新投影
+     *
+     * @param ls
+     * @param fieldGetter
+     * @param filterFunc
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> Set<R> mapFieldToSet(Collection<T> ls, Function<T, R> fieldGetter, Predicate<R> filterFunc) {
+        return Optional.ofNullable(ls).orElse(new ArrayList<>())
+                .stream()
+                .map(fieldGetter)
+                .filter(filterFunc)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * 重新投影
+     *
+     * @param ls
+     * @param fieldGetter
+     * @param filterFunc
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> SortedSet<R> mapFieldToSortedSet(Collection<T> ls, Function<T, R> fieldGetter, Predicate<R> filterFunc) {
+        return Optional.ofNullable(ls).orElse(new ArrayList<>())
+                .stream()
+                .map(fieldGetter)
+                .filter(filterFunc)
+                .collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    /**
+     * 取第一个符合条件的元素，不存在取默认值
+     *
+     * @param ls
+     * @param predicate
+     * @param defaultVal
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    public static <T> T firstOrDefault(Collection<T> ls, Predicate<T> predicate, T defaultVal) {
+        if (ls == null || ls.isEmpty()) {
+            return defaultVal;
+        }
+
+        return ls.stream()
+                .filter(predicate)
+                .findFirst()
+                .orElse(defaultVal);
+    }
+
+    /**
+     * 简单的分组
+     *
+     * @param ls
+     * @param filter
+     * @param groupByFunc
+     * @param <T>
+     * @param <TK>
+     * @return
+     */
+    public static <T, TK> Map<TK, List<T>> groupByMap(Collection<T> ls,
+                                                      Predicate<? super T> filter,
+                                                      Function<? super T, ? extends TK> groupByFunc) {
+        return groupByMap(ls, filter, groupByFunc, d -> d);
+    }
+
+    /**
+     * 简单的分组
+     *
+     * @param ls
+     * @param filter
+     * @param groupByFunc
+     * @param groupByValFunc
+     * @param <T>
+     * @param <TK>
+     * @param <TV>
+     * @return
+     */
+    public static <T, TK, TV> Map<TK, TV> groupByMap(Collection<T> ls,
+                                                     Predicate<? super T> filter,
+                                                     Function<? super T, ? extends TK> groupByFunc,
+                                                     Function<? super List<T>, ? extends TV> groupByValFunc) {
+        return groupByMap(ls, filter, groupByFunc, (k, v) -> groupByValFunc.apply(v));
+    }
+
+    /**
+     * 简单的分组
+     *
+     * @param ls
+     * @param filter
+     * @param groupByFunc
+     * @param groupByValFunc
+     * @param <T>
+     * @param <TK>
+     * @param <TV>
+     * @return
+     */
+    public static <T, TK, TV> Map<TK, TV> groupByMap(Collection<T> ls,
+                                                     Predicate<? super T> filter,
+                                                     Function<? super T, ? extends TK> groupByFunc,
+                                                     BiFunction<TK, ? super List<T>, ? extends TV> groupByValFunc) {
+        if (ls == null || ls.isEmpty()) {
+            return new HashMap<>();
+        }
+
+        Map<TK, TV> map = new HashMap<>();
+        ls.stream()
+                .filter(filter)
+                .collect(Collectors.groupingBy(groupByFunc))
+                .forEach((k, v) -> map.put(k, groupByValFunc.apply(k, v)));
+        return map;
+    }
+
+    /**
+     * 排序
+     *
+     * @param ls
+     * @param getFieldFunc
+     * @param asc
+     * @param <T>
+     * @param <TField>
+     * @return
+     */
+    public static <T, TField extends Comparable<TField>> List<T> sortList(Collection<T> ls,
+                                                                          Function<T, TField> getFieldFunc,
+                                                                          boolean asc) {
+        if (ls == null || ls.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Comparator<T> comparing;
+        if (asc) {
+            comparing = Comparator.comparing(getFieldFunc);
+        } else {
+            comparing = Comparator.comparing(getFieldFunc, Comparator.reverseOrder());
+        }
+        List<T> nullData = ls.stream()
+                .filter(d -> getFieldFunc.apply(d) == null)
+                .collect(Collectors.toList());
+        List<T> notNullData = ls.stream()
+                .filter(d -> getFieldFunc.apply(d) != null)
+                .sorted(comparing)
+                .collect(Collectors.toList());
+        notNullData.addAll(nullData);
+        return notNullData;
+    }
+
+}
