@@ -1,5 +1,6 @@
 package com.hxx.sbcommon.common;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
@@ -252,6 +253,38 @@ public class WASD {
                 .filter(predicate)
                 .findFirst()
                 .orElse(defaultVal);
+    }
+
+    /**
+     * 是否有任一符合条件的项
+     *
+     * @param ls
+     * @param predicate
+     * @param <T>
+     * @return
+     */
+    public static <T> boolean any(Collection<T> ls, Predicate<T> predicate) {
+        if (CollectionUtils.isEmpty(ls)) {
+            return false;
+        }
+
+        return ls.stream().anyMatch(predicate);
+    }
+
+    /**
+     * 是否全部项都符合条件
+     *
+     * @param ls
+     * @param predicate
+     * @param <T>
+     * @return
+     */
+    public static <T> boolean all(Collection<T> ls, Predicate<T> predicate) {
+        if (CollectionUtils.isEmpty(ls)) {
+            return false;
+        }
+
+        return ls.stream().allMatch(predicate);
     }
 
     /**
