@@ -351,6 +351,30 @@ public class WASD {
     }
 
     /**
+     * 返回按指定字段去重后的集合
+     *
+     * @param ls
+     * @param distinctByGetter
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> distinctBy(Collection<T> ls, Function<T, String> distinctByGetter) {
+        if (ls == null || ls.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Set<String> set = new HashSet<>();
+        List<T> results = new ArrayList<>();
+        for (T t : ls) {
+            String field = distinctByGetter.apply(t);
+            if (set.add(field)) {
+                results.add(t);
+            }
+        }
+        return results;
+    }
+
+    /**
      * 排序
      *
      * @param ls
