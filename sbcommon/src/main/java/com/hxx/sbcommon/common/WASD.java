@@ -380,13 +380,15 @@ public class WASD {
      * @param ls
      * @param getFieldFunc
      * @param asc
+     * @param limit        -1全部
      * @param <T>
      * @param <TField>
      * @return
      */
     public static <T, TField extends Comparable<TField>> List<T> sortList(Collection<T> ls,
                                                                           Function<T, TField> getFieldFunc,
-                                                                          boolean asc) {
+                                                                          boolean asc,
+                                                                          int limit) {
         if (ls == null || ls.isEmpty()) {
             return new ArrayList<>();
         }
@@ -397,15 +399,24 @@ public class WASD {
         } else {
             comparing = Comparator.comparing(getFieldFunc, Comparator.reverseOrder());
         }
-        List<T> nullData = ls.stream()
-                .filter(d -> getFieldFunc.apply(d) == null)
-                .collect(Collectors.toList());
-        List<T> notNullData = ls.stream()
-                .filter(d -> getFieldFunc.apply(d) != null)
-                .sorted(comparing)
-                .collect(Collectors.toList());
+        List<T> nullData = new ArrayList<>();
+        List<T> notNullData = new ArrayList<>();
+
+        for (T d : ls) {
+            if (getFieldFunc.apply(d) == null) {
+                nullData.add(d);
+            } else {
+                notNullData.add(d);
+            }
+        }
+
+        notNullData.sort(comparing);
         notNullData.addAll(nullData);
-        return notNullData;
+        if (limit < 0) {
+            return notNullData;
+        }
+
+        return notNullData.stream().limit(limit).collect(Collectors.toList());
     }
 
 }
