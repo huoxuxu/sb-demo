@@ -601,7 +601,9 @@ public class OftenUtil {
          * @return
          */
         public static String fmt2DateStr(LocalDateTime dateTime) {
-            if (dateTime == null) return "";
+            if (dateTime == null) {
+                return "";
+            }
             return dateTime.format(DateTime_Date_Formatter);
         }
 
@@ -618,7 +620,7 @@ public class OftenUtil {
         }
 
         /**
-         * 解析为LDT，支持字符串格式：yyyy-MM-dd HH:mm:ss
+         * 解析为LocalDateTime，支持字符串格式：yyyy-MM-dd HH:mm:ss
          *
          * @param text
          * @return
@@ -738,7 +740,7 @@ public class OftenUtil {
         }
 
         /**
-         * Date转LDT
+         * Date转LocalDateTime
          *
          * @param date Date
          * @return

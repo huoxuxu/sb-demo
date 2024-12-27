@@ -5,10 +5,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +27,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class WASD {
+    // yyyy-MM-dd HH:mm:ss
+    private final static DateTimeFormatter DateTime_Default_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    // yyyy-MM-dd
+    private final static DateTimeFormatter DateTime_Date_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public static void ast(boolean condition, String msg) {
         if (condition) {
@@ -48,6 +56,48 @@ public class WASD {
         return t == null ? defaultVal : t;
     }
 
+    /**
+     * 解析为LocalDateTime，支持字符串格式：yyyy-MM-dd HH:mm:ss
+     *
+     * @param text
+     * @return
+     */
+    public static LocalDateTime parseDateTime(String text) {
+        return LocalDateTime.parse(text, DateTime_Default_Formatter);
+    }
+
+    /**
+     * Date转LocalDateTime
+     *
+     * @param date Date
+     * @return
+     */
+    public static LocalDateTime parse(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
+
+    /**
+     * 格式化为：yyyy-MM-dd
+     *
+     * @param dateTime
+     * @return
+     */
+    public static String fmt2Date(LocalDateTime dateTime) {
+        if (dateTime == null) {
+            return "";
+        }
+        return dateTime.format(DateTime_Date_Formatter);
+    }
+
+    /**
+     * 转Date
+     *
+     * @param dt
+     * @return
+     */
+    public static Date toDate(LocalDateTime dt) {
+        return Date.from(dt.atZone(ZoneId.systemDefault()).toInstant());
+    }
 
     /**
      * 两数相除保留指定精度

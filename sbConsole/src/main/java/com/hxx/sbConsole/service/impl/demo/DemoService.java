@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.hxx.sbConsole.jwt.JWTUtil;
 import com.hxx.sbConsole.model.Person;
 import com.hxx.sbConsole.model.User;
+import com.hxx.sbcommon.common.WASD;
 import com.hxx.sbcommon.common.basic.OftenUtil;
 import com.hxx.sbcommon.common.basic.array.CollectionUtil;
 import com.hxx.sbcommon.common.basic.text.StringUtil;
@@ -105,6 +106,11 @@ public class DemoService {
                 LocalDateTime date = LocalDate.now().atStartOfDay().minusDays(7);
                 LocalDateTime end = date.plusDays(1);
                 System.out.println(Arrays.asList(date, end));
+
+                LocalDateTime sortDate = WASD.parseDateTime("2024-12-27 00:00:00");
+                // 2024-12-20 00:00:00
+                LocalDateTime plusSortDate = sortDate.plusDays(-7);
+                System.out.println(Arrays.asList(sortDate, plusSortDate));
             }
             {
                 LocalDateTime begin = OftenUtil.DateTimeUtil.parseDateTime("2024-07-20 00:00:00");
