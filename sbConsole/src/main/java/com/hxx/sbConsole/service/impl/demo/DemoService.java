@@ -111,6 +111,11 @@ public class DemoService {
                 // 2024-12-20 00:00:00
                 LocalDateTime plusSortDate = sortDate.plusDays(-7);
                 System.out.println(Arrays.asList(sortDate, plusSortDate));
+
+                LocalDateTime sortDate2 = WASD.parseDateTime("2024-12-27 00:00:00");
+                boolean equals = sortDate.equals(sortDate2);
+                sortDate.isEqual(sortDate2);
+                System.out.println(equals);
             }
             {
                 LocalDateTime begin = OftenUtil.DateTimeUtil.parseDateTime("2024-07-20 00:00:00");

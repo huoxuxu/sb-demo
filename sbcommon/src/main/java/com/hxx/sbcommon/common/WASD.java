@@ -231,6 +231,21 @@ public class WASD {
     }
 
     /**
+     * 返回符合条件的个数
+     *
+     * @param ls
+     * @param filterFunc
+     * @param <T>
+     * @return
+     */
+    public static <T> long count(Collection<T> ls, Predicate<T> filterFunc) {
+        return Optional.ofNullable(ls).orElse(new ArrayList<>())
+                .stream()
+                .filter(filterFunc)
+                .count();
+    }
+
+    /**
      * 重新映射
      *
      * @param ls
