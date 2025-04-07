@@ -28,6 +28,7 @@
         <dependency>
             <groupId>com.hxx</groupId>
             <artifactId>sb-spring-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
