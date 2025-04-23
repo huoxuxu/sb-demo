@@ -31,13 +31,17 @@ public class BeanUtil {
     public static Map<String, Object> toMap(Object source, String... ignoreProperties) {
         Class<?> actualEditable = source.getClass();
         PropertyDescriptor[] propDescs = BeanUtils.getPropertyDescriptors(actualEditable);
-        Set<String> ignoreList = ignoreProperties != null
+        Set<String> ignorePropNames = ignoreProperties != null
                 ? new HashSet<>(Arrays.asList(ignoreProperties))
                 : new HashSet<>();
 
         Map<String, Object> map = new HashMap<>();
         for (PropertyDescriptor propDesc : propDescs) {
             String name = propDesc.getName();
+            // 过滤忽略属性
+            if (ignorePropNames.contains(name)) {
+                continue;
+            }
             Method readMethod = propDesc.getReadMethod();
             if (readMethod == null) {
                 continue;
@@ -89,11 +93,11 @@ public class BeanUtil {
             if (sourcePd == null) {
                 continue;
             }
-
             Method readMethod = sourcePd.getReadMethod();
             if (readMethod == null) {
                 continue;
             }
+
             if (ClassUtils.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType())) {
                 try {
                     if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {

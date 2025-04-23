@@ -56,8 +56,10 @@ public class DemoService {
             {
                 Set<Integer> sls = new HashSet<>(Arrays.asList(1, 2, 3));
                 byte b = 1;
-
+                // false
                 System.out.println(sls.contains(b));
+                // false
+                System.out.println(sls.contains(null));
 
             }
             {
