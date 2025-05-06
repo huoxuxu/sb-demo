@@ -5,13 +5,117 @@ import net.coobird.thumbnailator.geometry.Positions;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ThumbnailsUtil {
+
+
+    public static byte[] compressImg(byte[] inputBytes, int width, int height, float quality)
+            throws IOException {
+        // 将 byte[] 转换为 ByteArrayInputStream
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(inputBytes);
+
+        // 获取图片的原始宽度和高度
+        BufferedImage originalImage = ImageIO.read(inputStream);
+        if (originalImage == null) {
+            throw new IOException("无法读取图片");
+        }
+        int originalWidth = originalImage.getWidth();
+        int originalHeight = originalImage.getHeight();
+
+        // 如果原始宽高小于目标宽高
+        if (originalWidth < width && originalHeight < height) {
+            width = originalWidth;
+            height = originalHeight;
+        }
+
+        // 重新创建输入流，因为上面的 read 方法已经消耗了流
+        inputStream = new ByteArrayInputStream(inputBytes);
+
+        // 创建 ByteArrayOutputStream 用于存储压缩后的字节数据
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        // 使用 Thumbnails 进行压缩
+        Thumbnails.of(inputStream)
+                .size(width, height)
+                .outputQuality(quality)
+                .outputFormat("jpg")
+                .toOutputStream(outputStream);
+
+        // 获取压缩后的字节数组
+        return outputStream.toByteArray();
+    }
+
+
+    /**
+     * 合并图片，每组n个
+     *
+     * @param groupSize 一组的图片个数
+     * @param images
+     * @return
+     * @throws IOException
+     */
+    public static List<BufferedImage> combineImages(int groupSize, List<BufferedImage> images) throws IOException {
+        List<BufferedImage> vos = new ArrayList<>();
+        for (int i = 0; i < images.size(); i += groupSize) {
+            List<BufferedImage> group = images.subList(i, Math.min(i + groupSize, images.size()));
+            if (group.size() < 6) {
+                while (group.size() < 6) {
+                    group.add(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
+                }
+            }
+            BufferedImage combinedImage = combineGroup(group);
+            vos.add(combinedImage);
+        }
+        return vos;
+    }
+
+    private static BufferedImage combineGroup(List<BufferedImage> group) throws IOException {
+        int maxWidth = 0;
+        int totalHeight = 0;
+        int halfGroupSize = group.size() / 2;
+
+        for (int i = 0; i < halfGroupSize; i++) {
+            maxWidth = Math.max(maxWidth, group.get(i).getWidth());
+            totalHeight = Math.max(totalHeight, group.get(i).getHeight());
+        }
+        maxWidth *= 3;
+        totalHeight *= 2;
+
+        BufferedImage combined = new BufferedImage(maxWidth, totalHeight, BufferedImage.TYPE_INT_RGB);
+
+        int x = 0;
+        int y = 0;
+        int imageWidth = maxWidth / 3;
+        int imageHeight = totalHeight / 2;
+
+        for (int i = 0; i < halfGroupSize; i++) {
+            BufferedImage resized = Thumbnails.of(group.get(i))
+                    .size(imageWidth, imageHeight)
+                    .asBufferedImage();
+            combined.getGraphics().drawImage(resized, x, y, null);
+            x += imageWidth;
+        }
+
+        x = 0;
+        y = totalHeight / 2;
+        for (int i = halfGroupSize; i < group.size(); i++) {
+            BufferedImage resized = Thumbnails.of(group.get(i))
+                    .size(imageWidth, imageHeight)
+                    .asBufferedImage();
+            combined.getGraphics().drawImage(resized, x, y, null);
+            x += imageWidth;
+        }
+
+        return combined;
+    }
 
     public static void convertImg() throws IOException {
         //outputFormat(图像格式)

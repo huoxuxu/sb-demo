@@ -52,6 +52,28 @@ public class ThumbnailatorImageCombiner {
         }
     }
 
+    /**
+     * 合并图片，每组n个
+     * @param groupSize 一组的图片个数
+     * @param images
+     * @return
+     * @throws IOException
+     */
+    public static List<BufferedImage> combineImages(int groupSize, List<BufferedImage> images) throws IOException {
+        List<BufferedImage> vos = new ArrayList<>();
+        for (int i = 0; i < images.size(); i += groupSize) {
+            List<BufferedImage> group = images.subList(i, Math.min(i + groupSize, images.size()));
+            if (group.size() < 6) {
+                while (group.size() < 6) {
+                    group.add(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
+                }
+            }
+            BufferedImage combinedImage = combineGroup(group);
+            vos.add(combinedImage);
+        }
+        return vos;
+    }
+
     private static BufferedImage combineGroup(List<BufferedImage> group) throws IOException {
         int maxWidth = 0;
         int totalHeight = 0;
