@@ -578,7 +578,10 @@ public class OftenUtil {
          * @return
          */
         public static String fmt2Str(LocalDateTime dateTime) {
-            if (dateTime == null) return "";
+            if (dateTime == null) {
+                return "";
+            }
+
             return dateTime.format(DateTime_Default_Formatter);
         }
 
@@ -589,7 +592,10 @@ public class OftenUtil {
          * @return
          */
         public static String fmt2Str(Date dateTime) {
-            if (dateTime == null) return "";
+            if (dateTime == null) {
+                return "";
+            }
+
             SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             return f.format(dateTime);
         }

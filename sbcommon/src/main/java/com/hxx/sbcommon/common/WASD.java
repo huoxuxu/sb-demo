@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -57,6 +58,22 @@ public class WASD {
     }
 
     /**
+     * 值为null则返回默认值
+     *
+     * @param t
+     * @param getFieldFunc
+     * @param defaultVal
+     * @param <T>
+     * @param <TField>
+     * @return
+     */
+    public static <T, TField> TField nullToDefault(T t, Function<T, TField> getFieldFunc, TField defaultVal) {
+        return Optional.ofNullable(t)
+                .map(getFieldFunc)
+                .orElse(defaultVal);
+    }
+
+    /**
      * 解析为LocalDateTime，支持字符串格式：yyyy-MM-dd HH:mm:ss
      *
      * @param text
@@ -97,6 +114,21 @@ public class WASD {
      */
     public static Date toDate(LocalDateTime dt) {
         return Date.from(dt.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * 格式化为：yyyy-MM-dd HH:mm:ss
+     *
+     * @param dateTime
+     * @return
+     */
+    public static String fmt2Str(Date dateTime) {
+        if (dateTime == null) {
+            return "";
+        }
+
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return f.format(dateTime);
     }
 
     /**
