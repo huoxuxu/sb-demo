@@ -6,12 +6,16 @@ import org.apache.commons.lang3.StringUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -99,11 +103,56 @@ public class WASD {
      * @param dateTime
      * @return
      */
-    public static String fmt2Date(LocalDateTime dateTime) {
+    public static String fmt(LocalDateTime dateTime) {
         if (dateTime == null) {
             return "";
         }
         return dateTime.format(DateTime_Date_Formatter);
+    }
+
+    /**
+     * 转13位毫秒时间戳
+     *
+     * @param dt
+     * @return
+     */
+    public static long toTimestamp(LocalDateTime dt) {
+        return dt.toInstant(ZoneOffset.ofHours(8))
+                .toEpochMilli();
+    }
+
+    /**
+     * 获取开始结束时间间隔
+     *
+     * @param chronoUnit
+     * @param begin
+     * @param end
+     * @return
+     */
+    public static long getInterval(ChronoUnit chronoUnit, LocalDateTime begin, LocalDateTime end) {
+        return chronoUnit.between(begin, end);
+    }
+
+    /**
+     * 获取开始结束时间间隔
+     *
+     * @param begin
+     * @param end
+     * @return
+     */
+    public static Duration getDuration(LocalDateTime begin, LocalDateTime end) {
+        return Duration.between(begin, end);
+    }
+
+    /**
+     * 解析为Date，支持字符串格式：yyyy-MM-dd HH:mm:ss
+     *
+     * @param text
+     * @return
+     */
+    public static Date parse(String text) {
+        LocalDateTime dt = parseDateTime(text);
+        return parse(dt);
     }
 
     /**
@@ -112,7 +161,7 @@ public class WASD {
      * @param dt
      * @return
      */
-    public static Date toDate(LocalDateTime dt) {
+    public static Date parse(LocalDateTime dt) {
         return Date.from(dt.atZone(ZoneId.systemDefault()).toInstant());
     }
 
@@ -122,7 +171,7 @@ public class WASD {
      * @param dateTime
      * @return
      */
-    public static String fmt2Str(Date dateTime) {
+    public static String fmt(Date dateTime) {
         if (dateTime == null) {
             return "";
         }
@@ -156,7 +205,7 @@ public class WASD {
      * @param b
      * @return
      */
-    public static String format(BigDecimal b) {
+    public static String fmt(BigDecimal b) {
         // stripTrailingZeros 去除小数点后无意义的零
         // toPlainString 返回不以指数表示的字符串形式
         return b.stripTrailingZeros()
@@ -189,13 +238,14 @@ public class WASD {
         if (org.apache.commons.lang3.StringUtils.isBlank(str)) {
             return new ArrayList<>();
         }
+
         if (splitStrs == null || splitStrs.length == 0) {
             return new ArrayList<>(Arrays.asList(str));
         }
 
         List<String> ls = new ArrayList<>();
         for (String splitStr : splitStrs) {
-            if (ls.size() == 0) {
+            if (ls.isEmpty()) {
                 String[] arr = org.apache.commons.lang3.StringUtils.splitByWholeSeparator(str, splitStr);
                 for (String item : arr) {
                     if (!org.apache.commons.lang3.StringUtils.isBlank(item)) {
@@ -203,8 +253,7 @@ public class WASD {
                     }
                 }
             } else {
-                List<String> result = splits(ls, splitStr);
-                ls = result;
+                ls = splits(ls, splitStr);
             }
         }
         return ls;
@@ -235,12 +284,45 @@ public class WASD {
     }
 
     /**
+     * 分割字符串，如果字符串为空或null，返回空集合
+     *
+     * @param txt
+     * @param splitStr
+     * @return
+     */
+    public static List<String> split(String txt, String splitStr) {
+        List<String> vos = new ArrayList<>();
+        if (StringUtils.isBlank(txt)) {
+            return vos;
+        }
+        txt = txt.trim();
+
+        int ind = txt.indexOf(splitStr);
+        if (ind == -1) {
+            vos.add(txt);
+            return vos;
+        }
+
+        // 在首位的不需要
+        if (ind > 0) {
+            vos.add(txt.substring(0, ind).trim());
+        }
+
+        // 剩下字符串
+        String residue = txt.substring(ind + splitStr.length());
+        List<String> splits = split(residue, splitStr);
+        vos.addAll(splits);
+
+        return vos;
+    }
+
+    /**
      * 过滤空且去空格
      *
      * @param ls
      * @return
      */
-    public static List<String> filterEmpty(Collection<String> ls) {
+    public static List<String> filterNotBlank(Collection<String> ls) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
                 .filter(d -> !StringUtils.isBlank(d))
@@ -254,7 +336,7 @@ public class WASD {
      * @param ls
      * @return
      */
-    public static Set<String> filterEmptyToSet(Collection<String> ls) {
+    public static Set<String> filterNotBlankToSet(Collection<String> ls) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
                 .filter(d -> !StringUtils.isBlank(d))
@@ -361,11 +443,7 @@ public class WASD {
      * @return
      */
     public static <T> boolean any(Collection<T> ls, Predicate<T> predicate) {
-        if (CollectionUtils.isEmpty(ls)) {
-            return false;
-        }
-
-        return ls.stream().anyMatch(predicate);
+        return Optional.ofNullable(ls).orElse(Collections.emptyList()).stream().anyMatch(predicate);
     }
 
     /**
@@ -377,11 +455,7 @@ public class WASD {
      * @return
      */
     public static <T> boolean all(Collection<T> ls, Predicate<T> predicate) {
-        if (CollectionUtils.isEmpty(ls)) {
-            return false;
-        }
-
-        return ls.stream().allMatch(predicate);
+        return Optional.ofNullable(ls).orElse(Collections.emptyList()).stream().allMatch(predicate);
     }
 
     /**
@@ -496,6 +570,7 @@ public class WASD {
         } else {
             comparing = Comparator.comparing(getFieldFunc, Comparator.reverseOrder());
         }
+
         List<T> nullData = new ArrayList<>();
         List<T> notNullData = new ArrayList<>();
 

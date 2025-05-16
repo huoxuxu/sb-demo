@@ -25,7 +25,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.ibatis.session.SqlSessionManager;
 import org.apache.ibatis.session.defaults.DefaultSqlSession;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
-import org.springframework.core.ResolvableTypeProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.util.*;
 
@@ -53,6 +52,33 @@ import java.util.stream.Collectors;
 public class DemoService {
     public static void main(String[] args) {
         try {
+            {
+                System.out.println("char:空 " + JsonUtil.toJSON(WASD.split(" ", " ")));
+
+                String txt = "123 4\t56\n 78";
+                for (int i = 0; i < txt.length(); i++) {
+                    var item = String.valueOf(txt.charAt(i));
+
+                    List<String> ls = WASD.split(txt, item);
+                    System.out.println("char:" + item + " " + JsonUtil.toJSON(ls));
+                }
+
+                System.out.println();
+                System.out.println("char:空格 " + JsonUtil.toJSON(WASD.split(txt, " ")));
+                System.out.println("char:\\t " + JsonUtil.toJSON(WASD.split(txt, "\t")));
+                System.out.println("char:\\n " + JsonUtil.toJSON(WASD.split(txt, "\n")));
+
+                System.out.println("ok");
+            }
+            {
+                LocalDateTime begin = WASD.parseDateTime("2024-07-20 00:00:00");
+                LocalDateTime end = WASD.parseDateTime("2024-07-20 23:59:59");
+
+                long second = WASD.getInterval(ChronoUnit.SECONDS, begin, end);
+                Duration duration = WASD.getDuration(begin, end);
+
+                WASD.ast(second != duration.getSeconds(), "计算错误！");
+            }
             {
                 Set<Integer> sls = new HashSet<>(Arrays.asList(1, 2, 3));
                 byte b = 1;
@@ -120,9 +146,9 @@ public class DemoService {
                 System.out.println(equals);
             }
             {
-                LocalDateTime begin = OftenUtil.DateTimeUtil.parseDateTime("2024-07-20 00:00:00");
-                LocalDateTime end = OftenUtil.DateTimeUtil.parseDateTime("2024-07-20 23:59:59");
-                LocalDateTime end1 = OftenUtil.DateTimeUtil.parseDateTime("2024-07-22 00:00:00");
+                LocalDateTime begin = WASD.parseDateTime("2024-07-20 00:00:00");
+                LocalDateTime end = WASD.parseDateTime("2024-07-20 23:59:59");
+                LocalDateTime end1 = WASD.parseDateTime("2024-07-22 00:00:00");
                 LocalDateTime stat = begin;
                 while (end.isAfter(stat) || end.isEqual(stat)) {
                     LocalDateTime date = stat.plusDays(1).minusSeconds(1);

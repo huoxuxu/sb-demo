@@ -790,52 +790,6 @@ public class OftenUtil {
             Duration dur = Duration.between(begin, end);
             return dur.getSeconds() < maxDuration.getSeconds();
         }
-
-        // 日期计算
-
-        /**
-         * 获取开始结束时间间隔小时数
-         *
-         * @param begin
-         * @param end
-         * @return
-         */
-        public static long getIntervalHour(LocalDateTime begin, LocalDateTime end) {
-            return ChronoUnit.HOURS.between(begin, end);
-        }
-
-        /**
-         * 获取开始结束时间间隔
-         *
-         * @param begin
-         * @param end
-         * @return
-         */
-        public static Duration calcDuration(LocalDateTime begin, LocalDateTime end) {
-            return Duration.between(begin, end);
-        }
-
-        /**
-         * 获取两个时间间隔的天数，必须是精确到秒级的时间段
-         * 使用时>=start && <=end
-         *
-         * @param begin 开始时间
-         * @param end   结束时间 必须带上23：59：59
-         * @return
-         */
-        public static Long getIntervalDays(Date begin, Date end) {
-            // 这样得到的差值是微秒级别
-            long diff = end.getTime() + 1000 - begin.getTime();
-
-            int dayMs = 1000 * 60 * 60 * 24;
-            // 间隔天数
-            long days = diff / dayMs;
-            if (diff % dayMs != 0) {
-                days++;
-            }
-
-            return days;
-        }
     }
 
     // 集合
