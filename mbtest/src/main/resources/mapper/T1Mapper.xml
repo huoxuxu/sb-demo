@@ -145,10 +145,29 @@
 
     <!--批量新增-->
     <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id">
-        insert into t1 (code, name, score,enabled,birthday,gmt_create)
+        insert into t1
+        (
+        <trim prefix="" suffixOverrides=",">
+            code,
+            name,
+            score,
+            birthday,
+            gmt_create,
+            enabled,
+        </trim>
+        )
         values
         <foreach collection="list" item="item" separator=",">
-            (#{item.code}, #{item.name}, #{item.score}, #{item.enabled}, #{item.birthday}, #{gmtCreate})
+            (
+            <trim prefix="" suffixOverrides=",">
+                #{item.code},
+                #{item.name},
+                #{item.score},
+                #{item.birthday},
+                #{item.gmtCreate},
+                #{item.enabled},
+            </trim>
+            )
         </foreach>
     </insert>
 

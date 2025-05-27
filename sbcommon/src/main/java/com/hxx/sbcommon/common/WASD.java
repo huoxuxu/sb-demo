@@ -78,6 +78,17 @@ public class WASD {
     }
 
     /**
+     * 去除字符串前后空格
+     *
+     * @param t
+     * @param defaultVal
+     * @return
+     */
+    public static String trim(String t, String defaultVal) {
+        return Optional.ofNullable(t).map(d -> d.trim()).orElse(defaultVal);
+    }
+
+    /**
      * 解析为LocalDateTime，支持字符串格式：yyyy-MM-dd HH:mm:ss
      *
      * @param text
@@ -322,7 +333,7 @@ public class WASD {
      * @param ls
      * @return
      */
-    public static List<String> filterNotBlank(Collection<String> ls) {
+    public static List<String> filterNotBlankAndTrim(Collection<String> ls) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
                 .filter(d -> !StringUtils.isBlank(d))
@@ -336,7 +347,7 @@ public class WASD {
      * @param ls
      * @return
      */
-    public static Set<String> filterNotBlankToSet(Collection<String> ls) {
+    public static Set<String> filterNotBlankAndTrimToSet(Collection<String> ls) {
         return Optional.ofNullable(ls).orElse(new ArrayList<>())
                 .stream()
                 .filter(d -> !StringUtils.isBlank(d))
